@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></meta>
+<meta http-equiv="Content-Language" content="zh-cn"></meta>
+<meta http-equiv="imagetoolbar" content="false"></meta>
+<meta name="robots" content="all"></meta>
+<meta name="author" content="w3school.com.cn"></meta>
+<meta name="Copyright" content="Copyright W3school.com.cn All Rights Reserved."></meta>
+<meta name="MSSmartTagsPreventParsing" content="true"></meta>
+
+<link rel="shortcut icon" href="http://www.w3school.com.cn/favicon.ico" type="image/x-icon"></link>
+<title>XML Validator</title>
+<style type="text/css">
+form {
+	margin-top: 10px;
+}
+</style>
+<script type="text/javascript">
+	function validateXML(txt) {
+		// code for IE
+		if (window.ActiveXObject) {
+			var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+			xmlDoc.async = "false";
+			xmlDoc.loadXML(document.all(txt).value);
+
+			if (xmlDoc.parseError.errorCode != 0) {
+				txt = "Error Code: " + xmlDoc.parseError.errorCode + "\n";
+				txt = txt + "Error Reason: " + xmlDoc.parseError.reason;
+				txt = txt + "Error Line: " + xmlDoc.parseError.line;
+				alert(txt);
+			} else {
+				alert("No errors found");
+			}
+		}
+		// code for Mozilla, Firefox, Opera, etc.
+		else if (document.implementation.createDocument) {
+			var parser = new DOMParser();
+			var text = document.getElementById(txt).value;
+			var xmlDoc = parser.parseFromString(text, "text/xml");
+
+			if (xmlDoc.documentElement.nodeName == "parsererror") {
+				alert(xmlDoc.documentElement.childNodes[0].nodeValue);
+			} else {
+				alert("No errors found");
+			}
+		} else {
+			alert('Your browser cannot handle XML validation');
+		}
+	}
+</script>
+</head>
+<body class="xml">
+	<div id="wrapper">
+		<div id="maincontent">
+			<h1>XML 验证器</h1>
+			<div>
+				<h2>对您的 XML 进行语法检查</h2>
+				<p>为了帮助您对 XML 进行语法检查，我们创建了一个 XML 验证器。</p>
+				<p>把您的 XML 粘贴到下面的文本框中，然后点击"验证"按钮来进行语法检查。</p>
+
+				<form action="">
+					<p>
+						<textarea id="validxml1" rows="10" cols="75">&lt;?xml version="1.0" ?&gt; 
+
+&lt;note&gt;
+&lt;to&gt;George&lt;/to&gt; 
+&lt;from&gt;John&lt;/Ffrom&gt; 
+&lt;heading&gt;Reminder&lt;/heading&gt; 
+&lt;body&gt;Don't forget the meeting!&lt;/body&gt; 
+&lt;/note&gt;
+</textarea>
+					</p>
+					<p>
+						<input value="验证" onclick="validateXML('validxml1')" type="button">
+					</p>
+				</form>
+			</div>
+
+
+			<div>
+				<h2>对您的 XML 文件进行语法检查</h2>
+
+				<p>您可以通过把 XML 文件的 URL 键入下面的输入框中，然后点击"验证"按钮，来对某个在线的 XML 文件进行语法检查：
+
+				</p>
+				<form action="/xml/validator.asp" target="_blank" method="post">
+					<label>文件名:</label>
+					<p>
+						<input name="xmlfile" size="50" value="/xml/note_error.xml"
+							type="text">
+					</p>
+					<p>
+						<input value="验证" type="submit">
+					</p>
+				</form>
+
+				<p class="note">
+					<span>注释：</span>如果返回的的错误是"拒绝访问"，说明您的浏览器安全设置不允许跨域的文件访问。
+				</p>
+
+				<p>文件 "note_error.xml"
+					的作用是演示浏览器的错误处理，如果需要返回无错的消息，可以将该文件替换为其他文件，比如 "books.xml"。</p>
+			</div>
+
+
+			<div>
+				<h2>根据 DTD 来验证 XML</h2>
+
+				<p>只要把 DOCTYPE 声明添加到您的 XML 中，然后点击验证按钮即可：</p>
+
+				<form action="">
+					<p>
+						<textarea id="validxml2" rows="17" cols="75">&lt;?xml version="1.0" ?&gt; 
+&lt;!DOCTYPE note [
+  &lt;!ELEMENT note (to,from,heading,body)&gt;
+  &lt;!ELEMENT to      (#PCDATA)&gt;
+  &lt;!ELEMENT from    (#PCDATA)&gt;
+  &lt;!ELEMENT heading (#PCDATA)&gt;
+  &lt;!ELEMENT body    (#PCDATA)&gt;
+]&gt;
+&lt;note&gt;
+&lt;to&gt;George&lt;/to&gt; 
+&lt;from&gt;John&lt;/Ffrom&gt; 
+&lt;heading&gt;Reminder&lt;/heading&gt; 
+&lt;body&gt;Don't forget the meeting!&lt;/body&gt; 
+&lt;/note&gt;
+</textarea>
+					</p>
+					<p>
+						<input value="验证" onclick="validateXML('validxml2')" type="button">
+					</p>
+				</form>
+
+				<p class="note">
+					<span>注释：</span>只有在 Internet Explorer 中，可以根据 DTD 来验证 XML。Firefox,
+					Mozilla, Netscape 以及 Opera 做不到这一点。
+				</p>
+			</div>
+
+		</div>
+
+
+	</div>
+
+</body>
+</html>

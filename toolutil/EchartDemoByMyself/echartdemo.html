@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+ <script type="text/javascript" src="jquery.js"></script>
+
+ <script type="text/javascript" src="chart/echarts-all.js"></script>
+ <script type="text/javascript" src="chart/d3.min.js"></script>
+ <script type="text/javascript" src="chart/dcim_chart.js"></script>
+
+
+<script type="text/javascript" src="echartUtil.js"></script>
+<script type="text/javascript" src="echartMonitor.js"></script>
+<title>Echart Demo</title>
+
+<script type="text/javascript">
+$(function() {
+	var ChartData = {"assetId":"88f780824e584d4096159905145347c3","metricDatas":[{"metricI18N":"","numberFormat":{},"showLegend"
+		:false,"name":"glys1","value":{"unit":"A","dataSets":[{"name":"glys1","points":[{"time":1451875515046
+			,"value":100.0},{"time":1451875525071,"value":100.0},{"time":1451875540498,"value":100.0},{"time":1451875555066
+			,"value":100.0},{"time":1451875570077,"value":100.0},{"time":1451875590061,"value":100.0},{"time":1451875600063
+			,"value":100.0},{"time":1451875615070,"value":100.0},{"time":1451875630062,"value":100.0},{"time":1451875645055
+			,"value":100.0},{"time":1451875660057,"value":100.0},{"time":1451875680071,"value":100.0},{"time":1451875690071
+			,"value":100.0},{"time":1451875705061,"value":100.0},{"time":1451875720049,"value":100.0},{"time":1451875740051
+			,"value":100.0},{"time":1451875755064,"value":100.0},{"time":1451875765062,"value":100.0},{"time":1451879200049
+			,"value":100.0},{"time":1451879220023,"value":100.0},{"time":1451879235033,"value":100.0},{"time":1451879245037
+			,"value":100.0},{"time":1451879260055,"value":100.0},{"time":1451879280027,"value":100.0},{"time":1451879290034
+			,"value":100.0},{"time":1451879305050,"value":100.0},{"time":1451879320048,"value":100.0},{"time":1451879335061
+			,"value":100.0},{"time":1451879355044,"value":100.0}]}]},"chartStyle":"msLine","localeName":"测试模拟量一"
+			},{"metricI18N":"","numberFormat":{},"showLegend":false,"name":"glys2","value":{"unit":"kW","dataSets"
+			:[{"name":"glys2","points":[{"time":1451875515046,"value":100.0},{"time":1451875525071,"value":100.0
+			},{"time":1451875540498,"value":100.0},{"time":1451875555066,"value":100.0},{"time":1451875570077,"value"
+			:100.0},{"time":1451875590061,"value":100.0},{"time":1451875600063,"value":100.0},{"time":1451875615070
+			,"value":100.0},{"time":1451875630062,"value":100.0},{"time":1451875645055,"value":100.0},{"time":1451875660057
+			,"value":100.0},{"time":1451875680071,"value":100.0},{"time":1451875690071,"value":100.0},{"time":1451875705061
+			,"value":100.0},{"time":1451875720049,"value":100.0},{"time":1451875740051,"value":100.0},{"time":1451875755064
+			,"value":100.0},{"time":1451875765062,"value":100.0},{"time":1451875780063,"value":100.0},{"time":1451875795062
+			,"value":100.0},{"time":1451875810078,"value":100.0},{"time":1451875825041,"value":100.0},{"time":1451875840063
+			,"value":100.0},{"time":1451875855071,"value":100.0},{"time":1451875870075,"value":100.0},{"time":1451875885115
+			,"value":100.0},{"time":1451875900077,"value":100.0},{"time":1451875915045,"value":100.0},{"time":1451875930104
+			,"value":100.0},{"time":1451875945048,"value":100.0},{"time":1451875960158,"value":100.0},{"time":1451875975059
+			,"value":100.0},{"time":1451875995033,"value":100.0},{"time":1451876005036,"value":100.0},{"time":1451876020042
+			,"value":100.0},{"time":1451876035087,"value":100.0},{"time":1451876050058,"value":100.0},{"time":1451876065053
+			,"value":100.0},{"time":1451876085060,"value":100.0},{"time":1451876095040,"value":100.0},{"time":1451879355044
+			,"value":100.0}]}]},"chartStyle":"msLine","localeName":"测试模拟量二"},{"metricI18N":"","numberFormat":{},"showLegend"
+			:false,"name":"glys3","value":{"unit":"kWh","dataSets":[{"name":"glys3","points":[{"time":1451875515046
+			,"value":100.0},{"time":1451875525071,"value":100.0},{"time":1451875540498,"value":100.0},{"time":1451875555066
+			,"value":100.0},{"time":1451875570077,"value":100.0},{"time":1451875590061,"value":100.0},{"time":1451875600063
+			,"value":100.0},{"time":1451875615070,"value":100.0},{"time":1451875630062,"value":100.0},{"time":1451875645055
+			,"value":100.0},{"time":1451875660057,"value":100.0},{"time":1451875680071,"value":100.0},{"time":1451875690071
+			,"value":100.0},{"time":1451875705061,"value":100.0},{"time":1451875720049,"value":100.0},{"time":1451875740051
+			,"value":100.0},{"time":1451875755064,"value":100.0},{"time":1451875765062,"value":100.0},{"time":1451879115038
+			,"value":100.0},{"time":1451879125055,"value":100.0},{"time":1451879140062,"value":100.0},{"time":1451879155042
+			,"value":100.0},{"time":1451879170044,"value":100.0},{"time":1451879185040,"value":100.0},{"time":1451879200049
+			,"value":100.0},{"time":1451879220023,"value":100.0},{"time":1451879235033,"value":100.0},{"time":1451879245037
+			,"value":100.0},{"time":1451879260055,"value":100.0},{"time":1451879280027,"value":100.0},{"time":1451879290034
+			,"value":100.0},{"time":1451879305050,"value":100.0},{"time":1451879320048,"value":100.0},{"time":1451879335061
+			,"value":100.0},{"time":1451879355044,"value":100.0}]}]},"chartStyle":"msLine","localeName":"测试模拟量仨"
+			},{"metricI18N":"0-正常-green|1-告警-red","numberFormat":{},"showLegend":false,"name":"IL1","value":{"unit"
+			:"","dataSets":[{"name":"IL1","points":[{"time":1451875515046,"value":1.0},{"time":1451875525071,"value"
+			:1.0},{"time":1451875540498,"value":1.0},{"time":1451875555066,"value":1.0},{"time":1451875570077,"value"
+			:1.0},{"time":1451875590061,"value":1.0},{"time":1451875600063,"value":1.0},{"time":1451875615070,"value"
+			:1.0},{"time":1451875630062,"value":1.0},{"time":1451875645055,"value":1.0},{"time":1451879260055,"value"
+			:2.0},{"time":1451879280027,"value":2.0},{"time":1451879290034,"value":2.0},{"time":1451879305050,"value"
+			:2.0},{"time":1451879320048,"value":2.0},{"time":1451879335061,"value":2.0},{"time":1451879355044,"value"
+			:2.0}]}]},"chartStyle":"udLine","localeName":"测试状态量一"},{"metricI18N":"0-开机-green|1-关机-red","numberFormat"
+			:{},"showLegend":false,"name":"IL2","value":{"unit":"","dataSets":[{"name":"IL2","points":[{"time":1451875515046
+			,"value":0.0},{"time":1451875525071,"value":0.0},{"time":1451875540498,"value":0.0},{"time":1451875555066
+			,"value":0.0},{"time":1451875570077,"value":0.0},{"time":1451875590061,"value":0.0},{"time":1451875600063
+			,"value":0.0},{"time":1451875615070,"value":0.0},{"time":1451875630062,"value":0.0},{"time":1451875645055
+			,"value":0.0},{"time":1451875660057,"value":0.0},{"time":1451875680071,"value":0.0},{"time":1451875690071
+			,"value":0.0},{"time":1451875705061,"value":0.0},{"time":1451879185040,"value":0.0},{"time":1451879200049
+			,"value":0.0},{"time":1451879220023,"value":0.0},{"time":1451879235033,"value":0.0},{"time":1451879245037
+			,"value":0.0},{"time":1451879260055,"value":0.0},{"time":1451879280027,"value":0.0},{"time":1451879290034
+			,"value":0.0},{"time":1451879305050,"value":0.0},{"time":1451879320048,"value":0.0},{"time":1451879335061
+			,"value":0.0},{"time":1451879355044,"value":0.0}]}]},"chartStyle":"udLine","localeName":"测试状态量二"},{"metricI18N"
+			:"0-制冷-green|1-加热-red|2-加湿-green","numberFormat":{},"showLegend":false,"name":"IL3","value":{"unit":""
+			,"dataSets":[{"name":"IL3","points":[{"time":1451875515046,"value":0.0},{"time":1451875525071,"value"
+			:0.0},{"time":1451875540498,"value":0.0},{"time":1451875555066,"value":0.0},{"time":1451875570077,"value"
+			:0.0},{"time":1451875590061,"value":0.0},{"time":1451875600063,"value":0.0},{"time":1451875615070,"value"
+			:0.0},{"time":1451875630062,"value":0.0},{"time":1451875645055,"value":0.0},{"time":1451875660057,"value"
+			:0.0},{"time":1451875680071,"value":0.0},{"time":1451875690071,"value":0.0},{"time":1451875705061,"value"
+			:0.0},{"time":1451875720049,"value":0.0},{"time":1451875740051,"value":0.0},{"time":1451875755064,"value"
+			:0.0},{"time":1451875765062,"value":0.0},{"time":1451875780063,"value":0.0},{"time":1451879080058,"value"
+			:0.0},{"time":1451879100267,"value":0.0},{"time":1451879115038,"value":0.0},{"time":1451879220023,"value"
+			:0.0},{"time":1451879235033,"value":0.0},{"time":1451879245037,"value":0.0},{"time":1451879260055,"value"
+			:0.0},{"time":1451879280027,"value":0.0},{"time":1451879290034,"value":0.0},{"time":1451879305050,"value"
+			:0.0},{"time":1451879320048,"value":0.0},{"time":1451879335061,"value":0.0},{"time":1451879355044,"value"
+			:0.0}]}]},"chartStyle":"udLine","localeName":"测试状态量三"}]};
+	
+	var metricData  = ChartData.metricDatas;
+	fillMetricCharts(metricData);
+});
+</script>
+</head>
+<body>
+sad
+<div id="monitorData" class="monitor-body"></div>
+</body>
+</html>
