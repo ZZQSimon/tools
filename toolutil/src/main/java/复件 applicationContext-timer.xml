@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!--↓=============== job ==============↓-->
+	<!-- 实时变化表dao -->
+	<bean id="realChangeDao" class="com.poscard.express.sendSmsTimer.dao.impl.RealChangeDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<!-- 实时变化表service -->
+	<bean id="realChangeService" class="com.poscard.express.sendSmsTimer.service.impl.RealChangeServiceImpl">
+		<constructor-arg>
+			<ref bean="realChangeDao"/>
+		</constructor-arg>
+		
+	</bean>
+	
+	<!-- 发送短信service -->
+  	<bean  id="sendSmsTimerService"  class="com.poscard.express.sendSmsTimer.SendSmsTimerService">
+  		<property name="realChangeService" ref="realChangeService"/>
+  		<property name="pubParamService" ref="pubParamService"/>
+  		<property name="cardDao" ref="cardDao"/>
+  		<property name="personDao" ref="personDao"/>
+		<property name="tradeFlowDao" ref="tradeFlowDao"/>
+  	</bean>
+  	
+  	<!-- 发送短信action -->
+  	<bean  id="sendSmsManagerAction"  class="com.poscard.express.sendSmsTimer.actions.SendSmsManagerAction" scope="prototype">
+  		<property name="sendSmsTimerService" ref="sendSmsTimerService"/>
+  		<property name="pubParamService" ref="pubParamService"/>
+  		<property name="accountService" ref="accountService"/>
+  	</bean>
+  	
+  	<!-- 定时任务 -->
+	<bean id="sendSmsJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="sendSmsTimerService"></property>
+	    <property name="targetMethod" value="process_warn"></property>
+		<property name="concurrent" value="false"/>
+	</bean>    
+	<bean id="sendSmsTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+		<property name="jobDetail" ref="sendSmsJob" />
+		<property name="cronExpression" value="0/60 * * * * ?"/>
+	</bean>	
+  	<!--每分钟发送一条短信 
+  	<property name="cronExpression" value="0/60 * * * * ?"/> -->
+	<!--↓=============== job ==============↓-->
+	<!--日报计算-->
+	<bean id="dailyReportCountServiceJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="dailyReportCountService"></property>
+	    <property name="targetMethod" value="doCountDaily"></property>
+		<property name="concurrent" value="false"/>
+	</bean>    
+	<bean id="dailyReportCountServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+		<property name="jobDetail" ref="dailyReportCountServiceJob" />
+		<property name="cronExpression" value="0/60 * * * * ?"/>
+  	<!-- 
+		<property name="cronExpression" value="0 0/1 * * * ?"/>
+		每天 0:5 AM
+		<property name="cronExpression" value="0 5 0 * * ?"/>
+	-->
+	</bean>	
+	<!--月报计算-->
+	<bean id="monthReportCountServiceJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="monthReportCountService"></property>
+	    <property name="targetMethod" value="doCountMonth"></property>
+		<property name="concurrent" value="false"/>
+	</bean>    
+	<bean id="monthReportCountServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+		<property name="jobDetail" ref="monthReportCountServiceJob" />
+		<property name="cronExpression" value="0 5 2 1 * ?"/>
+  	<!-- 
+		<property name="cronExpression" value="0 0/2 * * * ?"/>
+		每月1号的 2:5 AM
+		<property name="cronExpression" value="0 5 2 1 * ?"/>
+	-->
+	</bean>	
+	<!-- 年报计算-->
+	<bean id="annualReportCountServiceJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="annualReportCountService"></property>
+	    <property name="targetMethod" value="doCountAnnual"></property>
+		<property name="concurrent" value="false"/>
+	</bean>    
+	<bean id="annualReportCountServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+		<property name="jobDetail" ref="annualReportCountServiceJob" />
+		<property name="cronExpression" value="0 5 3 1 1 ?"/>
+  	<!-- 
+		<property name="cronExpression" value="0 0/3 * * * ?"/>
+		每一个 1月1号的3:5 AM
+		<property name="cronExpression" value="0 5 3 1 1 ?"/>
+	-->
+	</bean>	
+  	<!--↑=============== job ==============↑-->  	
+  	
+	<bean id="schedulerFactory" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> 
+		<property name="triggers">
+			<list>
+			<!-- 日报 
+				<ref bean="dailyReportCountServiceTrigger" />-->
+			<!-- 月报 -->
+				<ref bean="monthReportCountServiceTrigger" />
+			<!-- 年报 -->
+				<ref bean="annualReportCountServiceTrigger" />
+			<!-- 短信提醒 (甘肃已经使用) -->
+				<ref bean="sendSmsTrigger" />
+			</list>
+		</property>
+	</bean>
+</beans>

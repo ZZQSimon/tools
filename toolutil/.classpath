@@ -28,5 +28,23 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="src/main/java/jar/json/json-1.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/json/jsonplugin-0.32.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/log4j/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/mysql/mysql-connector-java-5.0.0-beta-bin.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/oracle/ojdbc14.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/poi/poi-3.12-beta1-20150228.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/poi/poi-examples-3.12-beta1-20150228.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/poi/poi-excelant-3.12-beta1-20150228.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/poi/poi-ooxml-3.12-beta1-20150228.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/poi/poi-ooxml-schemas-3.12-beta1-20150228.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/poi/poi-scratchpad-3.12-beta1-20150228.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/poi/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/servlet/servlet-api-2.5-6.1.2rc0.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/sqlserver/msbase.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/sqlserver/mssqlserver.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/sqlserver/msutil.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/xml/jdom-2.0.6.jar"/>
+	<classpathentry kind="lib" path="src/main/java/jar/jxl/jxl.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

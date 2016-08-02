@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="ceiling_ht_sw_p">
+	<resource name="CEILING_HT_SW_T" category="basedevice" alias="天棚温湿度">  
+		<extendproperties>
+			<extendproperty name="orderNumber" value="3.0.2"/>
+		</extendproperties>
+		<plugin type="detector" class="com.neusoft.aplus.databus.modelbus.collector.ModelBusCollector"> 
+			<method name="Resources" resource="CEILING_HT_SW_T"/>
+		</plugin>
+		<plugin type="collector" class="com.neusoft.aplus.databus.modelbus.collector.ModelBusCollector">
+			<metric name="CEILING_HUMIDITY" unit="" configs="start=0,symbol=*,value=0.01" active="true"></metric>
+			<metric name="CEILING_TEMPERATURE" unit="" configs="start=1,symbol=*,value=0.01" active="true"></metric>
+		</plugin>
+	</resource>
+</plugin>
