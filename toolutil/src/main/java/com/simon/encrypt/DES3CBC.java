@@ -1,7 +1,7 @@
 /**
  * 
  */
-package crypto;
+package com.simon.encrypt;
 
 /**
  * @serial 2010-3-2 上午09:59:43

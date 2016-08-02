@@ -1,4 +1,4 @@
-package demo;
+package file;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,22 +10,24 @@ public class Filecopy {
 
 	/**
 	 * @param args
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		File f=new File("D:\\aa.txt");
-		File f1=new File("D:\\bb.txt");
+		File f = new File("D:\\aa.txt");
+		File f1 = new File("D:\\bb.txt");
+		FileInputStream i = new FileInputStream(f);
+		FileOutputStream o = new FileOutputStream(f1);
 		try {
-			FileInputStream i=new FileInputStream(f);
-			FileOutputStream o=new FileOutputStream(f1);
-			while(i.available()>0)
-			{
+			while (i.available() > 0) {
 				int b;
-				b=i.read();
-				o.write((char)b);
+				b = i.read();
+				o.write((char) b);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		}finally {
+			i.close();
+			o.close();
 		}
 	}
 

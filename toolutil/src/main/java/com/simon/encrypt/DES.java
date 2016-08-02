@@ -5,7 +5,7 @@
  * @serialData 2010-01-20  修改为兼用1.4和1.5虚拟机
  *  
  */
-package crypto;
+package com.simon.encrypt;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

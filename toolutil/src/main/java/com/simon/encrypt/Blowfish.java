@@ -12,7 +12,7 @@
  * Released under the Apache 2.0 license.
  */
 
-package crypto;
+package com.simon.encrypt;
 
 import java.security.MessageDigest;
 import java.util.Random;

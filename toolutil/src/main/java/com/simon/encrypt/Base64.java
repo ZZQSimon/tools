@@ -1,4 +1,4 @@
-package crypto;
+package com.simon.encrypt;
 
 /**
  * <p>

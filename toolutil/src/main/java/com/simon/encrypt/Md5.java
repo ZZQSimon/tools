@@ -1,7 +1,7 @@
 /*
  * author dwd
  */
-package crypto;
+package com.simon.encrypt;
 
 import java.security.*;
 
