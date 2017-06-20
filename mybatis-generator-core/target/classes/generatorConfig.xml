@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<!-- 使用方法: 1.配置 properties. 2.配置数据库驱动位置. 3.配置需要反向生成代码的表. 4.配置完成后,在项目目录test-maven下运行：mvn 
+		mybatis-generator:generate 5.生成的代码在：target/generated-sources/mybatis-generator目录下. -->
+	<properties resource="generatorConfig.properties" />
+	<classPathEntry
+		location="C:/Users/Simon/.m2/repository/mysql/mysql-connector-java/5.1.39/mysql-connector-java-5.1.39-sources.jar" />
+	<context id="mysql" targetRuntime="MyBatis3">
+		<commentGenerator>
+			<property name="suppressDate" value="false" />
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="${jdbc.url.gen}" userId="${jdbc.userid.gen}" password="${jdbc.pwd.gen}" />
+
+		<javaModelGenerator targetPackage="${gen.pkg.model}"
+			targetProject="${gen.targetproject}">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="${gen.pkg.mapper}"
+			targetProject="${gen.targetproject}">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator targetPackage="${gen.pkg.mapperxml}"
+			targetProject="${gen.targetproject}" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- <table tableName="b_account" domainObjectName="Account" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_appointment" domainObjectName="Appointment" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_article" domainObjectName="Article" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_collection" domainObjectName="Collection" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_discussion_group" domainObjectName="DiscussionGroup" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_doctor" domainObjectName="Doctor" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_doctor_schedule" domainObjectName="DoctorSchedule" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_drug" domainObjectName="Drug" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_drug_taking" domainObjectName="DrugTaking" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_health_record" domainObjectName="HealthRecord" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_medical_record" domainObjectName="MedicalRecord" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_medical_record_offline" domainObjectName="MedicalRecordOffline" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_pic" domainObjectName="Pic" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_pre_medical" domainObjectName="PreMedical" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_prescription" domainObjectName="Prescription" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_rates" domainObjectName="Rates" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_treatment_record" domainObjectName="TreatmentRecord" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="b_treatment_report" domainObjectName="TreatmentReport" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="dic_area" domainObjectName="Area" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="dic_city" domainObjectName="City" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="dic_department" domainObjectName="Department" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="dic_province" domainObjectName="Province" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="dic_zhnation" domainObjectName="Nation" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="rel_participant" domainObjectName="RelParticipant" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="sys_dictionary" domainObjectName="Dictionary" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<table tableName="sys_icon" domainObjectName="Icon"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+		<!-- <table tableName="sys_log" domainObjectName="Log" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="sys_res" domainObjectName="Res" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="sys_role" domainObjectName="Role" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+		<!-- <table tableName="sys_user" domainObjectName="User" -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" -->
+		<!-- enableDeleteByExample="false" enableSelectByExample="false" -->
+		<!-- selectByExampleQueryId="false"></table> -->
+
+	</context>
+</generatorConfiguration>
