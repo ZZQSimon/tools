@@ -3,7 +3,7 @@ package cn.com.easyerp.framework.i18n;
 /**
  * 请引用下面常量时，根据注释中的旧key查找，并核对一下国际化内容后再使用。
  */
-public interface I18NConstants {
+public interface I18N {
 
     public String SUCCESS = "success";
     public String FAILED = "failed";
