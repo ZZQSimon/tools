@@ -117,8 +117,8 @@ public class InsertSelectiveElementGenerator extends
             sb.setLength(0);
 //            sb.append(introspectedColumn.getJavaProperty());
 //            sb.append(" != null"); //$NON-NLS-1$
-          //@com.zxzl.service.common.framework.util.Ognl@isNotEmpty(userId)
-            sb.append("@com.zxzl.service.common.framework.util.Ognl@isNotEmpty("); //$NON-NLS-1$
+          //@com.zxzl.service.Common.framework.util.Ognl@isNotEmpty(userId)
+            sb.append("@com.zxzl.service.Common.framework.util.Ognl@isNotEmpty("); //$NON-NLS-1$
             sb.append(introspectedColumn.getJavaProperty());
             sb.append(")"); //$NON-NLS-1$
             insertNotNullElement.addAttribute(new Attribute(
@@ -135,8 +135,8 @@ public class InsertSelectiveElementGenerator extends
             sb.setLength(0);
 //            sb.append(introspectedColumn.getJavaProperty());
 //            sb.append(" != null"); //$NON-NLS-1$
-          //@com.zxzl.service.common.framework.util.Ognl@isNotEmpty(userId)
-            sb.append("@com.zxzl.service.common.framework.util.Ognl@isNotEmpty("); //$NON-NLS-1$
+          //@com.zxzl.service.Common.framework.util.Ognl@isNotEmpty(userId)
+            sb.append("@com.zxzl.service.Common.framework.util.Ognl@isNotEmpty("); //$NON-NLS-1$
             sb.append(introspectedColumn.getJavaProperty());
             sb.append(")"); //$NON-NLS-1$
             valuesNotNullElement.addAttribute(new Attribute(

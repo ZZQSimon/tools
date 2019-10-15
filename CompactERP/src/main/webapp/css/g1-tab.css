@@ -1,0 +1,2175 @@
+.clearfix:after {
+  display: block;
+  clear: both;
+  content: "";
+  visibility: hidden;
+  height: 0;
+}
+.grey-background {
+  background-image: -moz-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+  background-image: -webkit-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+  background-image: -ms-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+}
+.deploy-input {
+  box-shadow: none;
+  border: 1px solid #E6E6E6;
+}
+.deploy-input:focus {
+  border: 1px solid #60B9E0;
+  -webkit-box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.3), 0 -2px 2px 0px rgba(96, 185, 224, 0.3), 0 2px 2px 0px rgba(96, 185, 224, 0.3), 2px 0 2px 0px rgba(96, 185, 224, 0.3);
+  -moz-box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.3), 0 -2px 2px 0px rgba(96, 185, 224, 0.3), 0 2px 2px 0px rgba(96, 185, 224, 0.3), 2px 0 2px 0px rgba(96, 185, 224, 0.3);
+  box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.3), 0 -2px 2px 0px rgba(96, 185, 224, 0.3), 0 2px 2px 0px rgba(96, 185, 224, 0.3), 2px 0 2px 0px rgba(96, 185, 224, 0.3);
+}
+:not(input[type=button]):focus,
+:not(input[type=radio]):focus,
+:not(input[type=checkbox]):focus {
+  border: 0.5px solid #60B9E0;
+  -webkit-box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.2), 0 -2px 2px 0px rgba(96, 185, 224, 0.2), 0 2px 2px 0px rgba(96, 185, 224, 0.2), 2px 0 2px 0px rgba(96, 185, 224, 0.2);
+  -moz-box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.2), 0 -2px 2px 0px rgba(96, 185, 224, 0.2), 0 2px 2px 0px rgba(96, 185, 224, 0.2), 2px 0 2px 0px rgba(96, 185, 224, 0.2);
+  box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.2), 0 -2px 2px 0px rgba(96, 185, 224, 0.2), 0 2px 2px 0px rgba(96, 185, 224, 0.2), 2px 0 2px 0px rgba(96, 185, 224, 0.2);
+}
+input,
+select,
+textarea {
+  height: 30px;
+  font-size: 12px;
+  border-radius: 3px;
+  outline: none;
+  box-shadow: none;
+  border: 1px solid #E6E6E6;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border: 1px solid #60B9E0;
+  -webkit-box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.3), 0 -2px 2px 0px rgba(96, 185, 224, 0.3), 0 2px 2px 0px rgba(96, 185, 224, 0.3), 2px 0 2px 0px rgba(96, 185, 224, 0.3);
+  -moz-box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.3), 0 -2px 2px 0px rgba(96, 185, 224, 0.3), 0 2px 2px 0px rgba(96, 185, 224, 0.3), 2px 0 2px 0px rgba(96, 185, 224, 0.3);
+  box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.3), 0 -2px 2px 0px rgba(96, 185, 224, 0.3), 0 2px 2px 0px rgba(96, 185, 224, 0.3), 2px 0 2px 0px rgba(96, 185, 224, 0.3);
+}
+input:disabled:focus,
+select:disabled:focus,
+textarea:disabled:focus,
+input:read-only:focus,
+select:read-only:focus,
+textarea:read-only:focus {
+  border-color: #E6E6E6;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+input[type=checkbox],
+input[type=radio] {
+  height: auto;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+input[type=button] {
+  border: none;
+  outline: none;
+}
+input[type=button]:focus {
+  border: 1px solid #e6e6e6 !important;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.deploy-border {
+  border: 1px solid #dadada;
+}
+.dx-modal-md .modal-dialog {
+  width: 355px;
+}
+.dx-modal-md .modal-content {
+  border-radius: 4px;
+  padding: 0 10px;
+}
+.dx-modal-md .modal-footer button {
+  padding: 5px 15px;
+}
+.modal .modal-header,
+.modal .modal-footer {
+  border: none;
+}
+.button-blue-font {
+  line-height: 20px;
+  margin: 0 10px;
+  color: #60B9E0;
+  background: none;
+}
+.button-blue-font:hover {
+  color: #81cbeb;
+}
+.button-red-font {
+  line-height: 20px;
+  margin: 0 10px;
+  color: #DC3535;
+  background: none;
+}
+.button-red-font:hover {
+  color: #e87676;
+}
+.addApproverUser,
+.authgroupadd {
+  line-height: 20px;
+  margin: 0 10px;
+  color: #60B9E0;
+  background: none;
+  display: inline-block;
+  padding: 0 0 0 18px;
+  margin: 20px 0 0 0;
+}
+.addApproverUser:hover,
+.authgroupadd:hover {
+  color: #81cbeb;
+}
+.approve-event-form .approve-event-work {
+  display: none;
+}
+.approve-event-form .approve-event-add-wrap {
+  padding-top: 10px;
+  border-top: 1px dashed #E6E6E6;
+}
+.approve-event-form .approve-event-add-wrap h4 {
+  line-height: 26px;
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  color: #333333;
+}
+.approve-event-form .event-detail-wrap h4 {
+  line-height: 22px;
+  margin: 0;
+}
+.approve-event-form .approve-event-btns {
+  font-size: 0;
+}
+.approve-event-form .approve-event-btns button {
+  margin-left: 10px;
+}
+.modal.approve-event-modal .modal-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4D4D4D;
+}
+.modal.approve-event-modal .form-group {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.modal.approve-event-modal .form-group label {
+  line-height: 20px;
+}
+.modal.approve-event-modal .form-group .informEvent label {
+  margin-right: 20px;
+}
+.modal.approve-event-modal .deploy-data-rule-item {
+  height: 250px;
+  margin: 0;
+}
+.modal.approve-event-modal .deploy-data-rule-item .tab-content {
+  position: static;
+  height: 100%;
+  top: 0;
+}
+.modal.approve-event-modal .modal-footer button {
+  margin-top: 0;
+}
+.event-detail-wrap {
+  padding: 5px 10px;
+  line-height: 22px;
+  background: #F2F2F2;
+  border-radius: 4px;
+}
+.event-detail-wrap .event-detail-tip {
+  float: left;
+  margin-right: 10px;
+  color: #999999;
+}
+.btn-hover-active:active,
+.btn-hover-active.active {
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-hover-active:hover {
+  border-color: #adadad;
+}
+.map-body {
+  height: 100%;
+}
+.map-body .map {
+  height: 100%;
+  position: relative;
+}
+.map-body .map .search {
+  padding: 5px;
+  position: absolute;
+  z-index: 5;
+  left: 15px;
+  top: 20px;
+  font-size: 0;
+}
+.map-body .map .search input {
+  height: 30px;
+  width: 220px;
+  padding: 5px;
+  border: none;
+  line-height: 20px;
+  float: left;
+  box-shadow: inset 0px -1px 0px 0px rgba(230, 230, 230, 0.004);
+}
+.map-body .map .search button {
+  width: 35px;
+  height: 30px;
+  font-size: 20px;
+  border: none;
+  color: white;
+  background: #3988fb;
+}
+.map-body .map #dxaddrmap {
+  width: 100%;
+  height: 100%;
+}
+.map-body .address {
+  height: 100%;
+  padding: 0;
+  border-left: 1px solid #e6e6e6;
+  position: relative;
+}
+.map-body .address .addr-head {
+  height: 36px;
+  padding-left: 15px;
+  background-image: -moz-linear-gradient(90deg, #e7e7e7 0%, #f7f7f7 100%);
+  background-image: -webkit-linear-gradient(90deg, #e7e7e7 0%, #f7f7f7 100%);
+  background-image: -ms-linear-gradient(90deg, #e7e7e7 0%, #f7f7f7 100%);
+  box-shadow: inset 0px -1px 0px 0px rgba(230, 230, 230, 0.004);
+  font-size: 13px;
+  color: #333333;
+  line-height: 36px;
+}
+.map-body .address ul li {
+  height: 55px;
+  border-bottom: 1px solid #e6e6e6;
+}
+.map-body .address ul li:hover {
+  background: #F8F8F8;
+}
+.map-body .address ul li .icheckbox_flat-blue {
+  margin-top: 15px;
+}
+.map-body .address ul li > div {
+  float: left;
+  margin-left: 15px;
+  font-size: 12px;
+}
+.map-body .address ul li > div span {
+  display: block;
+  color: #4D4D4D;
+  line-height: 30px;
+  font-size: 12px;
+}
+.map-body .address ul li > div p {
+  color: #999999;
+  font-size: 12px;
+  line-height: 1;
+}
+.map-body .address .addr-btn {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: 40px;
+  padding: 0 20px;
+  line-height: 39px;
+  background-color: #f9f9f9;
+  box-shadow: inset 0px 1px 0px 0px rgba(230, 230, 230, 0.004);
+  border-top: 1px solid #e6e6e6;
+}
+.map-body .address .addr-btn button {
+  margin-right: 10px;
+  padding: 0 5px;
+  border: 1px solid #e6e6e6;
+  line-height: 20px;
+  border-radius: 3px;
+  color: #666666;
+  background-image: -moz-linear-gradient(90deg, #ededed 0%, #f9f9f9 100%);
+  background-image: -webkit-linear-gradient(90deg, #ededed 0%, #f9f9f9 100%);
+  background-image: -ms-linear-gradient(90deg, #ededed 0%, #f9f9f9 100%);
+}
+.pc-setDayCal .select-box {
+  padding: 0 20px 10px;
+}
+.pc-setDayCal .select-box .work-day-wrap {
+  padding: 10px 0;
+  font-size: 0;
+}
+.pc-setDayCal .select-box span,
+.pc-setDayCal .select-box label {
+  display: inline-block;
+  width: 12.5%;
+  line-height: 20px;
+}
+.fc .fc-toolbar.fc-header-toolbar {
+  padding: 7px 0;
+  margin: 0;
+  font-size: 14px;
+}
+.fc .fc-toolbar.fc-header-toolbar .fc-icon {
+  color: #E6E6E6;
+}
+.fc .fc-toolbar.fc-header-toolbar .fc-header-title {
+  margin: 0;
+}
+.fc .fc-toolbar.fc-header-toolbar select {
+  height: 20px;
+  padding: 0;
+  margin: 0 5px;
+  background: white;
+}
+.fc .fc-toolbar.fc-header-toolbar select:active,
+.fc .fc-toolbar.fc-header-toolbar select.active {
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.fc .fc-toolbar.fc-header-toolbar select:hover {
+  border-color: #adadad;
+}
+.fc .fc-toolbar.fc-header-toolbar button {
+  height: 20px;
+  padding: 0 10px;
+  margin: 0 5px;
+  background: white;
+  border: 1px solid #E6E6E6;
+  border-radius: 3px;
+  box-shadow: none;
+}
+.fc .fc-toolbar.fc-header-toolbar button:active,
+.fc .fc-toolbar.fc-header-toolbar button.active {
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.fc .fc-toolbar.fc-header-toolbar button:hover {
+  border-color: #adadad;
+}
+.fc .fc-toolbar.fc-header-toolbar .fc-prev-button,
+.fc .fc-toolbar.fc-header-toolbar .fc-next-button {
+  padding: 0;
+}
+.fc th {
+  line-height: 30px;
+}
+.fc .fc-day.rest {
+  background: #F8F8F8;
+}
+.pc-calendar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  margin: 0 auto;
+}
+.pc-calendar.pc-calendar-workday {
+  top: 45px;
+}
+.pc-calendar.pc-calendar-event,
+.pc-calendar .appoint-right-body {
+  bottom: -40px;
+}
+.pc-calendar.pc-calendar-event .fc-header-toolbar,
+.pc-calendar.pc-calendar-appoint .fc-header-toolbar {
+  padding: 10px 0;
+  position: absolute;
+  right: 10px;
+  top: -40px;
+}
+.pc-calendar.pc-calendar-event .fc-event .fc-content,
+.pc-calendar.pc-calendar-appoint .fc-event .fc-content {
+  color: white;
+}
+.pc-calendar.pc-calendar-event .fc-event.pcWhiteBg .fc-content,
+.pc-calendar.pc-calendar-appoint .fc-event.pcWhiteBg .fc-content {
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+  color: #323131;
+}
+.pc-calendar.pc-calendar-appoint .deploy-left-menu .jstree {
+  width: 100%;
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+}
+.pc-calendar.pc-calendar-appoint .appoint-right-wrap {
+  position: relative;
+  height: 100%;
+}
+.pc-calendar.pc-calendar-appoint .appoint-right-wrap.dx-field-7 .fc-header-toolbar {
+  right: -40.8%;
+}
+.pc-calendar.pc-calendar-appoint .appoint-right-body {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: -40px;
+}
+.pc-calendar.pc-calendar-appoint .appointment-detail-view {
+  height: 100%;
+}
+.datagrid {
+  border: none;
+  color: #4D4D4D;
+}
+.datagrid .datagrid-editable-input {
+  color: #4D4D4D;
+}
+.datagrid .datagrid-header-check,
+.datagrid .datagrid-cell-check {
+  height: auto;
+  width: 40px;
+}
+.datagrid .datagrid-body {
+  position: relative;
+}
+.datagrid .datagrid-body .datagrid-row {
+  height: 30px;
+  color: #4D4D4D;
+}
+.datagrid .datagrid-body .dx-datagrid-select-group {
+  padding: 0 10px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #A0D5EC;
+}
+.datagrid .datagrid-body .dx-datagrid-select-group li {
+  padding: 0 5px;
+  display: inline-block;
+  line-height: 28px;
+}
+.datagrid .datagrid-cell {
+  padding: 0 13px;
+}
+.datagrid .datagrid-header-rownumber {
+  height: 32px;
+}
+.datagrid .datagrid-row-alt {
+  background: #fafafa;
+}
+.datagrid .combo-arrow {
+  background: url(../img/dx-tree.png) no-repeat -9px -70px;
+}
+.datagrid .datagrid-header {
+  background: #f8f8f8;
+  border-bottom: 1px solid #e6e6e6;
+}
+.datagrid .datagrid-header .datagrid-cell {
+  color: #1a1a1a;
+  line-height: 35px;
+}
+.datagrid .datagrid-header td,
+.datagrid .datagrid-body td,
+.datagrid .datagrid-footer td {
+  border-style: solid;
+}
+.datagrid .datagrid-header td,
+.datagrid .datagrid-body td,
+.datagrid .datagrid-footer td {
+  border-color: #dadada;
+}
+.datagrid .rowChange {
+  color: red;
+}
+.datagrid .input-bt-Switcher-wrap {
+  width: 100%;
+  height: 20px;
+  padding-top: 0;
+  text-align: center;
+}
+.datagrid .g1-internation-input {
+  width: 100%;
+}
+.datagrid .g1-dropdown .dropdown-menu {
+  width: 150px;
+  min-width: 150px;
+}
+.combobox-item {
+  min-height: 20px;
+}
+.combobox-item.combobox-item-selected {
+  background: #A0D5EC;
+}
+.combobox-item.combobox-item-hover {
+  background: #D3EBF6;
+}
+.dx-menu-bar select {
+  height: 20px;
+  line-height: 20px;
+  border-radius: 4px;
+  padding: 0 10px;
+  margin: 0 5px;
+  border: 1px solid #e6e6e6;
+}
+.grid-toolbar a,
+.grid-toolbar button {
+  height: 20px;
+  line-height: 20px;
+  border-radius: 2px;
+  padding: 0px 10px;
+  margin: 0 5px;
+  color: black;
+  background-color: #fafafa;
+  border: 1px solid #e6e6e6;
+}
+.combo-p .panel-body {
+  padding: 0;
+}
+.dropup .dropdown-menu {
+  padding: 10px;
+  min-width: 200px;
+}
+.dropup .dropdown-menu label {
+  height: 30px;
+}
+.dropup .dropdown-menu input {
+  height: 30px;
+  padding: 5px;
+  border-radius: 3px;
+}
+.report-item-wrap {
+  padding: 10px 15px;
+}
+.report-item-wrap .report-item {
+  width: 100%;
+  height: 98px;
+  position: relative;
+  padding: 15px;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 2px 6px rgba(34, 34, 35, 0.1);
+  box-shadow: 0 2px 6px rgba(34, 34, 35, 0.1);
+  cursor: pointer;
+}
+.report-item-wrap .report-item span.chart-pic {
+  display: block;
+  float: left;
+  width: 60px;
+  height: 60px;
+  margin-top: 5px;
+  background: url(../img/deploy-chart.png) no-repeat;
+}
+.report-item-wrap .report-item span.chart-pic.chart-pie {
+  background-position: -12px -5px;
+  background-size: 700px;
+}
+.report-item-wrap .report-item span.chart-pic.chart-line {
+  background-position: -93px -6px;
+  background-size: 740px;
+}
+.report-item-wrap .report-item span.chart-pic.chart-bar {
+  background-position: -153px 0px;
+  background-size: 680px;
+}
+.report-item-wrap .report-item span.chart-pic.chart-process {
+  background-position: -247px -5px;
+  background-size: 740px;
+}
+.report-item-wrap .report-item span.chart-pic.chart-word {
+  background-position: -291px -5px;
+  background-size: 580px;
+}
+.report-item-wrap .report-item span.chart-pic.chart-pdf {
+  background-position: -360px -4px;
+  background-size: 660px;
+}
+.report-item-wrap .report-item span.chart-pic.chart-xlsx {
+  background-position: -452px -5px;
+  background-size: 680px;
+}
+.report-item-wrap .report-item span.chart-pic.chart-radar {
+  background-position: -637px -7px;
+  background-size: 720px;
+}
+.report-item-wrap .report-item span.chart-pic.chart-funnel {
+  background-position: -524px -5px;
+  background-size: 680px;
+}
+.report-item-wrap .report-item img {
+  display: none;
+  float: left;
+  height: 45px;
+  margin-right: 20px;
+}
+.report-item-wrap .report-item p {
+  position: absolute;
+  top: 50%;
+  left: 90px;
+  right: 10px;
+  -webkit-transform: translate(0%, -50%);
+  -ms-transform: translate(0%, -50%);
+  transform: translate(0%, -50%);
+  line-height: 15px;
+  word-wrap: break-word;
+  word-break: break-all;
+  color: #333333;
+  font-size: 13px;
+}
+.report-item-wrap .report-item:hover {
+  -webkit-box-shadow: 0 3px 12px rgba(34, 34, 35, 0.3);
+  box-shadow: 0 3px 12px rgba(34, 34, 35, 0.3);
+}
+.report-item-wrap .to-be-selected {
+  -webkit-box-shadow: 0 3px 12px rgba(34, 34, 35, 0.3);
+  box-shadow: 0 3px 12px rgba(34, 34, 35, 0.3);
+}
+.empty-form,
+.empty-tab-form {
+  position: relative;
+  height: 100%;
+  display: block;
+  background: url(../img/empty.png) no-repeat center 40%;
+  background-size: 150px;
+}
+.empty-form p,
+.empty-tab-form p {
+  width: 100%;
+  position: absolute;
+  top: 56%;
+  text-align: center;
+  color: #ccc;
+  font-size: 14px;
+  line-height: 30px;
+}
+.deploy-render-color .label-1 {
+  width: 120px;
+}
+.deploy-render-color .input-1 {
+  height: 30px;
+  width: 250px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+}
+.deploy-render-color .evo-cp-wrap {
+  position: relative;
+  width: auto !important;
+  float: left;
+}
+.deploy-render-color .evo-cp-wrap .evo-colorind {
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  border-color: #E6E6E6;
+}
+.deploy-render-color .evo-cp-wrap .evo-pop {
+  width: 250px;
+  top: 30px;
+}
+.deploy-render-color .evo-cp-wrap .evo-pop .evo-palette {
+  margin: 0 auto;
+}
+.deploy-render-color .evo-cp-wrap .evo-pop .ui-widget-content {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.deploy-render-color .evo-cp-wrap .evo-pointer.evo-colorind {
+  border-radius: 2px;
+}
+.deploy-render-color .demo-font {
+  line-height: 28px;
+  text-align: center;
+  border: 1px solid #E6E6E6;
+}
+.deploy-render-color .font-style {
+  width: auto;
+  border: 1px solid #E6E6E6;
+}
+.deploy-render-color .font-style span {
+  display: inline-block;
+  width: 80px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+}
+.deploy-render-color .font-style span.isActive {
+  color: white;
+  background: #60B9E0;
+}
+.deploy-render-color .font-style .font-style-italic {
+  font-style: italic;
+}
+.deploy-render-color .font-style .font-style-bold {
+  font-weight: bold;
+}
+.prod-param {
+  display: inline-block;
+  width: 87%;
+  height: 100px;
+  padding: 15px 0;
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.prod-param .prod-column {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 10px 0 0;
+}
+.prod-param .prod-column span {
+  display: inline-block;
+  line-height: 14px;
+  padding: 5px 15px;
+  height: 24px;
+  margin-bottom: 10px;
+  color: white;
+  border-radius: 12px;
+}
+.prod-param .column-name {
+  background: #A0D5EC;
+}
+.prod-param .column-label {
+  background: #70BEE0;
+}
+.rowContent {
+  height: 100%;
+  padding-top: 40px;
+}
+.rowContentTop {
+  position: absolute;
+  width: 100%;
+}
+.deploy-left-tree-delete {
+  display: none;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 35px;
+  border-top: 1px solid #dadada;
+  text-align: center;
+  background-color: #ffffff;
+  box-shadow: inset 0px 1px 0px 0px rgba(216, 216, 216, 0.004);
+}
+.deploy-left-tree-delete .btn {
+  width: 100%;
+  line-height: 34px;
+  font-size: 14px;
+  color: #b2b2b2;
+  background: none;
+}
+.deploy-main-table-data {
+  position: relative;
+  height: 100%;
+  padding: 0;
+}
+.deploy-main-table-data .deploy-tab-pane {
+  height: 100%;
+  padding-top: 36px;
+}
+.deploy-main-table-data .datagrid-foot {
+  width: 100%;
+  height: 35px;
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #dadada;
+}
+.deploy-main-table-data .datagrid-foot button {
+  height: 20px;
+  width: 50px;
+  padding: 0 3px;
+  margin: 5px 0 0 10px;
+  line-height: 18px;
+  color: #666666;
+  border-radius: 3px;
+  border: 1px solid #dadada;
+  background-image: -moz-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+  background-image: -webkit-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+  background-image: -ms-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+}
+.deploy-main-table-data .deploy-table-grid,
+.deploy-main-table-data .deploy-url-table-grid {
+  height: 100%;
+  padding-top: 36px;
+}
+.deploy-main-table-data .deploy-table-grid .data-origin,
+.deploy-main-table-data .deploy-url-table-grid .data-origin,
+.deploy-main-table-data .deploy-table-grid .interface,
+.deploy-main-table-data .deploy-url-table-grid .interface {
+  padding: 15px;
+}
+.deploy-main-table-data .deploy-table-grid .data-origin p,
+.deploy-main-table-data .deploy-url-table-grid .data-origin p,
+.deploy-main-table-data .deploy-table-grid .interface p,
+.deploy-main-table-data .deploy-url-table-grid .interface p {
+  padding: 5px 0 15px 0;
+  color: #333333;
+  font-weight: 600;
+}
+.deploy-main-table-data .deploy-table-grid .tab-pane,
+.deploy-main-table-data .deploy-url-table-grid .tab-pane {
+  height: 100%;
+  overflow: auto;
+}
+.deploy-main-table-data .deploy-table-grid .tab-pane .data-rule-item .deploy-action-item,
+.deploy-main-table-data .deploy-url-table-grid .tab-pane .data-rule-item .deploy-action-item {
+  line-height: 25px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.deploy-main-table-data .deploy-table-grid .tab-pane .data-rule-item .deploy-action-item .deploy-action-item-remove,
+.deploy-main-table-data .deploy-url-table-grid .tab-pane .data-rule-item .deploy-action-item .deploy-action-item-remove {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  float: right;
+  margin: 4px 0 0 0;
+  background: url(../img/deploy.png) no-repeat -160px -3px;
+  background-size: 180px;
+}
+.deploy-main-table-data .deploy-table-grid .deploy-column-wrap .column-detail-tab,
+.deploy-main-table-data .deploy-url-table-grid .deploy-column-wrap .column-detail-tab {
+  width: 35%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+.deploy-main-table-data .deploy-table-grid .deploy-column-wrap .column-detail-tab .deploy-tab-ul a,
+.deploy-main-table-data .deploy-url-table-grid .deploy-column-wrap .column-detail-tab .deploy-tab-ul a {
+  padding-right: 5px;
+  padding-left: 5px;
+  font-size: 12px;
+}
+.deploy-main-table-data .deploy-table-grid .deploy-column-wrap .column-detail-tab .tab-content,
+.deploy-main-table-data .deploy-url-table-grid .deploy-column-wrap .column-detail-tab .tab-content {
+  height: 100%;
+  padding-top: 36px;
+}
+.deploy-main-table-data .deploy-table-grid .deploy-column-wrap .column-detail-tab .tab-content .tab-pane,
+.deploy-main-table-data .deploy-url-table-grid .deploy-column-wrap .column-detail-tab .tab-content .tab-pane {
+  padding-top: 15px;
+}
+.deploy-main-table-data .deploy-table-grid .deploy-column-wrap .column-detail-tab .form-group,
+.deploy-main-table-data .deploy-url-table-grid .deploy-column-wrap .column-detail-tab .form-group {
+  padding: 0 10px 0 0;
+}
+.deploy-main-table-data .deploy-table-grid .deploy-column-wrap .deploy-column-grid,
+.deploy-main-table-data .deploy-url-table-grid .deploy-column-wrap .deploy-column-grid {
+  width: 65%;
+  height: 100%;
+  padding: 0 0 35px 0;
+  border-right: 1px solid #dadada;
+}
+.deploy-main-table-data .tab-pane {
+  height: 100%;
+  overflow: auto;
+}
+.deploy-main-table-data .taskPanelTitle {
+  line-height: 20px;
+  margin: 20px 0 15px;
+}
+.deploy-main-table-data .taskPanel {
+  height: 280px;
+  padding: 20px 20px 15px 10px;
+  background: #FAFAFA;
+  border: 1px solid #e6e6e6;
+  border-radius: 3px;
+}
+.deploy-main-table-data .taskPanel textarea {
+  height: 60px;
+}
+.deploy-main-table-data .taskPanel .icheckbox {
+  position: absolute;
+  top: 5px;
+  left: 0px;
+}
+.deploy-main-table-data .taskPanel .form-group-two input,
+.deploy-main-table-data .taskPanel .form-group-two select {
+  width: 48%;
+}
+.deploy-tab-ul {
+  width: 100%;
+  position: absolute;
+  padding: 0;
+  font-size: 0;
+  border-bottom: 1px solid #dadada;
+}
+.deploy-tab-ul li {
+  display: inline-block;
+}
+.deploy-tab-ul li a {
+  padding: 10px;
+  line-height: 13px;
+  font-size: 13px;
+  color: #B3B3B3;
+}
+.deploy-tab-ul li a:hover {
+  border-bottom: 2px solid #eee;
+}
+.deploy-tab-ul li.active a,
+.deploy-tab-ul li.active a:hover {
+  color: #60B9E0;
+  background: none;
+  border-bottom: 2px solid #60B9E0;
+}
+.deploy-data-rule-item {
+  position: relative;
+  border: 1px solid #e6e6e6;
+  margin-bottom: 20px;
+}
+.deploy-data-rule-item .tab-content {
+  height: 356px;
+  padding-top: 36px;
+}
+.deploy-data-rule-item .deploy-tab-ul a {
+  font-size: 12px;
+}
+.deploy-data-rule-item .deploy-data-rule-item-warp {
+  height: 100%;
+  padding-bottom: 35px;
+}
+.deploy-left-menu {
+  position: relative;
+  height: 100%;
+  border-right: 1px solid #e6e6e6;
+  background: #F8F8F8;
+}
+.deploy-left-menu .search {
+  margin: 5px;
+}
+.deploy-left-menu .search input {
+  width: 100%;
+  padding: 5px 0 5px 20px;
+  background: white url(../img/deploy.png) no-repeat -180px -27px;
+  box-shadow: none;
+  border: 1px solid #E6E6E6;
+}
+.deploy-left-menu .search input:focus {
+  border: 1px solid #60B9E0;
+  -webkit-box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.3), 0 -2px 2px 0px rgba(96, 185, 224, 0.3), 0 2px 2px 0px rgba(96, 185, 224, 0.3), 2px 0 2px 0px rgba(96, 185, 224, 0.3);
+  -moz-box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.3), 0 -2px 2px 0px rgba(96, 185, 224, 0.3), 0 2px 2px 0px rgba(96, 185, 224, 0.3), 2px 0 2px 0px rgba(96, 185, 224, 0.3);
+  box-shadow: -2px 0 2px 0px rgba(96, 185, 224, 0.3), 0 -2px 2px 0px rgba(96, 185, 224, 0.3), 0 2px 2px 0px rgba(96, 185, 224, 0.3), 2px 0 2px 0px rgba(96, 185, 224, 0.3);
+}
+.deploy-left-menu .item span {
+  display: block;
+  padding-left: 10px;
+  line-height: 30px;
+}
+.deploy-left-menu .item span.active {
+  color: #65BDE3;
+  background: #DFEFF7;
+  border-right: 2px solid #65BDE3;
+}
+.deploy-left-menu .item span.change {
+  color: #cd1b1b;
+}
+.deploy-left-menu .menuItemWrap {
+  width: 100%;
+  position: absolute;
+  top: 38px;
+  bottom: 0;
+  padding: 0 0 35px 0;
+}
+.deploy-left-menu .menuItemWrap span {
+  cursor: pointer;
+}
+.deploy-left-menu .dropup {
+  width: 100%;
+  padding: 5px 10px 4px;
+  position: absolute;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid #dadada;
+}
+.deploy-left-menu .dropup .dropdown-menu {
+  bottom: 250%;
+}
+button.parameterInput {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 28px;
+  height: 30px;
+  border-radius: 3px;
+  border: 1px solid #dadada;
+  background: url(../img/deploy.png) no-repeat -41px -100px !important;
+  background-size: 140px !important;
+}
+form[name="checkWork"] .checkWorkCalwrap {
+  height: 100%;
+  padding-bottom: 30px;
+}
+form[name="checkWork"] .checkWorkCal {
+  height: 100%;
+}
+form[name="checkWork"] .checkWorkCal .a-loss .fc-content:before,
+form[name="checkWork"] .checkWorkCal .a-early .fc-content:before,
+form[name="checkWork"] .checkWorkCal .a-common .fc-content:before,
+form[name="checkWork"] .checkWorkCal .b-loss .fc-content:before,
+form[name="checkWork"] .checkWorkCal .b-early .fc-content:before,
+form[name="checkWork"] .checkWorkCal .b-common .fc-content:before {
+  content: "";
+  display: inline-block;
+  position: relative;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #5ec1ec;
+}
+form[name="checkWork"] .checkWorkCal .a-loss .fc-content:before,
+form[name="checkWork"] .checkWorkCal .b-loss .fc-content:before {
+  background: #cb3a21;
+}
+form[name="checkWork"] .checkWorkCal .a-early .fc-content:before,
+form[name="checkWork"] .checkWorkCal .b-early .fc-content:before {
+  background: #eca85e;
+}
+form[name="checkWork"] .checkWorkfooter {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+}
+form[name="checkWork"] .checkWorkfooter > div {
+  display: inline-block;
+  margin: 0 15px;
+  line-height: 30px;
+  color: #4d4d4d;
+}
+form[name="checkWork"] .checkWorkfooter > div .foot-dots {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  vertical-align: middle;
+  margin: -3px 5px 0 0;
+  border-radius: 50%;
+  background: #5ec1ec;
+}
+form[name="checkWork"] .checkWorkfooter > div.foot-early .foot-dots {
+  background: #eca85e;
+}
+form[name="checkWork"] .checkWorkfooter > div.foot-loss .foot-dots {
+  background: #cb3a21;
+}
+form[name="postInfo"] {
+  padding: 20px;
+}
+form[name="postInfo"] .jobHead h3 {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+}
+form[name="postInfo"] .jobHead .item {
+  display: inline-block;
+  position: relative;
+  padding: 0 20px 0 5px;
+  margin: 0 20px 5px 0;
+  line-height: 20px;
+  border: 1px solid #e6e6e6;
+  border-radius: 2px;
+  background-color: #f8f8f8;
+}
+form[name="postInfo"] .jobHead .item .jobclose {
+  display: block;
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  width: 12px;
+  height: 12px;
+  line-height: 11px;
+  text-align: center;
+  font-size: 12px;
+  color: white;
+  border-radius: 50%;
+  background-color: #b2b2b2;
+  cursor: pointer;
+}
+form[name="postInfo"] .jobHead .jobHeadList {
+  min-height: 80px;
+}
+form[name="postInfo"] .jobHead .dropdown {
+  margin: 0 0 10px 0;
+}
+form[name="postInfo"] .corpJobBd .col-xs-6 {
+  padding: 0;
+}
+form[name="postInfo"] .corpJobBd .col-xs-6:first-child {
+  padding-right: 15px;
+}
+form[name="postInfo"] .corpJobBd .corpJobPosi,
+form[name="postInfo"] .corpJobBd .corpJobFun {
+  position: relative;
+  border: 1px solid #e6e6e6;
+}
+form[name="postInfo"] .corpJobBd .jobTitle {
+  padding-left: 15px;
+  line-height: 30px;
+  background-image: -moz-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+  background-image: -webkit-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+  background-image: -ms-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+}
+form[name="postInfo"] .corpJobBd .jobList {
+  height: 250px;
+  padding-top: 15px;
+}
+form[name="postInfo"] .corpJobBd .jobList > div {
+  margin-bottom: 10px;
+}
+form[name="postInfo"] .corpJobBd .jobList label {
+  line-height: 20px;
+}
+form[name="postInfo"] .corpJobBd .jobFooter {
+  width: 100%;
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  background-color: #f5f5f5;
+}
+form[name="postInfo"] .corpJobBd .jobFooter button {
+  line-height: 30px;
+  padding: 0 15px;
+  color: #60b9e0;
+  border: none;
+  background: none;
+}
+form[name="importDeploy"] .deploy-import-body {
+  height: 100%;
+  padding: 40px 0 0 0;
+}
+form[name="importDeploy"] .rowContent {
+  padding-top: 0;
+}
+form[name="importDeploy"] .deploy-middle-import {
+  position: relative;
+  height: 100%;
+  padding: 0;
+  border-right: 5px solid #f0f0f0;
+}
+form[name="importDeploy"] .deploy-middle-import > div {
+  padding-left: 10px;
+}
+form[name="importDeploy"] .deploy-middle-import .table > tbody > tr > td {
+  line-height: 30px;
+}
+form[name="importDeploy"] .deploy-middle-import .table-warp {
+  width: 100%;
+  position: absolute;
+  top: 35px;
+  bottom: 0;
+  overflow: auto;
+}
+form[name="importDeploy"] .deploy-right-import {
+  padding: 20px 15px 0;
+}
+form[name="importDeploy"] .deploy-right-import .form-group {
+  position: relative;
+  width: 65%;
+  margin-bottom: 15px;
+}
+form[name="tableDeploy"],
+form[name="UrlInterface"] {
+  color: #4D4D4D;
+}
+form[name="tableDeploy"] h2,
+form[name="UrlInterface"] h2 {
+  line-height: 34px;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 20px 5px;
+  border-bottom: 1px solid #dadada;
+}
+form[name="tableDeploy"] [name="deploy-prod"],
+form[name="UrlInterface"] [name="deploy-prod"] {
+  padding: 0 15px;
+}
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table {
+  position: absolute;
+  width: 100%;
+  top: 40px;
+  bottom: 0;
+}
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-data,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-data,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-data,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-data,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-left-table-data,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-left-table-data,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-left-table-data,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-left-table-data,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-tree,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-tree,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-tree,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-tree,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-url-left-tree,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-url-left-tree,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-url-left-tree,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-url-left-tree {
+  height: 100%;
+  padding: 0 0 35px 0;
+}
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .jstree-default .jstree-themeicon,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .jstree-default .jstree-themeicon,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .jstree-default .jstree-themeicon,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .jstree-default .jstree-themeicon,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .jstree-default .jstree-themeicon,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .jstree-default .jstree-themeicon,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .jstree-default .jstree-themeicon,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .jstree-default .jstree-themeicon,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .jstree-default .jstree-node,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .jstree-default .jstree-node,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .jstree-default .jstree-node,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .jstree-default .jstree-node,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .jstree-default .jstree-node,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .jstree-default .jstree-node,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .jstree-default .jstree-node,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .jstree-default .jstree-node {
+  background: none;
+}
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer {
+  height: 35px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  border-top: 1px solid #dadada;
+  background: white;
+}
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .dropup,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .dropup,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .dropup,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .dropup,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .dropup,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .dropup,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .dropup,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .dropup,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .dropup,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .dropup,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .dropup,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .dropup,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .dropup,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .dropup,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .dropup,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .dropup {
+  display: inline-block;
+}
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .dropup .dropdown-menu,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .dropup .dropdown-menu,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .dropup .dropdown-menu,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .dropup .dropdown-menu,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .dropup .dropdown-menu,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .dropup .dropdown-menu,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .dropup .dropdown-menu,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .dropup .dropdown-menu {
+  bottom: 300%;
+}
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .deploy-left-tree-add,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .deploy-left-tree-add,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .deploy-left-tree-add,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .deploy-left-tree-add,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .deploy-left-tree-add,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .deploy-left-tree-add,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .deploy-left-tree-add,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .deploy-left-tree-add,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-left-tree-add,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-left-tree-add,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-left-tree-add,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-left-tree-add,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .deploy-left-tree-add,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .deploy-left-tree-add,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .deploy-left-tree-add,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .deploy-left-tree-add,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .deploy-left-tree-delect,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .deploy-left-tree-delect,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .deploy-left-tree-delect,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .deploy-left-tree-delect,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .deploy-left-tree-delect,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .deploy-left-tree-delect,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .deploy-left-tree-delect,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .deploy-left-tree-delect,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-left-tree-delect,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-left-tree-delect,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-left-tree-delect,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-left-tree-delect,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .deploy-left-tree-delect,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .deploy-left-tree-delect,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .deploy-left-tree-delect,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .deploy-left-tree-delect,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .deploy-url-left-tree-add,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .deploy-url-left-tree-add,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .deploy-url-left-tree-add,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .deploy-url-left-tree-add,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .deploy-url-left-tree-add,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .deploy-url-left-tree-add,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .deploy-url-left-tree-add,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .deploy-url-left-tree-add,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-url-left-tree-add,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-url-left-tree-add,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-url-left-tree-add,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-url-left-tree-add,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .deploy-url-left-tree-add,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .deploy-url-left-tree-add,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .deploy-url-left-tree-add,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .deploy-url-left-tree-add,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .deploy-url-left-tree-delete,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-left-table-footer .deploy-url-left-tree-delete,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .deploy-url-left-tree-delete,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-left-table-footer .deploy-url-left-tree-delete,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .deploy-url-left-tree-delete,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-left-table-footer .deploy-url-left-tree-delete,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .deploy-url-left-tree-delete,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-left-table-footer .deploy-url-left-tree-delete,
+form[name="tableDeploy"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-url-left-tree-delete,
+form[name="UrlInterface"] .deploy-left-table .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-url-left-tree-delete,
+form[name="tableDeploy"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-url-left-tree-delete,
+form[name="UrlInterface"] .deploy-url-left .deploy-left-tree-wrap .deploy-url-left-table-footer .deploy-url-left-tree-delete,
+form[name="tableDeploy"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .deploy-url-left-tree-delete,
+form[name="UrlInterface"] .deploy-left-table .deploy-url-left-table .deploy-url-left-table-footer .deploy-url-left-tree-delete,
+form[name="tableDeploy"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .deploy-url-left-tree-delete,
+form[name="UrlInterface"] .deploy-url-left .deploy-url-left-table .deploy-url-left-table-footer .deploy-url-left-tree-delete {
+  padding: 2px 10px;
+  margin: 5px;
+  border: 1px solid #dadada;
+  background: white;
+}
+form[name="tableDeploy"] .deploy-right-table-data,
+form[name="UrlInterface"] .deploy-right-table-data,
+form[name="tableDeploy"] .deploy-url-right,
+form[name="UrlInterface"] .deploy-url-right {
+  position: relative;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+form[name="tableDeploy"] .deploy-right-table-data .deploy-right-table-data-warp,
+form[name="UrlInterface"] .deploy-right-table-data .deploy-right-table-data-warp,
+form[name="tableDeploy"] .deploy-url-right .deploy-right-table-data-warp,
+form[name="UrlInterface"] .deploy-url-right .deploy-right-table-data-warp {
+  height: 100%;
+}
+form[name="tableDeploy"] .deploy-right-table-data .deploy-top-table-data,
+form[name="UrlInterface"] .deploy-right-table-data .deploy-top-table-data,
+form[name="tableDeploy"] .deploy-url-right .deploy-top-table-data,
+form[name="UrlInterface"] .deploy-url-right .deploy-top-table-data {
+  position: relative;
+  height: 40%;
+  border-bottom: 5px solid #F0F0F0;
+}
+form[name="tableDeploy"] .deploy-right-table-data .deploy-top-table-data h3,
+form[name="UrlInterface"] .deploy-right-table-data .deploy-top-table-data h3,
+form[name="tableDeploy"] .deploy-url-right .deploy-top-table-data h3,
+form[name="UrlInterface"] .deploy-url-right .deploy-top-table-data h3 {
+  width: 100%;
+  padding: 20px 0 15px 15px;
+  margin: 0;
+  font-size: 16px;
+  color: #333333;
+}
+form[name="tableDeploy"] .deploy-right-table-data .deploy-top-table-data .deploy-top-table-data-input,
+form[name="UrlInterface"] .deploy-right-table-data .deploy-top-table-data .deploy-top-table-data-input,
+form[name="tableDeploy"] .deploy-url-right .deploy-top-table-data .deploy-top-table-data-input,
+form[name="UrlInterface"] .deploy-url-right .deploy-top-table-data .deploy-top-table-data-input {
+  height: 100%;
+  padding-bottom: 20px;
+}
+form[name="tableDeploy"] .deploy-right-table-data .deploy-top-table-data .deploy-top-table-data-more,
+form[name="UrlInterface"] .deploy-right-table-data .deploy-top-table-data .deploy-top-table-data-more,
+form[name="tableDeploy"] .deploy-url-right .deploy-top-table-data .deploy-top-table-data-more,
+form[name="UrlInterface"] .deploy-url-right .deploy-top-table-data .deploy-top-table-data-more {
+  display: none;
+}
+form[name="tableDeploy"] .deploy-right-table-data .deploy-top-url-data,
+form[name="UrlInterface"] .deploy-right-table-data .deploy-top-url-data,
+form[name="tableDeploy"] .deploy-url-right .deploy-top-url-data,
+form[name="UrlInterface"] .deploy-url-right .deploy-top-url-data {
+  position: relative;
+  height: 28%;
+  border-bottom: 5px solid #F0F0F0;
+}
+form[name="tableDeploy"] .deploy-right-table-data .deploy-top-url-data h3,
+form[name="UrlInterface"] .deploy-right-table-data .deploy-top-url-data h3,
+form[name="tableDeploy"] .deploy-url-right .deploy-top-url-data h3,
+form[name="UrlInterface"] .deploy-url-right .deploy-top-url-data h3 {
+  width: 100%;
+  padding: 20px 0 15px 15px;
+  margin: 0;
+  font-size: 16px;
+  color: #333333;
+}
+form[name="tableDeploy"] .deploy-right-table-data .form-group textarea.input-1,
+form[name="UrlInterface"] .deploy-right-table-data .form-group textarea.input-1,
+form[name="tableDeploy"] .deploy-url-right .form-group textarea.input-1,
+form[name="UrlInterface"] .deploy-url-right .form-group textarea.input-1 {
+  height: 50px;
+}
+form[name="tableDeploy"] .deploy-right-table-data .form-group .input-1[type='radio'],
+form[name="UrlInterface"] .deploy-right-table-data .form-group .input-1[type='radio'],
+form[name="tableDeploy"] .deploy-url-right .form-group .input-1[type='radio'],
+form[name="UrlInterface"] .deploy-url-right .form-group .input-1[type='radio'],
+form[name="tableDeploy"] .deploy-right-table-data .form-group .input-1[type='checkbox'],
+form[name="UrlInterface"] .deploy-right-table-data .form-group .input-1[type='checkbox'],
+form[name="tableDeploy"] .deploy-url-right .form-group .input-1[type='checkbox'],
+form[name="UrlInterface"] .deploy-url-right .form-group .input-1[type='checkbox'] {
+  width: auto;
+  height: auto;
+}
+form[name="tableDeploy"] .deploy-main-table-data,
+form[name="UrlInterface"] .deploy-main-table-data,
+form[name="tableDeploy"] .deploy-main-url-data,
+form[name="UrlInterface"] .deploy-main-url-data {
+  display: none;
+}
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid {
+  height: 100%;
+  padding-top: 36px;
+}
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .data-origin,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .data-origin,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .data-origin,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .data-origin,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .data-origin,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .data-origin,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .data-origin,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .data-origin,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .interface,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .interface,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .interface,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .interface,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .interface,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .interface,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .interface,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .interface {
+  padding: 15px;
+}
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .data-origin p,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .data-origin p,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .data-origin p,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .data-origin p,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .data-origin p,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .data-origin p,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .data-origin p,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .data-origin p,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .interface p,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .interface p,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .interface p,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .interface p,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .interface p,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .interface p,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .interface p,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .interface p {
+  padding: 5px 0 15px 0;
+  color: #333333;
+  font-weight: 600;
+}
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule-warp,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule-warp,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule-warp,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule-warp,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule-warp,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule-warp,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule-warp,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule-warp,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .deploy-approve-event,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .deploy-approve-event,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .deploy-approve-event,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .deploy-approve-event,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .deploy-approve-event,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .deploy-approve-event,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .deploy-approve-event,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .deploy-approve-event {
+  padding: 10px 15px;
+  height: 100%;
+  overflow: auto;
+}
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule .col-xs-2,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule .col-xs-2,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule .col-xs-2,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule .col-xs-2,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule .col-xs-2,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule .col-xs-2,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule .col-xs-2,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 {
+  position: relative;
+  height: 100%;
+  padding: 0;
+  background: #F8F8F8;
+  border-right: 1px solid #dadada;
+}
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule .col-xs-2 .data-rule-item,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule .col-xs-2 .data-rule-item,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule .col-xs-2 .data-rule-item,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule .col-xs-2 .data-rule-item,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .data-rule-item,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .data-rule-item,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .data-rule-item,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .data-rule-item {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 35px;
+  overflow: auto;
+}
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule .col-xs-2 .dropup,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule .col-xs-2 .dropup,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule .col-xs-2 .dropup,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule .col-xs-2 .dropup,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .dropup,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .dropup,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .dropup,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .dropup {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule .col-xs-2 .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule .col-xs-2 .dropup .dropdown-menu,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule .col-xs-2 .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule .col-xs-2 .dropup .dropdown-menu,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .dropup .dropdown-menu,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .dropup .dropdown-menu,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule .col-xs-2 .dropup .dropdown-menu {
+  bottom: 250%;
+}
+form[name="tableDeploy"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule .col-xs-10,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-table-grid .deploy-data-rule .col-xs-10,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule .col-xs-10,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-table-grid .deploy-data-rule .col-xs-10,
+form[name="tableDeploy"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule .col-xs-10,
+form[name="UrlInterface"] .deploy-main-table-data .deploy-url-table-grid .deploy-data-rule .col-xs-10,
+form[name="tableDeploy"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule .col-xs-10,
+form[name="UrlInterface"] .deploy-main-url-data .deploy-url-table-grid .deploy-data-rule .col-xs-10 {
+  height: 100%;
+  padding: 0;
+}
+form[name="tableDeploy"] .deploy-main-url-data,
+form[name="UrlInterface"] .deploy-main-url-data {
+  height: 100%;
+}
+form[name="tableDeploy"] .url-prod-title,
+form[name="UrlInterface"] .url-prod-title {
+  width: 13%;
+  float: left;
+  display: inline-block;
+  padding: 15px;
+}
+form[name="tableDeploy"] .url-prod-title p,
+form[name="UrlInterface"] .url-prod-title p {
+  color: #1D2938;
+  font-size: 14px;
+  line-height: 24px;
+  margin-bottom: 10px;
+}
+form[name="dictionary"] .rowContent {
+  height: 100%;
+  padding-top: 40px;
+}
+form[name="dictionary"] .rowContent .dicList .dicItemList {
+  width: 100%;
+  position: absolute;
+  top: 38px;
+  bottom: 0;
+  padding: 0 0 35px 0;
+}
+form[name="dictionary"] .rowContent .dicList .dicItemList span {
+  cursor: pointer;
+}
+form[name="dictionary"] .rowContent .dicList .dropup {
+  width: 100%;
+  padding: 5px 10px 4px;
+  position: absolute;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid #dadada;
+}
+form[name="dictionary"] .rowContent .dicList .dropup .dropdown-menu {
+  bottom: 250%;
+}
+form[name="dictionary"] .panel-body {
+  padding-top: 0;
+  margin: 0;
+}
+form[name="viewReport"] .grid-toolbar {
+  position: absolute;
+  width: 100%;
+}
+form[name="viewReport"] .datagrid-content {
+  padding-top: 30px;
+}
+form[name="viewReport"] .panel-body {
+  padding: 0;
+  margin: 0;
+}
+form[name="menuDeploy"] {
+  color: #4D4D4D;
+}
+form[name="menuDeploy"] .datagrid-content {
+  height: 100%;
+  padding-top: 40px;
+}
+form[name="menuDeploy"] .datagrid-content .deploy-left-menu .deploy-menu-tree {
+  width: 100%;
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  overflow: auto;
+}
+form[name="menuDeploy"] .datagrid-content .deploy-left-menu .deploy-menu-tree .deploy-left-menu-tree {
+  height: 100%;
+  padding: 0 0 35px 0;
+}
+form[name="menuDeploy"] .datagrid-content .deploy-right-menu-data .deploy-config > div {
+  position: relative;
+}
+form[name="menuDeploy"] .datagrid-content .deploy-right-menu-data .deploy-config > div input {
+  width: 100%;
+}
+form[name="menuDeploy"] .datagrid-content .deploy-right-menu-data .deploy-config .dropdown {
+  position: absolute;
+  top: 0;
+  right: -40px;
+  display: inline-block;
+}
+form[name="menuDeploy"] .datagrid-content .deploy-right-menu-data .deploy-config .dropdown button {
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+}
+form[name="menuDeploy"] .datagrid-content .deploy-right-menu-data .deploy-config .dropdown .dropdown-menu {
+  width: 300px;
+  top: 0;
+  left: 150%;
+  padding: 10px;
+  margin: 0;
+}
+form[name="menuDeploy"] .datagrid-content .deploy-right-menu-data .form-group input {
+  height: 30px;
+}
+form[name="menuDeploy"] .datagrid-content .deploy-right-menu-data .deploy-right-menu-main {
+  display: none;
+  padding: 30px 20px;
+}
+form[name="menuDeploy"] .menuIconDrop button {
+  height: 30px;
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  border-radius: 3px;
+  background-color: #ffffff;
+}
+form[name="menuDeploy"] .menuIconDrop button .fa {
+  font-size: 16px;
+}
+form[name="menuDeploy"] .menuIconDrop .dropdown-menu li {
+  width: 20px;
+  display: inline-block;
+}
+form[name="menuDeploy"] .menuIconDrop .dropdown-menu li a {
+  padding: 3px;
+  font-size: 14px;
+}
+form[name="menuDeploy"] button:disabled,
+form[name="menuDeploy"] input:disabled,
+form[name="menuDeploy"] select:disabled,
+form[name="menuDeploy"] input:read-only {
+  background: #F4F4F4;
+}
+form[name="datedelay"] textarea {
+  height: 80px;
+  resize: none;
+}
+form[name="datedelay"] .datagrid-content {
+  height: 100%;
+  padding-top: 40px;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3 {
+  height: 100%;
+  padding: 18px 0 0;
+  border-right: 1px solid #dadada;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3 p {
+  line-height: 14px;
+  margin: 0 0 10px 15px;
+  padding-left: 25px;
+  font-size: 13px;
+  background: url(../img/deploy.png) no-repeat;
+  background-size: 160px 160px;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3 .menu-deploy-sec1 p,
+form[name="datedelay"] .datagrid-content .col-xs-3 .menu-deploy-sec2 p,
+form[name="datedelay"] .datagrid-content .col-xs-3 .menu-deploy-sec3 p,
+form[name="datedelay"] .datagrid-content .col-xs-3 .passageRowMap p {
+  background-position: -147px -55px;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3.datagrid-main-detail p,
+form[name="datedelay"] .datagrid-content .col-xs-3.date-delay-detail p {
+  background-position: -143px -145px;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3 .passageMap p,
+form[name="datedelay"] .datagrid-content .col-xs-3 .rowFormula p {
+  background-position: -145px -98px;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3 .section {
+  height: 100%;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3 .section .item a {
+  display: block;
+  line-height: 25px;
+  color: #4D4D4D;
+  padding-left: 20px;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3 .section .item a:hover {
+  background: #D3EBF6;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3 .section .item a.active {
+  background: #A0D5EC;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3 .section .dropup {
+  display: inline-block;
+}
+form[name="datedelay"] .datagrid-content .col-xs-3 .section .dropup .dropdown-menu {
+  bottom: 300%;
+}
+form[name="datedelay"] .datagrid-content .date-delay-detail {
+  padding-right: 15px;
+  padding-left: 15px;
+  overflow: auto;
+}
+form[name="datedelay"] .datagrid-content .date-delay-detail p {
+  margin-left: 0;
+}
+form[name="datedelay"] .datagrid-content .date-delay-detail .label-1 {
+  width: auto;
+  line-height: 20px;
+  padding-left: 0;
+  padding-bottom: 3px;
+  float: none;
+}
+form[name="datedelay"] .datagrid-content .date-delay-detail .input {
+  width: 100%;
+}
+form[name="datedelay"] .datagrid-content .date-delay-detail .input:disabled {
+  background: #dadada;
+  opacity: 1;
+}
+form[name="datedelay"] .form-control {
+  border: none;
+}
+form[name="datedelay"] .form-group {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+form[name="datedelay"] h2 {
+  font-size: 12px;
+  margin: 0;
+  border: 1px solid red;
+}
+form[name="datedelay"] .datagrid-content .date-delay-detail .colorPick {
+  width: 60%;
+}
+form[name="datedelay"] .datagrid-content .date-delay-detail .evo-pointer.evo-colorind {
+  width: 30%;
+  height: 26px;
+}
+form[name="datedelay"] .datagrid-content .date-delay-detail .evo-cp-wrap {
+  width: 100% !important;
+}
+form[name="datedelay"] .date-delay-section {
+  display: none;
+}
+form[name="datedelay"] .date-delay-section.active {
+  display: block;
+}
+form[name="datedelay"] .swraper.light {
+  float: right;
+}
+.datagrid-main .datagrid-foot.btn-toolbar {
+  border-top: 3px solid #e6e6e6;
+}
+.chart-form .chart-pan {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  padding: 50px 15px 15px;
+  background: #F8F8F8;
+  /*.chart-config-btn {
+      padding: 0 10px 0 5px;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 1;
+      height: 20px;
+      line-height: 18px;
+      border-radius: 3px;
+      color: #4c4c4c;
+      background-color: #fafafa;
+      border: 1px solid rgb(230, 230, 230);
+      span {
+        display: inline-block;
+        float: left;
+        width: 15px;
+        height: 12px;
+        margin: 4px 5px 0 0;
+        background: url(../img/btn-state.png) no-repeat -46px -6px;
+        background-size: 120px;
+      }
+      &.active {
+        span {
+          background-position: -66px -6px;
+          background-size: 120px;
+        }
+      }
+    }*/
+}
+.chart-form .chart-pan.active {
+  width: 75%;
+}
+.chart-form .chart-config {
+  display: none;
+  height: 100%;
+  border-left: 1px solid #E6E6E6;
+}
+.chart-form .chart-config .dx-filter-form {
+  height: 100%;
+  padding: 0 !important;
+  border: none;
+}
+.chart-form .chart-config .dx-filter-form h3 {
+  padding: 15px 10px 0 10px;
+  line-height: 30px;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+}
+.chart-form .chart-config .dx-filter-form .dx-field-10 {
+  width: 100%;
+  position: absolute;
+  top: 45px;
+  bottom: 40px;
+  padding-right: 15px;
+}
+.chart-form .chart-config .dx-filter-form .dx-field-10,
+.chart-form .chart-config .dx-filter-form .dx-filter-btn-group,
+.chart-form .chart-config .dx-filter-form .form-group.dx-field-4 {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.chart-form .chart-config .dx-filter-form .dx-filter-btn-group {
+  height: 40px;
+  padding: 10px 0 0;
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  background: #F8F8F8;
+  border-top: 1px solid #E6E6E6;
+  text-align: center;
+}
+.datagrid-content {
+  height: 100%;
+}
+.datagrid-content .datagrid-main {
+  height: 100%;
+  padding: 0;
+}
+.datagrid-content .form-group:after {
+  display: block;
+  clear: both;
+  content: "";
+  visibility: hidden;
+  height: 0;
+}
+.datagrid-content .datagrid-main {
+  padding-bottom: 35px;
+}
+.datagrid-content .datagrid-main-detail {
+  padding-right: 10px;
+}
+.datagrid-content .datagrid-main-detail p {
+  margin: 10px 0 20px;
+  font-size: 14px;
+}
+.datagrid-content .datagrid-main-detail > div {
+  margin: 0 0 10px;
+}
+.datagrid-content .datagrid-foot {
+  height: 35px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #dadada;
+  background: white;
+}
+.datagrid-content .datagrid-foot .removeit,
+.datagrid-content .datagrid-foot .append {
+  width: 50px;
+  height: 20px;
+  line-height: 18px;
+  padding: 0px 3px;
+  margin: 5px 0 0 10px;
+  color: #666666;
+  border-radius: 3px;
+  border: 1px solid #dadada;
+  background-image: -moz-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+  background-image: -webkit-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+  background-image: -ms-linear-gradient(90deg, #f4f4f4 0%, #f8f8f8 52%, #fbfbfb 100%);
+}
+.datagrid {
+  margin: 0;
+  border-radius: 0;
+}
+.datagrid .tree-expanded {
+  background: url(../img/deploy.png);
+  background-size: 160px;
+  background-position: -50px -1px;
+}
+.datagrid .tree-collapsed {
+  background: url(../img/deploy.png);
+  background-size: 160px;
+  background-position: -65px 0px;
+}
+.datagrid .tree-expanded,
+.datagrid .tree-collapsed,
+.datagrid .tree-folder,
+.datagrid .tree-file,
+.datagrid .tree-checkbox,
+.datagrid .tree-indent {
+  margin-top: 3px;
+}
+.datagrid .tree-title {
+  height: 25px;
+  line-height: 25px;
+}
+.datagrid .textbox .textbox-text {
+  color: black;
+}
+.datagrid .panel-body {
+  padding: 0;
+}
+.datagrid .datagrid-body .datagrid-editable {
+  overflow: visible;
+}
+.datagrid .datagrid-pager.pagination {
+  height: 41px;
+  border-radius: 0;
+}
+.datagrid .datagrid-header-check,
+.datagrid .datagrid-cell-check {
+  display: table-cell;
+  vertical-align: middle;
+}
+.datagrid .pagination table {
+  height: 40px;
+  float: right;
+}
+.datagrid .pagination table td:last-of-type {
+  display: none;
+}
+.datagrid .pagination table .l-btn-disabled,
+.datagrid .pagination table .l-btn-disabled:hover {
+  opacity: 0.2;
+}
+.datagrid .pagination-info {
+  float: left;
+  height: 40px;
+  line-height: 40px;
+}
+.datagrid input[type=checkbox],
+.datagrid input[type=radio] {
+  margin: 0;
+}
+.datagrid .datagrid-cell,
+.datagrid .datagrid-cell-group,
+.datagrid .datagrid-header-rownumber,
+.datagrid .datagrid-cell-rownumber {
+  line-height: 25px;
+}
+.checkWCBd .weeks {
+  background: #efefef;
+}
+.checkWCBd table {
+  border: none;
+}
+.checkWCBd table.dataTable thead th,
+.checkWCBd table.dataTable tbody td {
+  border-right: none;
+  text-align: center;
+}
+.checkWCBd table.dataTable thead th {
+  border-top: none;
+  border-bottom: 2px solid #ddd;
+}
+.fc-event-detail .all-day-event-label {
+  line-height: 20px;
+  margin-left: 100px;
+}
+.fc-event-detail .all-day-event-label .icheckbox_flat-blue {
+  margin-right: 10px;
+}
+.fc-event-detail .add-event-user {
+  color: #60B9E0;
+  line-height: 30px;
+  margin-left: 20px;
+}
+.fc-event-detail .event-user-div.disable span {
+  padding-right: 10px;
+  color: #4d4d4d;
+  background: #F0F0F0;
+  border: 1px solid #E6E6E6;
+}
+.fc-event-detail .event-user-div.disable .delete-user {
+  display: none;
+}
+.fc-event-detail .event-user-div span.no-event-user-span {
+  line-height: 30px;
+  background: none;
+  border: none;
+}
+.fc-event-detail .control-label {
+  width: 30%;
+}
+.fc-event-detail .control-label.label-3 {
+  width: 15%;
+}
+.fc-event-detail .content {
+  height: 100px;
+}
+.fc-event-detail .input-1 {
+  width: 70%;
+}
+.fc-event-detail .input-3 {
+  width: 85%;
+}
+.event-color-wrap.dropdown {
+  position: absolute;
+  right: 10px;
+  z-index: 4;
+}
+.event-color-wrap.dropdown .dropdown-menu {
+  min-width: 120px;
+  right: -10px;
+  left: auto;
+}
+.event-color-wrap button {
+  margin-top: 8px;
+  background: none;
+}
+.event-color-wrap button span {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1px dashed #cccccc;
+  background: #F2F2F2;
+  border-radius: 50%;
+}
+.event-color-wrap .isActive span {
+  border: none;
+}
+.event-color-wrap.disable li {
+  display: none;
+}
+.event-color-wrap.disable li.selected {
+  display: inline-block;
+}
+.event-color-wrap li {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: 5px 3px;
+  border: 1px solid rgba(255, 255, 255, 0);
+  border-radius: 50%;
+  cursor: pointer;
+  text-align: center;
+}
+.event-color-wrap li.selected,
+.event-color-wrap li:hover {
+  background: #F2F2F2;
+  border: 1px solid #E0E0E0;
+}
+.event-color-wrap .event-color span {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  background: white;
+  border-radius: 50%;
+}
+.event-color-wrap .event-white span {
+  border: 1px solid #d9d9d9;
+}
+.dx-modal-footer button {
+  line-height: 20px;
+  padding: 0 10px;
+  border-radius: 3px;
+}
+.dx-modal-footer .save {
+  color: white;
+  background: #60b9e0;
+}
+.dx-modal-footer .save:hover {
+  background: #81cbeb;
+}
+.modal.event-user-dialog .modal-dialog {
+  width: 300px;
+}
+.modal.event-user-dialog .dx-form {
+  height: auto;
+}
+.modal.event-user-dialog .event-user-search {
+  width: 200px;
+}
+.modal.event-user-dialog .event-user-tree {
+  height: 200px;
+  overflow: auto;
+}
+.pagination > li > a,
+.pagination > li > span {
+  padding: 0px 5px;
+  margin-left: -1px;
+  color: #60b9e0;
+  text-decoration: none;
+  background-color: #fff;
+  border: none;
+}
+.pagination > .active > a,
+.pagination > .active > a:focus,
+.pagination > .active > a:hover,
+.pagination > .active > span,
+.pagination > .active > span:focus,
+.pagination > .active > span:hover {
+  z-index: 3;
+  color: #fff;
+  cursor: default;
+  background-color: #60b9e0;
+  border-color: #60b9e0;
+}

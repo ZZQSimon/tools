@@ -1,0 +1,135 @@
+#macro(reportItem $report)
+<a href="javascript:void(0)" class="col-xs-3 report-item" name="$report.id">
+	<div class="">
+		#set($url="/img/report_"+$report.report_type+".png")
+		<img src="$url"/>
+		$dx.msg($report.international_id)
+	</div>
+<a>
+#end
+
+
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="viewReport" class="form-inline dx-form" role="form"">
+<div class="report-list">
+	<div class="rowContentTop btn-toolbar">
+	    ##<div style="height:auto">
+	        <a href="javascript:void(0)" class="easyui-linkbutton chart-report-add"  onclick="">$dx.msg("Add")</a>
+	        <a href="javascript:void(0)" class="easyui-linkbutton chart-report-delete"  onclick="">$dx.msg("Delete")</a>
+	    ##</div>
+	</div>
+	<div class="dx-form-con report_items">
+        <div class="dx-auto-expand dx-div-with-scroll">
+            <div class="report_items">
+                ###foreach($report in $form.chartReports)
+                    ###reportItem($report)
+                ###end
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="report-deployee" style="display:none;">
+	<div class="rowContentTop btn-toolbar">
+	    <div style="height:auto">
+	        <a href="javascript:void(0)" class="easyui-linkbutton chart-report-save" status="edit" onclick="">$dx.msg("Edit")</a>
+	        <a href="javascript:void(0)" class="easyui-linkbutton chart-report-return"  onclick="">$dx.msg("return")</a>
+	    </div>
+	</div>
+    <div class="dx-form-con ">
+        <div class="dx-auto-expand dx-div-with-scroll">
+            <div class="dx-detail-container">
+                <div class="dx-field-4">
+                    <div class="connom_field form-group">
+                        <label class="label-1" for="">$dx.msg("Chart id")</label>
+                        <input type="text" class="field input-1 chart_id" name="id" placeholder="" readonly="true">
+                    </div>
+                    <div class="connom_field form-group">
+                        <label class="label-1" for="">$dx.msg("Report name")</label>
+                        <input type="text" class="field input-1 report_name" name="international_id" placeholder="">
+                    </div>
+                    <div class="connom_field form-group">
+                        <label class="label-1" for="">$dx.msg("tableName")</label>
+                        <select class="field input-1 table_name" name="table_id">
+                        </select>
+                    </div>
+                    <div class="connom_field form-group">
+                        <label class="label-1" for="">$dx.msg("Report type")</label>
+                        <select class="field input-1 report_type" name="report_type">
+                            <option value="">$dx.msg("Please select an option")</option>
+                            #if( $form.type != 4 )
+                            <option value="1">$dx.msg("The line chart")</option>
+                            <option value="2">$dx.msg("Pie chart")</option>
+                            <option value="5">$dx.msg("Funnel chart")</option>
+                            <option value="6">$dx.msg("Histogram")</option>
+                            <option value="7">$dx.msg("Radar chart")</option>
+                            <option value="8">$dx.msg("ranking chart")</option>
+                            #else
+                            <option value="4">$dx.msg("Print report")</option>
+                            #end
+                        </select>
+                    </div>
+                    #if( $form.type != 4 )
+                    <div class="chart_field form-group">
+                        <label class="label-1" for="">$dx.msg("Report column")</label>
+                        <select class="field input-1 report_column" name="report_column">
+                        </select>
+                    </div>
+                    <div class="chart_field form-group">
+                        <label class="label-1" for="">$dx.msg("Count column")</label>
+                        <select class="field input-1 count_column" name="count_column">
+                        </select>
+                    </div>
+                    <div class="chart_field form-group">
+                        <label class="label-1" for="">$dx.msg("Group column")</label>
+                        <select class="field input-1 group_column" name="group_column">
+                        </select>
+                    </div>
+                    <div class="chart_field form-group">
+                        <label class="label-1" for="">$dx.msg("Date column")</label>
+                        <select class="field input-1 date_column" name="date_column">
+                        </select>
+                    </div>
+                    <div class="chart_field form-group">
+                        <label class="label-1" for="">$dx.msg("Date type")</label>
+                        <select class="field input-1 date_type" name="date_type">
+                            <option value="1" selected="selected">$dx.msg("day")</option>
+                            <option value="2">$dx.msg("monthly")</option>
+                            <option value="3">$dx.msg("year")</option>
+                        </select>
+                    </div>
+                    #end
+                    #if( $form.type == 4 )
+                    <div class="report_field form-group">
+                        <label class="label-1" for="">$dx.msg("File name")</label>
+                        <input type="text" class="field input-1 file_name" name="file_name"  placeholder="">
+                    </div>
+                    <div class="report_field form-group">
+                        <label class="label-1" for="">$dx.msg("Report file type")</label>
+                        <select class="field input-1 report_file_type" name="report_file_type">
+                            <option value="0" selected="selected">EXCEL</option>
+                            <option value="1">PDF</option>
+                        </select>
+                    </div>
+                    <div class="report_field form-group">
+                        <label class="label-1" for="">$dx.msg("repport disp type")</label>
+                        <select class="field input-1 report_disp_type" name="report_disp_type">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="report_field form-group">
+                        <label class="label-1" for="table-type">$dx.msg("The query SQL")</label>
+                        <textarea class="field input-1 SQL" name="sql"></textarea>
+                    </div>
+                    #end
+                    <div class="connom_field form-group">
+                        <label class="label-1" for="">$dx.msg("Option condition")</label>
+                        <input type="text" class="field input-1 condition" name="condition" placeholder="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+#dxFormTail($form)

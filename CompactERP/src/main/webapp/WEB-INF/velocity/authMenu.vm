@@ -1,0 +1,46 @@
+#dxFormHead($form)
+<div id="$form.id" class="dx-form" name="$form.widgetName">
+	#dxMenuBarHead($form)
+	<button type="button" class="btn btn-default btn-sm dx-auth-save">$dx.msg("Save")</button>
+	#dxMenuBarFoot()
+		<table width="100%">
+			<tbody>
+			<tr>
+				<td width="20%" valign="top">
+					<div class="dx-div-with-scroll dx-inner-menu">
+						<ul class="nav nav-pills nav-stacked dx-auth-list">
+							#foreach($control in $form.controls)
+								<li role="presentation">
+									<a href="#" name="$control.id" class="dx-auth-edit">
+										<button type="button" class="dx-auth-entry-edit" value="$control.id">
+											<span class="glyphicon glyphicon-edit"></span>
+										</button>
+										$dx.label($control)
+									</a>
+								</li>
+							#end
+						</ul>
+					</div>
+				</td>
+				<td width="80%" valign="top">
+					<div class="dx-auth-menu-tree container dx-auto-expand dx-div-with-scroll" style="padding:0;">
+						<ul>
+							<li>$dx.msg("menus")
+								<ul>
+									#dxAuthMenuTree($form.menu)
+								</ul>
+							</li>
+							<li>$dx.msg("shortcuts")
+								<ul>
+									#dxAuthMenuTree($form.shortcut)
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	#dxAuthEditor($form.depts, $form.roles, $form.users, false)
+</div>
+#dxFormTail($form)

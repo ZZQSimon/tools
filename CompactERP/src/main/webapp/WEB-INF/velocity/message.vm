@@ -1,0 +1,118 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="message" class="form-inline dx-form clearfix" role="form"">       ##基本上照抄即可
+<div class="message-content clearfix">
+
+  <!-- Nav tabs -->
+  <div class="message-sort dx-field-2">
+	  <ul class="scoll-ul">
+	    <li class="message-menu-li active">
+	    	<a href="#sys-message" aria-controls="sys-message" data-toggle="tab">
+		      $dx.msg("sys_message")<span><i class="sys-count"></i></span>
+		    </a>
+		</li>
+	    <li class="message-menu-li">
+	    	<a href="#cloud-message" aria-controls="cloud-message" data-toggle="tab">
+		      $dx.msg("cloud_message")<span><i class="cloud-count"></i></span>
+		    </a>
+		</li>
+	    <li class="message-menu-li"	>
+		    <a href="#aboutme-message" aria-controls="aboutme-message" data-toggle="tab">
+		      $dx.msg("aboutme_message")<span><i class="aboutme-count"></i></span>
+			</a>
+		</li>
+	  </ul>
+  </div>
+
+  <!-- Tab panes -->
+  <div class="message-main dx-field-10">
+	  <div class="tab-content">
+	    <div  class="tab-pane active" id="sys-message">
+	    	<div class="message-list-top">
+				<label class="all-select">
+					<input type="checkbox" class="sys-message-id">  $dx.msg("select_all") 
+				</label>	            
+	            <a href="javascript:void(0)" class="easyui-linkbutton message-list-clear sys-read">$dx.msg("read_all")</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton message-list-clear sys-clear">$dx.msg("delete_all")</a>
+	        </div>
+	        <ul  class="sys-message-list-ul">
+            </ul>
+            <div class="message-foot">
+            	<div style="float:right">
+            		<span class="glyphicon glyphicon-step-backward sys-pagination-first">&nbsp;</span>
+            		<span class="glyphicon glyphicon-backward sys-pagination-prev">&nbsp;</span>
+            		<span>$dx.msg("Page")</span>
+            		<input class="sys-pagination-pageNum" type="text"  value="1" size="2"/>
+            		<span	class="sys-pagination-page"></span>&nbsp;
+            		<span class="glyphicon glyphicon-forward sys-pagination-next">&nbsp;</span>
+            		<span class="glyphicon glyphicon-step-forward sys-pagination-last">&nbsp;</span>
+            	</div>
+            </div>
+       </div>
+	    <div  class="tab-pane" id="cloud-message">
+			<div class="message-list-top">
+				<label class="all-select"><input type="checkbox" class="cloud-message-id"> $dx.msg("select_all")</label>
+	            <a href="javascript:void(0);" class="easyui-linkbutton message-list-clear cloud-read">$dx.msg("read_all")</a>
+	            <a href="javascript:void(0);" class="easyui-linkbutton message-list-clear cloud-clear">$dx.msg("delete_all")</a>
+	        </div>
+	         <ul  class="cloud-message-list-ul">
+            </ul>
+            <div class="message-foot">
+            	<div style="float:right">
+            		<span class="glyphicon glyphicon-step-backward cloud-pagination-first">&nbsp;</span>
+            		<span class="glyphicon glyphicon-backward cloud-pagination-prev">&nbsp;</span>
+            		<span>$dx.msg("Page")</span>
+            		<input class="cloud-pagination-pageNum" type="text" value="1" size="2"/>
+            		<span	class="cloud-pagination-page"></span>&nbsp;
+            		<span class="glyphicon glyphicon-forward cloud-pagination-next">&nbsp;</span>
+            		<span class="glyphicon glyphicon-step-forward cloud-pagination-last">&nbsp;</span>
+            	</div>
+            </div>
+        </div>
+	    <div  class="tab-pane" id="aboutme-message">
+			<div class="message-list-top">
+				<label class="all-select"><input type="checkbox" class="aboutme-message-id">$dx.msg("select_all")</label>
+				<a href="javascript:void(0);" class="easyui-linkbutton message-list-clear  aboutme-read">$dx.msg("read_all")</a>
+	            <a href="javascript:void(0);" class="easyui-linkbutton message-list-clear aboutme-clear">$dx.msg("delete_all")</a>
+	        </div>
+	         <ul  class="aboutme-message-list-ul">
+            </ul>
+            <div class="message-foot">
+            	<div style="float:right">
+            		<span class="glyphicon glyphicon-step-backward aboutme-pagination-first">&nbsp;</span>
+            		<span class="glyphicon glyphicon-backward aboutme-pagination-prev">&nbsp;</span>
+            		<span>$dx.msg("Page")</span>
+            		<input class="aboutme-pagination-pageNum" type="text" value="1" size="2"/>
+            		<span	class="aboutme-pagination-page"></span>&nbsp;
+            		<span class="glyphicon glyphicon-forward aboutme-pagination-next">&nbsp;</span>
+            		<span class="glyphicon glyphicon-step-forward aboutme-pagination-last">&nbsp;</span>
+            	</div>
+            </div>
+        </div>
+	  </div>
+	</div> 
+</div>
+
+<!-- 模态框（Modal） -->
+    <div class="modal MessageInfoModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <p class="message-modal-title"></p>
+                    <p class="message-modal-date"></p>
+                </div>
+                <div class="modal-body">
+                    <div class="message-modal-content"></div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="button-color3 easyui-linkbutton dx-grid-add accept" data-dismiss="modal">$dx.msg("OK")</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+</div>
+#dxFormTail($form)

@@ -1,0 +1,2661 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.ApproveDao">
+	<select id="selectApproveTable" resultType="cn.com.easyerp.core.authGroup.Table">
+		select `id`,
+		`parent_id_column`, `children_id_column`, `name_expression`,
+		`readonly`,
+		`parent_id`, `group_name`, `check_condition`, `logable`,
+		`view_style`,
+		`view_main_table`,
+		`table_type`, `detail_disp_cols`,
+		`valid_date_cols`, `valid_date_cond_disp`,
+		`valid_date_group_cols`,
+		`seq`, `level`, `memo`, `key_formula`, `auto_gen_sql`, `type`,
+		`export_sql`,
+		`import_sql`, `importable`,
+		`block_view_style`,
+		`default_group_column`,
+		`international_id`,`is_approve`,`is_auth`,`module`,`is_approve_state`
+		FROM c_table where `is_approve`=1;
+	</select>
+	<insert id="addAuthGroup">
+		INSERT INTO `c_auth_group`
+		(`department`,
+		`department_relation`, `role`, `user`, `user_relation`,
+		`read`,
+		`create`, `update`,
+		`delete`, `operate`, `type`, `table`, `column`,
+		`menu`,
+		`template`,`ref_column_dept`,`ref_column_user`)
+		VALUES
+		(#{authGroup.department},#{authGroup.department_relation},#{authGroup.role},
+		#{authGroup.user},#{authGroup.user_relation},#{authGroup.read},#{authGroup.create},
+		#{authGroup.update},#{authGroup.delete},#{authGroup.operate},#{authGroup.type},#{authGroup.table},
+		#{authGroup.column},#{authGroup.menu},#{authGroup.template}，#{authGroup.ref_column_dept},#{authGroup.ref_column_user});
+	</insert>
+	<select id="selectTemplate" resultType="cn.com.easyerp.core.authGroup.AuthGroup">
+		SELECT
+		c.`department`,
+		c.`department_relation`,
+		c.`role`,
+		c.`user`,
+		c.`user_relation`,
+		c.`read`,
+		c.`create`,
+		c.`update`,
+		c.`delete`,
+		c.`operate`,
+		c.`type`,
+		c.`table`,
+		c.`column`,
+		c.`menu`,
+		replace(replace(c.`template`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as template,
+		replace(replace(v1.`name`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as department_relation_name,
+		replace(replace(v2.`name`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as user_relation_name,
+		replace(replace(v2.`name`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as userName,
+		replace(replace(v1.`name`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as deptName,
+		replace(replace(v3.`name`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as roleName
+		FROM
+		c_auth_group c
+		LEFT JOIN v_auth_group_dept_data v1 ON
+		c.department_relation = v1.id
+		or c.department=v1.id
+		LEFT JOIN
+		v_auth_group_user_data v2 ON
+		c.user_relation = v2.id or c.user=v2.id
+		LEFT JOIN v_auth_group_role v3
+		ON c.role = v3.id
+		WHERE
+		c.type = #{type}
+		and c.template!='' ORDER BY template;
+	</select>
+	<select id="selectBlock" resultType="cn.com.easyerp.core.approve.FlowBlock">
+		select
+		table_id,block_id,type,text,block_x,block_y,approve_name,task_msg,
+		turn_down_up,turn_down_source,time_limit,time_out_rule,need_agree_count_people,need_opinion_count_people,is_addApprove,addApprove_count,
+		is_until_block,is_approve_block,is_work_block
+		from c_flow_block where
+		table_id=#{Block.table_id}
+	</select>
+	<select id="selectApprover" resultType="cn.com.easyerp.core.authGroup.AuthGroup">
+		SELECT
+		c.`department`,
+		c.`department_relation`,
+		c.`role`,
+		c.`user`,
+		c.`user_relation`,
+		c.`read`,
+		c.`create`,
+		c.`update`,
+		c.`delete`,
+		c.`operate`,
+		c.`type`,
+		c.`table`,
+		c.`column`,
+		c.`menu`,
+		c.`ref_column_dept`,
+		c.`ref_column_user`,
+		replace(replace(c.`template`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as template,
+		c.block,
+		replace(replace(v1.`name`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as department_relation_name,
+		replace(replace(v2.`name`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as user_relation_name,
+		replace(replace(v2.`name`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as userName,
+		replace(replace(v1.`name`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as deptName,
+		replace(replace(v3.`name`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as roleName
+		FROM
+		c_auth_group c
+		LEFT JOIN v_auth_group_dept_data v1 ON
+		c.department_relation = v1.id
+		or c.department=v1.id
+		LEFT JOIN
+		v_auth_group_user_data v2 ON
+		c.user_relation = v2.id or c.user=v2.id
+		LEFT JOIN v_auth_group_role v3
+		ON c.role = v3.id
+		WHERE
+		`table` =
+		#{AuthGroup.table} and `type`=4 ORDER BY `block`;
+	</select>
+	<select id="selectLine" resultType="cn.com.easyerp.core.approve.FlowLine">
+		SELECT
+		c1.connection_id,
+		c1.page_source_id, c1.page_source_place,
+		c1.page_target_id,
+		c1.source_text, c1.page_target_place,
+		c1.target_text, c1.memo
+		FROM
+		c_flow_line c1
+		LEFT JOIN c_flow_block c2 ON c1.page_source_id =
+		c2.block_id
+		LEFT JOIN c_flow_block c3 ON c1.page_target_Id =
+		c2.block_id
+		WHERE c2.table_id=#{Block.table_id}
+
+	</select>
+	<select id="selectLineDetail" resultType="cn.com.easyerp.core.approve.FlowConditionDetail">
+		SELECT
+		c1.connection_id,c1.condition_detail_id,c1.column_name,c1.symbol,c1.value,c5.name
+		name
+		FROM
+		c_flow_condition_detail c1
+		LEFT JOIN c_flow_line c2 on
+		c1.connection_id=c2.connection_id
+		LEFT JOIN c_flow_block c3 ON
+		c2.page_source_id = c3.block_id
+		LEFT JOIN c_flow_block c4 ON
+		c2.page_target_Id = c4.block_id
+		LEFT JOIN m_user c5 ON c1.value = c5.id
+		WHERE c3.table_id=#{Block.table_id}
+	</select>
+	<insert id="addBlock">
+		insert into
+		c_flow_block(table_id,block_id,type,text,block_x,block_y,approve_name,task_msg,turn_down_up,
+		turn_down_source,time_limit,time_out_rule,need_agree_count_people,need_opinion_count_people,is_addApprove,addApprove_count,is_until_block,
+		is_approve_block,is_work_block)
+		VALUE
+		(#{Block.table_id},#{Block.block_id},
+		#{Block.type},#{Block.text},#{Block.block_x},#{Block.block_y},#{Block.approve_name},#{Block.task_msg},#{Block.turn_down_up},
+		#{Block.turn_down_source},#{Block.time_limit},#{Block.time_out_rule},#{Block.need_agree_count_people},#{Block.need_opinion_count_people},
+		#{Block.is_addApprove},#{Block.addApprove_count},#{Block.is_until_block},#{Block.is_approve_block},#{Block.is_work_block});
+	</insert>
+	<insert id="addApprover">
+		insert into c_auth_group(`department`,
+		`department_relation`, `role`, `user`, `user_relation`, `read`,
+		`create`, `update`, `delete`, `operate`, `type`,
+		`table`, `column`,
+		`menu`, `template`, `block`, `ref_column_dept`,
+		`ref_column_user`)
+		VALUE
+		(#{AuthGroup.department},#{AuthGroup.department_relation},#{AuthGroup.role},
+		#{AuthGroup.user},#{AuthGroup.user_relation},#{AuthGroup.read},#{AuthGroup.create},#{AuthGroup.update}
+		,#{AuthGroup.delete},#{AuthGroup.operate},#{AuthGroup.type},#{AuthGroup.table},#{AuthGroup.fields}
+		,#{AuthGroup.menu},#{AuthGroup.template},#{AuthGroup.block},#{AuthGroup.ref_column_dept},#{AuthGroup.ref_column_user});
+	</insert>
+	<insert id="addLine">
+		insert into c_flow_line
+		(connection_id,
+		page_source_id, page_source_place,
+		page_target_id, page_target_place,
+		source_text,
+		target_text,memo)
+		VALUE
+		(#{FlowLine.connection_id},
+		#{FlowLine.page_source_id}, #{FlowLine.page_source_place},
+		#{FlowLine.page_target_id}, #{FlowLine.page_target_place},
+		#{FlowLine.source_text},
+		#{FlowLine.target_text}, #{FlowLine.memo});
+	</insert>
+	<insert id="addFlowEvent">
+		INSERT INTO `c_flow_event` (
+		`block_id`,
+		`seq`,
+		`event_type`,
+		`email`,
+		`sms`,
+		`table_id`,
+		`international_id`,
+		is_index_button,
+		`flow_event_id`
+		)VALUES
+		(
+		#{FlowEvent.block_id},
+		#{FlowEvent.seq},
+		#{FlowEvent.event_type},
+		#{FlowEvent.email},
+		#{FlowEvent.sms},
+		#{FlowEvent.table_id},
+		#{FlowEvent.international_id},
+		#{FlowEvent.is_index_button},
+		#{FlowEvent.flow_event_id}
+		);
+	</insert>
+	<insert id="addActionPrerequistie">
+		INSERT INTO
+		`c_table_action_prerequistie` (
+		`table_action_id`,
+		`seq`,
+		`check_condition`,
+		`level`,
+		`violate_msg_international_id`,
+		`violate_msg_param`,
+		`is_using`
+		)
+		VALUES
+		(
+		#{actionPrerequistie.table_action_id},
+		#{actionPrerequistie.seq},
+		#{actionPrerequistie.check_condition},
+		#{actionPrerequistie.level},
+		#{actionPrerequistie.violate_msg_international_id},
+		#{actionPrerequistie.violate_msg_param},
+		#{actionPrerequistie.is_using}
+		);
+	</insert>
+	<insert id="addActionEvent">
+		INSERT INTO `c_table_action_event` (
+		`event_id`,
+		`table_action_id`,
+		`seq`,
+		`event_type`,
+		`event_name`,
+		`event_param`,
+		`is_using`
+		)
+		VALUES
+		(
+		#{actionEvent.event_id},
+		#{actionEvent.table_action_id},
+		#{actionEvent.seq},
+		#{actionEvent.event_type},
+		#{actionEvent.event_name},
+		#{actionEvent.event_param},
+		#{actionEvent.is_using}
+		);
+	</insert>
+	<insert id="addLineDetail">
+		insert into
+		c_flow_condition_detail(connection_id,condition_detail_id,column_name,symbol,value)
+		VALUE
+		(#{FlowConditionDetail.connection_id},#{FlowConditionDetail.condition_detail_id}
+		,#{FlowConditionDetail.column_name},#{FlowConditionDetail.symbol},#{FlowConditionDetail.value});
+	</insert>
+	<insert id="deleteBlock">
+		DELETE
+		c1,
+		c2,
+		c3,
+		c4
+		FROM
+		c_flow_block c1
+		LEFT JOIN
+		c_flow_event c2 ON c1.block_id = c2.block_id
+		LEFT JOIN
+		c_approve_block_event c3 ON c1.block_id = c3.block_id
+		LEFT JOIN
+		c_table_action_event c4 ON c3.approve_event_id = c4.table_action_id
+		WHERE
+		c1.table_id=#{Block.table_id}
+	</insert>
+	<insert id="deleteEvnet">
+		delete from c_flow_event where
+		table_id=#{Block.block_id}
+	</insert>
+	<insert id="deleteApprover">
+		delete from `c_auth_group` where
+		`block` not in
+		(select block_id from c_flow_block) and `type`=4 and
+		`table`=#{Block.table_id}
+	</insert>
+	<insert id="deleteFlowEvent">
+		delete from `c_auth_group` where
+		`block` not in
+		(select block_id from c_flow_block) and `type`=4 and
+		`table`=#{Block.table_id}
+	</insert>
+	<insert id="deleteLine">
+		delete from c_flow_line where page_source_id not
+		in(select block_id from
+		c_flow_block) or page_target_Id not in(select
+		block_id from
+		c_flow_block)
+
+	</insert>
+	<insert id="deleteFlowConditionDetail">
+		delete from
+		c_flow_condition_detail where not
+		EXISTS(select connection_id from
+		c_flow_line c2 where
+		c_flow_condition_detail.connection_id=c2.connection_id )
+	</insert>
+	<select id="selectSuperiorDept" resultType="java.lang.Integer">
+		select count(*) from m_user;
+		<!-- SELECT count(*) FROM( select m_user.*, '1' dept,'' `user` from m_user 
+			where department_id in ( select parent_id from m_department where id='AHHF' 
+			) and role_id='SALE' UNION select m_user.*, '2' dept,'' `user` from m_user 
+			where department_id in ( select parent_id from m_department where id in ( 
+			select parent_id from m_department where id='AHHF' ) )and role_id='GMT' UNION 
+			select m_user.*,'authGroup.getuser' dept,'' `user` from m_user where department_id='' 
+			and role_id='' UNION select m_user.*, '' dept,'1' `user` from m_user where 
+			parent_id='80000006' UNION select m_user.*, '' dept,'2' `user` from m_user 
+			where parent_id in (select id from m_user where parent_id ='80000006') UNION 
+			select m_user.*, '' dept,'authGroup.getuser' `user` from m_user where id='80000006' 
+			) c WHERE c.dept='1' and c.`user`='' -->
+
+	</select>
+
+	<delete id="deleteTemplate">
+		delete FROM `c_auth_group` where
+		template=#{authGroup.template} and type=#{authGroup.type};
+	</delete>
+	<update id="updateTemplate">
+		update `c_auth_group` set
+		template=#{authGroup.editTemplateName} where
+		template=#{authGroup.template} and type=#{authGroup.type};
+	</update>
+
+
+	<insert id="addApproveFlow">
+		insert into c_appvore_flow VALUE
+		(#{approveFlow.approve_id},#{approveFlow.table_id},#{approveFlow.data_id},
+		#{approveFlow.creation_time},#{approveFlow.end_time});
+	</insert>
+	<insert id="addApproveFlowNode">
+		insert into c_approve_flow_node
+		VALUE(#{approveFlowNode.approve_id},#{approveFlowNode.seq},#{approveFlowNode.state});
+	</insert>
+	<insert id="addApproveFlowNodes">
+		INSERT INTO
+		`c_approve_flow_node` (
+		`approve_id`,
+		`block_id`,
+		`state`,
+		`sequence`,
+		`node_seq`,
+		is_addApproveNode,
+		is_approve_block,
+		`module`,
+		belong_block
+		)
+		VALUES
+		(
+		#{approveFlowUser.approve_id},
+		#{approveFlowUser.block_id},
+		#{approveFlowUser.state},
+		#{approveFlowUser.sequence},
+		#{approveFlowUser.add_approve_seq},
+		1,
+		1,
+		#{approveFlowUser.module},
+		#{belong_block}
+		);
+	</insert>
+	<delete id="DeleteAddApproveFlowUser">
+		DELETE
+		FROM
+		c_approve_flow_user
+		WHERE
+		is_add_approve = 1
+		AND `approve_id` = #{approveId}
+		AND `sequence` =#{sequence}
+	</delete>
+	<delete id="DeleteAddApproveFlowNodes">
+		DELETE
+		FROM
+		c_approve_flow_node
+		WHERE
+		is_addApproveNode =
+		1
+		AND `approve_id` = #{approveId}
+		AND `sequence` =#{sequence}
+	</delete>
+	<update id="updateIsAddApproveNade">
+		UPDATE `c_approve_flow_node`
+		SET
+		`is_alreadyAddApprove` = #{is_addApproveNode}
+		WHERE
+		`approve_id` =
+		#{approveId}
+		AND `block_id` = #{blockId}
+	</update>
+	<insert id="addApproveFlowUser">
+		insert into c_approve_flow_user(
+		`approve_id`,
+		`block_id`,
+		`user`,
+		`state`,
+		`remark`,
+		`creation_time`,
+		`sequence`,
+		`is_default_approve`,
+		`is_add_approve`,
+		add_approve_seq,
+		`module`
+		) VALUE
+		(
+		#{approveFlowUser.approve_id},
+		#{approveFlowUser.block_id},
+		#{approveFlowUser.userId},
+		#{approveFlowUser.state},
+		#{approveFlowUser.remark},
+		#{approveFlowUser.creation_time},
+		#{approveFlowUser.sequence},
+		#{approveFlowUser.is_default_approve},
+		#{approveFlowUser.is_add_approve},
+		#{approveFlowUser.add_approve_seq},
+		#{approveFlowUser.module}
+		);
+	</insert>
+	<insert id="addApproveFlowUsers">
+		insert into c_approve_flow_user(
+		`approve_id`,
+		`block_id`,
+		`user`,
+		`state`,
+		`remark`,
+		`creation_time`,
+		`sequence`,
+		`is_default_approve`,
+		`is_add_approve`,
+		add_approve_seq,
+		`module`
+		) VALUES
+		<foreach collection="approveFlowUsers" item="approveFlowUser"
+			separator=",">
+			(
+			#{approveFlowUser.approve_id},
+			#{approveFlowUser.block_id},
+			#{approveFlowUser.userId},
+			#{approveFlowUser.state},
+			#{approveFlowUser.remark},
+			#{approveFlowUser.creation_time},
+			#{approveFlowUser.sequence},
+			#{approveFlowUser.is_default_approve},
+			#{approveFlowUser.is_add_approve},
+			#{approveFlowUser.add_approve_seq},
+			#{approveFlowUser.module}
+			)
+		</foreach>
+	</insert>
+	<update id="updateApproveState">
+		update c_approve_flow_user
+		set state = #{approveFlowUser.state},
+		remark
+		= #{approveFlowUser.remark},
+		creation_time =
+		#{approveFlowUser.creation_time},
+		flow_event_id =
+		#{approveFlowUser.flow_event_id}
+		where block_id =
+		#{approveFlowUser.block_id}
+		and approve_id =
+		#{approveFlowUser.approve_id}
+		and sequence =
+		#{approveFlowUser.sequence}
+		<if test="null != userId">
+			and `user`=#{userId}
+		</if>
+	</update>
+	<update id="updateApproveNodeState">
+		UPDATE `c_approve_flow_node`
+		SET
+		`state` =
+		#{approveFlowNode.state}
+		WHERE
+		(`approve_id` =
+		#{approveFlowNode.approve_id})
+		AND (`block_id` =
+		#{approveFlowNode.block_id})
+	</update>
+	<update id="updateApproveFlowState">
+		UPDATE `c_approve_flow`
+		SET
+		`state` = #{approveFlow.state}
+		<if test="approveFlow.end_time != null">
+			,end_time = #{approveFlow.end_time}
+		</if>
+		WHERE
+		(`approve_id` = #{approveFlow.approve_id})
+		AND (`table_id` =
+		#{approveFlow.table_id})
+	</update>
+	<update id="updateTableIsApproveState">
+		UPDATE `c_table`
+		SET
+		`is_approve_state` =
+		#{is_approve_state}
+		WHERE (`id` = #{table_id});
+	</update>
+	<select id="isLastNode" resultType="java.lang.Integer">
+		select count(*) from (
+		select
+		node_seq from c_approve_flow_node t1 where approve_id=#{approveId}
+		and
+		block_id=#{block_id}
+		AND node_seq =
+		(select max(node_seq) a from
+		c_approve_flow_node t2 where
+		t2.approve_id=#{approveId})
+		) t
+	</select>
+	<select id="getNeedAgreeCountPeople" resultType="java.lang.Integer">
+		select
+		need_agree_count_people from c_flow_block where table_id=#{table_id}
+		and block_id=#{block_id}
+	</select>
+	<select id="getAlreadyAgreeCountPeople" resultType="java.lang.Integer">
+		select
+		count(*) from c_approve_flow_user where block_id=#{block_id} and
+		approve_id=#{approveId}
+		and sequence=#{sequence} AND state != 'wait'
+	</select>
+	<select id="getAgreeCountPeople" resultType="java.lang.Integer">
+		select count(*) from
+		c_approve_flow_user where block_id = #{block_id} and
+		approve_id =
+		#{approveId}
+		and sequence = #{sequence} AND state = 'agree'
+	</select>
+	<select id="getActualNeedAgreeCountPeople" resultType="java.lang.Integer">
+		select
+		count(*) from c_approve_flow_user where block_id=#{block_id} and
+		approve_id=#{approveId}
+		and sequence=#{sequence}
+	</select>
+	<select id="getAddApproveAlreadyAgreeCountPeople" resultType="java.lang.Integer">
+		select count(*) from c_approve_flow_user where block_id=#{block_id}
+		and approve_id=#{approveId}
+		and is_add_approve=1 AND state = 'wait' and
+		sequence=#{sequence}
+	</select>
+	<select id="selectApproveFlow" resultType="cn.com.easyerp.core.approve.ApproveFlow">
+		select `approve_id`,
+		`table_id`, `data_id`, `creation_time`, `end_time` from c_approve_flow
+		;
+	</select>
+	<select id="selectApproveFlowNode" resultType="cn.com.easyerp.core.approve.ApproveFlowNode">
+		select
+		`approve_id`, `seq`, `state` from c_approve_flow_node;
+	</select>
+	<select id="selectApproveFlowUser" resultType="cn.com.easyerp.core.approve.ApproveFlowUser">
+		select
+		`approve_id`, `seq`, `user`, `state`, `remark`, `creation_time` from
+		c_approve_flow_user;
+	</select>
+	<select id="getId" resultType="java.lang.String">
+		CALL c_get_next_id (#{tableName},
+		#{parent_id}, @new_id, @new_not_no);
+		SELECT @new_id id;
+	</select>
+	<insert id="saveApproveFlow">
+		INSERT INTO `c_approve_flow` (
+		`approve_id`,
+		`table_id`,
+		`data_id`,
+		`creation_time`,
+		`state`
+		)
+		VALUES
+		(
+		#{approve_id},
+		#{table},
+		#{someMining_id},
+		#{date},
+		'1'
+		);
+	</insert>
+	<select id="selectBlocks" resultType="cn.com.easyerp.core.approve.FlowBlock">
+		SELECT `table_id`, `block_id`, `type`, `text`, `block_x`,
+		`block_y`,
+		`approve_name`, `task_msg`, `turn_down_up`, `turn_down_source`,
+		`time_limit`, `time_out_rule`, `is_until_block`, `is_approve_block`,
+		is_work_block,
+		need_opinion_count_people, `need_agree_count_people`,
+		notPassType
+		from c_flow_block
+		<if test="tableName != null">
+			where table_id = #{tableName}
+		</if>
+	</select>
+	<select id="selectBlockEditColumn" resultType="cn.com.easyerp.core.approve.FlowBlockEditColumn">
+		SELECT
+		`table`,
+		block,
+		`column`
+		FROM c_flow_block_edit_column
+	</select>
+	<select id="selectEvent" resultType="cn.com.easyerp.core.approve.FlowEvent">
+		SELECT
+		`table_id`,
+		`block_id`,
+		`seq`,
+		`event_type`,
+		`email`,
+		`sms`
+		FROM
+		`c_flow_event`
+		where
+		`block_id`=#{block_id};
+	</select>
+	<select id="selectLines" resultType="cn.com.easyerp.core.approve.FlowLine">
+		SELECT DISTINCT
+		c1.connection_id, c1.page_source_id,
+		c1.page_source_place,
+		c1.page_target_id, c1.source_text,
+		c1.page_target_place,
+		c1.target_text,c1.memo, c2.table_id
+		FROM
+		c_flow_line c1
+		LEFT JOIN c_flow_block c2 ON c1.page_source_id =
+		c2.block_id or
+		c1.page_target_Id = c2.block_id
+		<if test="tableName != null">
+			where c2.table_id = #{tableName}
+		</if>
+	</select>
+	<select id="selectCondition" resultType="cn.com.easyerp.core.approve.FlowConditionDetail">
+		SELECT
+		c1.connection_id,c1.condition_detail_id,c1.column_name,c1.symbol,c1.value,c4.name
+		`name`,
+		c3.table_id
+		FROM
+		c_flow_condition_detail c1
+		LEFT JOIN c_flow_line
+		c2 on c1.connection_id=c2.connection_id
+		LEFT JOIN c_flow_block c3 ON
+		c2.page_source_id = c3.block_id or
+		c2.page_target_Id = c3.block_id
+		LEFT
+		JOIN m_user c4 ON c1.value = c4.id
+		<if test="tableName != null">
+			where c3.table_id = #{tableName}
+		</if>
+	</select>
+	<select id="selectFirstLine" resultType="cn.com.easyerp.core.approve.FlowLine">
+		SELECT
+		c6.connection_id,c6.page_source_id,c6.page_target_id,c6.source_text,c6.target_text,c6.memo,c5.table_id
+		FROM c_flow_block c5
+		LEFT JOIN
+		(SELECT * FROM c_flow_line c1
+		WHERE NOT
+		EXISTS (SELECT 1 FROM c_flow_line c2 WHERE c1.page_source_id =
+		c2.page_target_Id)) c6
+		ON c5.block_id = c6.page_source_id
+		LEFT JOIN
+		(SELECT * FROM c_flow_line c1
+		WHERE NOT EXISTS (SELECT 1 FROM
+		c_flow_line c2 WHERE c1.page_source_id =
+		c2.page_target_Id)) c7
+		ON
+		c5.block_id = c7.page_target_Id
+		WHERE c6.connection_id is NOT NULL and
+		c5.table_id=#{tableName}
+	</select>
+	<insert id="saveApproveNode">
+		INSERT INTO `c_approve_flow_node`
+		(`approve_id`,
+		`block_id`, `state`, `sequence`, `node_seq`, is_until_block,
+		is_approve_block, belong_block)
+		VALUES
+		(#{approve_id}, #{block_id},
+		'wait', #{maxSequence}, #{seq}, #{is_until_block},
+		#{is_approve_block}, #{belong_block});
+	</insert>
+	<insert id="saveApproveNodes">
+		INSERT INTO `c_approve_flow_node`
+		(`approve_id`, `block_id`, `state`,
+		`sequence`, `node_seq`, is_until_block,
+		is_approve_block, belong_block)
+		VALUES
+		<foreach collection="approveNodes" item="approveNode"
+			separator=",">
+			(#{approveNode.approve_id}, #{approveNode.block_id},
+			'wait',
+			#{approveNode.maxSequence}, #{approveNode.num},
+			#{approveNode.is_until_block},
+			#{approveNode.is_approve_block},
+			#{approveNode.belong_block})
+		</foreach>
+	</insert>
+	<select id="selectApproveUser" resultType="java.util.Map">
+		call
+		approve_user(#{table_id}, #{block_id}, #{data_id})
+	</select>
+	<select id="selectCountApproveTable" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM c_auth_group WHERE `table` = #{tableName} AND `type` =
+		4
+	</select>
+	<select id="getApproveId" resultType="java.lang.String">
+		SELECT c1.approve_id FROM
+		c_approve_flow c1
+		INNER JOIN c_approve_flow_node c2
+		ON c1.approve_id =
+		c2.approve_id
+		WHERE c1.table_id = #{table_id}
+		AND c1.data_id =
+		#{data_id}
+		AND c2.sequence =
+		(SELECT MAX(c2.sequence) FROM
+		c_approve_flow c1
+		INNER JOIN c_approve_flow_node c2
+		ON c1.approve_id =
+		c2.approve_id
+		WHERE c1.table_id = #{table_id}
+		AND c1.data_id =
+		#{data_id})
+		LIMIT 0, 1
+	</select>
+	<select id="selectApproveByTable" resultType="cn.com.easyerp.core.approve.ApproveFlow">
+		SELECT
+		approve_id,
+		table_id,
+		data_id,
+		IFNULL(creation_time, '') creation_time,
+		IFNULL(end_time, '') end_time,
+		state,
+		`module`
+		FROM c_approve_flow
+		WHERE
+		approve_id =
+		(SELECT c1.approve_id FROM c_approve_flow c1
+		INNER JOIN
+		c_approve_flow_node c2
+		ON c1.approve_id = c2.approve_id
+		WHERE
+		c1.table_id = #{table_id}
+		AND c1.data_id = #{data_id}
+		AND c2.sequence =
+		(SELECT MAX(c2.sequence) FROM c_approve_flow c1
+		INNER JOIN
+		c_approve_flow_node c2
+		ON c1.approve_id = c2.approve_id
+		WHERE
+		c1.table_id = #{table_id}
+		AND c1.data_id = #{data_id})
+		LIMIT 0, 1)
+	</select>
+	<select id="selectApproveByApproveIdAndDataId" resultType="cn.com.easyerp.core.approve.ApproveFlow">
+		SELECT
+		approve_id,
+		table_id,
+		data_id,
+		IFNULL(creation_time, '')
+		creation_time,
+		IFNULL(end_time, '') end_time,
+		state,
+		`module`
+		FROM
+		c_approve_flow
+		WHERE approve_id = #{approve_id}
+	</select>
+	<select id="checkIsApprove" resultType="java.util.Map">
+		SELECT ${id_column} FROM ${table_id}
+		WHERE ${approve_column} IN
+		<foreach collection="approve_status" item="status" separator=","
+			open="(" close=")">
+			#{status}
+		</foreach>
+		<if test="ids != null">
+			AND ${id_column} IN
+			<foreach collection="ids" item="id" separator="," open="("
+				close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+	<select id="selectApproveFlowNodeByApproveId" resultType="cn.com.easyerp.core.approve.ApproveFlowNode">
+		SELECT
+		c1.approve_id,
+		c1.block_id,
+		c1.state,
+		c1.sequence,
+		c1.node_seq,
+		c1.`module`,
+		c1.is_addApproveNode,
+		c1.is_alreadyAddApprove,
+		c3.is_addApprove,
+		c3.addApprove_count,
+		c1.is_until_block,
+		c1.is_approve_block,
+		c1.belong_block,
+		c3.is_work_block
+		FROM
+		c_approve_flow_node c1 LEFT JOIN c_approve_flow c2 on
+		c1.approve_id=c2.approve_id
+		LEFT JOIN c_flow_block c3 on
+		c2.table_id=c3.table_id and
+		c1.block_id=c3.block_id
+		WHERE c1.approve_id
+		= #{approve_id} ORDER BY c1.node_seq
+	</select>
+	<select id="isApproveBack" resultType="java.lang.Integer">
+		SELECT COUNT(approve_id)
+		FROM c_approve_flow WHERE approve_id = #{approveId}
+	</select>
+	<select id="hasApproveBackButton" resultType="java.lang.Integer">
+		SELECT
+		COUNT(approve_id) FROM c_approve_flow_user
+		WHERE approve_id =
+		#{approveId}
+		AND state &lt;&gt; 'wait'
+		AND sequence =
+		(SELECT
+		MAX(sequence) FROM c_approve_flow_user WHERE approve_id =
+		#{approveId})
+	</select>
+	<delete id="deleteApproveFlowByApproveId">
+		DELETE FROM c_approve_flow WHERE approve_id =
+		#{approveId}
+	</delete>
+	<delete id="deleteApproveFlowNodeByApproveId">
+		DELETE FROM c_approve_flow_node WHERE approve_id =
+		#{approveId}
+	</delete>
+	<delete id="deleteApproveFlowUserByApproveId">
+		DELETE FROM c_approve_flow_user WHERE approve_id =
+		#{approveId}
+	</delete>
+	<select id="selectApproveFlowUserByApproveId" resultType="cn.com.easyerp.core.approve.ApproveFlowUser">
+		SELECT
+		approve_id,
+		block_id,
+		`user` userId,
+		state,
+		IFNULL(remark, '') remark,
+		IFNULL(creation_time, '') creation_time,
+		sequence,
+		is_default_approve,
+		is_add_approve,
+		`module`
+		FROM c_approve_flow_user
+		WHERE approve_id =
+		#{approve_id}
+	</select>
+	<select id="selectApproveUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT
+		m_user.id,
+		m_user.parent_id,
+		IFNULL(m_user.name, '') `name`,
+		m_user.sex,
+		m_user.birthdate,
+		m_user.telephone,
+		m_user.mobile,
+		m_user.email,
+		m_user.msn,
+		m_user.language_id,
+		m_user.role_id,
+		m_user.department_id,
+		--
+		m_user.long_term,
+		-- m_user.unchecked,
+		m_user.memo,
+		m_user.status,
+		m_user.cre_user,
+		m_user.cre_date,
+		m_user.upd_user,
+		m_user.upd_date,
+		m_user.imageUrl,
+		m_user.corpId,
+		-- m_user.secret,
+		m_user.agentId,
+		m_user.position,
+		m_user.status_wx
+		FROM c_approve_flow_user
+		c_approve_flow_user
+		LEFT JOIN m_user m_user
+		ON c_approve_flow_user.user
+		= m_user.id
+		WHERE c_approve_flow_user.approve_id = #{approve_id}
+	</select>
+	<select id="selectApproveUsersByBlockId" resultType="cn.com.easyerp.core.approve.ApproveFlowUser">
+		SELECT
+		approve_id, block_id, `user` userId, state,
+		remark,
+		creation_time, sequence,
+		is_default_approve, is_add_approve,
+		add_approve_seq,
+		`module`, flow_event_id
+		FROM c_approve_flow_user
+		WHERE
+		approve_id = #{approveId}
+		<if test="block_id != null">
+			AND block_id = #{block_id}
+
+		</if>
+	</select>
+	<select id="selectBatchBlock" resultType="java.util.Map">
+		SELECT c1.approve_id, c2.block_id, c1.table_id, c1.data_id,
+		c_block.task_msg FROM c_approve_flow c1
+		INNER JOIN c_approve_flow_node
+		c2
+		ON c1.approve_id = c2.approve_id
+		INNER JOIN c_approve_flow_user c3
+		ON
+		c2.approve_id = c3.approve_id AND c2.block_id = c3.block_id
+		INNER JOIN
+		c_flow_block c_block
+		ON c1.table_id = c_block.table_id AND c2.block_id
+		= c_block.block_id
+		WHERE c2.state = 'wait'
+		AND c1.state = 1
+		AND
+		c2.sequence =
+		(SELECT MAX(c4.sequence) FROM c_approve_flow_node c4
+		WHERE c2.approve_id =
+		c4.approve_id)
+		AND c2.node_seq =
+		(SELECT
+		MIN(c5.node_seq) FROM c_approve_flow_node c5 WHERE c5.state = 'wait'
+		AND c5.approve_id = c2.approve_id AND c5.block_id = c2.block_id)
+		AND
+		c1.table_id = #{table_id}
+		<if test="data_ids != null and data_ids.size() != 0">
+			AND c1.data_id IN
+			<foreach collection="data_ids" item="item" separator=","
+				open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="selectBatchBlocks" resultType="cn.com.easyerp.core.approve.ApproveFlowNode">
+		SELECT c1.approve_id,
+		c2.block_id, c2.belong_block, c1.data_id FROM
+		c_approve_flow c1
+		INNER
+		JOIN c_approve_flow_node c2
+		ON c1.approve_id = c2.approve_id
+		INNER JOIN
+		c_approve_flow_user c3
+		ON c2.approve_id = c3.approve_id AND c2.block_id
+		= c3.block_id
+		INNER JOIN ${table_id} data_table
+		ON
+		data_table.`${id_column}` = c1.data_id
+		WHERE c1.state = 1 AND c2.state
+		= 'wait' AND c3.`state` = 'wait'
+		AND c2.sequence =
+		(SELECT
+		MAX(c4.sequence) FROM c_approve_flow_node c4
+		WHERE c2.approve_id =
+		c4.approve_id AND c2.block_id = c4.block_id)
+		AND c2.node_seq =
+		(SELECT
+		MIN(c5.node_seq) FROM c_approve_flow_node c5
+		WHERE c2.approve_id =
+		c5.approve_id AND c5.state = 'wait')
+		AND c3.user = #{user_id}
+	</select>
+	<select id="selectUser" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT
+		m_user.id,
+		m_user.parent_id,
+		IFNULL(m_user.name, '') `name`,
+		m_user.sex,
+		m_user.birthdate,
+		m_user.telephone,
+		m_user.mobile,
+		m_user.email,
+		m_user.msn,
+		m_user.language_id,
+		m_user.role_id,
+		m_user.department_id,
+		--
+		m_user.long_term,
+		-- m_user.unchecked,
+		m_user.memo,
+		m_user.status,
+		m_user.cre_user,
+		m_user.cre_date,
+		m_user.upd_user,
+		m_user.upd_date,
+		m_user.imageUrl,
+		m_user.corpId,
+		-- m_user.secret,
+		m_user.agentId,
+		m_user.position,
+		m_user.status_wx
+		FROM m_user m_user
+		WHERE m_user.id =
+		#{user_id}
+	</select>
+	<select id="selectAllUser" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT
+		m_user.id,
+		m_user.parent_id,
+		IFNULL(m_user.name, '') `name`,
+		m_user.sex,
+		m_user.birthdate,
+		m_user.telephone,
+		m_user.mobile,
+		m_user.email,
+		m_user.msn,
+		m_user.language_id,
+		m_user.role_id,
+		m_user.department_id,
+		--
+		m_user.long_term,
+		-- m_user.unchecked,
+		m_user.memo,
+		m_user.`status`,
+		m_user.cre_user,
+		m_user.cre_date,
+		m_user.upd_user,
+		m_user.upd_date,
+		m_user.imageUrl,
+		m_user.corpId,
+		-- m_user.secret,
+		m_user.agentId,
+		m_user.position,
+		m_user.status_wx
+		FROM m_user m_user WHERE m_user.status
+		&lt;&gt; '02'
+	</select>
+	<select id="selectAllDept" resultType="cn.com.easyerp.auth.DepartmentDescribe">
+		select
+		`id`,
+		`parent_id`,
+		`name`,
+		`name_abbr`,
+		`address`,
+		`leader`,
+		`telephone`,
+		`fax`,
+		`participate_in_sale`,
+		`cre_user`,
+		`cre_date`,
+		`upd_user`,
+		`upd_date`
+		from
+		`m_department`
+	</select>
+	<select id="selectMyApprove"
+		resultType="cn.com.easyerp.core.approve.MyApproveAndWaitMeApprove">
+		CALL my_approve(#{user_id})
+	</select>
+	<select id="waitMeApprove"
+		resultType="cn.com.easyerp.core.approve.MyApproveAndWaitMeApprove">
+		CALL wait_me_approve(#{user_id})
+	</select>
+	<select id="indexApprove"
+		resultType="cn.com.easyerp.core.approve.MyApproveAndWaitMeApprove">
+		CALL index_approve(#{user_id}, #{type})
+	</select>
+	<select id="selectDataById" resultType="java.util.Map">
+		SELECT * FROM ${tableName} WHERE
+		<foreach collection="data.keys" item="key" separator="and">
+			<choose>
+				<when test="null == data[key]">
+					${key} IS NULL
+				</when>
+				<otherwise>
+					${key} = #{data[${key}]}
+				</otherwise>
+			</choose>
+			<!--<if test="null != data[key]"> -->
+			<!--${key} = #{data[${key}]} -->
+			<!--</if> -->
+		</foreach>
+	</select>
+	<insert id="proc_approve">
+		CALL proc_approve (#{dataId})
+	</insert>
+	<update id="updateColumnById">
+		UPDATE ${table_id}
+		SET
+		<foreach collection="column_value.entrySet()" item="value"
+			index="key" separator=",">
+			${key} = #{value}
+		</foreach>
+		WHERE
+		<foreach collection="data_id.entrySet()" item="value" index="key"
+			separator=" and ">
+			${key} = #{value}
+		</foreach>
+	</update>
+	<select id="selectApproveUserCreationTime" resultType="java.util.Date">
+		SELECT
+		c1.creation_time FROM c_approve_flow_user c1
+		WHERE c1.approve_id =
+		#{approveId}
+		AND c1.block_id = #{blockId}
+		AND c1.`user` = #{userId}
+		AND
+		sequence =
+		(SELECT MAX(c2.sequence) FROM c_approve_flow_user c2
+		WHERE
+		c2.approve_id = #{approveId}
+		AND c2.block_id = #{blockId}
+		AND c2.`user`
+		= #{userId})
+	</select>
+	<select id="checkHasSubmitButton" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM c_approve_flow c1
+		INNER JOIN c_approve_flow_node
+		c2
+		ON c1.approve_id = c2.approve_id
+		WHERE c1.table_id = #{table_id}
+		AND
+		c1.data_id = #{data_id}
+		AND c2.state = 'reject'
+		<if test="maxSequence != null">
+			AND c2.sequence = #{maxSequence}
+		</if>
+	</select>
+	<select id="getMaxSequence" resultType="java.lang.Integer">
+		SELECT c2.sequence FROM
+		c_approve_flow c1
+		INNER JOIN c_approve_flow_node c2
+		ON c1.approve_id =
+		c2.approve_id
+		WHERE c1.table_id = #{table_id}
+		AND c1.data_id =
+		#{data_id}
+		AND c2.sequence =
+		(SELECT MAX(c2.sequence) FROM
+		c_approve_flow c1
+		INNER JOIN c_approve_flow_node c2
+		ON c1.approve_id =
+		c2.approve_id
+		WHERE c1.table_id = #{table_id}
+		AND c1.data_id =
+		#{data_id})
+		LIMIT 0, 1
+	</select>
+	<select id="getSequenceByApproveId" resultType="java.lang.Integer">
+		SELECT
+		MAX(sequence) FROM c_approve_flow_node WHERE approve_id =
+		#{approveId}
+	</select>
+	<select id="selectApproveStatus" resultType="java.lang.String">
+		SELECT c1.state FROM
+		c_approve_flow_node c1
+		WHERE c1.approve_id = #{approveId}
+		AND
+		c1.block_id = #{blockId}
+		AND c1.sequence =
+		(SELECT MAX(c2.sequence) FROM
+		c_approve_flow_node c2
+		WHERE c2.approve_id = #{approveId}
+		AND
+		c2.block_id = #{blockId})
+	</select>
+	<select id="selectCreUser" resultType="java.util.Map">
+		SELECT * FROM ${tableId}
+		WHERE ${columnName} = #{dataId}
+	</select>
+	<select id="selectIsAddApprove" resultType="java.lang.Integer">
+		select count(*) from
+		c_approve_flow_user
+		where approve_id=#{approve_id}
+		and
+		block_id=#{block_id}
+		and state='wait'
+		and sequence=#{sequence}
+		and
+		is_add_approve=1
+		AND `user` = #{user_id}
+	</select>
+	<select id="selectAllAddApproveUser" resultType="cn.com.easyerp.core.approve.ApproveFlowUser">
+		select
+		approve_id,
+		block_id,
+		`user` userId,
+		state,
+		IFNULL(remark, '') remark,
+		IFNULL(creation_time, '') creation_time,
+		sequence,
+		is_default_approve,
+		is_add_approve,
+		add_approve_seq,
+		`module`
+		from c_approve_flow_user
+		where
+		approve_id=#{approve_id} and block_id=#{block_id} and
+		sequence=#{sequence} and is_add_approve=1
+		ORDER BY add_approve_seq
+	</select>
+
+	<select id="getEmailApprovalParam" resultType="java.util.Map">
+		SELECT
+		table_id,
+		block_id,
+		(
+		SELECT
+		approve_id
+		FROM
+		c_approve_flow
+		WHERE
+		table_id =
+		#{table_id}
+		AND data_id = #{data_id}
+		) approve_id,
+		#{data_id} data_id,
+		approve_name,
+		task_msg,
+		#{user} user
+		FROM
+		c_flow_block
+		WHERE
+		table_id =
+		#{table_id}
+		AND block_id = (
+		SELECT
+		block_id
+		FROM
+		c_approve_flow_node
+		WHERE
+		approve_id = (
+		SELECT
+		approve_id
+		FROM
+		c_approve_flow
+		WHERE
+		table_id =
+		#{table_id}
+		AND data_id = #{data_id}
+		)
+		ORDER BY
+		node_seq
+		LIMIT 0,1
+		)
+	</select>
+
+	<select id="getApprovers" resultType="java.util.Map">
+		SELECT
+		u.id,
+		CAST(AES_DECRYPT(u._password, #{domain}) AS CHAR) _password,
+		u.email,
+		u.openid,
+		u.telephone,
+		u.name
+		FROM
+		`c_approve_flow_user` a
+		LEFT JOIN m_user
+		u ON a. USER = u.id
+		WHERE
+		`approve_id` = #{approveId}
+		AND `block_id` =
+		#{blockId}
+		AND `sequence` = (
+		SELECT
+		max(`sequence`)
+		FROM
+		`c_approve_flow_user`
+		WHERE
+		`approve_id` = #{approveId}
+		AND `block_id` =
+		#{blockId}
+		)
+	</select>
+
+
+	<select id="getNextBlock" resultType="java.lang.String">
+		SELECT
+		`block_id`
+		FROM
+		`c_approve_flow_node`
+		WHERE
+		`approve_id` = #{approveId}
+		AND `sequence` =
+		(
+		SELECT
+		max(sequence)
+		FROM
+		`c_approve_flow_node`
+		WHERE
+		`approve_id` =
+		#{approveId}
+		AND `block_id` = #{blockId}
+		)
+		AND node_seq = (
+		SELECT
+		node_seq+1
+		FROM
+		`c_approve_flow_node`
+		WHERE
+		`approve_id` = #{approveId}
+		AND `block_id` = #{blockId}
+		AND `sequence` = (
+		SELECT
+		max(sequence)
+		FROM
+		`c_approve_flow_node`
+		WHERE
+		`approve_id` = #{approveId}
+		AND `block_id` =
+		#{blockId}
+		)
+		)
+	</select>
+
+	<select id="getApproversByCuiban" resultType="java.util.Map">
+		SELECT
+		u.id,
+		CAST(AES_DECRYPT(u._password, #{domain}) AS CHAR) _password,
+		u.email,
+		u.openid,
+		u.telephone
+		FROM
+		c_approve_flow_user afu
+		LEFT JOIN m_user u ON
+		afu. USER = u.id
+		WHERE
+		approve_id = #{approve_id}
+		AND block_id = (
+		SELECT
+		block_id
+		FROM
+		c_approve_flow_node
+		WHERE
+		approve_id = #{approve_id}
+		AND
+		sequence = (
+		SELECT
+		Max(sequence) sequence
+		FROM
+		c_approve_flow_node
+		WHERE
+		approve_id = #{approve_id}
+		)
+		AND state = #{state}
+		ORDER BY
+		node_seq
+		LIMIT
+		0,
+		1
+		)
+		AND state = 'wait'
+	</select>
+
+	<insert id="addEmailApprove">
+		INSERT INTO `c_email_approve` (
+		`email_approve_id`,
+		`table_id`,
+		`block_id`,
+		`approve_id`,
+		`data_id`,
+		`status`,
+		`cre_user`,
+		`cre_date`,
+		`upd_user`,
+		`upd_date`
+		)
+		VALUES
+		(
+		#{email_approve_id},
+		#{param.table_id},
+		#{param.block_id},
+		#{param.approve_id},
+		#{param.data_id},
+		0,
+		#{user},
+		NOW(),
+		#{user},
+		NOW()
+		)
+	</insert>
+	<select id="getRejectRecord" resultType="cn.com.easyerp.core.approve.ApproveFlowUser">
+		SELECT
+		approve_id,
+		block_id,
+		`user` userId,
+		state,
+		IFNULL(remark, '') remark,
+		IFNULL(creation_time, '') creation_time,
+		sequence,
+		is_default_approve,
+		is_add_approve,
+		`module`
+		FROM
+		`c_approve_flow_user`
+		WHERE
+		approve_id IN (
+		SELECT
+		approve_id
+		FROM
+		c_approve_flow
+		WHERE
+		table_id = #{tableName}
+		AND
+		data_id = #{data}
+		)
+		AND state = 'reject'
+		ORDER BY
+		sequence
+	</select>
+	<select id="selectApproveButtonEvent" resultType="cn.com.easyerp.core.approve.FlowEvent">
+		SELECT
+		table_id, block_id, event_type, seq, email,
+		sms, international_id,
+		flow_event_id, is_exec, is_index_button, color
+		FROM c_flow_event
+		ORDER
+		BY table_id, block_id, event_type, seq
+	</select>
+	<select id="selectApproveBlockEvent" resultType="cn.com.easyerp.core.approve.ApproveBlockEvent">
+		SELECT
+		table_id,
+		block_id,
+		event_type,
+		email,
+		sms,
+		approve_event_id
+		FROM
+		c_approve_block_event
+		ORDER BY table_id, block_id, event_type
+	</select>
+	<update id="takeBackApproveUser">
+		UPDATE `c_approve_flow_user`
+		SET
+		`state` = 'wait',
+		`remark` = '',
+		`creation_time` = null,
+		`flow_event_id` = null
+		WHERE
+		`approve_id` = #{approveId}
+		AND `block_id` = #{blockId}
+		AND `user` =
+		#{user_Id}
+		AND `sequence` = #{sequence};
+
+	</update>
+	<update id="takeBackApproveNode">
+		UPDATE `c_approve_flow_node`
+		SET
+		`state` = 'wait'
+		WHERE
+		`approve_id` = #{approveId}
+		AND `block_id` = #{blockId}
+		AND `sequence` =
+		#{sequence};
+	</update>
+	<select id="selectApproveFlowNodeByBlockId" resultType="cn.com.easyerp.core.approve.ApproveFlowNode">
+		SELECT
+		`approve_id`,
+		`block_id`,
+		`state`,
+		`sequence`,
+		`node_seq`,
+		`is_addApproveNode`,
+		`is_alreadyAddApprove`,
+		`module`,
+		belong_block
+		from
+		`c_approve_flow_node`
+		where `approve_id`=#{approveId} and
+		`block_id`=#{blockId}
+	</select>
+	<select id="selectNextBlockIdByFlowUser" resultType="cn.com.easyerp.core.approve.ApproveFlowUser">
+		SELECT
+		`approve_id`,
+		`block_id`,
+		`user`,
+		`state`,
+		`remark`,
+		`creation_time`,
+		`sequence`,
+		`is_default_approve`,
+		`is_add_approve`,
+		`add_approve_seq`,
+		`module`
+		from `c_approve_flow_user`
+		where `approve_id`=#{approveId} and
+		`block_id`=#{blockId}
+	</select>
+	<select id="selectApproveNameI18N" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+		SELECT
+		`international_id`,
+		`type`,
+		replace(replace(`cn`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as cn,
+		replace(replace(`en`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as en,
+		replace(replace(`jp`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as jp,
+		replace(replace(`other1`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as other1,
+		replace(replace(`other2`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as other2,
+		`module`
+		FROM
+		`c_international`where
+		international_id=#{approveName}
+	</select>
+	<select id="selectParentUser" resultType="java.lang.String">
+		SELECT parent_id FROM
+		m_user WHERE id = #{user_id}
+	</select>
+
+	<select id="ifAllow" resultType="java.lang.Integer">
+		SELECT
+		count(1) cnt
+		FROM
+		c_approve_flow_user
+		WHERE
+		approve_id = #{approveId}
+		AND sequence = (
+		SELECT
+		Max(sequence) sequence
+		FROM
+		c_approve_flow_user
+		WHERE
+		approve_id =
+		#{approveId}
+		)
+		AND state&lt;&gt;'wait'
+	</select>
+
+	<select id="getBlockEvent" resultType="cn.com.easyerp.core.approve.ApproveBlockEvent">
+		SELECT
+		`approve_event_id`,
+		`block_id`,
+		`table_id`,
+		`email`,
+		`sms`,
+		`event_type`
+		FROM
+		`c_approve_block_event`
+		WHERE
+		`approve_event_id` = #{eventId}
+	</select>
+
+	<select id="getEventidByBlockid" resultType="java.lang.String">
+		SELECT
+		approve_event_id
+		FROM
+		`c_approve_block_event`
+		WHERE
+		`table_id` =
+		#{tableId}
+		AND `block_id` = #{blockId}
+	</select>
+
+	<select id="getApproveByDataid" resultType="java.lang.String">
+		SELECT
+		approve_id
+		FROM
+		c_approve_flow
+		WHERE
+		table_id = #{tableId}
+		AND data_id = #{dataId}
+	</select>
+
+	<select id="getBlockEventByType" resultType="cn.com.easyerp.core.approve.ApproveBlockEvent">
+		SELECT
+		block_id,
+		event_type,
+		email,
+		sms,
+		table_id,
+		approve_event_id
+		FROM
+		c_approve_block_event
+		WHERE
+		table_id = #{tableId}
+		AND block_id =
+		#{blockId}
+		AND event_type = #{event_type}
+	</select>
+
+	<select id="getStartNodeBlock" resultType="java.util.Map">
+		SELECT
+		block_id blockId
+		FROM
+		c_flow_block
+		WHERE
+		type = 'startNode'
+		AND table_id = #{tableId}
+	</select>
+
+	<update id="updateFlowEventIsExec">
+		INSERT INTO c_approve_node_event_exec
+		(approve_id,
+		block_id, flow_event_id, is_exec)
+		VALUES
+		(#{approve_id}, #{block_id},
+		#{flow_event_id}, #{is_exec})
+	</update>
+	<select id="selectApproveBlockIsExec" resultType="cn.com.easyerp.core.approve.ApproveBlockEventExec">
+		SELECT
+		approve_id, block_id, flow_event_id, is_exec FROM
+		c_approve_node_event_exec
+		WHERE approve_id = #{approve_id}
+	</select>
+	<select id="getApproveDataByTableDataUser" resultType="java.util.Map">
+		SELECT
+		c1.approve_id, c2.block_id FROM c_approve_flow c1
+		LEFT JOIN
+		c_approve_flow_node c2
+		ON c1.approve_id = c2.approve_id
+		LEFT JOIN
+		c_approve_flow_user c3
+		ON c1.approve_id = c3.approve_id
+		AND c2.block_id
+		= c3.block_id
+		WHERE c1.table_id = #{table_id}
+		AND c1.data_id =
+		#{data_id}
+		AND c2.state = 'wait'
+		AND c3.state = 'wait'
+		AND c1.state = 1
+		AND c2.sequence =
+		(SELECT MAX(c2.sequence) FROM c_approve_flow c1
+		LEFT
+		JOIN c_approve_flow_node c2
+		ON c1.approve_id = c2.approve_id
+		LEFT JOIN
+		c_approve_flow_user c3
+		ON c1.approve_id = c3.approve_id
+		AND c2.block_id
+		= c3.block_id
+		WHERE c1.table_id = #{table_id}
+		AND c1.data_id =
+		#{data_id})
+		AND c2.node_seq =
+		(SELECT MIN(c4.node_seq) FROM
+		c_approve_flow_node c4 WHERE c4.state = 'wait'
+		AND c4.approve_id =
+		c2.approve_id)
+		AND c3.`user` = #{user_id}
+	</select>
+	<select id="getApproveDataByTableData" resultType="java.util.Map">
+		SELECT
+		c1.approve_id, c2.block_id, c3.user FROM c_approve_flow c1
+		LEFT JOIN
+		c_approve_flow_node c2
+		ON c1.approve_id = c2.approve_id
+		LEFT JOIN
+		c_approve_flow_user c3
+		ON c1.approve_id = c3.approve_id
+		AND c2.block_id
+		= c3.block_id
+		WHERE c1.table_id = #{table_id}
+		AND c1.data_id =
+		#{data_id}
+		AND c2.state = 'wait'
+		AND c3.state = 'wait'
+		AND c1.state = 1
+		AND c2.sequence =
+		(SELECT MAX(c2.sequence) FROM c_approve_flow c1
+		LEFT
+		JOIN c_approve_flow_node c2
+		ON c1.approve_id = c2.approve_id
+		LEFT JOIN
+		c_approve_flow_user c3
+		ON c1.approve_id = c3.approve_id
+		AND c2.block_id
+		= c3.block_id
+		WHERE c1.table_id = #{table_id}
+		AND c1.data_id =
+		#{data_id})
+		AND c2.node_seq =
+		(SELECT MIN(c4.node_seq) FROM
+		c_approve_flow_node c4 WHERE c4.state = 'wait'
+		AND c4.approve_id =
+		c2.approve_id)
+	</select>
+	<select id="hasStatus" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM
+		c_approve_flow_user
+		WHERE approve_id = #{approve_id} AND block_id =
+		#{block_id} AND sequence =
+		#{sequence} AND state = #{status}
+	</select>
+	<delete id="deleteApproveBlockEvent">
+		delete from c_approve_block_event where
+		table_id=#{approveBlockEvent.table_id} and
+		block_id=#{approveBlockEvent.block_id}
+	</delete>
+	<insert id="insertApproveBlockEvent">
+		INSERT INTO `c_approve_block_event` (
+		`block_id`,
+		`event_type`,
+		`email`,
+		`sms`,
+		`table_id`,
+		`approve_event_id`
+		)
+		VALUES
+		(
+		#{approveBlockEvent.block_id},
+		#{approveBlockEvent.event_type},
+		#{approveBlockEvent.email},
+		#{approveBlockEvent.sms},
+		#{approveBlockEvent.table_id},
+		#{approveBlockEvent.approve_event_id}
+		);
+	</insert>
+	<select id="selectAuthGroup" resultType="cn.com.easyerp.core.authGroup.AuthGroup">
+		SELECT
+		c_auth.department, c_auth.department_relation, c_auth.role,
+		c_auth.`user`, c_auth.user_relation
+		FROM c_auth_group c_auth
+		WHERE
+		c_auth.type = '4'
+		AND c_auth.`table` = #{tableName} AND c_auth.block =
+		#{blockId};
+	</select>
+	<select id="selectUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT m_user.id,
+		m_user.parent_id, IFNULL(m_user.name, '') `name`,
+		m_user.sex,
+		m_user.birthdate, m_user.telephone, m_user.mobile,
+		m_user.email,
+		m_user.msn, m_user.language_id, m_user.role_id,
+		m_user.department_id,
+		m_user.memo, m_user.`status`, m_user.cre_user,
+		m_user.cre_date,
+		m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+		m_user.corpId,
+		m_user.agentId, m_user.position, m_user.status_wx
+		FROM m_user m_user
+	</select>
+	<select id="selectUserById" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT m_user.id,
+		m_user.parent_id, IFNULL(m_user.name, '') `name`,
+		m_user.sex,
+		m_user.birthdate, m_user.telephone, m_user.mobile,
+		m_user.email,
+		m_user.msn, m_user.language_id, m_user.role_id,
+		m_user.department_id,
+		m_user.memo, m_user.`status`, m_user.cre_user,
+		m_user.cre_date,
+		m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+		m_user.corpId,
+		m_user.agentId, m_user.position, m_user.status_wx
+		FROM m_user m_user
+		WHERE m_user.id = #{userId};
+	</select>
+	<select id="selectDeptRoleUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT m_user.id,
+		m_user.parent_id, IFNULL(m_user.name, '') `name`,
+		m_user.sex,
+		m_user.birthdate, m_user.telephone, m_user.mobile,
+		m_user.email,
+		m_user.msn, m_user.language_id, m_user.role_id,
+		m_user.department_id,
+		m_user.memo, m_user.`status`, m_user.cre_user,
+		m_user.cre_date,
+		m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+		m_user.corpId,
+		m_user.agentId, m_user.position, m_user.status_wx
+		FROM m_user m_user
+		LEFT JOIN m_user_additional m2 ON m_user.id = m2.user_id
+		WHERE
+		(m_user.role_id = #{role} AND m_user.department_id = #{dept})
+		OR
+		(m2.role = #{role} AND m2.dept = #{dept});
+	</select>
+	<select id="selectRoleUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT m_user.id,
+		m_user.parent_id, IFNULL(m_user.name, '') `name`,
+		m_user.sex,
+		m_user.birthdate, m_user.telephone, m_user.mobile,
+		m_user.email,
+		m_user.msn, m_user.language_id, m_user.role_id,
+		m_user.department_id,
+		m_user.memo, m_user.`status`, m_user.cre_user,
+		m_user.cre_date,
+		m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+		m_user.corpId,
+		m_user.agentId, m_user.position, m_user.status_wx
+		FROM m_user m_user
+		LEFT JOIN m_user_additional m2 ON m_user.id = m2.user_id
+		WHERE
+		m_user.role_id = #{role} OR m2.role = #{role};
+	</select>
+	<select id="selectDeptUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT m_user.id,
+		m_user.parent_id, IFNULL(m_user.name, '') `name`,
+		m_user.sex,
+		m_user.birthdate, m_user.telephone, m_user.mobile,
+		m_user.email,
+		m_user.msn, m_user.language_id, m_user.role_id,
+		m_user.department_id,
+		m_user.memo, m_user.`status`, m_user.cre_user,
+		m_user.cre_date,
+		m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+		m_user.corpId,
+		m_user.agentId, m_user.position, m_user.status_wx
+		FROM m_user m_user
+		LEFT JOIN m_user_additional m2 ON m_user.id = m2.user_id
+		WHERE
+		m_user.department_id = #{dept} OR m2.dept = #{dept};
+	</select>
+	<select id="selectDeptRela0Users" resultType="cn.com.easyerp.auth.AuthDetails">
+		select m2.id,
+		m2.parent_id, IFNULL(m2.name, '') `name`,
+		m2.sex, m2.birthdate,
+		m2.telephone, m2.mobile,
+		m2.email, m2.msn, m2.language_id, m2.role_id,
+		m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+		m2.cre_date,
+		m2.upd_user, m2.upd_date, m2.imageUrl,
+		m2.corpId, m2.agentId,
+		m2.position, m2.status_wx
+		from m_user m2
+		LEFT JOIN m_user_additional
+		m_add ON m2.id = m_add.user_id
+		where m2.department_id in (
+		select
+		m1.department_id from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON
+		data_table.cre_user = m1.id
+		and data_table.${idColumn} = #{dataId}
+		)
+		OR
+		m_add.dept in (
+		select m1.department_id from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON data_table.cre_user = m1.id
+		and
+		data_table.${idColumn} = #{dataId})
+	</select>
+	<select id="selectDeptRela0RoleUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		select m2.id,
+		m2.parent_id, IFNULL(m2.name, '') `name`,
+		m2.sex, m2.birthdate,
+		m2.telephone, m2.mobile,
+		m2.email, m2.msn, m2.language_id, m2.role_id,
+		m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+		m2.cre_date,
+		m2.upd_user, m2.upd_date, m2.imageUrl,
+		m2.corpId, m2.agentId,
+		m2.position, m2.status_wx
+		from m_user m2
+		LEFT JOIN m_user_additional
+		m_add ON m2.id = m_add.user_id
+		where (m2.department_id in (
+		select
+		m1.department_id from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON
+		data_table.cre_user = m1.id
+		and data_table.${idColumn} = #{dataId}
+		) and
+		m2.role_id = #{role})
+		OR (m_add.dept in (
+		select m1.department_id from
+		${tableName} data_table
+		INNER JOIN m_user m1
+		ON data_table.cre_user =
+		m1.id
+		and data_table.${idColumn} = #{dataId}
+		) and m_add.role = #{role})
+
+	</select>
+	<select id="selectDeptRela1Users" resultType="cn.com.easyerp.auth.AuthDetails">
+		select m2.id,
+		m2.parent_id, IFNULL(m2.name, '') `name`,
+		m2.sex, m2.birthdate,
+		m2.telephone, m2.mobile,
+		m2.email, m2.msn, m2.language_id, m2.role_id,
+		m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+		m2.cre_date,
+		m2.upd_user, m2.upd_date, m2.imageUrl,
+		m2.corpId, m2.agentId,
+		m2.position, m2.status_wx
+		from m_user m2
+		LEFT JOIN m_user_additional
+		m_add ON m2.id = m_add.user_id
+		where m2.department_id in (
+		select
+		dept1.parent_id from m_department dept1 where dept1.id in (
+		select
+		m1.department_id from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON
+		data_table.cre_user = m1.id
+		and data_table.${idColumn} = #{dataId}
+		))
+		OR
+		m_add.dept in (
+		select dept1.parent_id from m_department dept1 where
+		dept1.id in (
+		select m1.department_id from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON data_table.cre_user = m1.id
+		and
+		data_table.${idColumn} = #{dataId}
+		))
+	</select>
+	<select id="selectDeptRela1RoleUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		select m2.id,
+		m2.parent_id, IFNULL(m2.name, '') `name`,
+		m2.sex, m2.birthdate,
+		m2.telephone, m2.mobile,
+		m2.email, m2.msn, m2.language_id, m2.role_id,
+		m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+		m2.cre_date,
+		m2.upd_user, m2.upd_date, m2.imageUrl,
+		m2.corpId, m2.agentId,
+		m2.position, m2.status_wx
+		from m_user m2
+		LEFT JOIN m_user_additional
+		m_add ON m2.id = m_add.user_id
+		where (m2.department_id in (
+		select
+		dept1.parent_id from m_department dept1 where dept1.id in (
+		select
+		m1.department_id from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON
+		data_table.cre_user = m1.id
+		and data_table.${idColumn} = #{dataId}
+		))
+		and m2.role_id = #{role})
+		OR (m_add.dept in (
+		select dept1.parent_id
+		from m_department dept1 where dept1.id in (
+		select m1.department_id
+		from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON data_table.cre_user
+		= m1.id
+		and data_table.${idColumn} = #{dataId}
+		)) and m_add.role =
+		#{role})
+	</select>
+	<select id="selectDeptRela2Users" resultType="cn.com.easyerp.auth.AuthDetails">
+		select m2.id,
+		m2.parent_id, IFNULL(m2.name, '') `name`,
+		m2.sex, m2.birthdate,
+		m2.telephone, m2.mobile,
+		m2.email, m2.msn, m2.language_id, m2.role_id,
+		m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+		m2.cre_date,
+		m2.upd_user, m2.upd_date, m2.imageUrl,
+		m2.corpId, m2.agentId,
+		m2.position, m2.status_wx
+		from m_user m2
+		LEFT JOIN m_user_additional
+		m_add ON m2.id = m_add.user_id
+		where m2.department_id in (
+		select id
+		from m_department dept2 where dept2.parent_id in (
+		select id from
+		m_department dept1 where dept1.parent_id in (
+		select m1.department_id
+		from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON data_table.cre_user
+		= m1.id
+		and data_table.${idColumn} = #{dataId}
+		)))
+		OR m_add.dept in (
+		select id from m_department dept2 where dept2.parent_id in (
+		select id
+		from m_department dept1 where dept1.parent_id in (
+		select
+		m1.department_id from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON
+		data_table.cre_user = m1.id
+		and data_table.${idColumn} = #{dataId}
+		)))
+	</select>
+	<select id="selectDeptRela2RoleUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		select m2.id,
+		m2.parent_id, IFNULL(m2.name, '') `name`,
+		m2.sex, m2.birthdate,
+		m2.telephone, m2.mobile,
+		m2.email, m2.msn, m2.language_id, m2.role_id,
+		m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+		m2.cre_date,
+		m2.upd_user, m2.upd_date, m2.imageUrl,
+		m2.corpId, m2.agentId,
+		m2.position, m2.status_wx
+		from m_user m2
+		LEFT JOIN m_user_additional
+		m_add ON m2.id = m_add.user_id
+		where (m2.department_id in (
+		select
+		parent_id from m_department dept2 where dept2.id in (
+		select parent_id
+		from m_department dept1 where dept1.id in (
+		select m1.department_id
+		from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON data_table.cre_user
+		= m1.id
+		and data_table.${idColumn} = #{dataId}
+		))) and m2.role_id =
+		#{role})
+		OR (m_add.dept in (
+		select parent_id from m_department dept2
+		where dept2.id in (
+		select parent_id from m_department dept1 where
+		dept1.id in (
+		select m1.department_id from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON data_table.cre_user = m1.id
+		and
+		data_table.${idColumn} = #{dataId}
+		))) and m_add.role = #{role})
+	</select>
+	<select id="selectUserRela0RoleUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		select m2.id,
+		m2.parent_id, IFNULL(m2.name, '') `name`,
+		m2.sex, m2.birthdate,
+		m2.telephone, m2.mobile,
+		m2.email, m2.msn, m2.language_id, m2.role_id,
+		m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+		m2.cre_date,
+		m2.upd_user, m2.upd_date, m2.imageUrl,
+		m2.corpId, m2.agentId,
+		m2.position, m2.status_wx
+		from m_user m2 where m2.id in (
+		select m1.id
+		from ${tableName} data_table
+		INNER JOIN m_user m1
+		ON data_table.cre_user
+		= m1.id
+		and data_table.${idColumn} = #{dataId}
+		)
+	</select>
+	<select id="selectUserRela1RoleUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		select m2.id,
+		m2.parent_id, IFNULL(m2.name, '') `name`,
+		m2.sex, m2.birthdate,
+		m2.telephone, m2.mobile,
+		m2.email, m2.msn, m2.language_id, m2.role_id,
+		m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+		m2.cre_date,
+		m2.upd_user, m2.upd_date, m2.imageUrl,
+		m2.corpId, m2.agentId,
+		m2.position, m2.status_wx
+		from m_user m2 where m2.id in (
+		select
+		parent_id from m_user m3 where m3.id in (
+		select m1.id from
+		${tableName} data_table
+		INNER JOIN m_user m1
+		ON data_table.cre_user =
+		m1.id
+		and data_table.${idColumn} = #{dataId}
+		))
+	</select>
+	<select id="selectUserRela2RoleUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		select m2.id,
+		m2.parent_id, IFNULL(m2.name, '') `name`,
+		m2.sex, m2.birthdate,
+		m2.telephone, m2.mobile,
+		m2.email, m2.msn, m2.language_id, m2.role_id,
+		m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+		m2.cre_date,
+		m2.upd_user, m2.upd_date, m2.imageUrl,
+		m2.corpId, m2.agentId,
+		m2.position, m2.status_wx
+		from m_user m2 where m2.id in (
+		select
+		parent_id from m_user m4 where m4.id in (
+		select parent_id from m_user
+		m3 where m3.id in (
+		select m1.id from ${tableName} data_table
+		INNER JOIN
+		m_user m1
+		ON data_table.cre_user = m1.id
+		and data_table.${idColumn} =
+		#{dataId}
+		)))
+	</select>
+	<select id="selectApproveUsersByDescribe" resultType="cn.com.easyerp.auth.AuthDetails">
+		<foreach collection="approveUserDescribes" item="approveUser"
+			separator=" union all ">
+			<choose>
+				<when test="approveUser.type == 1">
+					SELECT m_user.id, m_user.parent_id,
+					IFNULL(m_user.name, '') `name`,
+					m_user.sex, m_user.birthdate,
+					m_user.telephone, m_user.mobile,
+					m_user.email, m_user.msn,
+					m_user.language_id, m_user.role_id,
+					m_user.department_id,
+					m_user.memo, m_user.`status`,
+					m_user.cre_user,
+					m_user.cre_date,
+					m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+					m_user.corpId,
+					m_user.agentId, m_user.position, m_user.status_wx
+					FROM m_user m_user
+				</when>
+				<when test="approveUser.type == 2">
+					SELECT m_user.id, m_user.parent_id,
+					IFNULL(m_user.name, '') `name`,
+					m_user.sex, m_user.birthdate,
+					m_user.telephone, m_user.mobile,
+					m_user.email, m_user.msn,
+					m_user.language_id, m_user.role_id,
+					m_user.department_id,
+					m_user.memo, m_user.`status`,
+					m_user.cre_user,
+					m_user.cre_date,
+					m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+					m_user.corpId,
+					m_user.agentId, m_user.position, m_user.status_wx
+					FROM m_user m_user
+					WHERE m_user.role_id = #{approveUser.role} AND m_user.department_id
+					=
+					#{approveUser.dept}
+					UNION ALL
+					SELECT m_user.id, m_user.parent_id,
+					IFNULL(m_user.name, '') `name`,
+					m_user.sex, m_user.birthdate,
+					m_user.telephone, m_user.mobile,
+					m_user.email, m_user.msn,
+					m_user.language_id, m_user.role_id,
+					m_user.department_id,
+					m_user.memo, m_user.`status`,
+					m_user.cre_user,
+					m_user.cre_date,
+					m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+					m_user.corpId,
+					m_user.agentId, m_user.position, m_user.status_wx
+					FROM m_user m_user
+					INNER JOIN m_user_additional m2 ON m_user.id = m2.user_id
+					WHERE
+					m2.role = #{approveUser.role} AND m2.dept = #{approveUser.dept}
+				</when>
+				<when test="approveUser.type == 3">
+					SELECT m_user.id, m_user.parent_id,
+					IFNULL(m_user.name, '') `name`,
+					m_user.sex, m_user.birthdate,
+					m_user.telephone, m_user.mobile,
+					m_user.email, m_user.msn,
+					m_user.language_id, m_user.role_id,
+					m_user.department_id,
+					m_user.memo, m_user.`status`,
+					m_user.cre_user,
+					m_user.cre_date,
+					m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+					m_user.corpId,
+					m_user.agentId, m_user.position, m_user.status_wx
+					FROM m_user m_user
+					WHERE m_user.department_id = #{approveUser.dept}
+					UNION ALL
+					SELECT
+					m_user.id, m_user.parent_id, IFNULL(m_user.name, '') `name`,
+					m_user.sex, m_user.birthdate, m_user.telephone, m_user.mobile,
+					m_user.email, m_user.msn, m_user.language_id, m_user.role_id,
+					m_user.department_id, m_user.memo, m_user.`status`,
+					m_user.cre_user,
+					m_user.cre_date, m_user.upd_user, m_user.upd_date,
+					m_user.imageUrl,
+					m_user.corpId, m_user.agentId, m_user.position,
+					m_user.status_wx
+					FROM m_user m_user
+					INNER JOIN m_user_additional m2
+					ON m_user.id = m2.user_id
+					WHERE m2.dept = #{approveUser.dept}
+				</when>
+				<when test="approveUser.type == 4">
+					SELECT m_user.id, m_user.parent_id,
+					IFNULL(m_user.name, '') `name`,
+					m_user.sex, m_user.birthdate,
+					m_user.telephone, m_user.mobile,
+					m_user.email, m_user.msn,
+					m_user.language_id, m_user.role_id,
+					m_user.department_id,
+					m_user.memo, m_user.`status`,
+					m_user.cre_user,
+					m_user.cre_date,
+					m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+					m_user.corpId,
+					m_user.agentId, m_user.position, m_user.status_wx
+					FROM m_user m_user
+					WHERE m_user.role_id = #{approveUser.role}
+					UNION ALL
+					SELECT
+					m_user.id, m_user.parent_id, IFNULL(m_user.name, '') `name`,
+					m_user.sex, m_user.birthdate, m_user.telephone, m_user.mobile,
+					m_user.email, m_user.msn, m_user.language_id, m_user.role_id,
+					m_user.department_id, m_user.memo, m_user.`status`,
+					m_user.cre_user,
+					m_user.cre_date, m_user.upd_user, m_user.upd_date,
+					m_user.imageUrl,
+					m_user.corpId, m_user.agentId, m_user.position,
+					m_user.status_wx
+					FROM m_user m_user
+					INNER JOIN m_user_additional m2
+					ON m_user.id = m2.user_id
+					WHERE m2.role = #{approveUser.role}
+				</when>
+				<when test="approveUser.type == 5">
+					<choose>
+						<when test="approveUser.dept_rela == 0">
+							SELECT m2.id, m2.parent_id, IFNULL(m2.name, '')
+							`name`,
+							m2.sex, m2.birthdate, m2.telephone, m2.mobile,
+							m2.email,
+							m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2
+							WHERE m2.department_id = (
+							SELECT m1.department_id FROM
+							${tableName} data_table
+							INNER JOIN m_user m1
+							ON data_table.cre_user
+							= m1.id
+							AND data_table.${idColumn} = #{dataId}
+							) AND m2.role_id =
+							#{approveUser.role}
+							UNION ALL
+							SELECT m2.id, m2.parent_id,
+							IFNULL(m2.name, '') `name`,
+							m2.sex, m2.birthdate, m2.telephone,
+							m2.mobile,
+							m2.email, m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+							m2.cre_date,
+							m2.upd_user, m2.upd_date, m2.imageUrl,
+							m2.corpId, m2.agentId,
+							m2.position, m2.status_wx
+							FROM m_user m2
+							INNER JOIN
+							m_user_additional m_add ON m2.id = m_add.user_id
+							WHERE m_add.dept
+							= (
+							SELECT m1.department_id FROM ${tableName} data_table
+							INNER JOIN
+							m_user m1
+							ON data_table.cre_user = m1.id
+							AND data_table.${idColumn}
+							= #{dataId}
+							) AND m_add.role = #{approveUser.role}
+						</when>
+						<when test="approveUser.dept_rela == 1">
+							SELECT m2.id, m2.parent_id, IFNULL(m2.name, '')
+							`name`,
+							m2.sex, m2.birthdate, m2.telephone, m2.mobile,
+							m2.email,
+							m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2
+							WHERE m2.department_id = (
+							SELECT dept1.parent_id FROM
+							m_department dept1 WHERE dept1.id = (
+							SELECT m1.department_id FROM
+							${tableName} data_table
+							INNER JOIN m_user m1
+							ON data_table.cre_user
+							= m1.id
+							AND data_table.${idColumn} = #{dataId}
+							)) AND m2.role_id =
+							#{approveUser.role}
+							UNION ALL
+							SELECT m2.id, m2.parent_id,
+							IFNULL(m2.name, '') `name`,
+							m2.sex, m2.birthdate, m2.telephone,
+							m2.mobile,
+							m2.email, m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+							m2.cre_date,
+							m2.upd_user, m2.upd_date, m2.imageUrl,
+							m2.corpId, m2.agentId,
+							m2.position, m2.status_wx
+							FROM m_user m2
+							INNER JOIN
+							m_user_additional m_add ON m2.id = m_add.user_id
+							WHERE m_add.dept
+							= (
+							SELECT dept1.parent_id FROM m_department dept1 WHERE dept1.id
+							= (
+							SELECT m1.department_id FROM ${tableName} data_table
+							INNER JOIN
+							m_user m1
+							ON data_table.cre_user = m1.id
+							AND data_table.${idColumn}
+							= #{dataId}
+							)) AND m_add.role = #{approveUser.role}
+						</when>
+						<when test="approveUser.dept_rela == 2">
+							SELECT m2.id, m2.parent_id, IFNULL(m2.name, '')
+							`name`,
+							m2.sex, m2.birthdate, m2.telephone, m2.mobile,
+							m2.email,
+							m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2
+							WHERE m2.department_id = (
+							SELECT parent_id FROM
+							m_department dept2 WHERE dept2.id = (
+							SELECT parent_id FROM
+							m_department dept1 WHERE dept1.id = (
+							SELECT m1.department_id FROM
+							${tableName} data_table
+							INNER JOIN m_user m1
+							ON data_table.cre_user
+							= m1.id
+							AND data_table.${idColumn} = #{dataId}
+							))) AND m2.role_id =
+							#{approveUser.role}
+							UNION ALL
+							SELECT m2.id, m2.parent_id,
+							IFNULL(m2.name, '') `name`,
+							m2.sex, m2.birthdate, m2.telephone,
+							m2.mobile,
+							m2.email, m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo, m2.`status`, m2.cre_user,
+							m2.cre_date,
+							m2.upd_user, m2.upd_date, m2.imageUrl,
+							m2.corpId, m2.agentId,
+							m2.position, m2.status_wx
+							FROM m_user m2
+							INNER JOIN
+							m_user_additional m_add ON m2.id = m_add.user_id
+							WHERE m_add.dept
+							= (
+							SELECT parent_id FROM m_department dept2 WHERE dept2.id = (
+							SELECT parent_id FROM m_department dept1 WHERE dept1.id = (
+							SELECT m1.department_id FROM ${tableName} data_table
+							INNER JOIN
+							m_user m1
+							ON data_table.cre_user = m1.id
+							AND data_table.${idColumn}
+							= #{dataId}
+							))) AND m_add.role = #{approveUser.role}
+						</when>
+					</choose>
+				</when>
+				<when test="approveUser.type == 6">
+					<choose>
+						<when test="approveUser.dept_rela == 0">
+							SELECT m2.id, m2.parent_id, IFNULL(m2.name, '')
+							`name`,
+							m2.sex, m2.birthdate, m2.telephone, m2.mobile,
+							m2.email,
+							m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2
+							WHERE m2.department_id = (
+							SELECT m1.department_id FROM
+							${tableName} data_table
+							INNER JOIN m_user m1
+							ON data_table.cre_user
+							= m1.id
+							AND data_table.${idColumn} = #{dataId}
+							)
+							UNION ALL
+							SELECT
+							m2.id, m2.parent_id, IFNULL(m2.name, '') `name`,
+							m2.sex,
+							m2.birthdate, m2.telephone, m2.mobile,
+							m2.email, m2.msn,
+							m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2
+							INNER JOIN m_user_additional m_add ON m2.id =
+							m_add.user_id
+							WHERE m_add.dept = (
+							SELECT m1.department_id FROM
+							${tableName} data_table
+							INNER JOIN m_user m1
+							ON data_table.cre_user
+							= m1.id
+							AND data_table.${idColumn} = #{dataId})
+						</when>
+						<when test="approveUser.dept_rela == 1">
+							SELECT m2.id, m2.parent_id, IFNULL(m2.name, '')
+							`name`,
+							m2.sex, m2.birthdate, m2.telephone, m2.mobile,
+							m2.email,
+							m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2
+							WHERE m2.department_id = (
+							SELECT dept1.parent_id FROM
+							m_department dept1 WHERE dept1.id = (
+							SELECT m1.department_id FROM
+							${tableName} data_table
+							INNER JOIN m_user m1
+							ON data_table.cre_user
+							= m1.id
+							AND data_table.${idColumn} = #{dataId}
+							))
+							UNION ALL
+							SELECT
+							m2.id, m2.parent_id, IFNULL(m2.name, '') `name`,
+							m2.sex,
+							m2.birthdate, m2.telephone, m2.mobile,
+							m2.email, m2.msn,
+							m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2
+							INNER JOIN m_user_additional m_add ON m2.id =
+							m_add.user_id
+							WHERE m_add.dept = (
+							SELECT dept1.parent_id FROM
+							m_department dept1 WHERE dept1.id = (
+							SELECT m1.department_id FROM
+							${tableName} data_table
+							INNER JOIN m_user m1
+							ON data_table.cre_user
+							= m1.id
+							AND data_table.${idColumn} = #{dataId}
+							))
+						</when>
+						<when test="approveUser.dept_rela == 2">
+							SELECT m2.id, m2.parent_id, IFNULL(m2.name, '')
+							`name`,
+							m2.sex, m2.birthdate, m2.telephone, m2.mobile,
+							m2.email,
+							m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2
+							WHERE m2.department_id = (
+							SELECT id FROM m_department
+							dept2 WHERE dept2.parent_id = (
+							SELECT id FROM m_department dept1
+							WHERE dept1.parent_id = (
+							SELECT m1.department_id FROM
+							${tableName} data_table
+							INNER JOIN m_user m1
+							ON data_table.cre_user
+							= m1.id
+							AND data_table.${idColumn} = #{dataId}
+							)))
+							UNION ALL
+							SELECT
+							m2.id, m2.parent_id, IFNULL(m2.name, '') `name`,
+							m2.sex,
+							m2.birthdate, m2.telephone, m2.mobile,
+							m2.email, m2.msn,
+							m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2
+							INNER JOIN m_user_additional m_add ON m2.id =
+							m_add.user_id
+							WHERE m_add.dept = (
+							SELECT id FROM m_department
+							dept2 WHERE dept2.parent_id = (
+							SELECT id FROM m_department dept1
+							WHERE dept1.parent_id = (
+							SELECT m1.department_id FROM
+							${tableName} data_table
+							INNER JOIN m_user m1
+							ON data_table.cre_user
+							= m1.id
+							AND data_table.${idColumn} = #{dataId}
+							)))
+						</when>
+					</choose>
+				</when>
+				<when test="approveUser.type == 7">
+					<choose>
+						<when test="approveUser.user_rela == 0">
+							SELECT m2.id, m2.parent_id, IFNULL(m2.name, '')
+							`name`,
+							m2.sex, m2.birthdate, m2.telephone, m2.mobile,
+							m2.email,
+							m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2 WHERE m2.id = (
+							SELECT m1.id FROM ${tableName}
+							data_table
+							INNER JOIN m_user m1
+							ON data_table.cre_user = m1.id
+							AND
+							data_table.${idColumn} = #{dataId}
+							)
+						</when>
+						<when test="approveUser.user_rela == 1">
+							SELECT m2.id, m2.parent_id, IFNULL(m2.name, '')
+							`name`,
+							m2.sex, m2.birthdate, m2.telephone, m2.mobile,
+							m2.email,
+							m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2 WHERE m2.id = (
+							SELECT parent_id FROM m_user m3 WHERE
+							m3.id = (
+							SELECT m1.id FROM ${tableName} data_table
+							INNER JOIN
+							m_user m1
+							ON data_table.cre_user = m1.id
+							AND data_table.${idColumn}
+							= #{dataId}
+							))
+						</when>
+						<when test="approveUser.user_rela == 2">
+							SELECT m2.id, m2.parent_id, IFNULL(m2.name, '')
+							`name`,
+							m2.sex, m2.birthdate, m2.telephone, m2.mobile,
+							m2.email,
+							m2.msn, m2.language_id, m2.role_id,
+							m2.department_id, m2.memo,
+							m2.`status`, m2.cre_user,
+							m2.cre_date, m2.upd_user, m2.upd_date,
+							m2.imageUrl,
+							m2.corpId, m2.agentId, m2.position, m2.status_wx
+							FROM
+							m_user m2 WHERE m2.id = (
+							SELECT parent_id FROM m_user m4 WHERE
+							m4.id = (
+							SELECT parent_id FROM m_user m3 WHERE m3.id = (
+							SELECT
+							m1.id FROM ${tableName} data_table
+							INNER JOIN m_user m1
+							ON
+							data_table.cre_user = m1.id
+							AND data_table.${idColumn} = #{dataId}
+							)))
+						</when>
+					</choose>
+				</when>
+				<when test="approveUser.type == 8">
+					SELECT m_user.id, m_user.parent_id,
+					IFNULL(m_user.name, '') `name`,
+					m_user.sex, m_user.birthdate,
+					m_user.telephone, m_user.mobile,
+					m_user.email, m_user.msn,
+					m_user.language_id, m_user.role_id,
+					m_user.department_id,
+					m_user.memo, m_user.`status`,
+					m_user.cre_user,
+					m_user.cre_date,
+					m_user.upd_user, m_user.upd_date, m_user.imageUrl,
+					m_user.corpId,
+					m_user.agentId, m_user.position, m_user.status_wx
+					FROM m_user m_user
+					WHERE m_user.id = #{approveUser.user}
+				</when>
+			</choose>
+		</foreach>
+	</select>
+	<select id="getTableData" resultType="java.util.Map">
+		SELECT * FROM ${table}
+		WHERE
+		<foreach collection="idMap.keys" item="key" separator="and">
+			${key} =
+			#{idMap[${key}]}
+		</foreach>
+	</select>
+	<select id="checkBatchApproveSubmit" resultType="java.util.Map">
+		SELECT * FROM
+		(SELECT DISTINCT c1.data_id FROM c_approve_flow c1
+		INNER
+		JOIN c_approve_flow_node c2
+		ON c1.approve_id = c2.approve_id
+		WHERE
+		c2.sequence =
+		(SELECT MAX(c4.sequence) FROM c_approve_flow c3
+		INNER JOIN
+		c_approve_flow_node c4
+		ON c3.approve_id = c4.approve_id
+		WHERE c3.data_id
+		= c1.data_id)
+		AND c1.table_id = #{tableName}
+		AND c1.state NOT IN (1, 3,
+		5)
+		<if test="ids != null">
+			AND c1.data_id IN
+			<foreach collection="ids" item="id" separator="," open="("
+				close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="ids != null">
+			UNION ALL
+			<foreach collection="ids" item="id" separator="UNION ALL">
+				SELECT #{id}
+				data_id FROM c_approve_flow c1
+				WHERE c1.data_id = #{id}
+			</foreach>
+		</if>
+		) t1 WHERE t1.data_id IS NOT NULL
+	</select>
+
+	<select id="selectDataParam" resultType="java.util.Map">
+		select * from ${tableId}
+		where ${id_column}=#{dataId}
+	</select>
+</mapper>

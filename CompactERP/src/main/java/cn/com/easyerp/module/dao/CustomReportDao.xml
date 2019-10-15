@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.module.dao.CustomReportDao">
+    <select id="selectData" resultType="cn.com.easyerp.module.customReport.CustomData">
+        <choose>
+            <when test="isEmpType">
+                <foreach collection="sumCondition" item="sum" separator=" union all ">
+                    SELECT ${group}, t_monthly_staff_count.EmployeeType, #{leavingType} LeavingType,
+                    t_monthly_staff_count.MonthEndHC, COUNT(t2.shop_id) `Exit` FROM
+                    (SELECT ${group}, ${sum.sum} MonthEndHC, #{sum.Grade} EmployeeType
+                    FROM t_monthly_staff_count t_monthly_staff_count
+                    WHERE 1 = 1
+                    <if test="countCondition != null and countCondition != ''">
+                        AND ${countCondition}
+                    </if>
+                    GROUP BY ${group}) t_monthly_staff_count
+                    LEFT JOIN (SELECT t_employee_change.* FROM t_employee_change t_employee_change
+                    LEFT JOIN t_emp t_emp
+                    ON t_employee_change.emp_id = t_emp.employee_id
+                    LEFT JOIN m_department m_department
+                    ON t_employee_change.shop_id = m_department.id
+                    WHERE t_emp.employee_type = #{sum.Grade}
+                    <if test="changeCondition != null and changeCondition != ''">
+                        AND ${changeCondition}
+                    </if>
+                    ) t2
+                    ON t_monthly_staff_count.`month` = DATE_FORMAT(t2.date,'%Y%m')
+                    <if test="timeBetween != null">
+                        WHERE ${timeBetween}
+                    </if>
+                    GROUP BY ${group}
+                </foreach>
+            </when>
+            <otherwise>
+                <foreach collection="sumCondition" item="sum" separator=" union all ">
+                    SELECT ${group}, t_monthly_staff_count.sum_grade, #{leavingType} LeavingType,
+                    t_monthly_staff_count.MonthEndHC, COUNT(t2.shop_id) `Exit` FROM
+                    (SELECT ${group}, ${sum.sum} MonthEndHC, #{sum.Grade} sum_grade
+                    FROM t_monthly_staff_count t_monthly_staff_count
+                    WHERE 1 = 1
+                    <if test="countCondition != null and countCondition != ''">
+                        AND ${countCondition}
+                    </if>
+                    GROUP BY ${group}) t_monthly_staff_count
+                    LEFT JOIN (SELECT t_employee_change.* FROM t_employee_change t_employee_change
+                    LEFT JOIN t_emp t_emp
+                    ON t_employee_change.emp_id = t_emp.employee_id
+                    LEFT JOIN m_department m_department
+                    ON t_employee_change.shop_id = m_department.id
+                    WHERE t_emp.rank = #{sum.Grade}
+                    <if test="changeCondition != null and changeCondition != ''">
+                        AND ${changeCondition}
+                    </if>
+                    ) t2
+                    ON t_monthly_staff_count.`month` = DATE_FORMAT(t2.date,'%Y%m')
+                    <if test="timeBetween != null">
+                        WHERE ${timeBetween}
+                    </if>
+                    GROUP BY ${group}
+                </foreach>
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

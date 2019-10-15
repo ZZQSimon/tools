@@ -1,0 +1,48 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="dictionary" class="form-inline dx-form" role="form"">
+ #set ($contextRoot = "#springUrl('')")
+    <script>
+	    function makeLoginUrl(path) {
+	        return '$contextRoot' + path
+	    }
+    </script>
+    <div class="rowContentTop btn-toolbar dx-menu-bar">
+         <a href="javascript:void(0)" class="btn dx-grid-add accept" >$dx.msg("Save")</a>
+         <div class="dropdown dropdown-add">
+            <button type="button" class="btn tab-config-new" id="dic_add_new"
+                     	    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">$dx.msg("Add")</button>
+            <div class="dropdown-menu" aria-labelledby="dic_add_new">
+                <div class="clearfix">
+                    <label class="label-1">$dx.msg("name")：</label>
+                    <input type="text" class="input-1" name='adddicValue' autocomplete="off" />
+                </div>
+                <div class="dropdown-footer">
+                    <button data-toggle="dropdown" class="button-color4">$dx.msg("Cancel")</button>
+                    <button data-toggle="dropdown" class="button-color3 dicListAdd" value="保存">$dx.msg("Save")</button>
+                </div>
+            </div>
+         </div>
+    </div>
+    <div class="rowContent">
+        <div class="dicList col-xs-2 deploy-left-menu">
+            <div class="search">
+                <input type="text" class="retrieve_input" placeholder="检索字典"/>
+            </div>
+            <div class="dicItemList treeScroll menuItemWrap"></div>
+            <div class="deploy-left-tree-delete">
+                <button type="button" class="btn deleteDic">$dx.msg("Delete")</button>
+            </div>
+        </div>
+        <div class="datagrid-content dicContent deploy-main-table-data col-xs-10">
+             <div class="datagrid-main">
+                <table id="dictionTable" class="easyui-datagrid"></table>
+             </div>
+             <div class="datagrid-foot">
+                <button class="btn append" type="button">$dx.msg("Add")</button>
+                <button class="btn removeit"type="button">$dx.msg("Delete")</button>
+                <button type="button" class="btn datagrid_row_up_dictionary">$dx.msg("datagrid_row_up")</button>
+                <button type="button" class="btn datagrid_row_down_dictionary">$dx.msg("datagrid_row_down")</button>
+             </div>
+        </div>
+    </div>
+#dxFormTail($form)

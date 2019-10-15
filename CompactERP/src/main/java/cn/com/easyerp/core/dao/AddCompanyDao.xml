@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.AddCompanyDao">
+	<insert id="createDB">
+		CREATE database if not exists ${DBName};
+	</insert>
+	<update id="execSql">
+		${sql}
+	</update>
+	<select id="selectTableData" resultType="java.util.Map">
+		SELECT * FROM ${table}
+	</select>
+	<select id="selectUserTableData" resultType="java.util.Map">
+		SELECT * FROM ${table} WHERE is_user_custom = 1
+	</select>
+	<select id="selectMenu" resultType="java.util.Map">
+		SELECT * FROM c_menu WHERE `module` = #{module}
+	</select>
+	<select id="selectProductView" resultType="cn.com.easyerp.addCompany.ProductView">
+		SELECT `name`, `product`, `view`, `module` FROM sys_product_view WHERE
+		`module` = #{module}
+	</select>
+	<insert id="insertTableData">
+		<foreach collection="sqls" item="sql" separator=";">
+			${sql}
+		</foreach>
+	</insert>
+	<select id="selectTableDescribe" parameterType="cn.com.easyerp.core.dao.AddCompanyDao"
+		resultType="cn.com.easyerp.core.cache.TableDescribe">
+		select
+		id,
+		parent_id_column,
+		children_id_column,
+		case LENGTH(name_expression)
+		when 0
+		then null
+		else name_expression end name_column,
+		readonly,
+		case LENGTH(parent_id)
+		when 0
+		then null
+		else parent_id end parent_id,
+		case LENGTH(auto_gen_sql)
+		when 0
+		then null
+		else auto_gen_sql end auto_gen_sql,
+		group_name,
+		case LENGTH(pc_block_view_style)
+		when 0
+		then null
+		else pc_block_view_style end block_view_style,
+		case LENGTH(default_group_column)
+		when 0
+		then null
+		else default_group_column end default_group_column,
+		case LENGTH(check_condition)
+		when 0
+		then null
+		else check_condition end check_condition,
+		logable,
+		case LENGTH(view_style)
+		when 0
+		then null
+		else view_style end view_style,
+		table_type,
+		detail_disp_cols,
+		case LENGTH(valid_date_cols)
+		when 0
+		then null
+		else valid_date_cols end valid_date_cols,
+		valid_date_cond_disp,
+		case LENGTH(valid_date_group_cols)
+		when 0
+		then null
+		else valid_date_group_cols end valid_date_group_cols,
+		view_main_table,
+		case LENGTH(export_sql)
+		when 0
+		then null
+		else export_sql end export_sql,
+		case LENGTH(import_sql)
+		when 0
+		then null
+		else import_sql end import_sql,
+		importable,
+		seq,
+		international_id,
+		`module`,
+		memo
+		from c_table
+	</select>
+	<select id="selectColumnsDescribe" resultType="cn.com.easyerp.core.cache.ColumnDescribe"
+		parameterType="string">
+		select
+		table_id,
+		column_name,
+		is_id_column,
+		international_id,
+		virtual,
+		case LENGTH(tab_name)
+		when 0
+		then null
+		else tab_name end tab_name,
+		case LENGTH(group_name)
+		when 0
+		then null
+		else group_name end group_name,
+		data_type,
+		case LENGTH(data_format)
+		when 0
+		then null
+		else data_format end data_format,
+		min_len,
+		max_len,
+		is_condition,
+		case LENGTH(dic_id)
+		when 0
+		then null
+		else dic_id end dic_id,
+		case LENGTH(ref_table_name)
+		when 0
+		then null
+		else ref_table_name end ref_table_name,
+		case LENGTH(ref_table_cols)
+		when 0
+		then null
+		else ref_table_cols end ref_table_cols,
+		case LENGTH(ref_table_sql)
+		when 0
+		then null
+		else ref_table_sql end ref_table_sql,
+		case LENGTH(ref_table_filter)
+		when 0
+		then null
+		else ref_table_filter end ref_table_filter,
+		ref_table_display,
+		ref_table_new,
+		case LENGTH(formula)
+		when 0
+		then null
+		else formula end formula,
+		case LENGTH(default_value)
+		when 0
+		then null
+		else default_value end default_value,
+		case LENGTH(prefix)
+		when 0
+		then null
+		else prefix end prefix,
+		case LENGTH(suffix)
+		when 0
+		then null
+		else suffix end suffix,
+		sum_flag,
+		ro_insert,
+		ro_update,
+		case LENGTH(read_only_condition)
+		when 0
+		then null
+		else read_only_condition end read_only_condition,
+		read_only_clear,
+		ifnull(hidden, 0) hidden,
+		wrap,
+		case LENGTH(view_style)
+		when 0
+		then null
+		else view_style end view_style,
+		is_multiple,
+		cell_cnt,
+		case LENGTH(ref_table_tree)
+		when 0
+		then null
+		else ref_table_tree end ref_table_tree,
+		case LENGTH(link_json)
+		when 0
+		then null
+		else link_json end link_json,
+		seq,
+		memo
+		from c_column
+		order by
+		table_id, seq
+	</select>
+</mapper>

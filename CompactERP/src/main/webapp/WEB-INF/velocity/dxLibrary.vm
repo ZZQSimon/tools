@@ -1,0 +1,1858 @@
+#*
+*
+* Velocity macros for DX framework
+*
+* *#
+
+## define html head
+#macro (dxHead $homeForm)
+	#set ($contextRoot = "#springUrl('')")
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+#if($dx.empty($form.interior_logo))
+	<link rel="icon" href="#springUrl('')/img/g1.ico" type="image/x-icon"/>
+#else
+	<link rel="icon" href="#springUrl('')/auth/loginImgDownload.do?path=$form.interior_logo" type="image/x-icon"/>
+#end
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/jquery-ui-1.10.4.custom/css/flick/jquery-ui-1.10.4.custom.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/colorPicker/evol-colorpicker.css">
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/easyui-datagrid/easyui.css">
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/easyui-datagrid/icon.css">
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/bootstrap/css/bootstrap.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/jsTree/themes/default/style.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/DataTables-1.10.13/media/css/jquery.dataTables.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/DataTables-1.10.13/media/css/dataTables.bootstrap.css"/>
+<link type="text/css" rel="stylesheet"
+      href="$contextRoot/js/DataTables-1.10.13/extensions/ColReorder/css/colReorder.bootstrap.css"/>
+<link type="text/css" rel="stylesheet"
+      href="$contextRoot/js/DataTables-1.10.13/extensions/RowReorder/css/rowReorder.bootstrap.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/dialog/css/bootstrap-dialog.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/rcswitch/rcswitcher.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/boots-icheck/flat/blue.css"/>
+
+
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/fontawesome-4.7.0/css/font-awesome.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/fullcalendar-3.4.0/fullcalendar.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/index-calendar/calendar.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/js/jQuery-File-Upload-9.8.1/css/jquery.fileupload.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/js/webuploader-0.1.5/webuploader.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/lightbox/css/lightbox.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/bootstrap-multiselect-0.9.12/css/bootstrap-multiselect.css"/>
+
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/codemirror-5.31.0/lib/codemirror.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/codemirror-5.31.0/theme/3024-day.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/codemirror-5.31.0/addon/hint/show-hint.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/js/codemirror-5.31.0/addon/bxslider/jquery.bxslider.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/summernote-master/dist/summernote.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/index.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/import.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/js/passage.css"/>
+
+
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/g1-pluss.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/g1up.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/g1-tab.css"/>
+<link type="text/css" rel="stylesheet" id="skinColour" class="stylecssurl" href=""/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/fontStyle/font.${dx.user.language_id}.css"/>
+	#foreach($css in $dx.css)
+	<link type="text/css" rel="stylesheet" href="$css"/>
+	#end
+
+
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery-1.11.0.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/DataTables-1.10.13/media/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/DataTables-1.10.13/media/js/dataTables.bootstrap.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/DataTables-1.10.13/extensions/ColReorder/js/dataTables.colReorder.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/DataTables-1.10.13/extensions/RowReorder/js/dataTables.rowReorder.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/DataTables-1.10.13/extensions/pagination/input.js"></script>
+##<script type="text/javascript" charset="UTF-8"
+##        src="$contextRoot/js/Fixed-Header-Table/jquery.fixedheadertable.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/jquery-validation-1.12.0/jquery.validate.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/bootstrap/js/bootstrap.min.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery-sortable/jquery-sortable.js"></script>
+
+
+<script src="$contextRoot/js/codemirror-5.31.0/lib/codemirror.js"></script>
+<script src="$contextRoot/js/codemirror-5.31.0/mode/sql/sql.js"></script>
+<script src="$contextRoot/js/codemirror-5.31.0/addon/hint/show-hint.js"></script>
+
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/rcswitch/rcswitcher-4.0.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/boots-icheck/icheck.min.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/highcharts/highcharts.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/echart/echarts.min.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/highcharts/modules/exporting.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/highcharts/modules/funnel.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/highcharts/highcharts-more.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jsTree/jstree.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jsTree/plugins/jstreegrid.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/autoNumeric.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/BigDecimal-all-last.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery-dateFormat.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/dialog/js/bootstrap-dialog.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery.inputmask.bundle.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/lightbox/js/lightbox.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/bootstrap-multiselect-0.9.12/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+## moment.js is required by full calendar
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/moment.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/fullcalendar-3.4.0/lib/moment.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/fullcalendar-3.4.0/fullcalendar.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/fullcalendar-3.4.0/locale-all.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/index-calendar/calendar.js"></script>
+
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/g1.js"></script>
+	#foreach($file in $dx.js)
+	<script type="text/javascript" charset="UTF-8" src="$file"></script>
+	#end
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/sprintf.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/bxslider/jquery.bxslider.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery-ui-1.10.4.custom/jquery-ui-1.10.4.custom.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jQuery-File-Upload-9.8.1/js/jquery.fileupload.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jQuery-File-Upload-9.8.1/js/jquery.iframe-transport.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/webuploader-0.1.5/webuploader.min.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/webuploader-0.1.5/upload.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/home.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/userColumn.js"></script>
+<script type="text/javascript" charset="UTF-8" src="#springUrl('')/js/authGroup.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/message.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/g1-map.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/approve.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/g1-default-widget.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery.nicescroll-3.7.3/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/summernote-master/dist/summernote.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/summernote-master/dist/lang/summernote-zh-CN.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/divDrag/jquery.sortable.js"></script>
+<script src="$contextRoot/js/easyui-datagrid/jquery.easyui.min.js"></script>
+<script src="$contextRoot/js/easyui-datagrid/datagrid-dnd.js"></script>
+<script src="$contextRoot/js/easyui-datagrid/treegrid-dnd.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/g1up.js"></script>
+
+<script src="$contextRoot/js/jquery-ui-1.10.4/js/jquery-ui-1.10.4.dragDrop.min.js"></script>
+<script src="$contextRoot/js/jsplumb/jquery.jsPlumb-1.6.2-min.js"></script>
+<script src="$contextRoot/js/pc_calendar.js"></script>
+<script src="$contextRoot/js/pc_map.js"></script>
+<script src="$contextRoot/js/checkWork.js"></script>
+<script src="$contextRoot/js/checkWorkCount.js"></script>
+<script src="$contextRoot/js/postInfo.js"></script>
+##<script src="$contextRoot/js/deployTool.js"></script>
+<script src="$contextRoot/js/dictionary.js"></script>
+<script src="$contextRoot/js/timingTask.js"></script>
+<script src="$contextRoot/js/funcpoint.js"></script>
+<script src="$contextRoot/js/viewReport.js"></script>
+<script src="$contextRoot/js/urlDeploy.js"></script>
+<script src="$contextRoot/js/menuDeploy.js"></script>
+<script src="$contextRoot/js/tableDeploy.js"></script>
+<script src="$contextRoot/js/importDeploy.js"></script>
+<script src="$contextRoot/js/dashboard.js"></script>
+<script src="$contextRoot/js/abatchDeploy.js"></script>
+<script src="$contextRoot/js/datedelay.js"></script>
+<script src="$contextRoot/js/colorPicker/jqColor.js"></script>
+<script src="$contextRoot/js/colorPicker/evol-colorpicker.min.js"></script>
+<script src="$contextRoot/js/international.js"></script>
+<script src="$contextRoot/js/internationalControl.js"></script>
+<script src="$contextRoot/js/parameterInputControl.js"></script>
+<script src="$contextRoot/js/UrlInterface.js"></script>
+<script src="$contextRoot/js/indexApprove.js"></script>
+<script src="$contextRoot/js/chartReport.js"></script>
+<script src="$contextRoot/js/eventDetail.js"></script>
+<script src="$contextRoot/js/eventUser.js"></script>
+<script src="$contextRoot/js/appointment.js"></script>
+<script src="$contextRoot/js/customReport.js"></script>
+<script src="$contextRoot/js/adidasDashboard.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=pGTT2EGqegbkOMTPao6TRi5efnmmy9vu"></script>
+<script type="text/javascript">
+	dx.cache.form['index'] = $dx.json($homeForm);
+		#if ($dx.jsDebug)
+		dx.debug = true;
+		#end
+	function makeUrl(path) {
+		return '$contextRoot' + path
+	}
+</script>
+#end
+
+
+
+#macro (mobileHead $homeForm)
+#set ($contextRoot = "#springUrl('')")
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link type="text/css" rel="stylesheet"
+      href="$contextRoot/js/jquery-ui-1.10.4.custom/css/flick/jquery-ui-1.10.4.custom.min.css"/>
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css">
+<link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.1.2/css/jquery-weui.min.css">
+<link rel="stylesheet" href="$contextRoot/js/colorPicker/evol-colorpicker.css">
+
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/bootstrap/css/bootstrap.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/jsTree/themes/default/style.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/DataTables-1.10.13/media/css/jquery.dataTables.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/DataTables-1.10.13/media/css/dataTables.bootstrap.css"/>
+<link type="text/css" rel="stylesheet"
+      href="$contextRoot/js/DataTables-1.10.13/extensions/ColReorder/css/colReorder.bootstrap.css"/>
+<link type="text/css" rel="stylesheet"
+      href="$contextRoot/js/DataTables-1.10.13/extensions/RowReorder/css/rowReorder.bootstrap.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/dialog/css/bootstrap-dialog.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/boots-icheck/flat/blue.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/dropload/dropload.css"/>
+
+
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/fontawesome-4.7.0/css/font-awesome.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/index.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/css/passage.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/css/import.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/index-calendar/calendar.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/js/jQuery-File-Upload-9.8.1/css/jquery.fileupload.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/js/webuploader-0.1.5/webuploader.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/lightbox/css/lightbox.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/bootstrap-multiselect-0.9.12/css/bootstrap-multiselect.css"/>
+
+<link href="$contextRoot/js/codemirror-5.31.0/lib/codemirror.css" rel="stylesheet">
+<link href="$contextRoot/js/codemirror-5.31.0/theme/3024-day.css" rel="stylesheet">
+<link href="$contextRoot/js/codemirror-5.31.0/addon/hint/show-hint.css" rel="stylesheet">
+##<link href="$contextRoot/js/codemirror-5.31.0/addon/bxslider/jquery.bxslider.css" rel="stylesheet">
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/summernote-master/dist/summernote.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/fontStyle/font.${dx.user.language_id}.css"/>
+
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/g1-pluss.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/g1-tab.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/g1up.css"/>
+  #foreach($css in $dx.css)
+  <link type="text/css" rel="stylesheet" href="$css"/>
+  #end
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/mobile-css/mobileIndex.css"/>
+
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery-1.11.0.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/dropload/jquery.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery-1.11.0.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/DataTables-1.10.13/media/js/jquery.dataTables.js"></script>
+##<script src="https://cdn.bootcss.com/jquery-weui/1.1.2/js/jquery-weui.js"></script>
+<script src="$contextRoot/js/jquery-weui/jquery-ui.js"></script>
+<script src="$contextRoot/js/dropload/zepto.min.js"></script>
+<script src="$contextRoot/js/dropload/dropload.min.js"></script>
+
+
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/DataTables-1.10.13/media/js/dataTables.bootstrap.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/DataTables-1.10.13/extensions/ColReorder/js/dataTables.colReorder.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/DataTables-1.10.13/extensions/RowReorder/js/dataTables.rowReorder.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/DataTables-1.10.13/extensions/pagination/input.js"></script>
+##<script type="text/javascript" charset="UTF-8"
+##        src="$contextRoot/js/Fixed-Header-Table/jquery.fixedheadertable.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/jquery-validation-1.12.0/jquery.validate.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/bootstrap/js/bootstrap.min.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery-sortable/jquery-sortable.js"></script>
+
+
+<script src="$contextRoot/js/codemirror-5.31.0/lib/codemirror.js"></script>
+<script src="$contextRoot/js/codemirror-5.31.0/mode/sql/sql.js"></script>
+<script src="$contextRoot/js/codemirror-5.31.0/addon/hint/show-hint.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/echart/echarts.min.js"></script>
+
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/rcswitch/rcswitcher-4.0.min.js"></script>
+
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/boots-icheck/icheck.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jsTree/jstree.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jsTree/plugins/jstreegrid.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/autoNumeric.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery-dateFormat.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/dialog/js/bootstrap-dialog.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery.inputmask.bundle.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/lightbox/js/lightbox.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/bootstrap-multiselect-0.9.12/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+## moment.js is required by full calendar
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/moment.js"></script>
+
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/g1.js"></script>
+  #foreach($file in $dx.js)
+  <script type="text/javascript" charset="UTF-8" src="$file"></script>
+  #end
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/sprintf.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/bxslider/jquery.bxslider.min.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/jquery-ui-1.10.4.custom/jquery-ui-1.10.4.custom.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jQuery-File-Upload-9.8.1/js/jquery.fileupload.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jQuery-File-Upload-9.8.1/js/jquery.iframe-transport.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/webuploader-0.1.5/webuploader.min.js"></script>
+##<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/webuploader-0.1.5/upload.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/home.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/userColumn.js"></script>
+<script type="text/javascript" charset="UTF-8" src="#springUrl('')/js/authGroup.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/message.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/g1-map.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/g1-default-widget.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jquery.nicescroll-3.7.3/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/summernote-master/dist/summernote.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/summernote-master/dist/lang/summernote-zh-CN.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/divDrag/jquery.sortable.js"></script>
+
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/g1up.js"></script>
+
+<script src="$contextRoot/js/jquery-ui-1.10.4/js/jquery-ui-1.10.4.dragDrop.min.js"></script>
+<script src="$contextRoot/js/jsplumb/jquery.jsPlumb-1.6.2-min.js"></script>
+<script src="$contextRoot/js/mobile-js/mobile_calendar.js"></script>
+<script src="$contextRoot/js/pc_map.js"></script>
+<script src="$contextRoot/js/checkWork.js"></script>
+<script src="$contextRoot/js/checkWorkCount.js"></script>
+<script src="$contextRoot/js/postInfo.js"></script>
+##<script src="$contextRoot/js/deployTool.js"></script>
+<script src="$contextRoot/js/dictionary.js"></script>
+<script src="$contextRoot/js/mobileList.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=pGTT2EGqegbkOMTPao6TRi5efnmmy9vu"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/mobile-js/mobile-components.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/mobile-js/mobile-index.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/mobile-js/mobile.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/mobile-js/dx-mobile-grid.js"></script>
+<script type="text/javascript">
+  dx.cache.form['index'] = $dx.json($homeForm);
+    #if ($dx.jsDebug)
+    dx.debug = true;
+    #end
+  function makeUrl(path) {
+    return '$contextRoot' + path
+  }
+  
+</script>
+#end
+
+
+
+#macro(dxHtmlCommon)
+## hide dialog content on startup
+<div class="hidden">
+	<div id="dxResultDialog">
+		<p id="dxResultMessage"></p>
+		<ul id="dxResultDetails">
+		</ul>
+	</div>
+</div>
+#end
+
+## DX menu 主子菜单。。。。。。。。。。
+#macro(dxSubMenu $menu)
+	#if ($menu.sub)
+		#foreach ($sub in $menu.sub)
+		<li>
+			#if ($sub.sub)
+				<a id="$sub.id" href="#" class="nav-top-item">
+				<span class="#if(!$dx.empty($sub.icon)) $dx.formatEmpty($sub.icon) #else fa  fa-th #end"></span>
+				<span class="menuText">$dx.label($sub)</span>
+				</a>
+                <ul class="menuSonUl">
+                    #dxSubMenu($sub)
+                </ul>
+			#else
+				<a id="$sub.id" href="#" class="nav-node-item"
+				   onclick="openPage('$sub.page_id', '$sub.icon'); return false;">
+				   <span class="#if(!$dx.empty($sub.icon)) $dx.formatEmpty($sub.icon) #else fa  fa-th #end"></span>
+				   <span class="menuText">$dx.label($sub)</span></a>
+			#end
+		</li>
+		#end
+	#else
+	#end
+#end
+
+
+## DX menu 主菜单。。。。。。。。。。
+#macro(dxMainMenu $menus)
+<ul class="nav dx-main-menu-entry">
+	#foreach($menu in $menus)
+		<li>
+			<a id="$menu.id" href="#" class="nav-top-item">
+				##<i class="fa"></i>
+				#if($dx.empty($dx.label($menu)))
+                    ''
+                #else
+                    $dx.label($menu)
+                #end
+				
+			</a>
+			<ul class="subMenuUl">
+				#dxSubMenu($menu)
+			</ul>
+		</li>
+	#end
+</ul>
+#end
+
+
+## menu bar in each tab
+#macro(dxMenuBarHead $form)
+<div id="menu-bar-$form.id" class="btn-toolbar dx-menu-bar" role="toolbar">
+#end
+#macro(dxMenuBarFoot)
+</div>
+#end
+
+## detail groups
+#macro(dxDetailTab $detail $tab)
+	#foreach($group in $tab.groups)
+		#if ($dx.visible($group))
+		<div class="col-xs-12 h5 dx-detail-group">
+			##$dx.group($detail.tableName, $group.id)
+      $dx.msg($group.id)
+		</div>
+		#end
+		#set($col = 0)
+		#foreach($column in $group.columns)
+			#set($field =$detail.getField($column.column_name))
+			#if ($field)
+				#if (!$dx.visible($detail, $column))
+					#dxHiddenField($field, $column)
+				#else
+					#if(($column.wrap || ($column.data_type == 7) ||
+                        ($column.data_type == 14) ||
+                        ($column.data_type == 15)) && $col > 0)
+						#set($col = 0)
+					</div>
+					#end
+					#if ($col == 0)
+					<div class="row dx-detail-row">
+					#end
+					#if(!$dx.empty($dx.user) && $dx.user.isMobileLogin==1)
+						#dxFieldWithDivClass($field,
+						"form-group dx-field-12 dx-field-container")
+					#else
+						#dxFieldWithDivClass($field,
+							"form-group dx-field-$math.floor($math.mul($math.div(12, $detail.cols), $column.cell_cnt)) dx-field-container")
+					#end
+
+					#set($col = $math.add($col, $column.cell_cnt))
+					#if (($col.intValue() >= $detail.cols) || ($column.data_type == 7))
+						#set($col = 0)
+					</div>
+					#end
+				#end
+			#end
+		#end
+		#if ($col != 0)
+		</div>
+		#end
+	#end
+#end
+
+## detail fields
+#macro(dxDetail $detail)
+<div class="dx-detail-container">
+  #if(!$dx.empty($dx.user) && $detail.initiatorId!=$dx.user.id && $dx.table($detail.tableName).is_approve == 1 && $detail.action != "create" &&$dx.user.isMobileLogin==1 && $dx.tableKeySize($detail.tableName))
+    <div class="approve-record-info">
+        <img class="userlogo" src="$dx.user.imageUrl"/>$detail.initator $dx.msg("application form")
+    </div>
+  #end
+
+	#set($table = $dx.table($detail.tableName))
+	#if ($table.tabs.size() == 1)
+		#dxDetailTab($detail, $table.tabs[0])
+	#else
+		<ul class="nav nav-tabs">
+			#foreach ($tab in $table.tabs)
+				<li #if ($foreach.first) class="active" #end>
+					<a href="#${detail.id}-${tab.id}" data-toggle="tab">$dx.tab($detail.tableName, $tab.id)</a>
+				</li>
+			#end
+		</ul>
+		<div class="tab-content">
+			#foreach($tab in $table.tabs)
+				<div id="${detail.id}-${tab.id}" class="tab-pane#if ($foreach.first) active#end">
+					#dxDetailTab($detail, $tab)
+				</div>
+			#end
+		</div>
+	#end
+</div>
+#end
+
+## set validate attributes
+#macro(dxValidate $desc)
+	#if ($desc.min_len) minlength="$desc.min_len" #end
+	#if ($desc.max_len) maxlength="$desc.max_len" #end
+	#if($dx.required($desc)) required #end
+#end
+
+##input with selector field
+#macro(dxInputSelect $refField $class $noRequire)
+##	#set($hasName =$dx.hasName($refField))
+##	<div class="mul-select">
+    ##<div class="form-control">
+	#if($dx.empty($desc.refTree))
+		#if ($dx.isMap($refField.value))
+		<input id="$refField.id" name="$refField.column" class="$class dx-input-select-multiple dx-field-6"
+		       value="$dx.msg('multiple items selected')"/>
+##			#set($hasName = false)
+		#else
+		<input id="$refField.id" type="text" name="$refField.column" value="$dx.value($refField)"
+		       class="$class dx-field-6 ## #if ($hasName) dx-input-select-with-name #end"
+		       dx-input-select="true" #if ($noRequire || $desc.min_len) #else required #end/>
+		#end
+	#else
+	<div class="dropdown">
+		<input id="$refField.id" type="text" name="$refField.column" value="$dx.value($refField)"
+		       data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="button"
+		       class="$class dx-field-6 dropdown-toggle #if ($hasName) dx-input-select-with-name #end"
+		       dx-input-select="true" #if ($noRequire || $desc.min_len) #else required #end/>
+		<ul class="dropdown-menu" aria-labelledby="$refField.id">
+			<div class="dx-input-select-tree"/>
+		</ul>
+	</div>
+	#end
+##	#if($hasName)
+##	<input id="${refField.id}-name" type="text" value="$dx.text($refField)"
+##	       class="dx-input-select-name dx-field-6" disabled/>
+##	#end
+	##</div>
+#end
+
+#macro(dxMapField $mapField $class)
+<div class="dropdown clearfix">
+    <div name="$mapField.column" class="dx-input-map-div" style="position: relative"
+         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="map-selected">
+            #foreach($select in $mapField.selection.entrySet())
+                <div class="map-selected-param">
+                    <input type="hidden" value="${select.key}"><span>${select.value}</span><span class="remove-map-selected">x</span>
+                </div>
+            #end
+        </div>
+        <input id="$mapField.id" type="hidden" name="$mapField.column" value=""
+               class="$class"/>
+    </div>
+    <div class="dx-select-map-input-div dropdown-menu" aria-labelledby="dLabel">
+        <input type="text" name="$mapField.column" class="map-select-input" placeholder="$dx.msg("search_param")"/>
+        <div class="map-dropdown" >
+
+        </div>
+    </div>
+</div>
+
+##	<input id="$mapField.id" type="text" name="$mapField.column" value="$dx.text($mapField)"
+##	       class="$class" disabled #if ($dx.required($dx.desc($mapField))) required #end//>
+#end
+
+## input string date tag
+#macro(dxInputWithFormat $field $class $noRequire)
+	<input id="$field.id" type="text" name="$field.column" value="$dx.value($field)"
+	       class="$class" dx-input-with-format="true" #if ($noRequire || $desc.min_len) #else required #end//>
+#end
+
+## input tag
+#macro(dxInput $field $class)
+<input id="$field.id" type="text" name="$field.column" value="$dx.value($field)"
+       class="$class" #dxValidate($dx.desc($field))/>
+#end
+
+## date tag
+#macro(dxDate $textField $class)
+<input id="$textField.id" type="text" name="$textField.column" value="$dx.value($field)"
+       class="$class" dx-date="true" #dxValidate($dx.desc($textField))/>
+#end
+
+## dict select tag
+#macro(dxDictSelect $textField $class)
+<input id="$textField.id" type="text" name="$textField.column" value="$dx.dictText($textField)"
+      data-values="$dx.dictText($textField)" class="$class" dx-dict-select="true" #if ($desc.min_len) #else required #end/>
+#end
+
+## data grid
+###macro(dxGrid $grid $gridClass)
+##<div class="dx-grid-container#if ($gridClass) $gridClass#end">
+##	<table id="$grid.id" table="${grid.table}" class="dx-grid display cell-border" cellspacing="0" width="100%">
+##		<thead>
+##		<tr>
+##			#if($grid.listing)
+##				<th>
+##					#if ($form.action != 'select')
+##						<input type="checkbox" class="dx-grid-checkall"/>
+##					#end
+##				</th>
+##			#else
+##				<th>
+##					<button type="button" class="btn btn-default btn-xs dx-grid-add">
+##						<span class="glyphicon glyphicon-plus"></span>
+##					</button>
+##				</th>
+##			#end
+##			#foreach($column in $dx.table($grid.table).columns)
+##			## virtual or password column will not visible
+##				#if (!$column.virtual && ($column.data_type != 6))
+##					<th>$dx.i18n($column.i18n)</th>
+##				#end
+##			#end
+##		</tr>
+##		</thead>
+##		#if ($grid.hasSum)
+##			<tfoot>
+##			<tr>
+##				<th>#*$dx.msg("Total")*#</th>
+##				#foreach($column in $dx.table($grid.table).columns)
+##				## virtual or password column will not visible
+##					#if (!$column.virtual && ($column.data_type != 6))
+##						<th></th>
+##					#end
+##				#end
+##			</tr>
+##			</tfoot>
+##		#end
+##	</table>
+##</div>
+###end
+
+## ViewStyleGrid
+#macro(dxGrid $grid $isRefChild)
+##<div class="#if ($gridClass) $gridClass#end" style="height:100%"> ## dx-grid-container
+    <table id="$grid.id" table="${grid.table}" class="dx-grid display cell-border" cellspacing="0" style="height:100%" width="100%">
+
+    </table>
+##</div>
+#end
+## ajax form head and tail wrap.
+#macro(dxFormHead $form)
+<!--cache form:${form.id}-->
+	$dx.cacheFormModel($form)
+#end
+#macro(dxFormTail $form)
+#end
+
+## text area
+#macro(dxText $field $class)
+<textarea id="$field.id" name="$field.column"
+          class="$class" #dxValidate($dx.desc($field))>
+	$dx.value($field)
+</textarea>
+#end
+
+## check box
+#macro(dxCheckbox $check $class)
+<div class="switch " id="switch" data-animated="false" >
+
+    <div class="input-bt-Switcher-wrap">
+        <div class="input-bt-Switcher">
+            <input type="checkbox" id="$check.id" name="$check.column" class="ui-widget dx-field dx-checkbox" #if ($check.checked) checked  #end/><label></label>
+        </div>
+    </div>
+    ##<input type="checkbox" id="$check.id" name="$check.column"
+     ##  class="ui-widget dx-field dx-checkbox" #if ($check.checked) checked  #end/>
+    ##<script>
+    ##$('.switch input[name="$check.column"]').rcSwitcher({
+    ##	width: 35, 				// 56  in 'px'
+    ##	height: 20,
+    ##	inputs: true,
+    ##	onText: '&nbsp;',
+    ##	offText: '&nbsp;'
+    ##});
+    ##</script>
+</div>
+
+#end
+
+## password
+#macro(dxPassword $textField $class)
+##<input type="password" id="$textField.id" name="$textField.column" class="$class" #dxValidate($dx.desc($textField)) value="$dx.value($textField)"/>
+<input type="password" id="$textField.id" name="$dx.formatEmpty($textField.column)" class="$class" #dxValidate($dx.desc($textField)) value="$dx.value($textField)"/>
+#end
+
+## changePassword
+#macro(changePassword $textField $class)
+##<input type="password" id="$textField.id" name="$textField.column" class="$class" #dxValidate($dx.desc($textField))/>
+<input type="password" id="$textField.id" name="$dx.formatEmpty($textField.column)" class="$class" #dxValidate($dx.desc($textField))/>
+#end
+
+## digits
+#macro(dxDigits $field $class)
+##    same with number
+	#dxNumber($field $class)
+#end
+
+## Number
+#macro(dxNumber $field $class)
+	#set($desc=$dx.desc($field))
+	<input id="$field.id" type="text" name="$dx.formatEmpty($field.column)" class="$class" value="$dx.value($field)"
+	#dxValidate($desc)
+	#if($desc.complex_id)
+	       aria-controls="#${field.id}-btn" dx-complex="true"/>
+	<span class="input-group-btn">
+<button id="${field.id}-btn" type="button" class="btn btn-default dx-input-group-btn" type="button">...</button>
+</span>
+	#else
+	/>
+	#end
+#end
+
+## picture
+#macro(dxPicture $field $class)
+<div class="dx-upload-div">
+<input type="hidden" class="dx-upload-label" disabled/>
+	#if(!$dx.empty($dx.value($field)))
+	<a class="dx-preview-a" data-title="$dx.value($field)" data-lightbox="$dx.value($field)" name="$field.id"
+	   href="#springUrl('')/storage/preview.do?id=$field.id">
+		<img src="#springUrl('')/storage/thumbnail.do?id=$field.id" alt="$dx.value($field)"></a>
+	#end
+<span class="btn fileinput-button dx-upload-button">
+	<label>
+	<input type="file" accept="image/*"  id="$field.id" name="$dx.formatEmpty($field.column)"
+	       class="dx-field dx-pic-input" #if ($desc.min_len) #elseif ($form.action == "create") required#end/>
+	</label>      
+</span>
+</div>
+#end
+
+## file picker
+#macro(dxFile $field $class)
+
+<div class="dx-upload-div">
+<input type="hidden" class="dx-upload-label" disabled/>
+<a class="dx-download-a" name="$field.id" href="#">$dx.value($field)</a>
+<span class="btn fileinput-button dx-upload-button" >
+	<label>
+	<input type="file" id="$field.id" name="$dx.formatEmpty($field.column)" class="dx-field dx-file-input"
+		#if ($desc.min_len) #elseif (($form.action == "create") || ($form.action == "batch")) required#end/>
+	</label>
+</span>
+</div>
+<span class="dx-upload-tishi">$dx.msg("Upload instructions: support pdf, rar, etc., do not support exe file")</span>
+#end
+
+## link input
+#macro(dxLink $field $class)
+<input id="$field.id" type="text" name="$dx.formatEmpty($field.column)" class="$class" #dxValidate($dx.desc($field))
+       value="$dx.value($field)"/>
+#end
+
+## mail address input
+#macro(dxEMail $field $class)
+<input id="$field.id" type="text" name="$dx.formatEmpty($field.column)" class="$class" email="true" #dxValidate($dx.desc($field))
+       value="$dx.value($field)"/>
+#end
+
+#macro(dxTextArea  $field $class)
+    <input id="$field.id" type="hidden" name="$dx.formatEmpty($field.column)" class="$class" value="$dx.value($field)">
+    <textarea type="text" name="$dx.formatEmpty($field.column)" class="form-control dx-text-area-textarea"
+              value="$dx.value($field)" style="height: 220px"
+        #if ($desc.min_len) #elseif ($form.action == "create") required #end>$dx.value($field)</textarea>
+#end
+#macro(dxEditorInput  $field $class)
+    <input id="$field.id" type="hidden" name="$dx.formatEmpty($field.column)" class="$class">
+    <div type="text" name="$dx.formatEmpty($field.column)" class="dx-editor-input-textarea"
+        #if ($desc.min_len) #elseif ($form.action == "create") required#end>
+        $dx.value($field)
+    </div>
+#end
+## time tag
+#macro(dxTime $textField $class)
+<input id="$textField.id" type="text" name="$dx.formatEmpty($textField.column)" value="$dx.value($field)"
+       class="$class" #dxValidate($dx.desc($textField))/>
+#end
+
+## datetime tag
+#macro(dxDatetime $textField $class)
+<input id="$textField.id" type="text" name="$dx.formatEmpty($textField.column)" value="$dx.value($textField)"
+       class="$class" dx-datetime="true" #dxValidate($dx.desc($textField))/>
+#end
+
+
+## auto increase field
+#macro(dxAutoIncrase $field $class)
+<input id="$field.id" type="text" name="$dx.formatEmpty($field.column)" class="$class"
+       value="#if (${field.value})${field.value}#end"/>
+#end
+
+## define filter filter max length
+#macro(dxMaxLength $desc)
+	#if ($desc.max_len) maxlength="${desc.max_len}" #end
+#end
+
+## filter columns
+#macro(dxFilterField $filter $desc)
+<div name="$dx.formatEmpty(${desc.column_name})" class="form-group dx-field-4">
+	#set($table = $dx.table($filter.table))
+	#if ($dx.empty($table.rangeList) || ($table.rangeList[0] != ${desc.column_name}))
+		<label class="control-label label-1">$dx.label($desc)</label>
+	#else
+		<label class="control-label label-1">$dx.msg($table.valid_date_cond_disp)</label>
+	#end
+
+	<div class="dx-filter-container input-group input-1">
+    ##        1：字符串 2：整数 3：小数 4：日期 5：是非 6：密码 7：图片 8：文件 9：链接 10：email 11:时间 12:日期+时间 13:自增字段 14:长文本 15：富文本 16：颜色（待完善）
+        #if ($desc.data_type == 1)
+			#set($filterData = $filter.getData($desc.column_name))
+			#set($stdMode = $filter.mode == "std")
+			#if ($desc.dic_id)
+				#set($disabled = !($dx.empty($filter.fixedData) || $dx.empty($filter.fixedData.get($desc.column_name))))
+				#if($stdMode)
+					<select name="$dx.formatEmpty(${desc.column_name})" #if ($disabled) disabled #end multiple="multiple"
+					        class="dx-filter dx-filter-dict">
+						#foreach ($item in $dx.dict($desc.dic_id))
+							<option value="$dx.formatEmpty($item.key2)"
+								#if ($disabled && ($filter.fixedData.get($desc.column_name) == ${item.key2}))
+								    selected
+								#elseif (!$dx.empty($filterData) && $filterData.contain(${item.key2}))
+								    selected
+								#end>
+								$dx.dictText(${item.key1}, ${item.key2})
+							</option>
+						#end
+					</select>
+				#else
+					#dxDictSelect($filter.functionalField($desc.column_name),
+						"dx-filter dx-filter-string dx-dict-select")
+				#end
+			#elseif (!$dx.empty($desc.ref_table_name))
+				#dxInputSelect($filter.functionalField($desc.column_name),
+					"dx-filter dx-filter-string dx-input-select", $stdMode)
+			#elseif (!$dx.empty($desc.format))
+				#dxInputWithFormat($filter.functionalField($desc.column_name),
+					"dx-filter dx-filter-string dx-input-with-format", $stdMode)
+			#else
+                #if(!$dx.empty($filter.fixedData) && !$dx.empty($filter.fixedData.get($desc.column_name)))
+				    <input type="text" name="$dx.formatEmpty(${desc.column_name})" class="dx-filter dx-filter-string" #dxMaxLength($desc) value="$filter.fixedData.get($desc.column_name)"/>
+                #else
+				    <input type="text" name="$dx.formatEmpty(${desc.column_name})" class="dx-filter dx-filter-string" #dxMaxLength($desc)"/>
+                #end
+			#end
+		#elseif ($desc.data_type == 2)
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})" class="dx-filter dx-filter-digits dx-filter-start"/><label class="dx-filter-container-mid">～</label>
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})" class="dx-filter dx-filter-digits dx-filter-end"/>
+		#elseif ($desc.data_type == 3)
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})" class="dx-filter dx-filter-number dx-filter-start"/><label class="dx-filter-container-mid">～</label>
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})" class="dx-filter dx-filter-number dx-filter-end"/>
+		#elseif ($desc.data_type == 4)
+		##    data range field?
+			#if ($dx.empty($table.rangeList) || (($table.rangeList[0] != ${desc.column_name}) && ($table.rangeList[1] != ${desc.column_name})))
+				<input type="text" name="$dx.formatEmpty(${desc.column_name})" dx-date="true"
+				       class="dx-filter dx-filter-date dx-filter-start"
+				       value="$dx.filterFrom($desc, $filter)"/><label class="dx-filter-container-mid">～</label>
+				<input type="text" name="$dx.formatEmpty(${desc.column_name})" dx-date="true"
+				       class="dx-filter dx-filter-date dx-filter-end"
+				       value="$dx.filterTo($desc, $filter)"/>
+			#elseif ($table.rangeList[0] == ${desc.column_name})
+				<input type="text" name="$dx.formatEmpty(${desc.column_name})" dx-date="true"
+				       class="dx-filter dx-filter-date dx-filter-range" #if(!$stdMode)required#end/>
+			#end
+		#elseif ($desc.data_type == 5)
+			<select name="$dx.formatEmpty(${desc.column_name})" class="dx-filter dx-filter-checkbox">
+				<option selected value="2">$dx.msg("All", "")</option>
+				<option value="1">$dx.msg("Yes", "")</option>
+				<option value="0">$dx.msg("No", "")</option>
+			</select>
+		#elseif ($desc.data_type == 6)
+		##            password
+		#elseif ($desc.data_type == 7)
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})"
+			       class="dx-filter dx-filter-string" #dxMaxLength($desc)/>
+		#elseif ($desc.data_type == 8)
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})"
+			       class="dx-filter dx-filter-string" #dxMaxLength($desc)/>
+		#elseif ($desc.data_type == 9)
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})"
+			       class="dx-filter dx-filter-string" #dxMaxLength($desc)/>
+		#elseif ($desc.data_type == 10)
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})"
+			       class="dx-filter dx-filter-string" #dxMaxLength($desc)/>
+		#elseif ($desc.data_type == 11)
+			<input type="time" name="$dx.formatEmpty(${desc.column_name})" class="dx-filter dx-filter-time dx-filter-start"/><label class="dx-filter-container-mid">～</label>
+			<input type="time" name="$dx.formatEmpty(${desc.column_name})" class="dx-filter dx-filter-time dx-filter-end"/>
+		#elseif ($desc.data_type == 12)
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})"
+			       class="dx-filter dx-filter-datetime dx-filter-start"/><label class="dx-filter-container-mid">～</label>
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})"
+			       class="dx-filter dx-filter-datetime dx-filter-end"/>
+		#elseif ($desc.data_type == 13)
+			<input type="text" name="$dx.formatEmpty(${desc.column_name})"
+			       class="dx-filter dx-filter-string" #dxMaxLength($desc)/>
+        #elseif ($desc.data_type == 14)
+            <input type="text" name="$dx.formatEmpty(${desc.column_name})"
+                   class="dx-filter dx-filter-string" #dxMaxLength($desc)/>
+        #elseif ($desc.data_type == 15)
+            <input type="text" name="$dx.formatEmpty(${desc.column_name})"
+                   class="dx-filter dx-filter-string" #dxMaxLength($desc)/>
+		#else
+			<p>ERROR: $desc.table_id.$desc.column_name}, column type:$desc.data_type</p>
+		#end
+	</div>
+</div>
+#end
+
+## filter buttons
+#macro(dxFilterButtons $filter $enableCollapse)
+<div class="dx-filter-btn-group dx-field-2">
+	#if ($enableCollapse)
+		<div class="pull-left">
+			<button type="button" class="dx-filter-switch">
+				<span class="dx-filter-open"></span>
+			</button>
+		</div>
+	#end
+	#foreach ($button in $filter.buttons)
+		##<div class="pull-right">
+			<button type="button" class="dx-filter-button dx-filter-$dx.formatEmpty($button.action)"
+			        value="$dx.formatEmpty($button.action)">
+				$dx.msg($button.label)
+			</button>
+		##</div>
+	#end
+	#if ($filter.hasReset())
+		<div class="dx-filter-reset-box">
+			<button type="button" class="dx-filter-reset">
+				$dx.msg("Reset")
+			</button>
+		</div>
+	#end
+</div>
+#end
+
+## filter component
+#macro(dxFilter $filter)
+<$filter.type id="$filter.id" name="$dx.formatEmpty($filter.table)" class="form-inline dx-filter-form" role="form">
+	<div class="dx-field-10">
+	#set($table = $dx.table($filter.table))
+	#foreach($desc in $filter.columns)
+		#if ($dx.filter($table, $desc))
+			#dxFilterField($filter, $desc)
+		#end
+	#end
+	</div>
+  #if($dx.user.isMobileLogin==1)
+    <div class="moblie-footer-menu">
+      <button type="button" class="footer-menu-item1 dx-filter-button dx-filter-exec"
+              value="exec">
+        $dx.msg("Submit")
+      </button>
+    </div>
+  #else
+    #dxFilterButtons($filter, true)
+  #end
+	
+</$filter.type>
+#end
+
+#macro(dxSelectorField $field $table)
+	#set($desc = $dx.desc($field))
+
+	#set($class = "ui-widget dx-field form-control dx-selector-field")
+<div class="form-group col-xs-4 dx-field-container">
+	#if ($dx.empty($table.rangeList) || ($table.rangeList[0] != ${desc.column_name}))
+		#set($label = $dx.label(${field}))
+	#else
+		#set($label = $dx.msg($table.valid_date_cond_disp))
+	#end
+
+	<label class="control-label col-xs-4" for="${field.id}">$dx.formatEmpty(${label})</label>
+
+	<div class="input-group col-xs-8">
+		#if ($desc.prefix) <span class="input-group-addon dx-prefix" aria-owns="${field.id}"></span> #end
+		#dxFieldInput($field, $desc $class)
+		#if ($desc.suffix) <span class="input-group-addon dx-suffix" aria-owns="${field.id}"></span> #end
+	</div>
+</div>
+#end
+## keys selector component
+#macro(dxSelector $treeForm)
+	#set($ids = "")
+	#set($table = $dx.table($treeForm.tableName))
+	#foreach($field in $treeForm.fieldsCondition)
+		#dxSelectorField($field, $table)
+		#if($ids != "")
+			#set($ids = "${ids},")
+		#end
+		#set($ids = "${ids}$field.id")
+	#end
+<input type="button" class="btn btn-default dx-selector-btn" aria-controls="$ids" value="$dx.msg("OK")"/>
+#end
+##所有的按钮
+#macro(dxHeardButton $triggers $table)
+    #if (!$dx.empty($triggers))
+        #foreach($entry in $triggers)
+            ##操作按钮权限。若有关系部门与关系用户隐藏。若无。判断权限。
+            #if ($entry.system_type == 'add' && $entry.is_using == 1)
+                #if($dx.addAuth($dx.user, $table, $entry.action_id))
+                    <button type="button" class="btn dx-grid-add" name="$dx.formatEmpty(${entry.action_id})">
+                        $dx.msg(${entry.action_name_international})</button>
+                #end
+            #end
+            #if ($entry.system_type == 'edit' && $entry.is_using == 1)
+##                <button type="button" class="btn dx-grid-edit" name="${entry.action_id}">
+##                    $dx.msg(${entry.action_name_international})</button>
+            #end
+            #if ($form.button('delete') && $entry.system_type == 'delete' && $entry.is_using == 1)
+                #if($dx.deleteAuth($dx.user, $table, $entry.action_id))
+                    <button type="button" class="btn dx-grid-delete" name="$dx.formatEmpty(${entry.action_id})">
+                        $dx.msg(${entry.action_name_international})</button>
+                #end
+            #end
+            #if ($form.button('view') && $entry.system_type == 'view' && $entry.is_using == 1)
+##                <button type="button" class="btn dx-grid-view" name="${entry.action_id}">
+##                    $dx.msg(${entry.action_name_international})</button>
+            #end
+##            #if ($form.button('operation') && $entry.system_type == 'operation' && $entry.is_using == 1)
+##                #set($operateAuth = $dx.operateAuth($dx.user, $table, $entry.action_id))
+##                #if($operateAuth)
+##                    #if(!$dx.empty(${entry.url}))
+##                        <div class="dx-operate-menu">
+##                            <button type="button" class="btn dx-table-shortcut dx-operation" name="$dx.formatEmpty(${entry.action_id})">
+##                                $dx.msg(${entry.action_name_international})</button>
+##                        </div>
+##                    #else
+##                        <div class="dx-operate-menu">
+##                            <button type="button" class="btn dx-operation" name="$dx.formatEmpty(${entry.action_id})">
+##                                $dx.msg(${entry.action_name_international})</button>
+##                        </div>
+##                    #end
+##                #end
+##            #end
+        #end
+    #end
+##    #if($table.is_import=='1' && ($dx.importAuth($dx.user, $table.id, true) || $dx.importAuth($dx.user, $table.id, false)))
+    <div class="dropdown dx-operate-menu">
+        <a href="#" id="2" role="button" class="btn dropdown-toggle" data-toggle="dropdown">$dx.msg("operation")
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="2">
+            #if($table.is_import=='1' && ($dx.importAuth($dx.user, $table.id, true) || $dx.importAuth($dx.user, $table.id, false)))
+                #if($dx.importAuth($dx.user, $table.id, true))
+                    <li role="presentation">
+                        #if ($dx.isImportInsert($table.id))
+                            <button type="button" class="btn-sm dx-grid-import" name="$dx.formatEmpty($table.id)" role="menuitem" tabindex="-1">$dx.msg("import")</button>
+                        #end
+                    </li>
+                #end
+                #if($dx.importAuth($dx.user, $table.id, false))
+                    <li role="presentation">
+                        #if ($dx.isImportUpdate($table.id))
+                            <button type="button" class="btn-sm dx-grid-import-update" name="$dx.formatEmpty($table.id)" role="menuitem" tabindex="-1">$dx.msg("import-update")</button>
+                        #end
+                    </li>
+                #end
+            #end
+            #if ($dx.exportAuth($dx.user, $table.id, true) || $dx.exportAuth($dx.user, $table.id, false))
+                #if($dx.exportAuth($dx.user, $table.id, true))
+                    <li role="presentation">
+                        #if ($form.button('export'))
+                            <button type="button" class="btn-sm dx-grid-export" role="menuitem" tabindex="-1" >$dx.msg("export")</button>
+                        #end
+                    </li>
+                #end
+                #if($dx.exportAuth($dx.user, $table.id, false))
+                    <li role="presentation">
+                        #if ($form.button('exportAll'))
+                            <button type="button" class="btn-sm dx-grid-exportAll" role="menuitem" tabindex="-1">$dx.msg("exportAll")</button>
+                        #end
+                    </li>
+                #end
+            #end
+            #if (!$dx.empty($triggers))
+                #foreach($entry in $triggers)
+                    #if ($entry.system_type == 'operation' && $entry.is_using == 1)
+                        #set($operateAuth = $dx.operateAuth($dx.user, $table, $entry.action_id))
+                        #if($operateAuth)
+                            <li role="presentation">
+                                <button type="button" class="btn dx-operation btn-sm moreButtonStyle" name="$dx.formatEmpty(${entry.action_id})">
+                                    $dx.msg(${entry.action_name_international})</button>
+                            </li>
+                        #end
+                    #end
+                #end
+            #end
+        </ul>
+    </div>
+##    #end
+##    #if ($dx.exportAuth($dx.user, $table.id, true) || $dx.exportAuth($dx.user, $table.id, false))
+##		<div class="dropdown dx-operate-menu">
+##			<a href="#" id="1" role="button" class="btn dropdown-toggle"data-toggle="dropdown">$dx.msg("export")
+##		        <b class="caret"></b>
+##		    </a>
+##		    <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="1">
+##                #if($dx.exportAuth($dx.user, $table.id, true))
+##                    <li role="presentation">
+##                         #if ($form.button('export'))
+##                            <button type="button" class="btn-sm dx-grid-export" role="menuitem" tabindex="-1" >$dx.msg("export")</button>
+##                        #end
+##                    </li>
+##                #end
+##                #if($dx.exportAuth($dx.user, $table.id, false))
+##                    <li role="presentation">
+##                        #if ($form.button('exportAll'))
+##                            <button type="button" class="btn-sm dx-grid-exportAll" role="menuitem" tabindex="-1">$dx.msg("exportAll")</button>
+##                        #end
+##                    </li>
+##                #end
+##            </ul>
+##		</div>
+##	#end
+#end
+
+##所有的按钮
+#macro(dxOperationButton $form, $triggers)
+    #if (!$dx.empty($triggers))
+        #foreach($entry in $triggers)
+            #set($auth = $dx.operationButtonAuth($form.fieldMap, $dx.user, $table, $entry.action_id))
+            #if ($auth)
+##                ## 审批块配置可编辑字段
+##                #if($dx.empty($form.approveFlow) || ($table.is_approve == 1 && $form.hasEditButton))
+##                    #if($entry.system_type == 'edit' && $entry.is_using == 1)
+##                    <input type="button" id="${form.id}_submit" name="${form.action}" class="dx-submit btn"
+##                           value="$dx.msg($form.buttonText)"/>
+##                    #end
+##                #end
+                #if ($entry.system_type == 'operation' && $entry.is_using == 1)
+                    #if(!$dx.empty(${entry.url}))
+                    <div class="dx-operate-menu">
+                        <button type="button" class="btn dx-table-shortcut dx-operation" name="$dx.formatEmpty(${entry.action_id})">
+                            $dx.msg(${entry.action_name_international})</button>
+                    </div>
+                    #else
+                    <div class="dx-operate-menu">
+                        <button type="button" class="btn dx-operation" name="$dx.formatEmpty(${entry.action_id})">
+                            $dx.msg(${entry.action_name_international})</button>
+                    </div>
+                    #end
+                #end
+            #end
+        #end
+    #end
+#end
+## create operate menu for table
+#macro(dxOpMenu $widgetId $operations $shortcuts)
+    #if (!$dx.empty($operations) || !$dx.empty($shortcuts))
+    <div class="btn-sm dropdown dx-operate-menu">
+        <a href="#" id="drop-$widgetId" role="button" class="dropdown-toggle"
+           data-toggle="dropdown">$dx.msg("Operate")
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="drop-${widgetId}">
+            #set($user=$dx.user)
+            #if (!$dx.empty($shortcuts))
+                #foreach($shortcut in $shortcuts)
+                    #set($ts = $dx.ts($shortcut))
+                    <li role="presentation" class="hidden #if (!$dx.auth($user, $ts)) disabled #end">
+                        <a name="$dx.formatEmpty(${shortcut})" class="dx-table-shortcut dx-operation" role="menuitem" tabindex="-1"
+                           href="#" aria-owns="${widgetId}">$dx.label($ts)</a>
+                    </li>
+                #end
+            #end
+            #if (!$dx.empty($operations))
+                #if (!$dx.empty($shortcuts))
+                    <li role="presentation" class="divider"></li>
+                #end
+                #set($column = "")
+                #foreach($entry in $operations.entrySet())
+                    #foreach($oid in $entry.value)
+                        #set($op = $dx.operation($oid))
+                        <li role="presentation" class="hidden">
+                            <a name="${op.id}" class="dx-table-operate dx-operation" role="menuitem" tabindex="-1"
+                               href="#" column="$dx.formatEmpty(${entry.key})" aria-owns="${widgetId}">$dx.label($op)</a>
+                        </li>
+                    #end
+                #end
+            #end
+        </ul>
+    </div>
+    #end
+#end
+
+## create auto generate menu
+#macro(dxAgMenu $formId $grids $action)
+	#set($show= false)
+	#set($user=$dx.user)
+	#foreach($grid in $grids)
+		#set($childTable=$dx.table($grid.table))
+		#if ($dx.auth($user, $childTable) && !$dx.empty($dx.table($grid.table).autoGens))
+			#set($show= true)
+			#break
+		#end
+	#end
+	#if ($show)
+	<div class="btn btn-sm dropdown dx-ag-menu"
+            style=#if($action == 'view') "display: none" #else "display: ''" #end">
+		<button href="#" id="drop-$formId" role="button" class="btn dropdown-toggle"
+		   data-toggle="dropdown">$dx.msg("auto generate")
+			<b class="caret"></b>
+		</button>
+		<ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="drop-${formId}">
+			#set($column = "")
+			#foreach($grid in $grids)
+				#set($childTable = $dx.table($grid.table))
+				#if ($childTable.autoGens)
+					#if ($dx.auth($user, $childTable))
+						#foreach($entry in $childTable.autoGens.entrySet())
+							#set($ag = $entry.value)
+							<li role="presentation" class="hidden" name="$dx.formatEmpty(${ag.id})" table="${childTable.id}">
+								<a name="$dx.formatEmpty(${ag.id})" class="dx-ag" role="menuitem" tabindex="-1"
+								   href="#">$dx.msg(${ag.id})</a>
+							</li>
+						#end
+					#end
+				#end
+			#end
+		</ul>
+	</div>
+	#end
+#end
+
+## setup field input tag with model
+#macro(dxFieldInput $field $desc $class)
+	#if ($desc.data_type == 1 || $desc.data_type == 13)
+		#if ($desc.dic_id)
+			#dxDictSelect($field "$class dx-dict-select")
+		#elseif ($desc.ref_table_name && $desc.is_multiple==0)
+			#dxInputSelect($field "$class dx-input-select" false)
+		#elseif ($desc.data_format)
+			#dxInputWithFormat($field "$class dx-input-with-format", false)
+		#elseif ($dx.isMapColumn($field))
+			#dxMapField($field "$class dx-input-map")
+		#else
+			#dxInput($field "$class dx-input")
+		#end
+	#elseif ($desc.data_type == 2)
+		#dxDigits($field "$class dx-digits")
+	#elseif ($desc.data_type == 3)
+		#dxNumber($field "$class dx-number")
+	#elseif ($desc.data_type == 4)
+		#dxDate($field "$class dx-date")
+	#elseif ($desc.data_type == 5)
+		#dxCheckbox($field "$class dx-checkbox")
+	#elseif ($desc.data_type == 6)
+		#dxPassword($field "$class dx-password")
+	#elseif ($desc.data_type == 7)
+		#dxPicture($field "$class dx-pic")
+	#elseif ($desc.data_type == 8)
+		#dxFile($field "$class dx-file")
+	#elseif ($desc.data_type == 9)
+		#dxLink($field "$class dx-link")
+	#elseif ($desc.data_type == 10)
+		#dxEMail($field "$class dx-email")
+	#elseif ($desc.data_type == 11)
+		#dxTime($field "$class dx-time")
+	#elseif ($desc.data_type == 12)
+		#dxDatetime($field "$class dx-datetime")
+	##    #elseif ($desc.data_type == 13)
+	##        #dxAutoIncrase($field "$class dx-auto-incrase")
+    #elseif ($desc.data_type == 14)
+        #dxTextArea($field "$class dx-text-area")
+    #elseif ($desc.data_type == 15)
+        #dxEditorInput($field "$class dx-editor-input")
+	#else
+	<p>ERROR: $desc.table_id.$dx.desc($field).column_name}, field type:$desc.data_type</p>
+	#end
+#end
+
+## setup hidden field
+#macro(dxHiddenField $field $desc)
+<div class="dx-field-container dx-hidden">
+## dx-invisible for validate ignore selector
+#dxFieldInput($field, $desc, "dx-field dx-invisible")
+</div>
+#end
+
+## setup field div, including lable, prefix, suffix, input with model
+## 1：字符串 2：整数 3：小数 4：日期 5：是非 6：密码 7：图片 8：文件 9：链接 10：email 11:时间 12:日期+时间 13:自增字段
+#macro(dxField $field)
+	#set($desc = $dx.desc($field))
+	#dxFieldWithClass($field, "form-group col-xs-4 dx-field-container", "control-label label-$desc.cell_cnt",
+		"input-group input-$desc.cell_cnt")
+#end
+#macro(dxFieldWithDivClass $field $divClasss)
+	#dxFieldWithClass($field, $divClasss, "control-label label-$desc.cell_cnt", "input-group input-$desc.cell_cnt")
+#end
+#macro(dxFieldWithLabelClass $field $labelClass)
+	#dxFieldWithClass($field, "form-group col-xs-4 dx-field-container", $labelClass, "input-group input-$desc.cell_cnt")
+#end
+#macro(dxFieldWithInputClass $field $inputDivClass)
+	#dxFieldWithClass($field, "form-group col-xs-4 dx-field-container",
+		"control-label label-$desc.cell_cnt", $inputDivClass)
+#end
+
+#macro(dxFieldWithPrefixSuffix $field, $desc $inputDivClass $class)
+    #if($desc.prefix || $desc.suffix)
+        <div class="$inputDivClass  suffix-warp">
+            #if ($desc.prefix)<span class="input-group-addon dx-prefix" aria-owns="${field.id}"></span>#end
+            #dxFieldInput($field, $desc $class)
+            #if ($desc.suffix) <span class="input-group-addon dx-suffix" aria-owns="${field.id}"></span> #end
+##            #if ($desc.link) <a class="input-group-addon dx-column-link button-color2 fa fa-search" aria-owns="${field.id}" data-form="$form.id"
+##                                data-table="$desc.table_id" data-column="$desc.column_name"></a> #end
+            #calendarEvent($field $class)
+        </div>
+    #else
+        <div class="$inputDivClass">
+            #if ($desc.prefix)<span class="input-group-addon dx-prefix" aria-owns="${field.id}"></span>#end
+            #dxFieldInput($field, $desc $class)
+            #if ($desc.suffix) <span class="input-group-addon dx-suffix" aria-owns="${field.id}"></span> #end
+##            #if ($desc.link) <a class="input-group-addon dx-column-link button-color2 fa fa-search" aria-owns="${field.id}" data-form="$form.id"
+##                                data-table="$desc.table_id" data-column="$desc.column_name"></a> #end
+            #calendarEvent($field $class)
+        </div>
+    #end
+#end
+## 添加到日历颜色选择
+#macro(calendarEvent $field $class)
+    #if($dx.hasCalendarEvent($field) && $dx.user.isMobileLogin!=1)
+        <div class="dropdown event-color-wrap">
+            <button class="btn event-color-button " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
+                <span class="event-color-button-span" field_id="$field.id" ></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li class="selected event-color event-red" name="red" event_backgroud_color="#FF6861"><span class="" style="background: #FF6861" ></span></li>
+                <li class="event-color event-orange" name="orange" event_backgroud_color="#FEAA57"><span class="" style="background: #FEAA57"></span></li>
+                <li class="event-color event-grey" name="grey" event_backgroud_color="#A4A4A7"><span class="" style="background: #A4A4A7"></span></li>
+                <li class="event-color event-blue" name="blue" event_backgroud_color="#5EBEF7"><span class="" style="background: #5EBEF7"></span></li>
+                <li class="event-color event-green" name="green" event_backgroud_color="#88E06D"><span class="" style="background: #88E06D"></span></li>
+                <li class="event-color event-purple" name="purple" event_backgroud_color="#D592E5"><span class="" style="background: #D592E5"></span></li>
+                <li class="event-color event-yellow" name="yellow" event_backgroud_color="#F4C848"><span class="" style="background: #F4C848"></span></li>
+                <li class="event-color event-white" name="white" event_backgroud_color="#FFFFFF"><span class="" style="background: #FFFFFF"></span></li>
+            </ul>
+        </div>
+    #end
+#end
+#macro(dxFieldWithClass $field $divClasss $labelClass $inputDivClass)
+	#set($desc = $dx.desc($field))
+	#set($class = "ui-widget dx-field form-control")
+	#set($required = $dx.required($desc))
+
+<div class="$divClasss #if($form.action == "view" && ($desc.data_type == 7 || $desc.data_type == 8)) file-view-class #end">
+	<label class="$labelClass#if($required) required#end" #if($desc.data_type != 7 || ($form.action != "view" && $desc.data_type == 7 ))for="${field.id} #end ">
+        $dx.label(${field})#if($required)<font class="required bold">*</font>#end
+	</label>
+
+	#dxFieldWithPrefixSuffix($field, $desc, $inputDivClass, $class)
+</div>
+
+#end
+
+##for auth editor
+#macro(authOption $title $authOptions)
+<label class="dx-auth-editor-label">$title</label>
+<select multiple="multiple" class="dx-auth-editor-options">
+	<option value="*">$dx.msg("All", "(*)")</option>
+	#foreach($option in $authOptions)
+		<option value="$option.id">${option.name}($option.id)</option>
+	#end
+</select>
+#end
+
+#macro(dxAuthEditor $depts $roles $users $hasOwner)
+<div class="auth-entry-editor hidden">
+	#dxMenuBarHead($form)
+	<button type="button" class="btn btn-sm dx-auth-entry-save">$dx.msg("Save")</button>
+	<button type="button" class="btn btn-sm dx-btn-cancel">$dx.msg("Cancel")</button>
+	#dxMenuBarFoot()
+	<table>
+		<tbody>
+		<tr>
+			<td>
+				#authOption($dx.msg("Department"), $depts)
+			</td>
+			<td>
+				#authOption($dx.msg("Role"), $roles)
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				#authOption($dx.msg("User"), $users)
+			</td>
+		</tr>
+			#if ($hasOwner)
+			<tr>
+				<td colspan="3">
+					<input class="auth-editor-enabler" type="checkbox">
+					<label>$dx.msg("enable owner")</label>
+				</td>
+			</tr>
+			<tr class="dx-auth-owner">
+				<td>
+					#authOption($dx.msg("Department"), $depts)
+				</td>
+				<td>
+					#authOption($dx.msg("Role"), $roles)
+				</td>
+			</tr>
+			<tr class="dx-auth-owner">
+				<td colspan="2">
+					#authOption($dx.msg("User"), $users)
+				</td>
+			</tr>
+			#end
+		</tbody>
+	</table>
+</div>
+#end
+
+#macro(dxAuthMenuTree $menus)
+	#foreach ($menu in $menus)
+	<li #if ($dx.empty($menu.sub))id="${form.id}-$menu.id" #end>$dx.label($menu)
+		#if ($menu.sub)
+			<ul>
+				#dxAuthMenuTree($menu.sub)
+			</ul>
+		#end
+	</li>
+	#end
+#end
+
+## dx Matter
+#macro(dxMatter $matter $key)
+<div id="${matter.id}" class="panel panel-default dx-todo-${matter.id}"
+     style="position: absolute;margin:0;left:${matter.start_col}px;top:${matter.start_row}px;width:${matter.width}px;height:${matter.height}px;background-color:${matter.background_color};color:#FFF;padding:0;">
+	<div class="panel-heading"
+	     style="height:30px;border:0;background-color:${matter.background_color};color:#FFF;"><h3
+		class="panel-title" style="font-weight:bold;">$dx.dictText('DIC_DESKTOP_ITEM','60')
+		<a href="#" name="${matter.id}" key="$key" class="dx-todo-refresh">[$dx.msg("refresh")]</a></h3>
+	</div>
+	<div class="panel-body"
+	     style="height:$math.sub(${matter.height},30)px;overflow-y:auto;padding:0;margin:0;color:#FFF;">
+		<div class="dx-grid-container">
+			<table class="dx-grid display dx-operation-table" cellspacing="2px" width="100%">
+				<tbody>
+					#foreach($data in ${matter.matterDesk})
+					<tr id="${data.id}" key="$key" parentId="${matter.id}">
+						<td>[$dx.tableLabel(${data.table_id})]</td>
+						<td><a href="#" onclick="pageLink('${data.id}')">${data.key_value}</a>
+						</td>
+					</tr>
+					#end
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+	#foreach($data in ${matter.matterDesk})
+	<div class="hidden dx-todo-view dx-todo-${matter.id}" id="${data.id}_$key">
+		<table cellspacing="2px" class="dx-full-width">
+			<tbody>
+			<tr class="dx-full-width">
+				<td colspan=2 class="dx-todo-head">$dx.tableLabel(${data.table_id})</td>
+			</tr>
+			<tr>
+				<td class="dx-todo-detail">$dx.columnLabel(${data.disp_table_id},$dx.table(${data.disp_table_id}).idColumns[0])</td>
+				<td class="dx-todo-detail">$dx.formatEmpty(${data.key_value})</td>
+			</tr>
+			<tr>
+				<td class="dx-todo-detail">$dx.columnLabel(${data.table_id},${data.status_col})</td>
+				<td class="dx-todo-detail">$dx.dictText($dx.table(${data.table_id}).getColumn(${data.status_col}).dic_id, ${data.status_now})</td>
+			</tr>
+			<tr>
+				<td class="dx-todo-detail">$dx.columnLabel('sys_action_log','cre_user')</td>
+				<td class="dx-todo-detail">$dx.formatEmpty(${data.cre_user})</td>
+			</tr>
+			<tr>
+				<td class="dx-todo-detail-last">$dx.columnLabel('sys_action_log','cre_date')</td>
+				<td class="dx-todo-detail-last">${data.cre_date}</td>
+			</tr>
+				#set($btncnt=0)
+				#foreach($actionId in ${data.action_ids})
+					#if($btncnt == 0)
+					<tr>
+					<td colspan=2 class="dx-todo-operation">
+					#end
+					<button class="dx-operation-click btn btn-default" type="button" value="$dx.formatEmpty($actionId)">
+						[$dx.opLabel($actionId)]
+					</button>
+					#set($btncnt = $math.add($btncnt, 1))
+					#if($btncnt == 2)
+					</td>
+					</tr>
+						#set($btncnt = 0)
+					#end
+				#end
+				#if($btncnt == 1)
+				</td>
+				</tr>
+				#end
+			</tbody>
+		</table>
+	</div>
+	#end
+#end
+## dx 左侧查询
+#macro(dxGridLeftSelect $form)
+    <div class="group-column-name-box"><input type="hidden" value="" class="group-column-name"/>$dx.msg("group : ")<a href="#" class="left-group">XXX</a></div>
+    <div class="dx_grid_left_group"></div>
+    <div class="dx-grid-left-group-filter" >
+    	<input type="text" placeholder="$dx.msg("search_params")">
+    </div>
+    <div class="grid-left-select" style="">
+    	<script>
+    		$('.grid-left-select').on('open_node.jstree', function (e, data) {
+    			var id="#"+data.node.id;
+				$(id).find("ul").find("li").eq(0).find(".jstree-themeicon").css("visibility","visible");
+			})
+    	</script>
+    </div>
+    <div class="dx-left-clear-Group"><a href="#" class="fa fa-angle-double-right">
+    ##$dx.msg("remove-group")
+    </a></div>
+#end
+
+## 审批流
+#macro(detailApprove $form)
+  #set($table =$dx.table($form.tableName))
+  #if($table.is_approve != 1 || $dx.empty($form.approveFlow) || $dx.empty($dx.user))
+      #break;
+  #end
+  <div class="main-view col-xs-3 approve-line-ways">
+  ## 驳回记录
+      #if($form.rejectRecord.size() != 0)
+          #rejectLog($form)
+      #end
+      <div class="approve-line-ways-article ways-article">
+          <div class="approve-title">
+              <h4>$dx.msg("ApprovalProcess")</h4>
+          </div>
+          <div class="approve-line-ways-section approve-node-start">
+              <span class="point-time"></span>
+              <div class="approve-line-ways-top">
+                  <span class="line-ways-name">$dx.formatEmpty($form.initator)</span>
+                  <span class="line-ways-state">$dx.msg("initiateApprove")</span>
+                  #if($dx.user.isMobileLogin!=1)
+                    #if($form.hasApproveBackButton)
+                        <button class="approve-back" type="button">
+                            $dx.msg('approveBack')
+                        </button>
+                    #end
+                  #end
+              </div>
+              <div class="approve-line-ways-aside">
+                  <span class="line-ways-time">
+                      $dx.formatDate($form.byTheTime)
+                  </span>
+              </div>
+          </div>
+          #set($curApproveNode="")
+          #foreach($approveFlowNode in $form.approveFlow.approveFlowNodes)
+              <div class="approve-line-ways-section #if($approveFlowNode.state == 'wait') wait-point
+                  #elseif($approveFlowNode.state == 'finish') suc-point #elseif($approveFlowNode.state == 'reject') reject-point
+                  #elseif($approveFlowNode.state == 'termination') termination-point #elseif($approveFlowNode.state == 'hold') pause-point #end">
+                  <span class="point-time"></span>
+                  #if($dx.empty($approveFlowNode.approveFlowUsers))
+                      <span>$dx.msg("has no approve user")</span>
+                      #break
+                  #end
+                  #foreach($approveFlowUser in $approveFlowNode.approveFlowUsers)
+                  ## 用户状态为wait 1，有审批框， 2， 无审批框
+                      #if($approveFlowUser.state == 'wait')
+                      ## 1， 有审批框
+                          #if($approveFlowUser.hasApproveButton)
+                              <div class="approve-line-ways-top">
+                                  <span class="line-ways-name">$dx.formatEmpty($approveFlowUser.user.name)</span>
+                                  <span class="line-ways-time">
+                                      #if(!$dx.empty($approveFlowUser.creation_time))
+                                          $dx.formatDate($approveFlowUser.creation_time)
+                                      #end
+                                  </span>
+                              </div>
+                              ##手机端登录不加载
+                              #if(!$dx.empty($dx.user) && $dx.user.isMobileLogin!=1)
+                              <div class="approve-line-ways-aside">
+                                  #if($approveFlowNode.is_work_block != 1)
+                                      <textarea class="approveReason" placeholder="$dx.msg('please write approve reason')"></textarea>
+                                  #end
+                                  <div class="approve-line-ways-btn approve-flow-add-point-div approve-button-param"
+                                       approveId="$dx.formatEmpty($approveFlowNode.approve_id)"
+                                       blockId="$dx.formatEmpty($approveFlowNode.block_id)"
+                                       belongBlock="$dx.formatEmpty($approveFlowNode.belong_block)"
+                                       node_seq="$dx.formatEmpty($approveFlowNode.node_seq)">
+                                      #set($approveButton = $dx.approveButton($table.id, $approveFlowNode))
+                                      #set($flowEvent = "")
+                                      #if($approveButton)
+                                          #foreach($event in $approveButton)
+                                              #if($event.event_type == 'finishEvent')
+                                                  #set($flowEvent = $event)
+                                              #else
+                                                  <button class="approve-button
+                                                  #if($event.event_type == 'agreeEvent')
+                                                    approve-agree
+                                                  #elseif($event.event_type == 'disagreeEvent')
+                                                    approve-disagree
+                                                  #elseif($event.event_type == 'terminationEvent')
+                                                    approve-termination
+                                                  #elseif($event.event_type == 'retainEvent')
+                                                    approve-pause
+                                                  #elseif($event.event_type == 'rejectEvent')
+                                                    approve-reject
+                                                  #elseif($event.event_type == 'workEvent')
+                                                    approve-work
+                                                  #end"
+                                                          type="button" event_id="$dx.formatEmpty($event.flow_event_id)"
+                                                      #if($dx.approveBlockIsExec($form.approveFlow, $approveFlowNode.block_id, $event.flow_event_id)) disabled #end>
+                                                      $dx.i18n($event.i18n)
+                                                  </button>
+                                              #end
+                                          #end
+                                      #end
+                                      #if(!$dx.empty($flowEvent))
+                                          <textarea class="approveReason" placeholder="$dx.msg('please write approve reason')"></textarea>
+                                          <button class="approve-button" type="button" event_id="$dx.formatEmpty($flowEvent.flow_event_id)">
+                                              $dx.i18n($flowEvent.i18n)
+                                          </button>
+                                      #end
+                                      #if($approveFlowNode.is_alreadyAddApprove!=1 && $approveFlowNode.is_addApprove==1 && $dx.selectIsAddApprove($approveFlowNode.approve_id,$approveFlowNode.block_id))
+                                          <button class="approve-add-point" addApproveCount= "$dx.formatEmpty($approveFlowNode.addApprove_count)" data-toggle="modal"
+                                                  data-target=".approve-flow-add-point-$form.id" type="button">$dx.msg("Sign up")
+                                          </button>
+                                          #set($approveBlock=$approveFlowNode.block_id)
+                                      #end
+                                      #if($approveFlowNode.is_alreadyAddApprove==1 && $approveFlowNode.is_addApprove==1 && $dx.selectIsAddApprove($approveFlowNode.approve_id,$approveFlowNode.block_id))
+                                          <button class="approve-add-point" addApproveCount= "$dx.formatEmpty($approveFlowNode.addApprove_count)" isUpdateAddApprove="isUpdateAddApprove" data-toggle="modal"
+                                                  data-target=".approve-flow-add-point-$form.id" type="button">修改加签
+                                          </button>
+                                          #set($approveBlock=$approveFlowNode.block_id)
+                                      #end
+                                  </div>
+                              </div>
+                              #else
+                                  #set($curApproveNode=$approveFlowNode)
+                              #end
+                          #else
+                              <div class="approve-line-ways-top">
+                                  <span class="line-ways-name">
+                                      #if(!$dx.empty($approveFlowUser.user))
+                                          $dx.formatEmpty($approveFlowUser.user.name)
+                                      #end
+                                  </span>
+                              </div>
+                          #end
+                      #else
+                          <div class="approve-line-ways-top">
+                              <span class="line-ways-name">
+                                  #if(!$dx.empty($approveFlowUser.user))
+                                    $dx.formatEmpty($approveFlowUser.user.name)
+                                  #end
+                              </span>
+                              <span class="line-ways-state" style="color: $dx.formatEmpty($dx.approveStateColor($approveFlowUser.flow_event_id))">
+                                  $dx.formatEmpty($dx.approveState($approveFlowUser.flow_event_id))
+                              </span>
+                              #if($approveFlowUser.takeBack)
+                                  <button type="button" class="takeBack" approveId="$dx.formatEmpty($approveFlowUser.approve_id)"
+                                        block_id="$dx.formatEmpty($approveFlowUser.block_id)" userId="$dx.formatEmpty($approveFlowUser.userId)">$dx.msg("takeBack")</button>
+                              #end
+
+##                              #if($approveFlowUser.state == 'reject')
+##                                  <span class="line-ways-state reject">$dx.msg($approveFlowUser.state)</span>
+##                              #end
+                          </div>
+                          <div class="approve-line-ways-aside">
+                              #if(!$dx.empty($approveFlowUser.remark))
+                                  <div class="brief">
+                                      $dx.formatEmpty($approveFlowUser.remark)
+                                  </div>
+                              #end
+                              <span class="line-ways-time">
+                                  #if(!$dx.empty($approveFlowUser.creation_time))
+                                      $dx.formatDate($approveFlowUser.creation_time)
+                                  #end
+                              </span>
+                              ## TODO 工作节点放工作按钮。
+
+                          </div>
+                      #end
+                  #end
+              </div>
+          #end
+      ## 审批结束后的结束节点。
+          #if($form.approveFlow.approveOver=='over')
+              <div class="approve-line-ways-section approve-node-end isEnd">
+                  <span class="point-time"></span>
+                  <div class="approve-line-ways-top">
+                      <span class="line-ways-name">$dx.msg("approveOver")</span>
+                  </div>
+              </div>
+          #else
+              <div class="approve-line-ways-section approve-node-end">
+                  <span class="point-time"></span>
+                  <div class="approve-line-ways-top">
+                      <span class="line-ways-name">$dx.msg("approveOver")</span>
+                  </div>
+              </div>
+          #end
+      </div>
+  </div>
+  ## 加签人员
+ ## #addPoint($form)
+  ##手机端模块
+  #if(!$dx.empty($dx.user) && $dx.user.isMobileLogin==1)
+    #if(!$dx.empty($curApproveNode))
+    <div class="main-view moblie-footer-menu approve-button-param" 
+      approveId="$dx.formatEmpty($curApproveNode.approve_id)"
+      blockId="$dx.formatEmpty($curApproveNode.block_id)"
+      belongBlock="$dx.formatEmpty($curApproveNode.belong_block)"
+      node_seq="$dx.formatEmpty($curApproveNode.node_seq)"
+      addApproveCount= "$dx.formatEmpty($curApproveNode.addApprove_count)"
+      isAddApprove="$dx.formatEmpty($curApproveNode.is_addApprove)"
+      isReady="$dx.formatEmpty($curApproveNode.is_alreadyAddApprove)">
+        <input type="button" class="approve-submit-back"
+               value="$dx.msg('back')" style="display: none;background-color: #fff;width: 49%;border-right: 1px solid #E6E6E6;border-radius: 0;"/>
+        <input type="button" id="${form.id}_submit" name="${form.action}" class="dx-submit approve-submit"
+               value="$dx.msg($form.buttonText)" style="display: none;background-color: #fff; width: 49%;color:#5EC1EC"/>
+      #set($approveButton = $dx.approveButton($table.id, $curApproveNode))
+      #set($flowEvent = "")
+      #if($approveButton)
+        #foreach($event in $approveButton)
+          #if($event.event_type != 'workEvent')
+              <button class="btn mobile-approve-button $dx.formatEmpty($event.event_type)" type="button" event_id="$dx.formatEmpty($event.flow_event_id)" event_type="$dx.formatEmpty($event.event_type)"
+                  #if($dx.approveBlockIsExec($form.approveFlow, $curApproveNode.block_id, $event.flow_event_id)) disabled #end>
+                  $dx.i18n($event.i18n)
+              </button>
+          #end
+        #end
+        #if($curApproveNode.is_work_block == 1)
+          <button class="btn mobile-approve-button work-events" event_type="work-events">$dx.msg("work events")</button>
+        #end
+      #end
+    </div>
+
+    <div style="display: none" class="submit-approve reason-model">
+      <div class="approve-mind-head" name="$dx.formatEmpty($form.pageId)">
+          <span class="pull-left">$dx.msg("approveReason")</span>
+      </div>
+      <div>
+          <textarea class="approveReason" placeholder="$dx.msg('please write approve reason')"></textarea>
+          <div class="moblie-footer-menu footer-menu-item1">
+              <button class="approve-button" type="button">$dx.msg("Submit")</button>
+          </div>
+      </div>
+    </div>
+
+    <div style="display: none" class="submit-approve work-model">
+      <div class="approve-mind-head" name="$dx.formatEmpty($form.pageId)">##dx-more-record
+          <span class="cancle-work-model pull-left">$dx.msg("Cancel")</span>
+      </div>
+      <div class="approve-mind-body clearfix">
+          #set($approveButton = $dx.approveButton($table.id, $curApproveNode))
+          #set($flowEvent = "")
+          #if($approveButton)
+            #foreach($event in $approveButton)
+              #if($event.event_type == 'workEvent')
+              <div class="col-xs-6 approve-button-wrap">
+                  <button class="approve-button foot-menu-item1" type="button" event_id="$dx.formatEmpty($event.flow_event_id)" event_type="$dx.formatEmpty($event.event_type)"
+                      #if($dx.approveBlockIsExec($form.approveFlow, $curApproveNode.block_id, $event.flow_event_id)) disabled #end>
+                      $dx.i18n($event.i18n)
+                  </button>
+              </div>
+              #end
+            #end
+          #end
+      </div>
+    </div>
+    #elseif($form.initiatorId==$dx.user.id && $form.action != "edit" && $form.approveFlow.state!=4)
+    <div class="main-view moblie-footer-menu approve-button-param">
+      #if($dx.ifAllowUndo($form.approveFlow.approve_id))
+      <button class="m-approve-cuiban" type="button">$dx.msg("CuiBan")</button>
+      <button class="approve-back" type="button">
+      $dx.msg("Revocation")</button>
+      #else
+      <button class="m-approve-cuiban" type="button">$dx.msg("CuiBan")</button>
+      #end
+    </div>
+    #end
+  #end
+
+#end
+
+#macro(rejectLog $form)
+<div class="approve-line-ways-article reject-article">
+    <h4 >$dx.msg("RejectedRecord")</h4>
+    #foreach($rejectRecord in $form.rejectRecord)
+        #if(${velocityCount}==$form.rejectRecord.size())
+            <div class="approve-line-ways-section reject-point">
+                <span class="point-time"></span>
+                <div class="approve-line-ways-top">
+                    <span class="line-ways-name">$dx.formatEmpty($rejectRecord.user.name)</span>
+                    <span class="line-ways-state reject"></span>
+                </div>
+                <div class="approve-line-ways-aside">
+                    #if(!$dx.empty($rejectRecord.remark))
+                        <div class="brief">
+                            $dx.formatEmpty($rejectRecord.remark)
+                        </div>
+                    #end
+                    <span class="line-ways-time">
+                        #if(!$dx.empty($rejectRecord.creation_time))
+                            $dx.formatDate($rejectRecord.creation_time)
+                    	#end
+                    </span>
+                </div>
+            </div>
+            <div class="moreRejectRecordWrap"><button type="button" class="moreRejectRecord">$dx.msg("SpreadMore")</button></div>
+        #else
+            <div class="approve-line-ways-section reject-point approve-hidden-section">
+                <span class="point-time"></span>
+                <div class="approve-line-ways-top">
+                    <span class="line-ways-name">$dx.formatEmpty($rejectRecord.user.name)</span>
+                    <span class="line-ways-state reject"></span>
+                </div>
+                <div class="approve-line-ways-aside">
+                    #if(!$dx.empty($rejectRecord.remark))
+                        <div class="brief">
+                            $dx.formatEmpty($rejectRecord.remark)
+                        </div>
+                    #end
+                    <span class="line-ways-time">
+                        #if(!$dx.empty($rejectRecord.creation_time))
+                            $dx.formatDate($rejectRecord.creation_time)
+                        #end
+                    </span>
+                </div>
+            </div>
+        #end
+    #end
+</div>
+#end
+
+#macro(addPoint $form)
+<div class="modal approve-flow-add-point approve-flow-add-point-$form.id" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xs" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">$dx.msg("Approve add nodes")</h4>
+            </div>
+            <div class="modal-body clearfix">
+                <div class="approve-add-selected dx-field-12 clearfix">
+                    <div class="g1-dropdown dropdown approve-add-point-wrap">
+                        <button type="button" class="approve-add-toggle-btn">
+                            $dx.msg("Add approver")
+                        </button>
+                        <ul class="g1-dropdown-menu">
+                            <input type="text" class="approve-add-point-select" placeholder="$dx.msg('AddSignaturePersonnel')">
+                            <div class="g1-tree-icon-left deptUserTree">
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="main-view modal-footer">
+                <button type="button" class="button-color4" data-dismiss="modal">$dx.msg("Cancel")</button>
+                <button type="button" class="button-color3 approve-add-point-save" data-dismiss="modal">$dx.msg("Save")</button>
+            </div>
+        </div>
+    </div>
+</div>
+#end
+
+

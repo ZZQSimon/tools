@@ -1,0 +1,31 @@
+#dxFormHead($form)
+<form id="$form.id" class="dx-form" name="$form.widgetName">
+	#dxMenuBarHead($form)
+	<button type="button" class="btn btn-default btn-sm dx-ril-save">$dx.msg("Save")</button>
+	<button type="button" class="btn btn-default btn-sm dx-btn-cancel">$dx.msg("Cancel")</button>
+	#dxMenuBarFoot()
+	<div class="container" style="height:auto;">
+		<div class="row dx-detail-row dx-ril-selector">
+			#foreach($filter in $form.sourceFilters)
+				#dxField($filter)
+			#end
+			<input type="button" class="btn btn-default dx-btn-ok" value="$dx.msg("OK")""/>
+		</div>
+		<table id="$form.grid.id" class="dx-ril-grid display cell-border" cellspacing="0" width="100%">
+			<thead>
+			<tr>
+				<th>rowid</th>
+				#set($table = $dx.table($form.tableName))
+				#foreach($desc in $table.columns)
+					#if (($desc.group_name != "_SYS_COLUMN") && ($desc.column_name != $table.idColumns[0]))
+						<th>$dx.i18n($desc.i18n)</th>
+					#end
+				#end
+			</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</form>
+#dxFormTail($form)

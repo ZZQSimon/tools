@@ -1,0 +1,21 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="checkWork" class="form-inline dx-form clearfix pc-tab-form" role="form"">       ##基本上照抄即可
+
+<div class="checkWorkCalwrap">
+    <div class="checkWorkCal"></div>
+</div>
+ <div class="checkWorkfooter">
+    <div class="foot-common">
+        <span class="foot-dots"></span>
+        正常出勤
+    </div>
+    <div class="foot-early">
+        <span class="foot-dots"></span>
+        迟到/早退
+    </div>
+    <div class="foot-loss">
+        <span class="foot-dots"></span>
+        无考勤
+    </div>
+ </div>
+#dxFormTail($form)

@@ -1,0 +1,1519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.SystemDao">
+	<insert id="insertRecord">
+		insert into ${table}
+		<foreach collection="values" item="item" separator="," open="("
+			close=")">
+			`${item.id}`
+		</foreach>
+		values
+		<foreach collection="values" item="item" separator="," open="("
+			close=")">
+			<choose>
+				<when test="item.is_encrypt == 1 or item.data_type == 6">
+					AES_ENCRYPT(#{item.value}, #{encryptStr})
+				</when>
+				<otherwise>
+					#{item.value}
+				</otherwise>
+			</choose>
+		</foreach>
+	</insert>
+	<insert id="insertBatchRecord">
+		<foreach collection="sqls" item="sql" separator=";">
+			${sql}
+		</foreach>
+	</insert>
+	<insert id="insertLog">
+		insert into c_log (
+		id,
+		ts,
+		user_id,
+		type,
+		target_id,
+		context
+		) values (
+		#{id},
+		#{ts},
+		#{user_id},
+		#{type},
+		#{target_id},
+		#{context}
+		)
+	</insert>
+	<insert id="copyTableUsingTemplate">
+		CREATE TABLE ${target} LIKE ${template};
+	</insert>
+	<insert id="insertImportData">
+		insert into ${table}
+		<foreach collection="data.keySet()" item="column" separator=","
+			open="(" close=")">
+			`${column}`
+		</foreach>
+		values
+		<foreach collection="data.keySet()" item="column" separator=","
+			open="(" close=")">
+			#{data.${column}}
+		</foreach>
+	</insert>
+	<delete id="deleteRecords">
+		delete from ${table}
+		<foreach collection="key" item="item" separator="and" open="where">
+			${item.id} = #{item.value}
+		</foreach>
+	</delete>
+	<delete id="dropTable">
+		drop table ${table}
+	</delete>
+	<select id="selectTableDescribe" parameterType="cn.com.easyerp.core.dao.SystemDao"
+		resultType="cn.com.easyerp.core.cache.TableDescribe">
+		select
+		id,
+		parent_id_column,
+		children_id_column,
+		case LENGTH(name_expression)
+		when 0
+		then null
+		else name_expression end name_column,
+		name_expression_publicity,
+		readonly,
+		case LENGTH(parent_id)
+		when 0
+		then null
+		else parent_id end parent_id,
+		case LENGTH(auto_gen_sql)
+		when 0
+		then null
+		else auto_gen_sql end auto_gen_sql,
+		group_name,
+		case LENGTH(pc_block_view_style)
+		when 0
+		then null
+		else pc_block_view_style end block_view_style,
+		case LENGTH(default_group_column)
+		when 0
+		then null
+		else default_group_column end default_group_column,
+		case LENGTH(check_condition)
+		when 0
+		then null
+		else check_condition end check_condition,
+		logable,
+		case LENGTH(view_style)
+		when 0
+		then null
+		else view_style end view_style,
+		table_type,
+		detail_disp_cols,
+		case LENGTH(valid_date_cols)
+		when 0
+		then null
+		else valid_date_cols end valid_date_cols,
+		valid_date_cond_disp,
+		case LENGTH(valid_date_group_cols)
+		when 0
+		then null
+		else valid_date_group_cols end valid_date_group_cols,
+		view_main_table,
+		case LENGTH(export_sql)
+		when 0
+		then null
+		else export_sql end export_sql,
+		case LENGTH(import_sql)
+		when 0
+		then null
+		else import_sql end import_sql,
+		importable,
+		seq,
+		international_id,
+		is_approve,
+		is_auth,
+		is_approve_state,
+		key_formula,
+		`module`,
+		memo,
+		IFNULL(`is_import`,'0') `is_import`,
+		child_seq,
+		mobile_list_group,
+		is_approve_select
+		from ${domain}.c_table
+	</select>
+	<select id="selectTableViewStyle" resultType="cn.com.easyerp.core.cache.TableViewStyle">
+		SELECT
+		id,
+		name,
+		style_html
+		FROM c_table_view_style
+	</select>
+	<select id="selectColumnsDescribe" resultType="cn.com.easyerp.core.cache.ColumnDescribe"
+		parameterType="string">
+		select
+		`table_id`,
+		`column_name`,
+		`url_id`,
+		`is_id_column`,
+		`international_id`,
+		`virtual`,
+		case LENGTH(tab_name)
+		when 0
+		then null
+		else tab_name end tab_name,
+		case LENGTH(group_name)
+		when 0
+		then null
+		else group_name end group_name,
+		data_type,
+		case LENGTH(data_format)
+		when 0
+		then null
+		else data_format end data_format,
+		min_len,
+		max_len,
+		is_condition,
+		is_auth,
+		case LENGTH(dic_id)
+		when 0
+		then null
+		else dic_id end dic_id,
+		case LENGTH(ref_table_name)
+		when 0
+		then null
+		else ref_table_name end ref_table_name,
+		case LENGTH(ref_table_cols)
+		when 0
+		then null
+		else ref_table_cols end ref_table_cols,
+		case LENGTH(ref_table_sql)
+		when 0
+		then null
+		else ref_table_sql end ref_table_sql,
+		case LENGTH(ref_table_filter)
+		when 0
+		then null
+		else ref_table_filter end ref_table_filter,
+		ref_table_display,
+		ref_table_new,
+		case LENGTH(formula)
+		when 0
+		then null
+		else formula end formula,
+		case LENGTH(default_value)
+		when 0
+		then null
+		else default_value end default_value,
+		case LENGTH(prefix)
+		when 0
+		then null
+		else prefix end prefix,
+		case LENGTH(suffix)
+		when 0
+		then null
+		else suffix end suffix,
+		sum_flag,
+		ro_insert,
+		ro_update,
+		case LENGTH(read_only_condition)
+		when 0
+		then null
+		else read_only_condition end read_only_condition,
+		read_only_clear,
+		ifnull(hidden, 0) hidden,
+		`wrap`,
+		case LENGTH(view_style)
+		when 0
+		then null
+		else view_style end view_style,
+		is_multiple,
+		cell_cnt,
+		case LENGTH(ref_table_tree)
+		when 0
+		then null
+		else ref_table_tree end ref_table_tree,
+		case LENGTH(link_json)
+		when 0
+		then null
+		else link_json end link_json,
+		`seq`,
+		nesting_column_name,
+		`memo`,
+		isCalendarEvent,
+		calendarEventDefaultColor,
+		is_encrypt,
+		IFNULL(`mobile_column`,0) `mobile_column`
+		from ${domain}.c_column
+		order by
+		table_id, seq
+	</select>
+	<select id="selectI18N" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+		select
+		type,
+		international_id,
+		key1,
+		key2,
+		replace(replace(replace(replace(replace(replace(replace(cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as cn,
+		replace(replace(replace(replace(replace(replace(replace(en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as en,
+		replace(replace(replace(replace(replace(replace(replace(jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as jp,
+		replace(replace(replace(replace(replace(replace(replace(other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other1,
+		replace(replace(replace(replace(replace(replace(replace(other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other2,
+		`value`,
+		hidden,
+		seq
+		from c_international
+		where hidden is null or hidden = 0
+	</select>
+	<select id="selectTableI18N" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+		SELECT
+		1 type,
+		international.international_id,
+		tab.id key1,
+		'' key2,
+		replace(replace(replace(replace(replace(replace(replace(international.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as cn,
+		replace(replace(replace(replace(replace(replace(replace(international.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as en,
+		replace(replace(replace(replace(replace(replace(replace(international.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as jp,
+		replace(replace(replace(replace(replace(replace(replace(international.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other1,
+		replace(replace(replace(replace(replace(replace(replace(international.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other2
+		FROM c_table tab
+		LEFT JOIN c_international international
+		ON tab.international_id = international.international_id
+	</select>
+	<select id="selectColumnI18N" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+		SELECT
+		2 type,
+		international.international_id,
+		col.table_id key1,
+		col.column_name key2,
+		replace(replace(replace(replace(replace(replace(replace(international.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as cn,
+		replace(replace(replace(replace(replace(replace(replace(international.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as en,
+		replace(replace(replace(replace(replace(replace(replace(international.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as jp,
+		replace(replace(replace(replace(replace(replace(replace(international.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other1,
+		replace(replace(replace(replace(replace(replace(replace(international.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other2
+		FROM c_column col
+		LEFT JOIN c_international international
+		ON col.international_id = international.international_id
+	</select>
+	<select id="selectDictI18N" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+		SELECT
+		3 type,
+		international.international_id,
+		dict.dic_id key1,
+		dict.dic_key key2,
+		replace(replace(replace(replace(replace(replace(replace(international.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as cn,
+		replace(replace(replace(replace(replace(replace(replace(international.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as en,
+		replace(replace(replace(replace(replace(replace(replace(international.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as jp,
+		replace(replace(replace(replace(replace(replace(replace(international.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other1,
+		replace(replace(replace(replace(replace(replace(replace(international.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other2,
+		dict.seq,
+		dict.level
+		FROM c_dictionary dict
+		LEFT JOIN c_international international
+		ON dict.key_international = international.international_id
+		WHERE dict.hidden IS NULL OR dict.hidden = 0
+	</select>
+	<select id="selectDictNameI18N" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+		SELECT
+		3 type,
+		international.international_id,
+		dict.dic_id key1,
+		dict.dic_key key2,
+		replace(replace(replace(replace(replace(replace(replace(international.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as cn,
+		replace(replace(replace(replace(replace(replace(replace(international.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as en,
+		replace(replace(replace(replace(replace(replace(replace(international.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as jp,
+		replace(replace(replace(replace(replace(replace(replace(international.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other1,
+		replace(replace(replace(replace(replace(replace(replace(international.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other2,
+		dict.seq,
+		dict.level
+		FROM c_dictionary dict
+		LEFT JOIN c_international international
+		ON dict.id_international = international.international_id
+	</select>
+	<select id="selectMenuI18N" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+		SELECT
+		4 type,
+		international.international_id,
+		international.international_id key1,
+		'' key2,
+		replace(replace(replace(replace(replace(replace(replace(international.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as cn,
+		replace(replace(replace(replace(replace(replace(replace(international.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as en,
+		replace(replace(replace(replace(replace(replace(replace(international.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as jp,
+		replace(replace(replace(replace(replace(replace(replace(international.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other1,
+		replace(replace(replace(replace(replace(replace(replace(international.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other2
+		FROM c_menu menu
+		LEFT JOIN c_international international
+		ON menu.international_id = international.international_id
+	</select>
+	<select id="selectReportI18N" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+		SELECT
+		5 type,
+		international.international_id,
+		report.id key1,
+		'' key2,
+		replace(replace(replace(replace(replace(replace(replace(international.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as cn,
+		replace(replace(replace(replace(replace(replace(replace(international.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as en,
+		replace(replace(replace(replace(replace(replace(replace(international.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as jp,
+		replace(replace(replace(replace(replace(replace(replace(international.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other1,
+		replace(replace(replace(replace(replace(replace(replace(international.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other2
+		FROM c_report report
+		LEFT JOIN c_international international
+		ON report.id = international.international_id
+	</select>
+	<select id="selectOtherI18N" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+		SELECT
+		'' type,
+		c1.international_id,
+		c1.international_id key1,
+		'' key2,
+		replace(replace(replace(replace(replace(replace(replace(c1.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as cn,
+		replace(replace(replace(replace(replace(replace(replace(c1.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as en,
+		replace(replace(replace(replace(replace(replace(replace(c1.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as jp,
+		replace(replace(replace(replace(replace(replace(replace(c1.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other1,
+		replace(replace(replace(replace(replace(replace(replace(c1.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>),<![CDATA['"']]>,<![CDATA['&quot;']]>),<![CDATA['''']]>,<![CDATA['&#x27;']]>),<![CDATA['/']]>,<![CDATA['&#x2F;']]>),<![CDATA['(']]>,<![CDATA['&#40;']]>),<![CDATA[')']]>,<![CDATA['&#41;']]>)
+		as other2
+		FROM c_international c1
+		-- WHERE NOT EXISTS(SELECT 1 FROM c_column c2 WHERE c1.international_id
+		= c2.international_id)
+		-- AND NOT EXISTS(SELECT 1 FROM c_table c2 WHERE c1.international_id =
+		c2.international_id)
+		-- AND NOT EXISTS(SELECT 1 FROM c_dictionary c2 WHERE
+		c1.international_id = c2.key_international)
+		-- AND NOT EXISTS(SELECT 1 FROM c_dictionary c2 WHERE
+		c1.international_id = c2.id_international)
+	</select>
+	<select id="selectOrderBy" resultType="cn.com.easyerp.core.cache.OrderByDescribe">
+		SELECT
+		table_id,
+		column_name,
+		seq,
+		order_rule
+		FROM c_table_order
+		ORDER BY seq
+	</select>
+	<select id="filterInputSelect" resultType="java.util.Map">
+		select '' __dummy
+		<foreach item="item" collection="columns">
+			<if test="!item.virtual">
+				, ${table}.${item.column_name}
+			</if>
+		</foreach>
+		from ${table}
+		<if test="refs != null">
+			<foreach collection="refs" item="ref">
+				${ref.join}
+				<if test="ref.query != null">(${ref.query})</if>
+				<if test="ref.query == null">${ref.child.id}</if>
+				${ref.alias} on
+				<if test="ref.column.ref_mapping == null">
+					${table}.${ref.column.column_name} = ${ref.alias}.${ref.child.id_column}
+				</if>
+				<if test="ref.column.ref_mapping != null">
+					<foreach collection="ref.column.ref_mapping.entrySet()"
+						item="value" index="key" separator="and">
+						${table}.${key} = ${ref.alias}.${value}
+					</foreach>
+				</if>
+			</foreach>
+		</if>
+		<if test="where != null">
+			where ${where}
+		</if>
+		order by
+		<if test="term != null and term != ''">
+			case when
+			<if test="label_column!=null">${label_column} like '%${term}%' or</if>
+			${table}.${value_column} like '%${term}%' then 0 else 1 end,
+		</if>
+		${table}.${value_column}
+		limit 0, ${top_count}
+	</select>
+	<select id="selectDataWithCondition" resultType="java.util.Map">
+		<if test="paging != null">
+			SELECT t2.* FROM ( SELECT
+			<!--ROW_NUMBER() OVER( order by -->
+			<!--<foreach collection="orderBy" item="column" index="index" separator=","> -->
+			<!--${column} -->
+			<!--</foreach> -->
+			<!--) AS row, -->
+			t1.* FROM (
+		</if>
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<foreach item="column" collection="columns" separator=",">
+			<choose>
+				<when test="column.is_encrypt == 1">
+					CAST(AES_DECRYPT(${table}.`${column.column_name}`, #{encryptStr}) AS CHAR) '${column.column_name}'
+				</when>
+				<when test="column.data_type == 6">
+
+				</when>
+				<when test="column.data_type == 15 and !isDetail">
+
+				</when>
+				<otherwise>
+					${table}.`${column.column_name}` '${column.column_name}'
+				</otherwise>
+			</choose>
+		</foreach>
+		<if test="refs!= null">
+			<foreach collection="refs" item="ref">
+				<foreach collection="ref.child.columns" item="column">
+					<if test="!column.virtual">
+						<choose>
+							<when test="column.is_encrypt == 1">
+								, CAST(AES_DECRYPT(${ref.alias}.`${column.column_name}`,
+								#{encryptStr}) AS CHAR)
+								${ref.column.column_name}$${column.column_name}
+							</when>
+							<when test="column.data_type == 6">
+
+							</when>
+							<when test="column.data_type == 15 and !isDetail">
+
+							</when>
+							<otherwise>
+								, ${ref.alias}.`${column.column_name}`
+								${ref.column.column_name}$${column.column_name}
+							</otherwise>
+						</choose>
+					</if>
+				</foreach>
+			</foreach>
+		</if>
+		from
+		${table}
+		<if test="refs != null">
+			<foreach collection="refs" item="ref">
+				${ref.join}
+				<if test="ref.query != null">(${ref.query})</if>
+				<if test="ref.query == null">${ref.child.id}</if>
+				${ref.alias} on
+				<if test="ref.column.ref_mapping == null">
+					${table}.`${ref.column.column_name}` = ${ref.alias}.`${ref.child.id_column}`
+				</if>
+				<if test="ref.column.ref_mapping != null">
+					<foreach collection="ref.column.ref_mapping.entrySet()"
+						item="value" index="key" separator="and">
+						${table}.`${key}` = ${ref.alias}.${value}
+					</foreach>
+				</if>
+			</foreach>
+		</if>
+		<if test="where != null or keys != null or authCondition != null">
+			where 1 = 1
+			<if test="authCondition != null">
+				and ${authCondition}
+			</if>
+			<if test="where != null">
+				and ${where}
+			</if>
+			<if test="keys != null">
+				and
+				<foreach collection="keys" item="item" separator="and">
+					${table}.`${item.id}` = #{item.value}
+				</foreach>
+			</if>
+		</if>
+		<if test="orderBy != null">
+			order by
+			<foreach collection="orderBy" item="column" index="index"
+				separator=",">
+				<if test='!column.contains(".")'>${table}.</if>
+				${column}
+			</foreach>
+		</if>
+		<if test="paging != null">
+			) t1 ) t2 limit ${paging.start} , ${paging.length}
+		</if>
+	</select>
+
+	<select id="selectDataWithConditionCount" resultType="java.lang.Integer">
+		<if test="paging != null">
+			SELECT t2.* FROM (
+			<!--SELECT ROW_NUMBER() OVER( order by -->
+			<!--<foreach collection="orderBy" item="column" index="index" separator=","> -->
+			<!--${column} -->
+			<!--</foreach> -->
+			<!--) AS row, -->
+			t1.* FROM (
+		</if>
+		select
+		COUNT(*)
+		from
+		${table}
+		<if test="refs != null">
+			<foreach collection="refs" item="ref">
+				${ref.join}
+				<if test="ref.query != null">(${ref.query})</if>
+				<if test="ref.query == null">${ref.child.id}</if>
+				${ref.alias} on
+				<if test="ref.column.ref_mapping == null">
+					${table}.${ref.column.column_name} = ${ref.alias}.${ref.child.id_column}
+				</if>
+				<if test="ref.column.ref_mapping != null">
+					<foreach collection="ref.column.ref_mapping.entrySet()"
+						item="value" index="key" separator="and">
+						${table}.${key} = ${ref.alias}.${value}
+					</foreach>
+				</if>
+			</foreach>
+		</if>
+		<if test="where != null or keys != null or authCondition != null">
+			where 1 = 1
+			<if test="authCondition != null">
+				and ${authCondition}
+			</if>
+			<if test="where != null">
+				and ${where}
+			</if>
+			<if test="keys != null">
+				and
+				<foreach collection="keys" item="item" separator="and">
+					${table}.${item.id} = #{item.value}
+				</foreach>
+			</if>
+		</if>
+		<if test="paging != null">
+			) t1 ) t2 limit ${paging.start} , ${paging.length}
+		</if>
+	</select>
+
+	<select id="selectDataWithKeys" resultType="java.util.Map">
+		select
+		<foreach item="column" collection="columns" separator=",">
+			<choose>
+				<when test="column.is_encrypt == 1">
+					CAST(AES_DECRYPT(${table}.${column.column_name}, #{encryptStr}) AS CHAR) '${column.column_name}'
+				</when>
+				<when test="column.data_type == 6">
+
+				</when>
+				<otherwise>
+					${table}.${column.column_name} '${column.column_name}'
+				</otherwise>
+			</choose>
+		</foreach>
+		<if test="refs!= null">
+			<foreach collection="refs" item="ref">
+				<foreach collection="ref.child.columns" item="column">
+					<if test="!column.virtual">
+						<choose>
+							<when test="column.is_encrypt == 1">
+								, CAST(AES_DECRYPT(${ref.alias}.${column.column_name},
+								#{encryptStr}) AS CHAR)
+								${ref.column.column_name}$${column.column_name}
+							</when>
+							<when test="column.data_type == 6">
+
+							</when>
+							<otherwise>
+								, ${ref.alias}.${column.column_name}
+								${ref.column.column_name}$${column.column_name}
+							</otherwise>
+						</choose>
+					</if>
+				</foreach>
+			</foreach>
+		</if>
+		from
+		${table}
+		<if test="refs != null">
+			<foreach collection="refs" item="ref">
+				${ref.join}
+				<if test="ref.query != null">(${ref.query})</if>
+				<if test="ref.query == null">${ref.child.id}</if>
+				${ref.alias} on
+				<if test="ref.column.ref_mapping == null">
+					${table}.${ref.column.column_name} = ${ref.alias}.${ref.child.id_column}
+				</if>
+				<if test="ref.column.ref_mapping != null">
+					<foreach collection="ref.column.ref_mapping.entrySet()"
+						item="value" index="key" separator="and">
+						${table}.${key} = ${ref.alias}.${value}
+					</foreach>
+				</if>
+			</foreach>
+		</if>
+		where
+		<foreach collection="keys" item="key" separator="or">
+			<foreach collection="key.entrySet()" item="value" index="key"
+				open="(" separator="and" close=")">
+				${table}.${key} = #{value}
+			</foreach>
+		</foreach>
+	</select>
+
+	<select id="selectAllDataWithCondition" resultType="cn.com.easyerp.core.data.DatabaseDataMap">
+		select
+		<foreach item="column" collection="columns" separator=",">
+			${table}.`${column}` `${column}`
+		</foreach>
+		from ${table}
+		where ${where}
+	</select>
+
+	<select id="execDynamicProcess" resultType="cn.com.easyerp.core.data.DatabaseDataMap">
+		CALL ${name}(#{uuid});
+	</select>
+
+	<select id="selectCountWithCondition" resultType="java.lang.Integer">
+		select count(*) from
+		<if test="authCondition != null">m_user sys_user_for_auth,</if>
+		${table}
+		<if test="where != null or keys != null or authCondition != null">
+			where 1 = 1
+			<if test="authCondition != null">
+				and ${authCondition}
+			</if>
+			<if test="where != null">
+				and ${where}
+			</if>
+			<if test="keys != null">
+				and
+				<foreach collection="keys" item="item" separator="and">
+					${table}.${item.id} = #{item.value}
+				</foreach>
+			</if>
+		</if>
+	</select>
+	<select id="selectChildrenTable" resultType="java.lang.String">
+		select id
+		from c_table
+		where parent_id = #{table}
+		order by seq
+	</select>
+	<select id="selectSystemParam" resultType="cn.com.easyerp.core.data.SystemParameter">
+		select
+		default_language,
+		-- home_currency,
+		upload_root,
+		-- pdf_lib_path,
+		mail_host,
+		mail_user,
+		mail_pwd,
+		mail_addr,
+		app_id,
+		secret,
+		agent_id,
+		ftp_host,
+		ftp_port,
+		ftp_user,
+		ftp_pwd,
+		server_address,
+		encrypt_str,
+		sms_key,
+		sms_secret,
+		pwd_strong_level,
+		input_selector_lines,
+		thumbnail_width,
+		thumbnail_height
+		from p_parameter
+	</select>
+	<select id="selectSystemParam_master" resultType="cn.com.easyerp.core.data.SystemParameter">
+		select
+		default_language,
+		home_currency,
+		upload_root,
+		pdf_lib_path,
+		mail_host,
+		mail_user,
+		mail_pwd,
+		mail_addr,
+		max_list_lines,
+		input_selector_lines,
+		mobile_login,
+		thumbnail_height,
+		thumbnail_width,
+		sms_key,
+		sms_secret
+		from sys_parameter
+	</select>
+	<select id="selectTableCheckRules" resultType="cn.com.easyerp.core.cache.TableCheckRuleDescribe">
+		select
+		table_id,
+		case LENGTH(column_name)
+		when 0
+		then null
+		else column_name end column_name,
+		url_id,
+		seq,
+		formula,
+		error_msg_id,
+		error_msg_param,
+		memo,
+		`type`,
+		check_level,
+		create_submit,
+		edit_submit,
+		input_blur
+		from c_table_check
+		order by
+		table_id, seq
+	</select>
+	<select id="selectTableOperations" resultType="cn.com.easyerp.core.cache.OperationDescribe">
+		select
+		id,
+		table_id,
+		column_name,
+		status_id_from,
+		allow_multi,
+		backlog_event,
+		case LENGTH(statement)
+		when 0
+		then null
+		else statement end statement,
+		case LENGTH('condition')
+		when 0
+		then null
+		else 'condition' end 'condition',
+		case LENGTH(alert_condition)
+		when 0
+		then null
+		else alert_condition end alert_condition,
+		case LENGTH(alert_message)
+		when 0
+		then null
+		else alert_message end alert_message
+		from c_action
+	</select>
+	<select id="selectTableOperationRules" resultType="cn.com.easyerp.core.cache.OperationRuleModel">
+		select
+		id,
+		action_id,
+		cond,
+		status_id_to,
+		seq
+		from c_action_status_rule
+		order by action_id, seq
+	</select>
+	<select id="selectComplexColumn" resultType="cn.com.easyerp.core.cache.ComplexColumnDescribe">
+		select
+		id,
+		case LENGTH(base_tbl)
+		when 0
+		then null
+		else base_tbl end base_tbl,
+		detail_tbl,
+		ins_disp_sql,
+		upd_disp_sql,
+		detail_tbl_pid_col,
+		detail_tbl_pnm_col,
+		detail_tbl_number_col,
+		case LENGTH(base_tbl_number_col)
+		when 0
+		then null
+		else base_tbl_number_col end base_tbl_number_col,
+		memo
+		from c_complex_col_conf
+	</select>
+	<select id="selectComplexColumnMap" resultType="cn.com.easyerp.core.cache.ComplexColumnMapModel">
+		select
+		id,
+		complex_id,
+		detail_col,
+		base_col
+		from c_complex_col_mapping
+		order by complex_id
+	</select>
+	<update id="callApi" statementType="CALLABLE">
+		{ call ${name} (#{uuid}
+		<if test="args != null">
+			<foreach collection="args" item="value" index="key"
+				separator="," open=",">
+				#{value}
+			</foreach>
+		</if>
+		)
+		}
+	</update>
+	<update id="callApiTimeTask" statementType="CALLABLE">
+		{ call ${domain}.${name} (#{uuid}
+		<if test="args != null">
+			<foreach collection="args" item="value" index="key"
+				separator="," open=",">
+				#{value}
+			</foreach>
+		</if>
+		)
+		}
+	</update>
+	<update id="callBatchApi" statementType="CALLABLE">
+		<foreach collection="apiSqls" item="apiSql" separator=";">
+			${apiSql}
+		</foreach>
+	</update>
+	<select id="callStoredProcedure" statementType="CALLABLE">
+		{ call ${name}
+		<if test="args != null">
+			<foreach collection="args" item="arg" separator=",">
+				#{arg}
+			</foreach>
+		</if>
+		}
+	</select>
+	<select id="selectTableTriggers" resultType="cn.com.easyerp.core.cache.TriggerDescribe">
+		select
+		table_id,
+		action_id,
+		system_type,
+		seq,
+		action_name_international,
+		IFNULL(is_using, 0) is_using,
+		memo,
+		report_id,
+		is_using,
+		IFNULL(is_one_data, 0) is_one_data,
+		url
+		from c_table_action
+		ORDER BY table_id, seq
+	</select>
+	<select id="selectActionEvent" resultType="cn.com.easyerp.core.cache.ActionEventDescribe">
+		SELECT
+		event_id,
+		table_action_id,
+		seq,
+		event_type,
+		event_name,
+		event_param,
+		is_using
+		FROM c_table_action_event
+		order BY table_action_id, seq
+	</select>
+	<select id="selectActionPrerequistie"
+		resultType="cn.com.easyerp.core.cache.ActionPrerequistieDescribe">
+		select
+		table_action_id,
+		seq,
+		check_condition,
+		level,
+		violate_msg_international_id,
+		violate_msg_param,
+		is_using
+		from c_table_action_prerequistie
+		ORDER BY table_action_id, seq
+		-- WHERE is_using = 1
+	</select>
+
+	<select id="selectBatchDesc" resultType="cn.com.easyerp.core.cache.BatchDescribe">
+		select
+		batch_id,
+		statement,
+		update_statement,
+		case LENGTH(interceptor_service)
+		when 0
+		then null
+		else interceptor_service end interceptor_service,
+		case LENGTH(service_param)
+		when 0
+		then null
+		else service_param end service_param,
+		memo
+		from c_batch
+	</select>
+
+	<select id="selectBatchDescByTable" resultType="cn.com.easyerp.core.cache.BatchDescribe">
+		select
+		batch_id,
+		statement,
+		update_statement,
+		case LENGTH(interceptor_service)
+		when 0
+		then null
+		else interceptor_service end interceptor_service,
+		case LENGTH(service_param)
+		when 0
+		then null
+		else service_param end service_param,
+		memo,
+		create_trigger
+		from c_batch
+		where table_id=#{table}
+	</select>
+
+	<select id="selectApiLogs" resultType="cn.com.easyerp.core.api.ApiLog">
+		select
+		proc_name,
+		result,
+		msg_id,
+		msg_param
+		from c_api_result
+		where id = #{uuid}
+	</select>
+	<select id="selectApiLogsTimeTask" resultType="cn.com.easyerp.core.api.ApiLog">
+		select
+		proc_name,
+		result,
+		msg_id,
+		msg_param
+		from ${domain}.c_api_result
+		where id = #{uuid}
+	</select>
+	<select id="selectBatchApiLogs" resultType="cn.com.easyerp.core.api.ApiLog">
+		${sql}
+	</select>
+	<select id="selectTableShortcuts" resultType="cn.com.easyerp.core.cache.TableShortcutDescribe">
+		select
+		c_action_link.id,
+		c_action_link.table_id,
+		c_url.url,
+		case LENGTH(c_action_link.param)
+		when 0
+		then null
+		else c_action_link.param end param
+		from c_action_link, c_url
+		where c_action_link.url_id = c_url.id
+	</select>
+	<select id="selectRecordCountByValues" resultType="java.lang.Integer">
+		select count(`${values.get(0).id}`) from ${table}
+		<foreach collection="values" item="item" open="where"
+			separator="and">
+			`${item.id}` = #{item.value}
+		</foreach>
+	</select>
+	<select id="selectBizParam" resultType="java.util.Map">
+		select
+		<foreach collection="table.columns" item="item" separator=",">
+			${item.column_name}
+		</foreach>
+		from ${table.id}
+	</select>
+	<select id="selectAutoGen" resultType="cn.com.easyerp.core.cache.AutoGenTableDesc">
+		select
+		id,
+		table_id,
+		ref_view,
+		gen_sql,
+		international_id,
+		case LENGTH(exec_condition)
+		when 0
+		then null
+		else exec_condition end exec_condition,
+		case LENGTH(mode)
+		when 0
+		then null
+		else mode end mode
+		from c_auto_gen
+	</select>
+	<select id="selectTableRender" resultType="cn.com.easyerp.core.cache.TableRenderModel">
+		select
+		table_id,
+		level,
+		`column`,
+		`seq`,
+		formula,
+		color
+		from c_table_render
+		order by table_id, level
+	</select>
+	<select id="selectExportData" resultType="java.util.LinkedHashMap">
+		select
+		<if test="table.export_sql==null">
+			<foreach collection="table.columns" item="column" separator=",">
+				<if test="!column.virtual">
+					`${column.column_name}`
+				</if>
+			</foreach>
+		</if>
+		<if test="table.export_sql!=null">
+			*
+		</if>
+		from
+		<if test="table.export_sql==null">
+			${table.id}
+		</if>
+		<if test="table.export_sql!=null">
+			(${table.export_sql}) ${table.id}
+		</if>
+		where
+		<foreach collection="keys" item="key" separator="or">
+			<foreach collection="key.entrySet()" item="value" index="key"
+				open="(" separator="and" close=")">
+				${table.id}.${key} = #{value}
+			</foreach>
+		</foreach>
+		<if test="table.order_by!=null">
+			order by ${table.order_by}
+		</if>
+	</select>
+	<select id="selectImportData" resultType="cn.com.easyerp.core.data.DatabaseDataMap">
+		with t_main as (select * from ${table.id}_${uid}) select ${table.id}.*
+		<if test="refs!= null">
+			<foreach collection="refs" item="ref">
+				<foreach collection="ref.child.columns" item="column">
+					<if test="!column.virtual">
+						, ${ref.alias}.${column.column_name}
+						${ref.column.column_name}#${column.column_name}
+					</if>
+				</foreach>
+			</foreach>
+		</if>
+		from ( ${table.import_sql} ) ${table.id}
+		<if test="refs != null">
+			<foreach collection="refs" item="ref">
+				left join ${ref.child.id} ${ref.alias} on
+				<if test="ref.column.ref_mapping == null">
+					${table.id}.${ref.column.column_name} = ${ref.alias}.${ref.child.id_column}
+				</if>
+				<if test="ref.column.ref_mapping != null">
+					<foreach collection="ref.column.ref_mapping.entrySet()"
+						item="value" index="key" separator="and">
+						${table.id}.${key} = ${ref.alias}.${value}
+					</foreach>
+				</if>
+			</foreach>
+		</if>
+	</select>
+	<select id="selectOldRecord" resultType="java.util.Map">
+		select
+		<foreach collection="table.columns" item="column" separator=",">
+			<if test="!column.virtual">
+				`${column.column_name}`
+			</if>
+		</foreach>
+		from ${table.id} where
+		<foreach collection="keys" item="key" separator="and">
+			`${key.id}` = #{key.value}
+		</foreach>
+		<if test="where != null">
+			and ${where}
+		</if>
+	</select>
+	<select id="selectAllData" resultType="cn.com.easyerp.core.data.DatabaseDataMap">
+		select ${table}.*
+		<if test="refs!= null">
+			<foreach collection="refs" item="ref">
+				<foreach collection="ref.child.columns" item="column">
+					<if test="!column.virtual">
+						, ${ref.alias}.${column.column_name}
+						${ref.column.column_name}#${column.column_name}
+					</if>
+				</foreach>
+			</foreach>
+		</if>
+		from ${table}
+		<if test="refs != null">
+			<foreach collection="refs" item="ref">
+				left join ${ref.child.id} ${ref.alias} on
+				<if test="ref.column.ref_mapping == null">
+					${table}.${ref.column.column_name} = ${ref.alias}.${ref.child.id_column}
+				</if>
+				<if test="ref.column.ref_mapping != null">
+					<foreach collection="ref.column.ref_mapping.entrySet()"
+						item="value" index="key" separator="and">
+						${table}.${key} = ${ref.alias}.${value}
+					</foreach>
+				</if>
+			</foreach>
+		</if>
+	</select>
+	<update id="updateRecord">
+		update ${table} set
+		<foreach collection="values" item="item" separator=",">
+			<choose>
+				<when test="item.is_encrypt == 1 or item.data_type == 6">
+					`${item.id}` = AES_ENCRYPT(#{item.value}, #{encryptStr})
+				</when>
+				<otherwise>
+					`${item.id}` = #{item.value}
+				</otherwise>
+			</choose>
+		</foreach>
+		where
+		<foreach collection="keys" item="key" separator="and">
+			${key.id} = #{key.value}
+		</foreach>
+		<if test="where != null">
+			and ${where}
+		</if>
+	</update>
+	<update id="updateBatchRecord">
+		<foreach collection="updateSql" item="sql" separator="">
+			${sql}
+		</foreach>
+	</update>
+	<update id="updatePassword">
+		update m_user
+		set _password = AES_ENCRYPT(#{password}, #{encryptStr})
+		where id = #{uid}
+	</update>
+	<select id="selectDistinctValue" resultType="java.util.Map">
+		select DISTINCT
+		<foreach collection="distinctColumns" item="column" separator=",">
+			`${column}`
+		</foreach>
+		from ${table.id} where 1=1
+		<if test="where != null">
+			and ${where}
+		</if>
+	</select>
+	<select id="selectViewGridValue" resultType="java.util.Map">
+		select
+		<foreach collection="table.columns" item="column" separator=",">
+			<if test="!column.virtual">
+				`${column.column_name}`
+			</if>
+		</foreach>
+		from ${table.id} where 1=1
+		<if test="where != null">
+			and ${where}
+		</if>
+	</select>
+	<select id="execSql" resultType="java.util.Map">
+		${sql}
+	</select>
+	<update id="updateActionLogCurrentNo">
+		UPDATE c_current_no SET current_no = ${current_no} WHERE table_id =
+		'c_action_log'
+	</update>
+	<select id="selectAuthGroup" resultType="cn.com.easyerp.core.authGroup.AuthGroup">
+		SELECT
+		`department`,
+		`department_relation`,
+		`role`,
+		`user`,
+		`user_relation`,
+		`read`,
+		`create`,
+		`update`,
+		`delete`,
+		`operate`,
+		`import_auth`,
+		`export_auth`,
+		`type`,
+		`table`,
+		`column`,
+		`menu`,
+		replace(replace(`template`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as template,
+		`block`,
+		`module`,
+		`data_group_id`
+		FROM c_auth_group
+	</select>
+	<select id="selectAuthDataGroup" resultType="cn.com.easyerp.core.authGroup.AuthDataGroup">
+		SELECT
+		`group_id`,
+		`filter`,
+		`international_id`
+		FROM c_auth_data_group
+	</select>
+	<select id="selectAuthDataGroupDetail" resultType="cn.com.easyerp.core.authGroup.AuthDataGroupDetail">
+		SELECT
+		`group_id`,
+		`group_detail_id`,
+		`column_name`,
+		`symbol`,
+		`value`
+		FROM c_auth_data_group_detail ORDER BY group_id, group_detail_id
+	</select>
+	<select id="selectMenuGroup" resultType="cn.com.easyerp.core.authGroup.MenuGroup">
+		SELECT
+		replace(replace(`menu_group_id`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as menu_group_id,
+		`menu_id`
+		FROM c_menu_group
+	</select>
+	<select id="selectUrlInterface" resultType="cn.com.easyerp.core.cache.UrlInterfaceDescribe">
+		SELECT
+		id,
+		`name`,
+		url,
+		param,
+		memo,
+		router_url,
+		`module`,
+		`type`,
+		summary,
+		prodSql
+		FROM ${domain}.c_url
+	</select>
+	<select id="selectDomainLanguage" resultType="java.lang.String">
+		SELECT language_id FROM ${dbName}.sys_master WHERE `name` = #{domain}
+	</select>
+	<select id="selectAllApproveEvent" resultType="cn.com.easyerp.core.cache.TableApproveEventDescribe">
+		SELECT
+		`table_id`,
+		`approve_event_type`,
+		`event_type`,
+		`event_id`,
+		`event_param`,
+		`is_using`,
+		`seq`
+		FROM
+		`c_table_approve_event`
+	</select>
+	<select id="selectRefChildTable" resultType="java.util.Map">
+		SELECT table_id, `column_name` FROM c_column
+		WHERE ref_table_name = #{tableName}
+		AND ref_table_display = 1
+		AND table_id IS NOT NULL
+		AND table_id &lt;&gt; ''
+		AND `column_name` &lt;&gt; ''
+	</select>
+
+	<select id="getMobileMenuModule" resultType="java.lang.String">
+		SELECT
+		module
+		FROM
+		`c_menu`
+		WHERE
+		`is_mobile_menu` = '1'
+		group by
+		module
+	</select>
+
+	<select id="getSubMobileMenu" resultType="java.util.Map">
+		SELECT
+		*
+		FROM
+		`c_menu`
+		WHERE
+		`is_mobile_menu` = '1'
+		AND
+		`module` = #{module}
+	</select>
+
+	<select id="getMobileListGroup" resultType="java.util.Map">
+		SELECT
+		<choose>
+			<when test="table.mobile_list_group=='cre_date'">
+				DATE_FORMAT(`cre_date`,'%Y年%m月') `cre_date`
+			</when>
+			<otherwise>
+				${table.mobile_list_group}
+			</otherwise>
+		</choose>
+		FROM
+		${table.id}
+		GROUP BY
+		<choose>
+			<when test="table.mobile_list_group=='cre_date'">
+				DATE_FORMAT(`cre_date`,'%Y年%m月')
+			</when>
+			<otherwise>
+				${table.mobile_list_group}
+			</otherwise>
+		</choose>
+		<if test="table.mobile_list_group=='cre_date'">
+			ORDER BY
+			`cre_date` DESC
+		</if>
+	</select>
+	<select id="selectTimeTask"
+		resultType="cn.com.easyerp.core.timedTask.entity.TimeTaskDescribe">
+		SELECT
+		task_id,
+		international_id
+		FROM ${domain}.c_time_task
+	</select>
+	<select id="selectTimeTaskSysTime"
+		resultType="cn.com.easyerp.core.timedTask.entity.TimeTaskSysTimeDescribe">
+		SELECT
+		task_id,
+		sys_time_id,
+		begin_date,
+		end_date,
+		lead,
+		lead_type,
+		is_loop,
+		`space`,
+		loop_type,
+		is_using
+		FROM ${domain}.c_time_task_sys_time
+	</select>
+	<select id="selectTimeTaskBusinessTime"
+		resultType="cn.com.easyerp.core.timedTask.entity.TimeTaskBusinessTimeDescribe">
+		SELECT
+		task_id,
+		business_time_id,
+		`table`,
+		`column`,
+		lead,
+		lead_type,
+		filter_sql,
+		is_using
+		FROM ${domain}.c_time_task_business_time
+	</select>
+	<select id="selectTimeTaskEvent"
+		resultType="cn.com.easyerp.core.timedTask.entity.TimeTaskEventDescribe">
+		SELECT
+		task_id,
+		event_id,
+		event_type,
+		event_url_id,
+		event_param,
+		is_using
+		FROM ${domain}.c_time_task_event
+	</select>
+	<select id="selectCountBusiness" resultType="java.lang.Integer">
+		SELECT count(*) FROM (${param.filter}) buiness_table
+		WHERE buiness_table.${column} BETWEEN #{param.beginDate} AND
+		#{param.endDate}
+	</select>
+	<select id="selectBusiness" resultType="java.util.Map">
+		SELECT buiness_table.*
+		<if test="refs!= null">
+			<foreach collection="refs" item="ref">
+				<foreach collection="ref.child.columns" item="column">
+					<if test="!column.virtual">
+						, ${ref.alias}.${column.column_name}
+						${ref.column.column_name}$${column.column_name}
+					</if>
+				</foreach>
+			</foreach>
+		</if>
+		FROM (${param.filter}) buiness_table
+		<if test="refs != null">
+			<foreach collection="refs" item="ref">
+				${ref.join}
+				${ref.child.id}
+				${ref.alias} on
+				buiness_table.${ref.column.column_name} = ${ref.alias}.${ref.child.id_column}
+			</foreach>
+		</if>
+		WHERE buiness_table.${columnName} BETWEEN #{param.beginDate} AND
+		#{param.endDate}
+	</select>
+
+	<select id="getTemplateById"
+		resultType="cn.com.easyerp.core.widget.message.MessageTemplateModel">
+		SELECT
+		id,
+		template_id,
+		title,
+		template,
+		btn_text
+		FROM
+		m_weichat_message_template
+		WHERE
+		id = #{templateId}
+	</select>
+	<select id="execEvalSql" resultType="java.util.Map">
+		${sql}
+	</select>
+
+	<select id="getUserById" resultType="cn.com.easyerp.auth.AuthDetails">
+		select
+		id,
+		parent_id,
+		`name`,
+		CAST(AES_DECRYPT(_password, #{domain}) AS CHAR) _password,
+		sex,
+		birthdate,
+		telephone,
+		mobile,
+		email,
+		imageUrl,
+		msn,
+		case language_id
+		when ''
+		then null
+		else language_id end language_id,
+		role_id,
+		department_id,
+		status,
+		memo
+		from m_user
+		where
+		id = #{id}
+	</select>
+	<insert id="insertTimeTaskLog">
+		insert into ${domain}.c_time_task_log (UUID, api_name, param, date)
+		values (#{uuid}, #{apiName}, #{param}, #{date});
+	</insert>
+
+	<select id="getTimingMessage"
+		resultType="cn.com.easyerp.core.widget.message.TimmingMessageModel">
+		SELECT
+		`id`,
+		`template_id`,
+		`param`,
+		`receiver`,
+		`status`,
+		`result`
+		FROM
+		c_timing_message
+		WHERE
+		`status`=0
+	</select>
+	<update id="execTimingResult">
+		UPDATE c_timing_message
+		SET `status` = #{status},
+		`result` = #{result}
+		WHERE
+		`id` = #{id}
+	</update>
+	<select id="getId" resultType="java.lang.String">
+		CALL c_get_next_id (#{tableName}, #{parent_id}, @new_id, @new_not_no);
+		SELECT @new_id id;
+	</select>
+	<insert id="setCodeStr">
+		INSERT INTO c_code_str
+		(`UUID`, `str`, `valid_time`, `type`, `cre_date`)
+		VALUES
+		(#{codeSt.UUID}, #{codeSt.str}, #{codeSt.valid_time}, #{codeSt.type},
+		#{codeSt.cre_date})
+	</insert>
+	<select id="getCodeStr" resultType="cn.com.easyerp.core.data.CodeStrDescribe">
+		SELECT `UUID`, `str`, `valid_time`, `type`, `cre_date` FROM c_code_str
+		WHERE UUID = #{uuid}
+	</select>
+	<select id="selectDataByKey" resultType="java.util.Map">
+		SELECT * FROM ${tableName}
+		WHERE 1=1
+		<foreach collection="ids" index="key" item="value" separator=" and "
+			open=" and ">
+			`${key}` = #{value}
+		</foreach>
+	</select>
+	<select id="selectCalendarEventConfigs"
+		resultType="cn.com.easyerp.core.cache.CalenderEventConfigDescribe">
+		SELECT
+		`id`,
+		`table_id`,
+		`begin_time`,
+		`end_time,
+		`event_name`,
+		`default_color`
+		FROM c_calendar_event_config
+	</select>
+</mapper>

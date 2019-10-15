@@ -1,0 +1,338 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="menuDeploy" class="form-inline dx-form" role="form"">
+
+
+<div class="rowContentTop btn-toolbar dx-menu-bar">
+    <div style="height:auto">
+        <a href="javascript:void(0)" class="btn dx-grid-add MenuDeploySave" onclick="">$dx.msg("Save")</a>
+
+            <div class="dropdown dropdown-add"">
+                <a  class="btn append" id="deploy_menu_sec1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    $dx.msg("Add")
+                </a>
+                <div class="dropdown-menu clearfix" aria-labelledby="deploy_menu_sec1">
+                    <label class="label-1">$dx.msg("name")：</label>
+                    <input type="text" class="input-1" name="addMenuDeployOneValue" autocomplete="off"/>
+
+                    <div class="dropdown-footer text-right">
+                        <button data-toggle="dropdown" class="button-color4">$dx.msg("Cancel")</button>
+                        <button data-toggle="dropdown" class="button-color3 addMenuDeploy" name="addMenuDeployOne" value="保存">$dx.msg("Save")</button>
+                    </div>
+                </div>
+            </div>
+        <button class="btn copyMenuTree" type="button" name="">$dx.msg("Copy")</button>
+        ##<button class="btn cutMenuTree" type="button" name="">剪切</button>
+        ##<button class="btn pasteMenuTree" type="button" name="">粘贴</button>
+    </div>
+</div>
+<div class="datagrid-content">
+    <div class="deploy-left-menu dx-field-2">
+        <div class="search">
+            <input type="text" class="retrievalMenu" placeholder="检索已配置的菜单"/>
+        </div>
+        <div class="deploy-menu-tree">
+            <div class="deploy-left-menu-tree g1-tree-icon-left"></div>
+            <div class="deploy-left-tree-delete">
+                <button class="btn deMenuDeploy" type="button" name="deMenuDeployOne">$dx.msg("Delete")</button>
+            </div>
+        </div>
+
+        ##<div class="datagrid-foot btn-toolbar">
+           ## <div class="dropup" style="display:inline-block;">
+             ##   <button type="button" class="append" id="deploy_menu_sec1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              ##  </button>
+              ##  <div class="dropdown-menu clearfix" aria-labelledby="deploy_menu_sec1">
+             ##       <label class="label-1">$dx.msg("name")：</label>
+            ##        <input type="text" class="input-1" name="addMenuDeployOneValue">
+            ##        <button data-toggle="dropdown" class="button-color4">$dx.msg("cancel")</button>
+             ##       <button data-toggle="dropdown" class="button-color3 addMenuDeploy" name="addMenuDeployOne" value="保存">$dx.msg("Save")</button>
+            ##    </div>
+           ## </div>
+            ##<button class="removeit deMenuDeploy" type="button" name="deMenuDeployOne"></button>
+           ## <button class="copyMenuTree" type="button" name=""></button>
+            ##<button class="cutMenuTree" type="button" name=""></button>
+            ##<button class="pasteMenuTree" type="button" name=""></button>
+        ##</div>
+    </div>
+    <div class="deploy-main-table-data deploy-right-menu-data dx-field-10">
+        <div class="empty-form">
+            <p>请选择菜单</p>
+        </div>
+        <div class="deploy-right-menu-main">
+            <div class="dx-field-4">
+                <div class="form-group">
+                    <label class="label-1">菜单名</label>
+                     <div class="interMenu input-1"></div>
+                </div>
+                <div class="form-group dropdown menuIconDrop">
+                    <label class="label-1">$dx.msg("menu jpg")</label>
+                    <button disabled class="dropdown-toggle input-1" type="button" id="dropdownMenuIcon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="" name="icon" style="display:inline-block;width:12px;height:12px;"></span>
+                        <span class="caret pull-right" style="margin-top:4px;"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuIcon">
+                        <li><a href="#" class="" aria-hidden="true">无</a></li>
+                        <li><a href="#" class="fa fa-envira" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-adjust" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-bar-chart" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-comments" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-cubes" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-user" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-user-times" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-group"  aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-globe"  aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-home"  aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-laptop" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-object-group" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-pencil-square-o" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-server" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-star" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-cog" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-credit-card-alt" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-gears" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-pie-chart" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-calendar-check-o" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-calculator" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-barcode" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-coffee" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-qrcode"  aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-print" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-object-group" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-percent" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-tags" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-cog" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-exchange" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-random" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-recycle" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-th" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-tachometer" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-gift" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-wpforms" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-database" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-filter" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-sticky-note-o" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-upload" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-thumb-tack" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-retweet" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-object-ungroup" aria-hidden="true"></a></li>
+
+                        <li><a href="#" class="fa fa-cloud-upload" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-shopping-basket" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-shopping-cart" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-bar-chart" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-line-chart" aria-hidden="true"></a></li>
+
+                        <li><a href="#" class="fa fa-clock-o" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-compass" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-bullhorn" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-bus" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-trophy" aria-hidden="true"></a></li>
+
+                        <li><a href="#" class="fa fa-user-plus" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-puzzle-piece" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-language" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-comments-o" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-cloud" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-code" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-bug" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-cart-arrow-down" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-archive" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-ship" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-plane" aria-hidden="true"></a></li>
+
+                        <li><a href="#" class="fa fa-truck" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-file-o" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa  fa-file" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-file-text-o" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-table" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-link" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-chevron-right" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-chevron-circle-right" aria-hidden="true"></a></li>
+
+                        <li><a href="#" class="fa fa-building" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-file-archive-o" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-file-word-o" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-sign-in" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-qrcode" aria-hidden="true"></a></li>
+
+                        <li><a href="#" class="fa fa-trash-o" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-sitemap" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-shield" aria-hidden="true"></a></li>
+                        <li><a href="#" class="fa fa-newspaper-o" aria-hidden="true"></a></li>
+
+                    </ul>
+                </div>
+            ##<div class="pull-left dx-field-12">
+                <div class="form-group deploy-config">
+                    <label class="label-1">页面模板</label>
+                    <select class="input-1 urlList" disabled></select>
+                </div>
+                <div class="form-group deploy-config urlValueStyle" style="display:none">
+                    <label class="label-1">页面参数</label>
+                    <div class="input-1 clearfix">
+                        <input class="urlValue" type="text" name="urlValue" readonly disabled/>
+                        <button class="btn parameterInput" type="button" disabled></button>
+                    </div>
+                </div>
+            ##</div>
+
+            </div>
+        </div>
+    </div>
+
+
+<!--*******************************************************************
+    <div class="col-xs-3">
+        <div class="section menu-deploy-sec1">
+            <p>$dx.msg("one menu")</p>
+            <div class="itemlist">
+            </div>
+             <div class="datagrid-foot btn-toolbar">
+                <div class="dropup">
+                    <button type="button" class="append" id="deploy_menu_sec1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        新增
+                    </button>
+                    <div class="dropdown-menu clearfix" aria-labelledby="deploy_menu_sec1">
+                        <label class="label-1">$dx.msg("name")：</label>
+                        <input type="text" class="input-1  form-control" name="addMenuDeployOneValue">
+                        <button data-toggle="dropdown" class="button-color4">$dx.msg("cancel")</button>
+                        <button data-toggle="dropdown" class="button-color3 addMenuDeploy" name="addMenuDeployOne" value="保存">$dx.msg("Save")</button>
+                    </div>
+                </div>
+                    <button class="removeit deMenuDeploy" type="button" name="deMenuDeployOne">删除</button>
+             </div>
+        </div>
+    </div>
+    <div class="col-xs-3">
+        <div class="section menu-deploy-sec2">
+            <p>$dx.msg("two menu")</p>
+            <div class="itemlist">
+            
+            </div>
+             <div class="datagrid-foot btn-toolbar">
+                <div class="dropup">
+                    <button type="button" class="append" id="deploy_menu_sec2" aria-haspopup="true" aria-expanded="false">
+                           ＋
+                    </button>
+                    <div class="dropdown-menu clearfix" aria-labelledby="deploy_menu_sec2">
+                        <label class="label-1">$dx.msg("name")：</label>
+                        <input type="text" class="input-1  form-control" name="addMenuDeployTwoValue">
+                        <button data-toggle="dropdown" class="button-color4">$dx.msg("cancel")</button>
+                        <button data-toggle="dropdown" class="button-color3 addMenuDeploy" name="addMenuDeployTwo" value="保存">$dx.msg("Save")</button>
+                    </div>
+                </div>
+                    <button class="removeit deMenuDeploy" type="button" name="deMenuDeployTwo" >－</button>
+             </div>
+        </div>
+    </div>
+    <div class="col-xs-3">
+        <div class="section menu-deploy-sec3">
+            <p>$dx.msg("three menu")</p>
+            <div class="itemlist">
+               
+            </div>
+             <div class="datagrid-foot btn-toolbar">
+                <div class="dropup">
+                    <button type="button" class="append" id="deploy_menu_sec3"
+                                                 aria-haspopup="true" aria-expanded="false">
+                                            ＋
+                    </button>
+                    <div class="dropdown-menu clearfix" aria-labelledby="deploy_menu_sec3">
+                        <label class="label-1">$dx.msg("name")：</label>
+                        <input type="text" class="input-1  form-control" name="addMenuDeployThreeValue">
+                        <button data-toggle="dropdown" class="button-color4">$dx.msg("cancel")</button>
+                        <button data-toggle="dropdown" class="button-color3 addMenuDeploy" name="addMenuDeployThree" value="保存">$dx.msg("Save")</button>
+                    </div>
+                </div>
+                    <button class="removeit deMenuDeploy" type="button" name="deMenuDeployThree">－</button>
+             </div>
+        </div>
+    </div>
+    <div class="col-xs-3 datagrid-main-detail">
+        <div>
+            <p>$dx.msg("edit")</p>
+            <div class="">
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("menu(CN)")</label>
+                    <input type="text" class="input" name="cn" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("menu(EN)")</label>
+                    <input type="text" class="input" name="en" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("menu(JP)")</label>
+                    <input type="text" class="input" name="jp" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("menu(other 1)")</label>
+                    <input type="text" class="input" name="other1" disabled>
+                </div>
+                 <div class="form-group">
+                    <label class="label-1">$dx.msg("menu(other 2)")</label>
+                    <input type="text" class="input" name="other1" disabled>
+                </div>
+                <div class="form-group">
+                   <label class="label-1">$dx.msg("menu(function)")</label>
+                   <select class="input" optionId="page_id" disabled>
+       			   </select>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("menu(seq)")</label>
+                    <input type="number" class="input" name="seq" disabled>
+                    
+                </div>
+                <div class="form-group dropup menuIconDrop">
+                  <label class="label-1">$dx.msg("menu jpg")</label>
+                  <button disabled class="btn btn-default dropdown-toggle input" type="button" id="dropdownMenuIcon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="" name="icon"></span>
+
+                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuIcon">
+                 	<li><a href="#" class="" aria-hidden="true">无</a></li>
+                    <li><a href="#" class="fa fa-envira" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-adjust" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-bar-chart" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-comments" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-user" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-cubes" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-group"  aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-globe"  aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-home"  aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-laptop" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-object-group" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-pencil-square-o" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-server" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-sliders" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-star" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-file" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-cog" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-credit-card-alt" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-gears" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-pie-chart" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-calendar-check-o" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-calculator" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-barcode" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-coffee" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-qrcode"  aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-print" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-object-group" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-percent" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa fa-plane" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-tags" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-cog" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-exchange" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-random" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-recycle" aria-hidden="true"></a></li>
+                    <li><a href="#" class="fa  fa-th" aria-hidden="true"></a></li>
+                  </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    --!>
+</div>
+
+#dxFormTail($form)

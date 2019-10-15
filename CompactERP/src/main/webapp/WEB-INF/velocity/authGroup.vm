@@ -1,0 +1,349 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="potence" class="form-inline dx-form" role="form""> 
+      ##基本上照抄即可
+
+<!-- Modal -->
+<div class="modal model-tag-modal" id="auth-tag-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">$dx.msg("template management")</h4>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <!--<div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>--!>
+    </div>
+  </div>
+</div>
+
+<div class="authgroupdiv">
+  <!-- Nav tabs -->
+	<div class="nav-auth-div button-color2 clearfix">
+	  <ul class="nav nav-auth " >
+	    <li class="active "><a href="#auth-menu-div" aria-controls="auth-menu-div" data-toggle="tab">$dx.msg("menu permissions")</a></li>
+	    <li ><a href="#auth-data-div" aria-controls="auth-data-div" data-toggle="tab">$dx.msg("data permission")</a></li>
+	    <li><a href="#auth-detail-div" aria-controls="auth-detail-div" data-toggle="tab">$dx.msg("field permissions")</a></li>
+	  </ul>
+	</div>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div class="tab-pane active clearfix" id="auth-menu-div">
+    <div class="auth-group-body">
+		<div  class="col-xs-2 auth-menu-group" >
+			<p><i class="menuicon"></i>$dx.msg("menu group")</p>
+
+			<ul class="menuGroup menuGroupList dx-whole-nav-tab">
+				#foreach($MenuGroup in $form.menuGroup)
+			        <li><a href="javascript:void(0)" class="changeContent_menu" name="$MenuGroup.menu_group_id">$MenuGroup.menu_group_id</a></li>
+			    #end
+			</ul>
+			 <div class="dropup">
+                 <button id="add-Menu-Group-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                 <button class="delete-Menu-Group-btn" type="button"></button>
+                 <button type="button" class="update-Menu-Group-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                 <div class="dropdown-menu clearfix" aria-labelledby="add-Menu-Group-btn"> 
+                 	<label class="label-1">$dx.msg("save as")：</label>
+                    <input type="text" class="input-1 form-control" name='menuGroupName' />
+                    <button data-toggle="dropdown" type="button" class="button-color4">$dx.msg("cancel")</button>
+                    <button data-toggle="dropdown" type="button" class="addMenuGroup button-color3" value="$dx.msg("save")">$dx.msg("save")</button>
+                 </div>
+            </div>
+		</div>
+		
+		<div class="col-xs-3 menutree" >
+		</div>
+		
+		<div class="col-xs-7 auth-menu-user">
+			<div class="auth-group-top clearfix">
+				<div class="auth-group-top-btn">$dx.msg("by department + post")
+	                ## <a class="button-color2 remove-btn" role="button">-</a>
+	            </div>
+				<div class="deptAndRole_menu deptAndRole"></div>
+				
+				<div class="collapse" id="auth-menu-add">
+				    <div class="collapseWrap clearfix">
+                        <div class="clearfix">
+                            <div class="select_department_menu input-1 clearfix select_department"></div>
+                                <span class="well-label">  $dx.msg("and")</span>
+                            <div class="select_role_menu input-1 clearfix select_role"></div>
+                        </div>
+                        <button class="pull-right button-color4" type="button" data-toggle="collapse"
+                              data-target="#auth-menu-add"
+                              aria-expanded="false">$dx.msg("cancel")
+                        </button>
+                        <button class="pull-right button-color3 addAuthGroupMember_menu_dept" type="button" data-toggle="collapse"
+                              data-target="#auth-menu-add" aria-expanded="false">$dx.msg("save")</button>
+	               </div>
+				</div>
+
+                <button class="authgroupadd" type="button" data-toggle="collapse" data-target="#auth-menu-add"
+                        aria-expanded="false" aria-controls="auth-menu-add">$dx.msg("add permissions")</button>
+			</div>
+			
+			<div class="auth-group-top-btn">$dx.msg("by user")
+               ## <a class="button-color2 remove-btn" role="button">-</a>
+            </div>
+			<div class="userDiv_menu userDiv"></div>
+			
+			<div class="collapse" id="auth-muser-add">
+			    <div class="collapseWrap clearfix">
+                    <div class="clearfix">
+                        <label class="pull-left">$dx.msg("user")：</label>
+                        <div class="select_user_menu input-1 clearfix select_user"></div>
+                    </div>
+                    <button class="pull-right button-color4" type="button" data-toggle="collapse"
+                          data-target="#auth-muser-add" aria-expanded="false">$dx.msg("cancel")
+                    </button>
+                    <button class="pull-right button-color3 addAuthGroupMember_menu_user" type="button" data-toggle="collapse"
+                          data-target="#auth-muser-add" aria-expanded="false">$dx.msg("save")</button>
+			    </div>
+			</div>
+
+            <button class="authgroupadd" type="button" data-toggle="collapse" data-target="#auth-muser-add"
+                aria-expanded="false" aria-controls="auth-muser-add">$dx.msg("add permissions")</button>
+		</div>	
+		</div>
+		<div class="auth-group-bottom">
+			<input type="button" class="button-color1 addMenuAuthGroup" value="$dx.msg("save")"/>
+		</div>
+	</div>
+    <div role="tabpanel" class="tab-pane" id="auth-data-div">
+    	<div class="auth-group-body">
+			<div class="col-xs-2 auth-menu-group">
+				<p><i class="tableicon"></i>$dx.msg("all forms")</p>
+				<ul class="menuGroup dx-whole-nav-tab">
+                    #foreach($table in $form.table)
+                        <li><a href="javascript:void(0)" class="changeContent_data" name="$table.id">$table.name</a></li>
+                    #end
+				</ul>
+			</div>
+			<div class="col-xs-2 tale-data-auth-group" style="height: 93%">
+				<div class="chose">
+			        <button type="button" class="btn btn-block btn-default delete-button delete-data-Group-btn">删除</button>
+			        <button type="button" class="btn btn-block btn-default edit-button update-data-Group-btn">编辑</button>
+			    </div>
+			    <ul class="tableDataGroupList  dx-whole-nav-tab"></ul>
+			    <div class="modal model-tag-modal data—permission" id="auth-t" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			        <div class="modal-dialog" role="document">
+			            <div class="modal-content">
+			                <div class="modal-header">
+			                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="canel_x">&times;</span></button>
+			                    <h4 class="modal-title" id=""></h4>
+			                </div>
+			                <div class="modal-body">
+			                    <div class="array-name">
+			                        <label for="" class="label-1">数据组名称</label>
+			                        <div class="authDataGroupName input-1"></div>
+			                    </div>
+			    				<div class="select">
+			                        <label for="" class="label-1" style="margin-top: 10px;">条件详情</label>
+			                        <div class="auth_data_group_detail" style="float: left">
+			                        </div>
+			    				</div>
+			    				<button  class="add_authDataGroupSymbol add_arry" type="button">+添加</button>
+			                </div>
+			                <div class="modal-footer">
+			    				<button type="button" class="save save_authDataGroupSymbol" data-dismiss="modal">保存</button>
+			    				<button type="button" class="canel_x">取消</button>
+			    			</div>
+			    		</div>
+			    	</div>
+				</div>
+				<div class="add_new_arry" style="bottom: -5%;"><a>添加操作</a></div>
+			</div>
+						
+			<div class="col-xs-8 auth-data-user">
+
+				<div class="dropdown">
+				    <button id="auth-save-data-label" class="saveTemplate button-color2" type="button"
+				            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				        	$dx.msg("save the template")
+				    </button>
+			    	<div class="dropdown-menu clearfix" aria-labelledby="auth-save-data-label">
+				        <label class="label-1 pull-left">$dx.msg("save as")</label>
+				        <input type="text" class="template_name input-1" >
+				        <button data-toggle="dropdown" class="button-color4">$dx.msg("cancel")</button>
+				        <button data-toggle="dropdown" class="button-color3 saveTemplate_data">$dx.msg("save")</button>
+			   		 </div>
+				</div>
+				<div class="dropdown">
+				    <button id="auth-select-data-label" class="button-color2 lookAllTemplate_data" type="button"
+				            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				        	$dx.msg("choose a template")
+				    </button>
+				    <ul class="dropdown-menu allTemplate" aria-labelledby="auth-select-data-label">
+				       
+				    </ul>
+				</div>
+				
+				<div class="auth-group-top clearfix">
+					<div class="auth-group-top-btn">$dx.msg("by department + post")</div>
+
+					<div class="deptAndRole_data deptAndRole"></div>
+					
+					<div class="collapse" id="auth-data-add">
+			            <div class="collapseWrap clearfix">
+                            <div class="clearfix">
+                                <div class="select_department_data input-1 clearfix select_department"></div>
+                                <label class="well-label"> $dx.msg("and")</label>
+                                <div class="select_role_data input-1 clearfix select_role"></div>
+                                <div class="checkBoxDeptAndRole_data auth-checkBox select_checkbox"></div>
+                            </div>
+                            <button class="pull-right button-color4" type="button" data-toggle="collapse"
+                                                data-target="#auth-data-add" aria-expanded="false"> $dx.msg("cancel")
+                            </button>
+                            <button class="pull-right button-color3 addAuthGroupMember_data_dept" type="button" data-toggle="collapse"
+                                                data-target="#auth-data-add" aria-expanded="false"> $dx.msg("save")</button>
+					    </div>
+					</div>
+
+                    <button class="authgroupadd" type="button" data-toggle="collapse" data-target="#auth-data-add"
+                        aria-expanded="false" aria-controls="auth-data-add"> $dx.msg("add permissions")</button>
+				</div>
+		
+		      
+				<div class="auth-group-top-btn">$dx.msg("by user")</div>
+		
+				<div class="userDiv_data userDiv"></div>
+				
+				<div class="collapse" id="auth-duser-add">
+			        <div class="collapseWrap clearfix">
+                        <div class="clearfix">
+                            <label class="pull-left">$dx.msg("user")：</label>
+                            <div class="select_user_data input-1 clearfix select_user"></div>
+
+                            <div class="checkBoxUser_data auth-checkBox select_checkbox"></div>
+                        </div>
+                        <button class="pull-right button-color4" type="button" data-toggle="collapse"
+                              data-target="#auth-duser-add"
+                              aria-expanded="false">$dx.msg("cancel")
+                        </button>
+                        <button class="pull-right button-color3 addAuthGroupMember_data_user" type="button" data-toggle="collapse"
+                              data-target="#auth-duser-add"
+                              aria-expanded="false">$dx.msg("save")</button>
+				    </div>
+				</div>
+
+	            ##<a class="authgroupadd" role="button" data-toggle="collapse" href="#auth-duser-add"aria-expanded="false" aria-controls="auth-duser-add">$dx.msg("add permissions")</a>
+	            <button class="authgroupadd" type="button" data-toggle="collapse" data-target="#auth-duser-add"
+	                aria-expanded="false" aria-controls="auth-duser-add">$dx.msg("add permissions")</button>
+			</div>
+			<div class="auth-group-bottom">
+				<input type="button" class="button-color1 addDataAuthGroup" value='$dx.msg("save")'/>
+			</div>
+		</div>
+	</div>
+	
+    <div role="tabpanel" class="tab-pane" id="auth-detail-div">
+		<div class="auth-group-body">
+			<div class="col-xs-2 auth-menu-group">
+				<p><i class="columnicon"></i>$dx.msg("all fields")</p>
+				<div class="columntree"></div>
+			</div>
+			
+			<div class="col-xs-10 auth-detail-user">
+                <div class="empty-form">
+                    <p>$dx.msg("please select the field")</p>
+                </div>
+				<div class="auth-detail-user-wrap" style="display:none;height:100%">
+					
+					<div class="dropdown">
+					    <button id="auth-save-detail-label" class="saveTemplate button-color2" type="button"
+					            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					        	$dx.msg("save the template")</button>
+					    <div class="dropdown-menu clearfix" aria-labelledby="auth-save-detail-label">
+					        <label class="label-1 pull-left">$dx.msg("save as")</label>
+					        <input type="text" class="template_name input-1" >
+					        <button data-toggle="dropdown" class="button-color4">$dx.msg("cancel")</button>
+					        <button data-toggle="dropdown" class="button-color3 saveTemplate_column">$dx.msg("save")</button>
+					    </div>
+					</div>
+					<div class="dropdown">
+					    <button id="auth-select-detail-label" class="button-color2 lookAllTemplate_column" type="button"
+					            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					       	 $dx.msg("choose a template")</button>
+					    <ul class="dropdown-menu allTemplate" aria-labelledby="auth-select-detail-label">
+					    </ul>
+					</div>
+					<div class="auth-group-top clearfix">
+						<div class="auth-group-top-btn">$dx.msg("by department + post")
+			                ##<a class="button-color2 remove-btn" role="button">-</a>
+	            	    </div>
+	            
+					    <div class="deptAndRole_column deptAndRole"></div>
+					
+                        <div class="collapse" id="auth-detail-add">
+			                <div class="collapseWrap clearfix">
+                            <div class="clearfix">
+                                 <div class="select_department_column input-1 clearfix select_department"></div>
+                                    <span class="well-label"> $dx.msg("and")</span>
+                                <div class="select_role_column input-1 clearfix select_role"></div>
+                                <div class="checkBoxDeptAndRole_column auth-checkBox select_checkbox"></div>
+                            </div>
+                            <button class="pull-right button-color4" type="button" data-toggle="collapse"
+                                  data-target="#auth-detail-add"
+                                  aria-expanded="false">$dx.msg("cancel")
+                            </button>
+                            <button class="pull-right button-color3 addAuthGroupMember_column_dept" type="button" data-toggle="collapse"
+                                  data-target="#auth-detail-add"
+                                  aria-expanded="false">$dx.msg("save")</button>
+                            </div>
+                        </div>
+
+                        <button class="authgroupadd" type="button" data-toggle="collapse" data-target="#auth-detail-add"
+                        	                aria-expanded="false" aria-controls="auth-detail-add">$dx.msg("add permissions")</button>
+				    </div>
+		     
+		
+                    <div class="auth-group-top-btn">$dx.msg("by user")</div>
+		
+				    <div class="userDiv_column userDiv"></div>
+		
+                    <div class="collapse" id="auth-cuser-add">
+                        <div class="collapseWrap clearfix">
+                            <div class="clearfix">
+                                <label class="pull-left">$dx.msg("user")：</label>
+                                <div class="select_user_column input-1 clearfix select_user"></div>
+
+                                <div class="checkBoxUser_column auth-checkBox select_checkbox"></div>
+                            </div>
+                            <button class="pull-right button-color4" type="button" data-toggle="collapse"
+                                  data-target="#auth-cuser-add"
+                                  aria-expanded="false">$dx.msg("cancel")
+                            </button>
+                            <button class="pull-right button-color3 addAuthGroupMember_column_user" type="button" data-toggle="collapse"
+                                  data-target="#auth-cuser-add"
+                                  aria-expanded="false">$dx.msg("save")</button>
+                        </div>
+                    </div>
+
+
+                    <button class="authgroupadd" type="button" data-toggle="collapse" data-target="#auth-cuser-add"
+                        aria-expanded="false" aria-controls="auth-cuser-add">$dx.msg("add permissions")</button>
+				</div>
+			</div>
+			</div>
+                <div class="auth-group-bottom">
+                    <input type="button" class="button-color1 addColumnAuthGroup" value="$dx.msg("save")"/>
+                </div>
+			</div>
+		</div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+

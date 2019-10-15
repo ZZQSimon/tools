@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.FunctionPointDao">
+	<select id="selectFunctionPoint" resultType="cn.com.easyerp.DeployTool.service.FunctionPoint">
+		SELECT
+	c1.id,
+	c1.`name`,
+	c1.table_id,
+	c2.`name` AS url_name,
+	c1.url_id,
+	c1.param,
+	c1.module
+FROM
+	c_page c1,
+	c_url c2
+WHERE
+	c1.url_id = c2.id
+	</select>
+	<select id="countFunctionPoint" resultType="int">
+	SELECT COUNT(*) from c_page
+	</select>
+	<select id="selectDimFunctionPoint" resultType="cn.com.easyerp.DeployTool.service.FunctionPoint">
+	SELECT
+	c1.id,
+	c1.`name`,
+	c1.table_id,
+	c2.`name` AS url_name,
+	c1.url_id,
+	c1.param,
+	c1.module
+FROM
+	c_page c1,c_url c2
+WHERE
+	CONCAT(
+		IFNULL(c1.id, ''),
+		IFNULL(c1.`name`, ''),
+		IFNULL(c1.url_id, ''),
+		IFNULL(c1.table_id, ''),
+		IFNULL(c1.param, ''),
+		IFNULL(c1.module, '')
+	) LIKE #{params} AND c1.url_id = c2.id
+	</select>
+	<insert id="addFunctionPoint" parameterType="java.util.List" >
+	INSERT INTO c_page (
+	id,
+	name,
+	table_id,
+	url_id,
+	param,
+	module
+)
+VALUES
+	<foreach collection="list" item="item" index="index" separator=",">
+	(UUID(),#{item.name},#{item.table_id},#{item.url_id},#{item.param},#{item.module})
+	</foreach>
+	</insert>
+	<update id="updateFunctionPointById" parameterType="java.util.List">
+	<foreach collection="list" item="item" index="index" separator=";">
+	UPDATE c_page
+	<set>
+	<if test="item.name != null">
+	name = #{item.name,jdbcType=VARCHAR},</if>
+	<if test="item.table_id != null">
+	table_id = #{item.table_id,jdbcType=VARCHAR},</if>
+	<if test="item.url_id != null">
+	url_id = #{item.url_id,jdbcType=VARCHAR},</if>
+	<if test="item.param != null">
+	param = #{item.param,jdbcType=VARCHAR},</if>
+	<if test="item.module != null">
+	module = #{item.module,jdbcType=VARCHAR},</if>
+	</set>
+WHERE
+	id = #{item.id}
+	</foreach>
+	</update>
+	<delete id="deleteFunctionPoint" >
+	DELETE  FROM c_page WHERE id in (
+<foreach collection="list" item = "item" separator=",">
+#{item.id}
+</foreach>
+)
+	</delete>
+	<select id="selectUrl" resultType="cn.com.easyerp.DeployTool.service.Url">
+	SELECT id,`name`,url,param,memo,router_url,module FROM c_url
+	</select>
+</mapper>

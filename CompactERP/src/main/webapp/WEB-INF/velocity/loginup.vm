@@ -1,0 +1,216 @@
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/html">
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Login Page</title>
+	<link href="#springUrl('')/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="#springUrl('')/css/login.css" rel="stylesheet">
+
+	<script src="#springUrl('')/js/jquery-1.11.0.min.js"></script>
+	<script src="#springUrl('')/js/bootstrap/js/bootstrap.min.js"></script>
+    <script src="#springUrl('')/js/dialog/js/bootstrap-dialog.min.js"></script>
+    <script src="#springUrl('')/js/login.js"></script>
+	<script>
+		function makeUserName() {
+			$('#username').val($('#susername').val() + '@' + $('#datasource').val())
+		}
+	</script>
+</head>
+<body onload='document.loginForm.username.focus();' >
+<div id="login-body" style="min-width:992px;height:100%;">
+
+<div id="login-con" class="container" style="">
+	<div id="login-box-left" style="width:52%;float:left;">
+		<div style="margin-top:100px;height:44px;">
+			<div style="float:left;width:88px;height:44px;border:1px solid red;"></div>
+			<div class="system-title" style="">$dx.msg("System_Title")</div>
+		</div>
+		<div id="login-link">
+			<a href="#1"><span id="link-weixin"  style=""></span></a>
+			<a href="#1"><span id="link-zhifubao" style=""></span></a>
+			<a href="#1"><span id="link-weibo"  style=""></span></a>
+			<p>第三方登录</p>
+		</div>
+		
+	</div>
+	<div id="login-box-right" style="padding-left:35px;width:48%;height:100%;float:left;background: URL(#springUrl('')/img/login-line.png) no-repeat left center;">
+		#*<div class="form-group " style="">
+				##<label class="col-sm-offset-1 col-sm-3 control-label" for="username"><font
+					##color="white">$dx.columnLabel("sys_user","id")</font></label>
+
+				<div class="">
+					<input type="text" style="width:100%;margin-top: 10px;border:1px solid white;border-radius:2px;padding:10px;" placeholder="请输入账号" class="input-control" id="susername" name='susername'/>
+					<input type="hidden" id="username" name='username'/>
+				</div>
+				<input type="password" style="margin-top: 10px;border:1px solid white;border-radius:2px;padding:10px;" placeholder="请输入密码"  class="input-control" id="password" name='password'/>
+				
+				<input type="password" style="margin-top: 10px;border:1px solid white;border-radius:2px;padding:10px;" placeholder="请输入验证码"   class="input-control" id="password" name='password'/>
+				
+			</div>
+		
+			<div class="form-groupp">
+				<div class="col-sm-offset-1 col-sm-11">
+					<div class="checkbox">
+						<label style="font-size:12px;">
+				          <input type="checkbox" value="true" name="remember-me"/><font color="white">
+							<p>$dx.msg("Remember_Me")</p></font>
+				        </label>
+					</div>
+				</div>
+			</div>*#
+			<div class="form-group">
+
+				##<label class="col-sm-offset-1 col-sm-3 control-label" for="username"><font
+					##color="white">$dx.columnLabel("sys_user","id")</font></label>
+
+				<div class="">
+					<input type="text" style="margin-top: 10px;" class="input-control" id="susername" placeholder="请输入用户名" name='susername'/>
+					<input type="hidden" id="username" name='username'/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				##<label class="col-sm-offset-1 col-sm-3 control-label" for="password"><font
+					##color="white">$dx.msg("Password")</font></label>
+
+				<div class="">
+					<input type="password" style="margin-top: 10px;" class="input-control" id="password" placeholder="请输入密码"  name='password'/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="validate">
+					<input type="password" style="margin-top: 10px;" class="input-control" id="yanzheng" placeholder="请输入验证码"  name='yanzheng'/>
+					<span>
+						<img src="ll"/>
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="remember-con">
+				<div class="remember-box clearfix" style="overflow:hidden;float:left">
+					<input id="remember-me" type="checkbox" value="true" name="remember-me"/>
+					<label for="remember-me" style="">
+						$dx.msg("Remember_Me")
+				    </label>
+				</div>
+				<div class="" style="float:right;height:22px;padding:0;text-align:right;font-size:10px;-webkit-transform:scale(0.9);">
+					<a href="#1" style="line-height:22px;">忘记密码？</a>
+				</div>
+				</div>
+			</div>
+			<div class="roow">
+				<div class=" " style="">
+					<button style="" class="btn btn-OK" type="submit" onclick="makeUserName();">$dx.msg("Login")</button>
+				</div>
+			</div>
+			<div class="go-reg" style="padding-top:28px;">
+				<a href="#1">没有账号，立即注册→</a>
+			</div>
+	</div>
+	
+	#*<div class="form-signin">##hhhh
+        <p class="msg" style="display: none;">
+            #if($loadCacheErrorMsg)
+                <a href="#" onclick="loadErrorMsg();">存在警告信息,点击查看</a>
+            #end
+        </p>
+        <div id="loadErrorMsgDialog" style="display: none">
+            #foreach($msg in $loadCacheErrorMsg) $msg #end
+        </div>
+        <p class="msg">
+            #if ($error)
+                <span class="glyphicon glyphicon-exclamation-sign">$error</span>
+            #end
+        </p>
+		<p class="msg" style="display: none">
+            #set($loadError = $dx.getErrorMsg())
+			#if ($loadError)
+				<span class="glyphicon glyphicon-exclamation-sign">$loadError</span>
+			#end
+		</p>
+		<div class="row">
+			<h3 class="form-signin-heading pull-right" style=""><font color="white">$dx.msg("Login")</font></h3>
+		</div>
+		<div class="row">
+			<h5 class="form-signin-heading pull-right" style=""><font color="white">$dx.msg("System_Title")</font></h5>
+		</div>
+		<form class="form-horizontal" role="form" name='loginForm' action="#springUrl('')/auth/login.do" method='POST'>
+			<br>
+			<br>
+			<div class="form-group">
+
+				<label class="col-sm-offset-1 col-sm-3 control-label" for="datasource"><font
+					color="white">$dx.msg("DataSource")</font></label>
+
+				<div class="col-sm-8">
+					<select style="margin-top: 10px;background-color: #f0f0f0;" class="input-control" id="datasource" name='datasource'>
+						#foreach ($name in ${dx.ds()})
+							<option value="${name}">${name}</option>
+						#end
+					</select>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+
+				<label class="col-sm-offset-1 col-sm-3 control-label" for="username"><font
+					color="white">$dx.columnLabel("sys_user","id")</font></label>
+
+				<div class="col-sm-8">
+					<input type="text" style="margin-top: 10px;" class="input-control" id="susername" name='susername'/>
+					<input type="hidden" id="username" name='username'/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label class="col-sm-offset-1 col-sm-3 control-label" for="password"><font
+					color="white">$dx.msg("Password")</font></label>
+
+				<div class="col-sm-8">
+					<input type="password" style="margin-top: 10px;" class="input-control" id="password" name='password'/>
+				</div>
+			</div>
+			<div class="form-groupp">
+				<div class="col-sm-offset-1 col-sm-11">
+					<div class="checkbox">
+						<label style="font-size:12px;">
+				          <input type="checkbox" value="true" name="remember-me"/><font color="white">
+							<p>$dx.msg("Remember_Me")</p></font>
+				        </label>
+					</div>
+				</div>
+			</div>
+			<br><br><br>
+			<div class="row">
+				<div class="pull-left col-sm-offset-1 col-sm-11">
+					<button style="" class="btn btn-OK" type="submit" onclick="makeUserName();">$dx.msg("Login")</button>
+					<button style="" class="btn btn-Cancel" type="button" onclick="window.close();">$dx.msg("Cancel")</button>
+				</div>
+			</div>
+
+		</form></div>
+	</div>##lllllll*#
+	
+</div>
+	<div id="login-footer" style="position:absolute;bottom:0;">
+		<div>
+			<a href="#1"><span id="login-foot-left" style=""></span></a>
+			<a href="#1"><span id="login-foot-right" style=""></span></a>
+			<a href="#1"><span id="login-foot-pic" style=""></span></a>
+		</div>
+	</div>
+</div>
+
+<!-- /container -->
+
+</body>
+</html>

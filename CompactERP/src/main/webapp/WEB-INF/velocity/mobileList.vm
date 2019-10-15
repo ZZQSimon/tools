@@ -1,0 +1,10 @@
+#dxFormHead($form)
+<div id="$form.id" class="dx-form" name="$form.widgetName">
+    <div class="gm-top-menu">
+        <div class="top-menu-title pull-left">查看记录</div>
+    </div>
+    <div class="list">
+    </div>
+    <div class="list-footer"></div>
+</div>
+#dxFormTail($form)

@@ -1,0 +1,32 @@
+#dxFormHead($form)
+<div id="$form.id" class="dx-form chart-form" name="$form.widgetName" action="">
+    #if($dx.user.isMobileLogin!=1)
+    <div class="btn-toolbar">
+        <button class="btn chart-to-list" type="button">$dx.msg('chart-to-list')</button>
+        <button class="btn chart-config-btn pull-right" type="button"><span></span>$dx.msg("more-select")</button>
+	</div>
+    
+	<div class="dx-form-con">
+        <div class="dx-field-9 chart-pan" style="height:100%">
+            ##<div id="$form.chart.id" style="width:100%;height:400px;">
+            ##</div>
+        </div>
+        <div class="dx-field-3 chart-config">
+            #dxFilter($form.filter)
+        </div>
+	</div>
+    #else
+    <div class="gm-top-menu" >
+        <div class="top-menu-title pull-left">$dx.formatEmpty($form.title)</div>
+        <span class="show-filters fa fa-navicon pull-right" toggle="dx-form-con"></span>
+    </div>
+    <div class="dx-form-con">
+        <div class="dx-field-9 chart-pan" style="height:100%">
+        </div>
+    </div>
+    <div class="chart-filter" style="display: none">
+        #dxFilter($form.filter)
+    </div>
+    #end
+</div>
+#dxFormTail($form)

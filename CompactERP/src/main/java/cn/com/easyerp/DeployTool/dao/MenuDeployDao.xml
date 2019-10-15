@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.MenuDeployDao">
+	<select id="selectMenu" resultType="cn.com.easyerp.DeployTool.service.MenuDeployDetails">
+		SELECT
+			c1.`id`,
+			c1.`type`,
+			c1.`icon`,
+			c1.`page_id`,
+			c1.`parent_id`,
+			c1.`seq`,
+			c1.`module`,
+			c1.`icon_out`,
+			c1.`is_system`,
+			c1.`is_mobile_menu`,
+			c2.`international_id` id_international,
+			c2.`international_id`,
+			c2.`type` type_inter,
+			replace(replace(c2.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as cn,
+			replace(replace(c2.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as en,
+			replace(replace(c2.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as jp,
+			replace(replace(c2.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other1,
+			replace(replace(c2.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other2,
+			c2.`module` module_inter
+		FROM
+			`c_menu` c1
+		LEFT JOIN c_international c2 ON c1.international_id = c2.international_id
+		WHERE
+			(c1.parent_id = ""
+		OR parent_id IS NULL
+		OR parent_id = "default"
+		OR c1.parent_id IN (
+			SELECT
+				id
+			FROM
+				c_menu
+		))
+		<if test="userId!='Super'">
+			and
+			c1.is_system!='1'
+			or c1.is_system is null
+		</if>
+		ORDER BY c1.seq
+	</select>
+	<select id="selectMenuById" resultType="cn.com.easyerp.DeployTool.service.MenuDeployDetails">
+		SELECT
+			c1.`id`,
+			c1.`type`,
+			c1.`icon`,
+			c1.`page_id`,
+			c1.`parent_id`,
+			c1.`seq`,
+			c1.`module`,
+			c1.`icon_out`,
+			c1.`is_system`,
+			c1.`is_mobile_menu`,
+			c2.`international_id`,
+			c2.`type` type_inter,
+			replace(replace(c2.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as cn,
+			replace(replace(c2.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as en,
+			replace(replace(c2.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as jp,
+			replace(replace(c2.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other1,
+			replace(replace(c2.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other2,
+			c2.`module` module_inter
+		FROM
+			`c_menu` c1
+		LEFT JOIN c_international c2 ON c1.id = c2.international_id
+		WHERE
+			c1.type = '1'
+		AND
+			c1.parent_id =#{id}
+	</select>
+	<insert id="addMenuDeploy">
+		INSERT INTO `c_menu` (
+			`id`,
+			`type`,
+			`icon`,
+			`page_id`,
+			`parent_id`,
+			`seq`,
+			`module`,
+			`icon_out`,
+			`is_mobile_menu`,
+			`international_id`,
+			`is_system`
+		)
+		VALUES
+			(
+				#{menuDeploy.id},
+				'1',
+				#{menuDeploy.icon},
+				#{menuDeploy.page_id},
+				#{menuDeploy.parent_id},
+				#{menuDeploy.seq},
+				#{menuDeploy.module},
+				#{menuDeploy.icon_out},
+				#{menuDeploy.is_mobile_menu},
+				#{menuDeploy.international_id},
+				#{menuDeploy.is_system}
+			);
+	</insert>
+	<insert id="addPage">
+		INSERT INTO `c_page` (
+			`id`,
+			`name`,
+			`table_id`,
+			`url_id`,
+			`param`,
+			`module`
+		)
+		VALUES
+			(
+				#{menuDeploy.page_id},
+				'',
+				'',
+				#{menuDeploy.url},
+				#{menuDeploy.param},
+				''
+			);
+	</insert>
+	<insert id="addInternational">
+		INSERT INTO `c_international` (
+			`international_id`,
+			`type`,
+			`cn`,
+			`en`,
+			`jp`,
+			`other1`,
+			`other2`,
+			`module`
+		)
+		VALUES
+			(
+				#{international.international_id},
+				#{international.type_inter},
+				#{international.cn},
+				#{international.en},
+				#{international.jp},
+				#{international.other1},
+				#{international.other2},
+				#{international.module_inter}
+			);
+	</insert>
+	<delete id="deleteMenuDeploy">
+	DELETE c4 FROM
+		c_menu c4 
+		INNER JOIN
+		(SELECT id FROM c_menu c3 WHERE c3.id =#{id}
+		UNION
+		SELECT id FROM c_menu c2 WHERE c2.parent_id IN (
+		SELECT id FROM c_menu c6 WHERE c6.parent_id = #{id})
+		UNION
+		SELECT id FROM c_menu c1 WHERE c1.parent_id = #{id}) c5
+	WHERE c4.id = c5.id 
+	</delete>
+	<delete id="deleteMenuDeployById">
+		DELETE  FROM c_menu WHERE id = #{id};
+	</delete>
+	<delete id="deletePage">
+		DELETE FROM c_page where id=#{id}
+	</delete>
+	<update id="updateMenuDeploy">
+		UPDATE `c_menu`
+		SET `id` = #{menuDeploy.id},
+		 `type` = '1',
+		 `icon` = #{menuDeploy.icon},
+		 `page_id` = #{menuDeploy.page_id},
+		 `parent_id` = #{menuDeploy.parent_id},
+		 `seq` = #{menuDeploy.seq},
+		 `module` = #{menuDeploy.module},
+		 `icon_out` = #{menuDeploy.icon_out},
+		 `is_mobile_menu` = '0'
+		WHERE `id` = #{menuDeploy.id}
+	</update>
+	<update id="updateInternational">
+		UPDATE `c_international`
+		SET 
+		 `international_id` = #{international.international_id},
+		 `type` = #{international.type_inter},
+		 `cn` = #{international.cn},
+		 `en` = #{international.en},
+		 `jp` = #{international.jp},
+		 `other1` = #{international.other1},
+		 `other2` = #{international.other2},
+		 `module` = #{international.module_inter}
+		WHERE  `international_id` = #{international.international_id}
+	</update>
+</mapper>

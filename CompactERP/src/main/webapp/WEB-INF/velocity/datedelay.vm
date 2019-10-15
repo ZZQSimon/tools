@@ -1,0 +1,193 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="datedelay" class="form-inline dx-form" role="form"">
+
+
+<div class="rowContentTop btn-toolbar dx-menu-bar grid-toolbar">
+    <a href="javascript:void(0)" class="dx-grid-add datedelay_save">$dx.msg("Save")</a>
+</div>
+<div class="datagrid-content">
+    <div class="col-xs-3">
+        <div class="section passageMap">
+            <p>$dx.msg("Calendar transition configuration")</p>
+            <div class="itemlist"></div>
+            <div class="datagrid-foot">
+                <div class="dropup">
+                    <button type="button" class="append" id="delay_add_map"
+                        data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+                        ＋
+                    </button>
+                    <div class="dropdown-menu clearfix" aria-labelledby="delay_add_map">
+                        <label class="label-1">$dx.msg("enter_name")</label>
+                        <input type="text" class="input-1"  name="passageMap">
+                        <button data-toggle="dropdown" class="button-color4">$dx.msg("Cancel")</button>
+                        <button data-toggle="dropdown" class="button-color3 rowadd">$dx.msg("Save")</button>
+                    </div>
+                </div>
+                <button class="removeit"type="button">－</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-3">
+        <div class="section passageRowMap">
+            <p>$dx.msg("Calendar push line information")</p>
+            <div class="itemlist"></div>
+             <div class="datagrid-foot">
+                <div class="dropup">
+                    <button type="button" class="append" id="delay_add_rowMap"
+                        aria-haspopup="true" aria-expanded="false">
+                        ＋
+                    </button>
+                    <div class="dropdown-menu clearfix" aria-labelledby="delay_add_rowMap">
+                        <label class="label-1">$dx.msg("enter_name")</label>
+                        <input type="text" class="input-1"  name="passageRowMap">
+                        <button data-toggle="dropdown" class="button-color4">$dx.msg("Cancel")</button>
+                        <button data-toggle="dropdown" class="button-color3 rowadd">$dx.msg("Save")</button>
+                    </div>
+                </div>
+                <button class="removeit"type="button">－</button>
+             </div>
+        </div>
+    </div>
+    <div class="col-xs-3">
+        <div class="section rowFormula">
+            <p>$dx.msg("Calendar push line formula configuration")</p>
+            <div class="itemlist"></div>
+             <div class="datagrid-foot">
+                <div class="dropup">
+                    <button type="button" class="append rowadd" id="delay_add_formula"
+                         aria-haspopup="true" aria-expanded="false">
+                        ＋
+                    </button>
+                    <!--<div class="dropdown-menu clearfix" aria-labelledby="delay_add_formula">
+                        <label class="label-1">$dx.msg("enter_name")</label>
+                        <input type="text" class="input-1"  name="rowFormula">
+                        <button data-toggle="dropdown" class="button-color4">$dx.msg("Cancel")</button>
+                        <button data-toggle="dropdown" class="button-color3 rowadd">$dx.msg("Save")</button>
+                    </div>--!>
+                </div>
+                <button class="removeit"type="button">－</button>
+             </div>
+        </div>
+    </div>
+    <div class="col-xs-3 date-delay-detail">
+        <div>
+            <div class="date-delay-section" name="passageMap">
+                <p>$dx.msg("Edit (calendar pass configuration table)")</p>
+                <div class="form-group">
+                    <label class="label-1">ID</label>
+                    <input type="text" class="input id" name="id"/>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Date pass table name")</label>
+                    <input type="text" class="name input" name="name"/>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Passage category")</label>
+                    <select class="input type"  name="type"/>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Base table")</label>
+                    <select class="input main_table"  name="main_table"/>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Grouping field")</label>
+                    <select class="input group_cols"  name="group_cols">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Representation field")</label>
+                    <textarea class="input disp_cols" name="disp_cols"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Filter list")</label>
+                    <textarea class="input filter_tables" name="filter_tables"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Filtering SQL")</label>
+                    <textarea class="input filter_sql" name="filter_sql"></textarea>
+                </div>
+                <div class="form-group switch clearfix">
+                    <label class="label-1">$dx.msg("Is it possible to append")</label>
+                    <input type="checkbox"  class="has_append" name="has_append" value="has_append">
+                </div>
+            </div>
+            <div class="date-delay-section"  name="passageRowMap">
+                <p>$dx.msg("Edit (calendar push line information table)")</p>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Representation name")</label>
+                    <input type="text" class="input disp_name_key" name="disp_name_key"/>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Update API")</label>
+                    <input type="text" class="input upd_statement" name="upd_statement">
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Edit condition")</label>
+                    <input type="text" class="input edit_cond" name="edit_cond">
+                </div>
+                <div class="form-group clearfix">
+                    <label class="label-1">$dx.msg("Edit part bg color")</label>
+	                <input class="input colorPick edit_part_bg_color"  name="edit_part_bg_color"/>
+                </div>
+                <div class="form-group clearfix">
+                    <label class="label-1">$dx.msg("Edit part fg color")</label>
+	                <input class="input colorPick edit_part_fg_color"  name="edit_part_fg_color" />
+                </div>
+                <div class="form-group clearfix">
+                    <label class="label-1">$dx.msg("Non-editing part bg color")</label>
+	                <input class="input colorPick unedit_part_bg_color" name="unedit_part_bg_color"/>
+                </div>
+                <div class="form-group clearfix">
+                    <label class="label-1">$dx.msg("Non-editing part fg color")</label>
+	                <input class="input colorPick unedit_part_fg_color" name="unedit_part_fg_color" />
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Decimal places")</label>
+                    <input type="number" class="input decimal_digit" name="decimal_digit">
+                </div>
+                <div class="form-group switch clearfix">
+                    <label class="label-1">$dx.msg("End of line total")</label>
+                   <input type="checkbox" class="total_row" name="total_row" />
+                </div>
+                <div class="form-group switch clearfix">
+                    <label class="label-1">$dx.msg("End of column total")</label>
+                   <input type="checkbox" class="total_col"  name="total_col"/>
+                </div>
+                <div class="form-group">
+                    <label class="label-1">$dx.msg("Detail line SQL")</label>
+                    <textarea class="input detail_sql" name="detail_sql"></textarea>
+                </div>
+            </div>
+                <div class="date-delay-section" name="rowFormula">
+                    <p>$dx.msg("Edit (calendar push line formula table)")</p>
+                    <div class="form-group">
+                        <label class="label-1">$dx.msg("Formula precedence")</label>
+                        <input type="number" class="input level"  name="level">
+                    </div>
+                    <div class="form-group">
+                        <label class="label-1">$dx.msg("Line formula table type")</label>
+                        <select class="input type"  name="type">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="label-1">$dx.msg("Line formula table condition")</label>
+                        <input type="text" class="input cond" name="cond">
+                    </div>
+                    <div class="form-group">
+                        <label class="label-1">$dx.msg("Line formula table formula")</label>
+                        <textarea class="input formula" name="formula"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="label-1">SQL</label>
+                        <textarea class="input sql" name="sql"></textarea>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+
+#dxFormTail($form)

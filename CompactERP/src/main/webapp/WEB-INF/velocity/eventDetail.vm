@@ -1,0 +1,116 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="eventDetail" class="form-inline fc-event-detail dx-detail-form dx-form clearfix pc-tab-form" role="form"">       ##基本上照抄即可
+    <div class="btn-toolbar dx-menu-bar">
+        <button type="button" class="event-back">$dx.msg('back')</button>
+        #if($form.type != 'create')
+            <button type="button" class="event-edit">$dx.msg('edit')</button>
+        #end
+        <button type="button" class="event-save" style="display: none">$dx.msg('save')</button>
+        #if(!$dx.empty($form.calendarEvent) && $form.calendarEvent.owner == $dx.user.id && !$dx.empty($form.calendarEvent.ref_table))
+            <button type="button" class="event-detail">$dx.msg('event_detail')</button>
+        #end
+    </div>
+
+    <div class="dx-form-con">
+        <div class="dx-auto-expand dx-div-with-scroll">
+            <div class="dx-detail-container">
+                <div class="row event-column-row">
+                    <div class="form-group dx-field-12 dx-field-container">
+                        <label class="control-label label-3"><i class="ipt-require"></i>$dx.msg('event title')</label>
+                        <input type="text" #if($form.type != 'create')value="$dx.formatEmpty($form.calendarEvent.event_name)"#end class="input-3 event-title ui-widget dx-field" #if($form.type != 'create')readonly#end required/>
+                    </div>
+                </div>
+                <div class="row event-column-row">
+                    <div class="form-group dx-field-12 dx-field-container">
+                        <label class="all-day-event-label">
+                            <input type="checkbox" class="all-day-event" #if($form.type != 'create')disabled="disabled" #end/>$dx.msg('all day event')
+##                            <input type="checkbox" class="is-public-event" #if($form.type != 'create')disabled="disabled" #end/>$dx.msg('is public event')
+                        </label>
+                    </div>
+                </div>
+                <div class="row event-column-row">
+                    <div class="form-group dx-field-6 dx-field-container">
+                        <label class="control-label label-1"><i class="ipt-require"></i>$dx.msg('begin date')</label>
+                        <input type="text" #if($form.type != 'create')value="$dx.formatDateHasMin($form.calendarEvent.begin_date)"#end class="input-1 begin-date datetime form-control ui-widget dx-field" #if($form.type != 'create')readonly#end required/>
+                     </div>
+                    <div class="form-group dx-field-6 dx-field-container end-date-div">
+                        <label class="control-label label-1"><i class="ipt-require"></i>$dx.msg('end date')</label>
+                        <input type="text" #if($form.type != 'create')value="$dx.formatDateHasMin($form.calendarEvent.end_date)"#end class="input-1 end-date datetime form-control ui-widget dx-field" #if($form.type != 'create')readonly#end/>
+                    </div>
+                </div>
+
+                <div class="row event-column-row">
+                    <div class="form-group dx-field-12">
+                        <label class="control-label label-1"><i class="ipt-require"></i>标记</label>
+                        <div class="input-group input-1">
+                              <ul class="event-color-wrap disable">
+                                <li class="#if(!$dx.empty($form.calendarEvent) && $form.calendarEvent.color == '#FF6861') selected #end event-color event-red" event_backgroud_color="#FF6861"><span class="" style="background: #FF6861" ></span></li>
+                                <li class="#if(!$dx.empty($form.calendarEvent) && $form.calendarEvent.color == '#FEAA57') selected #end event-color event-orange" name="orange" event_backgroud_color="#FEAA57"><span class="" style="background: #FEAA57"></span></li>
+                                <li class="#if(!$dx.empty($form.calendarEvent) && $form.calendarEvent.color == '#A4A4A7') selected #end event-color event-grey" event_backgroud_color="#A4A4A7"><span class="" style="background: #A4A4A7"></span></li>
+                                <li class="#if(!$dx.empty($form.calendarEvent) && $form.calendarEvent.color == '#5EBEF7') selected #end event-color event-blue" event_backgroud_color="#5EBEF7"><span class="" style="background: #5EBEF7"></span></li>
+                                <li class="#if(!$dx.empty($form.calendarEvent) && $form.calendarEvent.color == '#88E06D') selected #end event-color event-green" event_backgroud_color="#88E06D"><span class="" style="background: #88E06D"></span></li>
+                                <li class="#if(!$dx.empty($form.calendarEvent) && $form.calendarEvent.color == '#D592E5') selected #end event-color event-purple" event_backgroud_color="#D592E5"><span class="" style="background: #D592E5"></span></li>
+                                <li class="#if(!$dx.empty($form.calendarEvent) && $form.calendarEvent.color == '#F4C848') selected #end event-color event-yellow" event_backgroud_color="#F4C848"><span class="" style="background: #F4C848"></span></li>
+                                <li class="#if(!$dx.empty($form.calendarEvent) && $form.calendarEvent.color == '#FFFFFF') selected #end event-color event-white" event_backgroud_color="#FFFFFF"><span class="" style="background: #FFFFFF"></span></li>
+                              </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row event-column-row">
+                    <div class="form-group dx-field-6">
+                        <label class="control-label label-1">$dx.msg('attachment')</label>
+##                        <!--<div class="file-input-div dx-upload-div" >
+##                            <a class="event-file-download" href="#">$dx.formatEmpty($form.calendarEvent.file)</a>
+##                            <input type="file" class="file-input" required/>
+##                        </div>--!>
+
+                        <div class="input-group input-1">
+                            <div class="dx-upload-div disable">
+                                <input type="hidden" class="dx-upload-label" disabled/>
+                                <a class="dx-download-a event-file-download" name="#if($form.type != 'create')$dx.formatEmpty($form.calendarEvent.file)#end" href="#">#if($form.type != 'create')$dx.substringAfterLast($form.calendarEvent.file)#end
+                                    <span class="download-icon event-file-download-icon"><button type="button" name="#if($form.type != 'create')$dx.formatEmpty($form.calendarEvent.file)#end">下载</button></span>
+                                </a>
+                                <span class="btn fileinput-button dx-upload-button" style="display: none">
+                                    <label>
+                                        <input type="file" class="file-input dx-field dx-file-input tooltip-f" required/>
+                                    </label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row event-column-row">
+                    <div class="form-group dx-field-12">
+                        <label class="control-label label-3">$dx.msg('event persion')</label>
+                        <div class="input-3 event-user-div disable">
+                            #if(!$dx.empty($form.calendarEvent) && !$dx.empty($form.calendarEvent.calendarEventShare))
+                                #foreach($calendarEventShare in $form.calendarEvent.calendarEventShare.entrySet())
+                                    <span class="add-inviter event-user-span" user_id="$dx.formatEmpty($calendarEventShare.value.user_id)">
+                                        $dx.formatEmpty($calendarEventShare.value.user_name)<span class="delete-user">×</span>
+                                    </span>
+                                #end
+                            #else
+                                <span class="no-event-user-span">$dx.msg('no event user')</span>
+                            #end
+                            <span class="add-event-user-div" style="display: none"><a href="#" class="add-event-user">$dx.msg('add event user')</a></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row event-column-row">
+                    <div class="form-group dx-field-12">
+                        <label class="control-label label-3">$dx.msg('content')</label>
+                        <textarea class="input-3 content" #if($form.type != 'create')readonly="readonly" #end>#if(!$dx.empty($form.calendarEvent) && !$dx.empty($form.calendarEvent.content))$form.calendarEvent.content#end</textarea>
+                    </div>
+                </div>
+                <div class="row event-column-row">
+                    <div class="form-group dx-field-12">
+                        <label class="control-label label-3">$dx.msg('memo')</label>
+                        <input type="text" #if($form.type != 'create')value="$dx.formatEmpty($form.calendarEvent.memo)"#end class="input-3 event-memo" #if($form.type != 'create')readonly#end/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+#dxFormTail($form)

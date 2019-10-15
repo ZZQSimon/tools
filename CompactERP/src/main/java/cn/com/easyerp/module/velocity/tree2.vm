@@ -1,0 +1,23 @@
+#dxFormHead($form)
+<form id="${form.id}" class="dx-form" name="$form.widgetName" action="${form.action}">
+	#dxMenuBarHead($form)
+		<input type="button" id="${form.id}_down" name="${form.action}" class="btn btn-default dx-submit"
+	       value="$dx.msg('Search_Down')" />
+	    <input type="button" id="${form.id}_up" name="${form.action}" class="btn btn-default dx-submit"
+	       value="$dx.msg('Search_Up')" />
+	#dxMenuBarFoot()
+	<input type='hidden' id='${form.id}conditions'/>
+	<div class="container" style="position: relative;left:0px;top:0px;width:100%;height:450PX;">
+		<div class="row" style="left:5px;margin:5px;">
+			#foreach($field in ${form.fields})
+				#dxFieldWithClass($field,"form-group col-xs-6 dx-field-container","control-label col-xs-5",
+								"input-group col-xs-7")
+			#end
+		</div>
+		<div class="" id="${form.id}_div"
+		     style="overflow:auto;float:left;position: absolute;left:30px;width:95%;height:350PX;">
+		     
+		</div>
+	</div>
+</form>
+#dxFormTail($form)

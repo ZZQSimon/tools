@@ -1,0 +1,32 @@
+			<div style="text-align: center; font-weight: bold; margin-top: 20px">表体信息</div>
+			<table table="" class="dx-grid display dataTable no-footer dx-import-table" cellspacing="0" width="100%">
+				#foreach ($body in ${form.bodyList})
+					#if($foreach.index == 0)
+				<thead>
+				<tr>
+					#foreach ($data in $body.entrySet())						
+						#set ($foundName = 0)	
+						#if(${form.titleName.size()} >1)
+							#foreach($title in ${form.titleName})
+								#if(${data.key}==${title.get('KEY2')})
+									<th>${title.get('CN')} </th>		
+									#set ($foundName = 1)
+								#end
+							#end	
+						#end
+						#if($foundName == 0)	
+							<th>${data.key}</th>		
+						#end
+					#end
+				</tr>		
+				</thead>
+				<tbody>			
+					#end
+					<tr>
+					#foreach ($data in $body.entrySet())										
+						<td>$!{data.value}</td>
+					#end
+					</tr>
+				#end
+				</tbody>
+			</table>

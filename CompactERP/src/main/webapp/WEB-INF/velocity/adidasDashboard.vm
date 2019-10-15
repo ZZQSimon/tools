@@ -1,0 +1,112 @@
+#dxFormHead($form)                  ##必须
+<div id="$form.id" name="adidasDashboard" class="form-inline fc-event-detail dx-detail-form dx-form clearfix pc-tab-form" role="form">       ##基本上照抄即可
+    <div class="dx-filter-select">
+        #dxFilter($form.filter)
+    </div>
+    <div style="margin-top: 20px;height: 100%;clear: both;overflow: auto">
+        #if($form.type == 1)
+##            <div style="height:20px;line-height: 20px;width:100%;background-color: #000000;text-align: center;color:white;border-bottom: 3px solid #e7e7e7">EMPLOYMENT</div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style=" padding:0; border-right: 2px solid #e7e7e7;border-bottom:2px solid #e7e7e7;overflow-x: auto;">
+                <p style="height:43px;line-height: 43px;font-size:17px;font-weight: bold;padding-top:5px solid #707070;background-color: #60B9E0;text-align: center;color:#1A1A1A;">HC/FTE</p>
+                <div class="hcFteChart" style="width:100%;height:400px;float: left"></div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 0px;border-right: 2px solid #e7e7e7;border-bottom:2px solid #e7e7e7;overflow-x: auto;">
+                <p style="height:43px;line-height: 43px;font-size:17px;font-weight: bold;padding-top:5px solid #707070;background-color: #60B9E0;text-align: center;color:#1A1A1A;">BY CONTRACT TYPE</p>
+                <div class="contractChart" style="width:100%;height:400px;float: left"></div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 0px;border-bottom:2px solid #e7e7e7; overflow-x: auto;">
+                <p style="height:43px;line-height: 43px;font-size:17px;font-weight: bold;padding-top:5px solid #707070;background-color: #60B9E0;text-align: center;color:#1A1A1A;">BY LENGTH OF SERVICE</p>
+                <div class="lengthServiceChart" style="width:100%;height:400px;float: left"></div>
+            </div>
+
+            <div style="height:43px;line-height: 43px;font-size:17px;font-weight: bold;width:100%;background-color: #60B9E0;text-align: center;color:#1A1A1A;border-bottom: 3px solid #e7e7e7">DIVERSITY</div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style=" padding:0; border-right: 2px solid #e7e7e7;border-bottom:2px solid #e7e7e7;overflow-x: auto;">
+                <p style="height:43px;line-height: 43px;font-size:17px;font-weight: bold;padding-top:5px solid #707070;background-color: #60B9E0;text-align: center;color:#1A1A1A;">HC DISTRIBUTION (GENDER) </p>
+                <div class="testee" style="width:100%;height:400px;float: left;clear: both">
+                    <p style="line-height: 30px;vertical-align: middle;text-align: justify";>
+                        <strong style="display: inline-block;width:69px;text-align: center;">Gender</strong style="display: inline-block;width: 70px;text-align: center;">
+                        <strong style="display: inline-block;width: 70px;text-align: center;">Total%HC</strong>
+                        <strong style="display: inline-block;width: 70px;text-align: center">Mgmt%HC</strong>
+                        <strong style="display: inline-block;width: 70px;line-height: 30px;text-align: center">Non-Mgmt%HC</strong>
+                    </p>
+                    <div style="margin-top: 20px;">
+                        <span style="display: inline-block;width:69px;text-align: center;">女</span>
+                        <span style="display: inline-block;width:70px;text-align: center;" class="girl-count">0%</span>
+                        <span style="display: inline-block;width:70px;text-align: center;" class="girl-FTE-count">0%</span>
+                        <span style="display: inline-block;width:70px;text-align: center;" class="girl-Intern-count">0%</span>
+                    </div>
+                    <div style="margin-top: 20px;margin-bottom: 20px;">
+                        <span style="display: inline-block;width:69px;text-align: center;">男</span>
+                        <span style="display: inline-block;width:70px;text-align: center;" class="boy-count">0%</span>
+                        <span style="display: inline-block;width:70px;text-align: center;" class="boy-FTE-count">0%</span>
+                        <span style="display: inline-block;width:70px;text-align: center;" class="boy-Intern-count">0%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 0px;border-right: 2px solid #e7e7e7;border-bottom:2px solid #e7e7e7;overflow-x: auto;">
+                <p style="height:43px;line-height: 43px;font-size:17px;font-weight: bold;padding-top:5px solid #707070;background-color: #60B9E0;text-align: center;color:#1A1A1A;">HC DISTRIBUTION (AGE)</p>
+                <div class="ageChart" style="width:100%;height:400px;float: left"></div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 0px;border-bottom:2px solid #e7e7e7; overflow-x: auto;">
+                <p style="height:43px;line-height: 43px;font-size:17px;font-weight: bold;padding-top:5px solid #707070;background-color: #60B9E0;text-align: center;color:#1A1A1A;">HC DISTRIBUTION (LOS)</p>
+                <div class="workYearChart" style="width:100%;height:400px;float: left"></div>
+            </div>
+        #else
+            <div class="AAAA" style="width:100%;height:400px;float: left;">
+                <div  class="">
+                    <div class="" style="display:flex;flex-direction: row;flex-wrap: nowrap;justify-content: center;lign-items: center;">
+##                        <div style="width: 33.3%;text-align: center;font-size: 18px;line-height: 22px;height: 22px;"></div>
+##                        <div style="width: 33.3%;text-align: center;font-size: 18px;line-height: 22px;height: 22px;">Hiring</div>
+##                        <div style="width: 33.3%;text-align: center;font-size: 18px;line-height: 22px;height: 22px;">Termination</div>
+                    </div>
+                    <div>
+                        <div class="src col-lg-4 col-md-4 col-sm-4 col-xs-4" style="border-top:6px solid #ffffff;border-left:6px solid #ffffff;padding:0;display:inline-block;height:180px;background-repeat:no-repeat;-webkit-background-size: cover;background-size: cover;">
+                            <img src="#springUrl('')/img/dashboardImg/dashboardadidas.png" alt="" style="width:70%;height: 99%;margin-left:15%;"></div>
+                        <div class="src col-lg-4 col-md-4 col-sm-4 col-xs-4" style="border-top:6px solid #ffffff;border-left:6px solid #ffffff;padding:0;display:inline-block;height:230px;background-repeat:no-repeat;-webkit-background-size: cover;background-size: cover;background-position: center; background-image: url('#springUrl('')/img/dashboardImg/hires.jpg');">
+                            <div style="background-color: rgba(0,0,0,0.5);display: inline-block;height: 230px;width: 100%;color:#FFFFFF;font-weight: bold">
+                                <span style="margin-top:40px;width:100%;display:inline-block;text-align:center;height:60px;line-height:60px;font-size:43px;">Hiring</span>
+                                <span style="margin-top:20px;width:100%;background-color:#60B9E0;display:inline-block;text-align:center;height:60px;line-height:60px;font-size: 34px;opacity: 0.9" class ='hirescount'>0</span>
+                            </div>
+                        </div>
+                        <div class="src col-lg-4 col-md-4 col-sm-4 col-xs-4" style="border-top:6px solid #ffffff;border-left:6px solid #ffffff;padding:0;display:inline-block;height:230px;background-repeat:no-repeat;-webkit-background-size: cover;background-size: cover;background-position: center; background-image: url('#springUrl('')/img/dashboardImg/Promotion.jpg');">
+                            <div style="background-color: rgba(0,0,0,0.5);display: inline-block;height: 230px;width: 100%;color:#FFFFFF;font-weight: bold">
+                                <span style="margin-top:40px;width:100%;display:inline-block;text-align:center;height:60px;line-height:60px;font-size:43px;">Termination</span>
+                                <span style="margin-top:20px;width:100%;background-color:#60B9E0;display:inline-block;text-align:center;height:60px;line-height:60px;font-size: 34px;opacity: 0.9" class ='Termination'>0</span>
+                            </div>
+                        </div>
+##                        <div class="src col-lg-4 col-md-4 col-sm-4 col-xs-4" style="border-top:2px solid #e7e7e7;border-left:2px solid #e7e7e7;padding:0;display:inline-block;height:180px;background-repeat:no-repeat;-webkit-background-size: cover;background-size: cover; background-image: url('#springUrl('')/img/dashboardImg/Promotion.jpg');"><span style="margin-top:100px;width:100%;background-color:rgba(255, 251, 251, 0.8);display:inline-block;text-align:center;height:60px;line-height:60px;font-size: 19px" class ='promotioncount'>0</span></div>
+                    </div>
+##                    <div class="" style="">
+##                        <div style="width: 33.3%;text-align: center;display: inline-block;font-size: 18px;line-height: 22px;height: 20px;">Promotion</div><div style="width: 33.3%;text-align: center;display: inline-block;font-size: 18px;line-height: 22px;height: 20px;">Transfer In</div><div style="width: 33.3%;text-align: center;display: inline-block;font-size: 18px;line-height: 22px;height: 20px;">Transfer Out</div>
+##                    </div>
+             <div class="src col-lg-4 col-md-4 col-sm-4 col-xs-4" style="border-top:6px solid #ffffff;border-left:6px solid #ffffff;padding:0;display:inline-block;height:230px;background-repeat:no-repeat;-webkit-background-size: cover;background-size: cover;background-position: center; background-image: url('#springUrl('')/img/dashboardImg/termination.jpg');">
+                 <div style="background-color: rgba(0,0,0,0.5);display: inline-block;height: 230px;width: 100%;color:#FFFFFF;font-weight: bold">
+                     <span style="margin-top:40px;width:100%;display:inline-block;text-align:center;height:60px;line-height:60px;font-size:43px;">Promotion</span>
+                     <span style="margin-top:20px;width:100%;background-color:#60B9E0;display:inline-block;text-align:center;height:60px;line-height:60px;font-size: 34px;opacity: 0.9" class ='promotioncount'>0</span>
+                 </div>
+             </div>
+              <div class="src col-lg-4 col-md-4 col-sm-4 col-xs-4" style="border-top:6px solid #ffffff;border-left:6px solid #ffffff;padding:0;display:inline-block;height:230px;background-repeat:no-repeat;-webkit-background-size: cover;background-size: cover;background-position: center; background-image: url('#springUrl('')/img/dashboardImg/transfer in.jpg');">
+                  <div style="background-color: rgba(0,0,0,0.5);display: inline-block;height: 230px;width: 100%;color:#FFFFFF;font-weight: bold">
+                      <span style="margin-top:40px;width:100%;display:inline-block;text-align:center;height:60px;line-height:60px;font-size:43px;">Transfer In</span>
+                      <span style="margin-top:20px;width:100%;background-color:#60B9E0;display:inline-block;text-align:center;height:60px;line-height:60px;font-size: 34px;opacity: 0.9" class ='transferoutcount'>0</span>
+                   </div>
+              </div>
+              <div class="src col-lg-4 col-md-4 col-sm-4 col-xs-4" style="border-top:6px solid #ffffff;border-left:6px solid #ffffff;padding:0;display:inline-block;height:230px;background-repeat:no-repeat;-webkit-background-size: cover;background-size: cover;background-position: center; background-image: url('#springUrl('')/img/dashboardImg/transfer in.jpg');">
+                  <div style="background-color: rgba(0,0,0,0.5);display: inline-block;height: 230px;width: 100%;color:#FFFFFF;font-weight: bold">
+                      <span style="margin-top:40px;width:100%;display:inline-block;text-align:center;height:60px;line-height:60px;font-size:43px;">Transfer Out</span>
+                      <span style="margin-top:20px;width:100%;background-color:#60B9E0;display:inline-block;text-align:center;height:60px;line-height:60px;font-size: 34px;opacity: 0.9" class ='terminationcount'>0</span>
+                  </div>
+              </div>
+
+
+##			<div class="src col-lg-4 col-md-4 col-sm-4 col-xs-4" style="border-top:2px solid #e7e7e7;border-left:2px solid #e7e7e7;padding:0;display:inline-block;height:180px;background-repeat:no-repeat;-webkit-background-size: cover;background-size: cover; background-image: url('#springUrl('')/img/dashboardImg/termination.jpg');"><span style="margin-top:100px;width:100%;background-color:rgba(255, 251, 251, 0.8);display:inline-block;text-align:center;height:60px;line-height:60px;font-size:19px" class ='terminationcount'>0</span></div>
+##			<div class="src col-lg-4 col-md-4 col-sm-4 col-xs-4" style="border-top:2px solid #e7e7e7;border-left:2px solid #e7e7e7;padding:0;display:inline-block;height:180px;background-repeat:no-repeat;-webkit-background-size: cover;background-size: cover; background-image: url('#springUrl('')/img/dashboardImg/transfer in.jpg');"><span style="margin-top:100px;width:100%;background-color:rgba(255, 251, 251, 0.8);display:inline-block;text-align:center;height:60px;line-height:60px;font-size:19px" class ='transferincount'>0</span></div>
+##			<div class="src col-lg-4 col-md-4 col-sm-4 col-xs-4" style="border-top:2px solid #e7e7e7;border-left:2px solid #e7e7e7;padding:0;display:inline-block;height:180px;background-repeat:no-repeat;-webkit-background-size: cover;background-size: cover; background-image: url('#springUrl('')/img/dashboardImg/transfer in.jpg');"><span style="margin-top:100px;width:100%;background-color:rgba(255, 251, 251, 0.8);display:inline-block;text-align:center;height:60px;line-height:60px;font-size:19px" class ='transferoutcount'>0</span></div>
+		</div>
+            </div>
+        #end
+    </div>
+#*    <div class="testbb" style="width: 300px;height:400px;float: left"></div>
+    <div class="testcc" style="width: 300px;height:400px;float: left"></div>*#
+</div>
+#dxFormTail($form)

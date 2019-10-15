@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.master.MasterDao">
+	<select id="selectDataSourceDesc" resultType="cn.com.easyerp.core.master.DataSourceDescModel">
+		select
+			name,
+			active,
+			seq,
+			case driver
+			when '' then null else driver end driver,
+			url,
+			username,
+			password,
+			default_account
+		from
+			sys_master
+		where active = #{active_flag}
+		order by default_account desc, seq desc
+	</select>
+</mapper>

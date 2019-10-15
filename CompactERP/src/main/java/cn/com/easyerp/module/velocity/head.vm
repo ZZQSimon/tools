@@ -1,0 +1,82 @@
+			<div style="text-align: center; font-weight: bold; margin-top: 10px">表头信息</div>
+			<table table="" class="dx-grid display dataTable no-footer dx-import-table" cellspacing="0"  width="100%">
+				#foreach ($head in ${form.headList})
+					#if($foreach.index == 0)
+				<thead>
+				<tr>
+					#if(${form.headList.size()} >0)
+						<th><input type="checkbox" class="cancel-select-all" name="cancel-select-all" onchange="allselect()" style="margin-right: 5px" /></th>
+					#end
+					#foreach ($data in $head.entrySet())	
+						#if(${data.key}!="flag_2")	
+							#set ($foundName = 0)	
+							#if(${form.titleName.size()} >1)
+								#foreach($title in ${form.titleName})
+									#if(${data.key}==${title.get('KEY2')})
+										<th>${title.get('CN')} </th>		
+										#set ($foundName = 1)
+									#end
+								#end
+							#end
+							#if($foundName ==0)	
+								<th>${data.key}</th>		
+							#end
+						#end
+					#end
+				</tr>		
+				</thead>
+				
+				<tbody>			
+					#end
+					<tr data-id="$!{head.get('keyid')}" style="cursor: pointer">
+						#if(${form.headList.size()} >0)
+							<td><input type="checkbox" class="cancel-select" name="cancel-select" value="$!{head.get('keyid')}" style="margin-right: 5px" /> </td>
+						#end
+					#foreach ($data in $head.entrySet())			
+						#if(${data.key}!="flag_2")
+							#if(${data.key} =="status")
+								#if($!{data.value} =="0")
+									<td>未导出</td>
+								#else
+									<td>已导出</td>
+								#end
+							#else
+								<td>$!{data.value}</td>	
+							#end 			
+						#end							
+					#end
+					</tr>
+				#end
+				</tbody>
+			</table>
+	
+	
+<script type="text/javascript">			
+	$(".cancel-select").change(function(){
+	
+		if($(".cancel-select:checked").length>0){
+			$("#cancel_btn").attr("disabled", false);
+			$("#export_btn").attr("disabled", false);
+		}
+		else{
+			$("#cancel_btn").attr("disabled", true);
+			$("#export_btn").attr("disabled", true);
+		}
+	});
+	
+	function allselect(){
+		$(".cancel-select").each(function(){
+  			$(this).prop("checked",!!$(".cancel-select-all").prop("checked"));
+  			});
+  		if($(".cancel-select:checked").length>0){
+			$("#cancel_btn").attr("disabled", false);
+			$("#export_btn").attr("disabled", false);
+		}
+		else{
+			$("#cancel_btn").attr("disabled", true);
+			$("#export_btn").attr("disabled", true);
+		}
+	}
+	
+		
+</script> 

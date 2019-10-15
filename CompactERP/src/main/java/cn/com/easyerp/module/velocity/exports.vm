@@ -1,0 +1,210 @@
+#dxFormHead($form)
+<form id="$form.id" name="ttt" class="form-inline dx-form" role="form" action="#springUrl('')/imports/upload.view">
+<div id="$form.id">
+	#dxMenuBarHead($form)
+	<button type="button" class="btn btn-default dx-submit" id="query_btn" disabled>查询</button>
+	<button type="button" class="btn btn-default btn-sm dx-grid-Import" disabled id="export_btn">导出</button>
+	<button type="button" class="btn btn-default btn-cancel" disabled id="cancel_btn">撤销</button>
+	#dxMenuBarFoot()
+	<div class="container" style="height:auto;padding:0;">
+		<div class="dx-detail-container">
+			<div class="row dx-detail-row">
+				<div class="form-group dx-field-4 dx-field-container">
+					<label class="control-label label-1" for="w_P99EjMo" style="width: auto; padding-right: 5%">类型</label>
+					<div class="input-group input-1">
+						<select id="typeexp" name="typeexp" class="dx-filter dx-filter-checkbox">
+								<option value="0" disabled selected style="border-bottom: 1px solid #000">请选择类型</option>
+							#foreach ($typeName in ${form.typeName})								
+								<option value="0" disabled style='background-color: #000; color: #FFF; '>$!{typeName}</option>
+								#foreach($typeexp in ${form.typeList.get($typeName)})
+									<option value="$!{typeexp.get('CODE')}">&nbsp;&nbsp;&nbsp;$!{typeexp.get('NAME')}</option>
+								#end
+							#end							
+						</select>
+					</div>
+				</div>
+				<div class="form-group dx-field-8 dx-field-container">
+					<label class="control-label label-1" for="w_P99EjMp" style="width: auto; padding-right: 5%">开始日期</label>
+					<div class="input-group input-1" style="width: auto">
+						<input type="text" dx-date="true" class="start_date" readonly="true" />
+					</div>
+					<label class="control-label label-1" for="w_P99EjMp" style="width: auto; padding-right: 5%">结束日期</label>
+					<div class="input-group input-1" style="width: auto">
+						<input type="text" dx-date="true" class="end_date" readonly="true" disabled />
+					</div>
+					<label class="control-label label-1" for="w_P99EjMp" style="width: auto; padding-right: 5%">导出状态</label>
+					<div class="input-group input-1" style="width: auto ">
+						<select id="status" name="status" class="dx-status dx-filter-checkbox">
+								<option value="-1"  selected >请选择</option>
+								<option value="0"   >未导出</option>
+								<option value="1"   >已导出</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+				
+		<div class="dx-grid-container dx-div-with-scroll" style="overflow:auto;max-height:300px;" id="dataHead">
+		</div>
+		<div class="dx-grid-container dx-div-with-scroll" style="overflow:auto;max-height:300px;" id="dataBody">
+		</div>	
+			
+	</div>
+</div>
+</form>
+#dxFormTail($form)
+<div class="hidden" id="${form.id}_msg">
+</div>
+
+
+<script type="text/javascript">
+var typeexp="";
+
+$(document).ready(function(){  
+	$("input[dx-date='true']").datepicker({
+		format: "yyyy-mm-dd",
+		language: "zh-CN",
+		autoclose: true,
+	})
+	
+	$(".start_date").change(changeEndDate);
+	$(".end_date").change(compareDate);
+	$(" #typeexp").change(changeBtn);
+	$("#query_btn").click(queryHead);
+	$("#export_btn").click(exportXml);
+	$("#cancel_btn").click(cancelStatus);
+	$(document).on("click", "#dataHead table tbody tr", null, queryBody);
+	
+});  
+
+//改变结束日期状态
+function changeEndDate(e){
+	if($(this).val()!=""){
+		$(".end_date").attr("disabled", false).change();
+	}
+	else
+	{
+		$(".end_date").attr("disabled", true).html("");
+	}
+}
+
+//判断时间大小
+function compareDate(e){
+	if($(this).val()!=""){
+		var minDate=$(".start_date").val().split("-");
+		var current=$(this).val().split("-");
+		//比较年
+		if(parseInt(minDate[0])>parseInt(current[0])){
+			$(this).val("").attr("placeholder", "结束日期应大于开始日期！");
+			changeBtn();
+		}
+		else if(parseInt(minDate[0])<parseInt(current[0])){
+			 changeBtn();
+		}
+		else{
+			//比较月
+			if(parseInt(minDate[1])>parseInt(current[1])){
+				$(this).val("").attr("placeholder", "结束日期应大于开始日期！");
+				changeBtn();
+			}
+			else if(parseInt(minDate[1])<parseInt(current[1])){
+				changeBtn();
+			}
+			else{
+				//比较日
+				if(parseInt(minDate[2])>parseInt(current[2])){
+					$(this).val("").attr("placeholder", "结束日期应大于开始日期！");
+					changeBtn();
+				}
+				else{
+					changeBtn();
+				}
+			}
+		}
+	}
+}
+
+//改变按钮状态
+function changeBtn(e){
+	if($(".start_date").val()!=""&&$(".end_date").val()!=""&&$("#typeexp>option:selected").val()!="0"){
+		$("#query_btn").attr("disabled", false);
+	}
+	else
+	{
+		$("#query_btn").attr("disabled", true);
+	}
+}
+
+//查询表头
+function queryHead(){
+	typeexp=$("#typeexp").val();
+
+	var request = {};
+	request.typeexp = $("#typeexp").val();
+	request.start =$(".start_date").val();
+	request.end=$(".end_date").val();
+	request.status = $("#status").val();
+	//提交返回数据
+	postPage('/export/queryHead.view',request, function (result) {
+		$("#dataHead").html(result);
+		
+	} , function (msg) {
+		messageBox(msg);	//失败Msg
+	} );
+}
+
+//查询表体
+function queryBody(){
+	var request={};
+	request.keyid=$(this).attr("data-id");
+	request.typeexp=typeexp;
+	
+	//提交返回数据
+	postPage('/export/queryBody.view',request, function (result) {
+		$("#dataBody").html(result);
+		
+	} , function (msg) {
+		messageBox(msg);	//失败Msg
+	} );
+}
+
+//导出xml
+function exportXml(e) {
+	var request = {};
+	request.typeexp = $("#typeexp>option:selected").val();
+	request.start=$(".start_date").val();
+	request.end=$(".end_date").val();
+	request.keyid =new Array();
+	$(".cancel-select:checked").map(function(index){
+		request.keyid.push($(this).val());
+	});
+	//提交返回数据
+	postJson('/export/exportXml.do',request, function (result) {
+		$("#cancel_btn, #export_btn").attr("disabled", true);
+		window.open("/dx/"+result);
+		
+	} , function (msg) {
+		messageBox(msg);	//失败Msg
+	});	
+}
+  
+ //取消已导出状态
+function cancelStatus(e) {
+	var request = {};
+	request.keyid =new Array();
+	request.typeexp =  $("#typeexp>option:selected").val();
+	$(".cancel-select:checked").map(function(index){
+		request.keyid.push($(this).val());
+	});
+	//提交返回数据
+	postJson('/export/cancelStatus.do',request, function (result) {
+		$("#cancel_btn, #export_btn").attr("disabled", true);
+		alert("导出状态撤销成功！");
+		
+	} , function (msg) {
+		messageBox(msg);	//失败Msg
+	});	
+}
+
+</script> 
+

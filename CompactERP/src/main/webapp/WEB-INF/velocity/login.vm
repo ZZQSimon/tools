@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Login Page</title>
+	<link href="#springUrl('')/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="#springUrl('')/css/login.css" rel="stylesheet">
+
+	<script src="#springUrl('')/js/jquery-1.11.0.min.js"></script>
+	<script src="#springUrl('')/js/bootstrap/js/bootstrap.min.js"></script>
+    <script src="#springUrl('')/js/dialog/js/bootstrap-dialog.min.js"></script>
+    #set ($contextRoot = "#springUrl('')")
+    <script>
+        function makeLoginUrl(path) {
+            return '$contextRoot' + path
+        }
+    </script>
+    <script src="#springUrl('')/js/login.js"></script>
+	<script>
+		function makeUserName() {
+			$('#username').val($('#susername').val() + '@' + $('#datasource').val())
+		}
+	</script>
+</head>
+<body>
+    <form action="#springUrl('')/auth/login2.view" class="login1">
+        <input type="hidden" name="subjectID" class="subjectID">
+        <input type="hidden" name="backgroundID" class="backgroundID">
+    </form>
+</body>
+</html>

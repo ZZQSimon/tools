@@ -1,0 +1,42 @@
+#dxFormHead($form)
+<form id="$form.id" class="dx-form" name="$form.widgetName">
+<div id="$form.id">
+	#dxMenuBarHead($form)
+	<span class="btn btn-success fileinput-button">
+        <span>$dx.msg("Import")</span>
+        <input type="file" name="files[]" class="dx-import-import" multiple>
+	</span>
+	<button type="button" class="btn btn-default btn-sm dx-import-Save">$dx.msg("Save")</button>
+	#dxMenuBarFoot()
+	<div class="container" style="height:auto;padding:0;">
+		<div class="dx-grid-container dx-auto-expand dx-div-with-scroll" style="overflow:auto;height:300px">
+			<table table="" class="dx-grid display dataTable no-footer dx-import-table" cellspacing="0" width="100%">
+				<thead>
+					<tr>
+						<th>$dx.msg('rowid')</th>
+						#foreach($column in $form.columns)
+							#if (!$column.virtual && ($column.data_type != 6))
+								<th>$dx.i18n($column.i18n)</th>
+							#end
+						#end
+					</tr>
+				</thead>
+				<tbody>
+					#set($index = 1)
+					#foreach($record in ${form.records})
+						<tr id = "${record.id}">
+							<td style="font-size:12px;">$index</td>
+							#foreach($field in ${record.fields})
+								#set($desc = $dx.desc($field))
+								<td>#dxFieldInput($field,$desc,"ui-widget dx-field dx-import-input dx-readonly")</td>
+							#end
+							#set($index = $math.add($index,1))
+						</tr>
+					#end
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</form>
+#dxFormTail($form)

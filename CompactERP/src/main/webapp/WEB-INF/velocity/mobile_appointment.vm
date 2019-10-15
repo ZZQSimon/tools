@@ -1,0 +1,14 @@
+#dxFormHead($form)
+<form id="$form.id" name="appointment" class="form-inline fc-event-detail dx-detail-form dx-form clearfix pc-tab-form" role="form"">
+    <div class="gm-top-menu"> 
+        <div class="top-menu-title pull-left">车辆预约</div>   
+    </div>
+    <div class="form-filter">   
+    </div>
+    <div class="booking-details">  
+    </div>
+    <div class="btn-toolbar">  
+        <input type="button"  value="立即预约">
+    </div>
+</form>
+#dxFormTail($form)

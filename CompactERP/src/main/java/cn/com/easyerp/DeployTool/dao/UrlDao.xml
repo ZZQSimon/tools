@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.UrlDao">
+<select id="findAllUrl" resultType="cn.com.easyerp.DeployTool.service.Url">
+SELECT id,name,url,param,memo,router_url,module FROM c_url  
+</select>
+<insert id="addUrl" parameterType="java.util.List">
+INSERT INTO c_url (
+	id,
+	name,
+	url,
+	param,
+	memo,
+	router_url,
+	module
+)
+VALUES
+	<foreach collection="list" item="item" index="index" separator=",">
+	(UUID(),#{item.name},#{item.url},#{item.param},#{item.memo},#{item.router_url},#{item.module})
+	</foreach>
+</insert>
+<update id="updUrl" parameterType="java.util.List">
+<foreach collection="list" item="item" index="index" separator=";">
+UPDATE c_url
+<set>
+	<if test="item.name != null">
+	name = #{item.name,jdbcType=VARCHAR},</if>
+	<if test="item.url != null">
+	url = #{item.url,jdbcType=VARCHAR},</if>
+	<if test="item.param != null">
+	param = #{item.param,jdbcType=VARCHAR},</if>
+	<if test="item.memo != null">
+	memo = #{item.memo,jdbcType=VARCHAR},</if>
+	<if test="item.router_url != null">
+	router_url = #{item.router_url,jdbcType=VARCHAR},</if>
+	<if test="item.module != null">
+	module = #{item.module,jdbcType=VARCHAR},</if>
+	</set>
+WHERE
+	id = #{item.id,jdbcType=VARCHAR}
+	</foreach>
+</update>
+<delete id="deleteUrl">
+DELETE  FROM c_url WHERE id in (
+<foreach collection="list" item = "item" separator=",">
+#{item.id}
+</foreach>
+)
+</delete>
+</mapper>

@@ -1,0 +1,50 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="message" class="form-inline dx-form clearfix" role="form"">       ##基本上照抄即可
+<div class="map-body clearfix">
+
+    <div class="dx-field-9 map" >
+        <div class="search">
+            <input class="searchAddr" type="text" placeholder="查找地点">
+            <button class="searchBtn fa fa-search"  aria-hidden="true" type="button"></button>
+        </div>
+        <div id="dxaddrmap"></div>
+    </div>
+    <div class="dx-field-3 address">
+        <div class="addr-head">考勤地点</div>
+        <ul class="area-ul">
+            
+        </ul>
+        <div class="addr-btn" >
+            <button type="button" data-toggle="modal" data-target="#mapModal">＋</button>
+            <button type="button" class="addr-del">－</button>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal dx-modal-md" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                <h4 class="modal-title" >添加地点</h4>
+                ##id="myModalLabel"
+              </div>
+              <div class="modal-body">
+                  <div class="form-group">
+                    <label class="label-1">名称</label>
+                    <input type="text" class="input-1 address-name" placeholder="请填写地点名称">
+                  </div>
+                  <div class="form-group">
+                    <label class="label-1">地址</label>
+                    <input type="text" class="input-1 address-detail" placeholder="请填写具体地址（如街道、门牌号）">
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="button-color3 addr-add" data-dismiss="modal">确定</button>
+                <button type="button" class="button-color4" data-dismiss="modal">取消</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+#dxFormTail($form)

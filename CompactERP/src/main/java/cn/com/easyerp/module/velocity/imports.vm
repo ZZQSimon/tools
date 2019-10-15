@@ -1,0 +1,197 @@
+#dxFormHead($form)
+<form id="$form.id" name="ttt" class="form-inline dx-form" role="form" action="#springUrl('')/imports/upload.view">
+<div id="$form.id">
+	#dxMenuBarHead($form)
+	<button type="button" class="btn btn-default dx-submit" id="update_btn" disabled>更新</button>
+	#dxMenuBarFoot()
+	<div class="container" style="height:auto;padding:0;">
+		<div class="dx-detail-container">
+			<div class="row dx-detail-row">
+				<div class="form-group dx-field-4 dx-field-container">
+					<label class="control-label label-1" for="w_P99EjMo">类型</label>
+					<div class="input-group input-1">
+						<select id="type" name="type" class="dx-filter dx-filter-checkbox">
+								<option value="0" selected disabled>请选择类别</option>
+							#foreach ($field in ${form.typeList})								
+								<option value="$!{field.get('CODE')}">$!{field.get('NAME')}</option>
+							#end							
+						</select>
+					</div>
+				</div>
+				<div class="form-group dx-field-6 dx-field-container">
+					<label class="control-label label-1" for="w_P99EjMp">XML文件</label>
+					<div class="input-group input-1">
+						<button type="button" id="upload_btn" style="height: 20px">选择文件</button>
+						<span id="file_display" style="padding-left: 10px;">没有选择文件！</span>
+						<input type="file" accept="application/xml" id="xmlFile" name="file" required style="display: none;" />
+	       				<input type="hidden" id="xmlFileId" name="uuid" >
+					</div>
+				</div>
+
+		<div class="pull-right">
+			<button type="button" class="btn btn-default dx-filter-reset"  id="read_btn" disabled title="请选择文件">
+				读入
+			</button>
+		</div>				
+				
+			</div>
+				
+		<div class="dx-grid-container dx-div-with-scroll" style="overflow:auto;height:300px">
+			<table table="" class="dx-grid display dataTable no-footer dx-import-table" cellspacing="0" width="100%" >
+				<thead>
+					<tr>
+						<th>代码</th>
+						<th>名称<span id="data_resource" style="float: right"></span></th>
+					</tr>
+				</thead>
+				<tbody id="display">
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</form>
+#dxFormTail($form)
+<div class="hidden" id="${form.id}_msg">
+</div>
+
+
+<script type="text/javascript">  
+var filename;
+var xmlResult="";
+
+$(document).ready(function(){  
+
+	//上传按钮回调函数
+	initFileUploadButtonB($('#xmlFile'), function(uuid) {
+		$('#xmlFileId').val(uuid);
+		$("#read_btn").attr("title", "");
+		//改变disable状态
+		if($("#type>option:selected").val()!="0"){
+			$("#read_btn").attr("disabled", false);
+			$("#update_btn").attr("disabled", false);
+		}
+		
+		//显示文件名
+		$("#file_display").html("您已选择："+filename);
+		
+		
+	});
+	
+	$("#type").change(displaySelected);
+	$("#read_btn").click(readXml);
+	$("#update_btn").click(importXml);
+	$("#upload_btn").click(function(e){
+		$("#xmlFile").click();
+	})
+	
+});  
+
+//选择类别
+function displaySelected(e){
+	var type=$(this).children("option:selected").val();
+	if(type=="0"){
+		$("#read_btn").attr("disabled", true);
+		$("#display").html("");
+	}
+	else{
+		var request = {};
+		request.type = $(this).children("option:selected").val();
+		postJson('/imports/displayData.do', request, function (msg){
+			$("#display").html(msg);
+			$("#data_resource").html("来自数据库");
+		}, function (msg){
+			alert(msg);
+		});
+		if($("#xmlFileId").val()!=""){
+			$("#read_btn").attr("disabled", false);
+			$("#update_btn").attr("disabled", false);
+		}
+		else{
+			$("#read_btn").attr("disabled", true);
+			$("#update_btn").attr("disabled", true);
+		}
+	}
+}
+
+//读入xml
+function readXml(e){
+	var request={};
+	request.type=$("#type").val();
+	request.uuid=$("#xmlFileId").val();
+	//提交数据
+	postJson('/imports/readXml.do',request, function (result) {
+		$("#data_resource").html("来自"+filename);
+		$("#xmlFileId").val("");
+		$("#read_btn").attr("disabled", true);
+		xmlResult="";
+		switch(result["status"]){
+			case "success"	:
+			{
+				var data=result["data"];
+				var html;
+				for(var i=0; i<data.length; i++){
+					html+="<tr><td>"+data[i]["code"]+"</td><td>"+data[i]["name"]+"</td></tr>";
+					xmlResult+=data[i]["code"]+"@@@"+data[i]["name"]+"&&&";
+				}
+				$("#display").html(html);
+				break;
+			}
+			case "invalid":
+			{
+				$("#display").html("<tr><td colspan='2' style='text-align: center'>解析失败！请检查XML文件格式！</td></tr>");
+				break;
+			}
+		}
+		
+	} , function (result) {
+		messageBox(result);	//失败Msg
+	} );	
+}
+
+//导入xml
+function importXml() {
+	$("#read_btn").attr("disabled", true);
+	var request = {};
+	request.type = $("#type").val();
+	if($("#xmlFileId").val()==""){
+		request.data=xmlResult;
+	}
+	else
+	{
+		request.uuid=$("#xmlFileId").val();
+	}
+	//提交返回数据
+	postJson('/imports/importXml.do',request, function (msg) {
+		messageBox(msg);	//成功Msg
+		$("#xmlFileId").val("");
+		$("#update_btn").attr("disabled", true);
+		$("#type").change();
+	} , function (msg) {
+		messageBox(msg);	//失败Msg
+	} );	
+}
+
+//选择文件后上传文件
+function initFileUploadButtonB(fileObject, callback) {
+	fileObject.fileupload({
+		dataType: 'json ',
+		url: makeUrl('/storage/upload.do'),
+		autoUpload: true,
+		add: function (e, data) {
+			data.url = makeUrl('/storage/upload.do');
+			progressBox('uploading', data.files[0].name);
+			data.submit();
+			filename=data.files[0].name;
+		},
+		done: function (e, data) {
+			hidePorgressBox();
+			checkJsonResult(data.result, function (uuid) {
+				callback(uuid);
+			});
+		}
+	});
+}
+
+</script> 
+

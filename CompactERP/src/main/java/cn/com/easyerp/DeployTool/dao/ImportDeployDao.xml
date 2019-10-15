@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.ImportDeployDao">
+
+	<select id="selectBasicDeploy" resultType="java.util.Map">
+		select
+		international_id as id, ${lan} as lan from c_international where
+		international_id = 'deploy_base_table'
+		or
+		international_id = 'deploy_professional_table'
+
+	</select>
+	
+	<select id="getImportDeploy" resultType="cn.com.easyerp.DeployTool.view.ImportDeployModel">
+        select 
+        table_id,
+		batch_id,
+		statement,
+		update_statement,
+		case LENGTH(interceptor_service)
+		when 0
+		then null
+		else interceptor_service end interceptor_service,
+		case LENGTH(service_param)
+		when 0
+		then null
+		else service_param end       service_param,
+		memo,
+		module,
+		column_mapper,
+		is_insert,
+		is_update,
+		update_keywords,
+		create_trigger
+		from c_batch where table_id =#{tableName}
+    </select>
+    
+    <select id="isExistsImport" resultType="java.lang.Integer">
+        select 
+        count(*)
+		from c_batch where table_id =#{tableName}
+    </select>
+    
+    <insert id="saveImportDeploy">
+        INSERT INTO `c_batch` (`table_id`, `batch_id`, `statement`, `memo`, `interceptor_service`, `service_param`, `module`, `column_mapper`,`is_insert`,`is_update`,`update_keywords`,`create_trigger`,`update_statement`) 
+        	VALUES (#{import.table_id},#{import.batch_id},#{import.statement},#{import.memo},#{import.interceptor_service},#{import.service_param},#{import.module},#{import.column_mapper},#{import.is_insert},#{import.is_update},#{import.update_keywords},#{import.create_trigger},#{import.update_statement});
+    </insert>
+    
+    <select id="getTableDesctribeById" resultType="cn.com.easyerp.core.cache.TableDescribe">
+        select *
+        from c_table
+        where id = #{tableName}
+    </select>
+    
+    <select id="getI18NByid" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+        SELECT
+        '' type,
+        international.international_id,
+        international.international_id key1,
+        '' key2,
+        replace(replace(international.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as cn,
+		replace(replace(international.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as en,
+		replace(replace(international.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as jp,
+		replace(replace(international.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other1,
+		replace(replace(international.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other2
+        FROM c_international international
+        JOIN c_table t
+        on international.international_id=t.international_id
+        WHERE t.id=#{tableName}
+    </select>
+    
+    <insert id="insertI18N">
+		INSERT INTO `c_international` (
+		`international_id`, 
+		`type`, 
+		`cn`, 
+		`en`,
+		`jp`, 
+		`other1`, 
+		`other2`
+		) 
+		VALUES 
+		(#{il8n.international_id}, #{il8n.type}, #{il8n.cn}, #{il8n.en}, #{il8n.jp}, #{il8n.other1}, #{il8n.other2});
+	</insert>
+	
+	<insert id="insertTable">
+        INSERT INTO `c_table` 
+        (
+        	`id`,  `readonly`,  `group_name`,   `default_group_column`,  `logable`, `view_style`,  `table_type`, `detail_disp_cols`, `valid_date_cols`, `valid_date_cond_disp`, `valid_date_group_cols`, `seq`,  `auto_gen_sql`, `international_id`,  `is_auth`, `module`, `is_approve_state`
+        ) 
+		VALUES (
+			#{table.id},#{table.readonly},#{table.group_name},#{table.default_group_column},#{table.logable},#{table.view_style},#{table.table_type},#{table.detail_disp_cols},#{table.valid_date_cols},#{table.valid_date_cond_disp},#{table.valid_date_group_cols},#{table.seq},#{table.auto_gen_sql},#{table.international_id},#{table.is_auth},#{table.module},#{table.is_approve_state}
+		)
+    </insert>
+    
+    <select id="selectColumnDescribeByTable" resultType="cn.com.easyerp.core.cache.ColumnDescribe" parameterType="string">
+        select
+        table_id,
+        column_name,
+        url_id,
+        is_id_column,
+        international_id,
+        virtual,
+        case LENGTH(tab_name)
+        when 0
+        then null
+        else tab_name end            tab_name,
+        case LENGTH(group_name)
+        when 0
+        then null
+        else group_name end          group_name,
+        data_type,
+        case LENGTH(data_format)
+        when 0
+        then null
+        else data_format end         data_format,
+        min_len,
+        max_len,
+        is_condition,
+        case LENGTH(dic_id)
+        when 0
+        then null
+        else dic_id end              dic_id,
+        case LENGTH(ref_table_name)
+        when 0
+        then null
+        else ref_table_name end      ref_table_name,
+        case LENGTH(ref_table_cols)
+        when 0
+        then null
+        else ref_table_cols end      ref_table_cols,
+        case LENGTH(ref_table_sql)
+        when 0
+        then null
+        else ref_table_sql end       ref_table_sql,
+        case LENGTH(ref_table_filter)
+        when 0
+        then null
+        else ref_table_filter end    ref_table_filter,
+        ref_table_display,
+        ref_table_new,
+        case LENGTH(formula)
+        when 0
+        then null
+        else formula end             formula,
+        case LENGTH(default_value)
+        when 0
+        then null
+        else default_value end       default_value,
+        case LENGTH(prefix)
+        when 0
+        then null
+        else prefix end              prefix,
+        case LENGTH(suffix)
+        when 0
+        then null
+        else suffix end              suffix,
+        sum_flag,
+        ro_insert,
+        ro_update,
+        case LENGTH(read_only_condition)
+        when 0
+        then null
+        else read_only_condition end read_only_condition,
+        read_only_clear,
+        ifnull(hidden, 0)            hidden,
+        wrap,
+        case LENGTH(view_style)
+        when 0
+        then null
+        else view_style end          view_style,
+        is_multiple,
+        cell_cnt,
+        case LENGTH(ref_table_tree)
+        when 0
+        then null
+        else ref_table_tree end      ref_table_tree,
+        case LENGTH(link_json)
+        when 0
+        then null
+        else link_json end           link_json,
+        seq,
+        nesting_column_name,
+        memo
+        from c_column
+        where table_id=#{tableName}
+        order by
+        table_id, seq
+    </select>
+    
+    <insert id="addColumn">
+    	INSERT INTO `c_column` (`table_id`, `column_name`, `url_id`,`virtual`, `data_type`, `max_len`,`is_multiple`,  `ro_insert`, `ro_update`, `hidden`, `wrap`, `cell_cnt`, `seq`, `ref_table_new`,  `international_id`, `is_id_column`) 
+    		VALUES (#{col.table_id},#{col.column_name},'',#{col.virtual},#{col.data_type},#{col.max_len},#{col.is_multiple},#{col.ro_insert},#{col.ro_update},#{col.hidden},#{col.wrap},#{col.cell_cnt},#{col.seq},#{col.ref_table_new},#{col.international_id},#{col.is_id_column})
+    </insert>
+    
+    <insert id="createTable">
+      ${sql}
+    </insert>
+    
+    <delete id="delImportDeploy">
+        DELETE FROM c_batch
+        WHERE table_id = #{tableName}
+    </delete>
+    
+    <delete id="delTable">
+        DELETE FROM c_table
+        WHERE id = #{tableName}
+    </delete>
+    
+    <delete id="delTableI18n">
+        DELETE FROM c_international
+        WHERE international_id = #{tableName}
+    </delete>
+    
+    <delete id="delColumns">
+        DELETE FROM c_column
+        WHERE table_id = #{tableName}
+    </delete>
+    
+    <insert id="addI18n">
+    	INSERT INTO `c_international` (`international_id`, `cn`, `cre_date`) 
+    		VALUES (#{international_id},#{cn},now());
+    </insert>
+    
+    <select id="getI18nsByTable" resultType="String">
+        SELECT     
+        	international_id 
+        FROM 
+        	c_column
+        WHERE 
+        	table_id=#{tableName}
+    </select>
+    
+    <delete id="delI18nWithList">
+		DELETE  FROM c_international WHERE international_id in (
+		<foreach collection="list" item = "item" separator=",">
+		#{item}
+		</foreach>
+		)
+	</delete>
+	
+	<delete id="dropTable">
+		DROP TABLE
+		IF EXISTS ${table}
+    </delete>
+    
+    <insert id="createImportProcedure">
+		${sql}
+    </insert>
+    
+    <select id="getTableIdByBatchId" resultType="String">
+        SELECT     
+        	table_id 
+        FROM 
+        	c_batch
+        WHERE 
+        	batch_id=#{batchId}
+    </select>
+    
+    <select id="callSysImportApi">
+        CALL ${apiName} ('uuid', #{userId});
+    </select>
+    
+    <update id="updateImportDeploy">
+    	UPDATE
+			`c_batch` 
+		SET 
+			`table_id`=#{import.table_id}, 
+			`statement`=#{import.statement}, 
+			`memo`=#{import.memo}, 
+			`interceptor_service`=#{import.interceptor_service}, 
+			`service_param`=#{import.service_param}, 
+			`module`=#{import.module}, 
+			`column_mapper`=#{import.column_mapper},
+			`is_insert`=#{import.is_insert},
+			`is_update`=#{import.is_update},
+			`update_keywords`=#{import.update_keywords},
+			`update_statement`=#{import.update_statement},
+			`create_trigger`=#{import.create_trigger}
+			
+		WHERE 
+			`batch_id`=#{import.batch_id}
+    </update>
+    
+    <update id="updTableIsImport">
+    	UPDATE c_table
+		SET `is_import` = #{is_import}
+		WHERE
+			id = #{table}
+    </update>
+</mapper>

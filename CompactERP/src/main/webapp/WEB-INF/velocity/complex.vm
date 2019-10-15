@@ -1,0 +1,49 @@
+#dxFormHead($form)
+<form id="$form.id" class="dx-form" name="$form.widgetName">
+	#dxMenuBarHead($form)
+	#if ($form.action != "view")
+		<button type="button" class="btn btn-default btn-sm dx-complex-save">$dx.msg("Save")</button>
+	#end
+	<button type="button" class="btn btn-default btn-sm dx-btn-cancel">$dx.msg("Cancel")</button>
+	#dxMenuBarFoot()
+	<div class="container" style="height:auto;">
+		<table id="$form.grid.id" class="dx-grid display cell-border" cellspacing="0" width="100%">
+			<thead>
+			<tr>
+				<th>
+					#if ($form.desc.extended)
+						<button type="button" class="btn btn-default btn-xs dx-grid-add">
+							<span class="glyphicon glyphicon-plus"></span>
+						</button>
+					#else
+						rowid
+					#end
+				</th>
+				#foreach($column in $form.columns)
+					#if ($form.desc.extended)
+						<th>$dx.columnLabel($form.desc.detail_tbl, $column)</th>
+					#else
+						<th>$dx.columnLabel($form.desc.base_tbl, $column)</th>
+					#end
+				#end
+			## table contain current complex column
+				#set($desc = $dx.desc($form.tableName, $form.column))
+				<th>$dx.i18n($desc.i18n)</th>
+			</tr>
+			</thead>
+			<tbody>
+			</tbody>
+			<tfoot>
+			<tr>
+				<th/>
+				#foreach($column in $form.columns)
+					<th/>
+				#end
+				<th/>
+			</tr>
+			</tfoot>
+
+		</table>
+	</div>
+</form>
+#dxFormTail($form)

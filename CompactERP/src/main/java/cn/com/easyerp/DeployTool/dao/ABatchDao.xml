@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.ABatchDao">
+<select id="selectBatch" resultType="cn.com.easyerp.DeployTool.service.ABatch">
+SELECT batch_id,statement,memo,interceptor_service,service_param,module FROM c_batch
+</select>
+<insert id="addBatch" parameterType="java.util.List">
+INSERT INTO c_batch (
+	batch_id,
+	statement,
+	memo,
+	interceptor_service,
+	service_param,
+	module
+)
+VALUES
+<foreach collection="list" item="item" index="index" separator=",">
+	(UUID(),#{item.statement},#{item.memo},#{item.interceptor_service},#{item.service_param},#{item.module})
+	</foreach>
+</insert>
+<update id="updBatch" parameterType="java.util.List">
+<foreach collection="list" item="item" index="index" separator=";">
+	UPDATE c_batch
+	<set>
+	<if test="item.statement != null">
+	statement = #{item.statement,jdbcType=VARCHAR},</if>
+	<if test="item.memo != null">
+	memo = #{item.memo,jdbcType=VARCHAR},</if>
+	<if test="item.interceptor_service != null">
+	interceptor_service = #{item.interceptor_service,jdbcType=VARCHAR},</if>
+	<if test="item.service_param != null">
+	service_param = #{item.service_param,jdbcType=VARCHAR},</if>
+	<if test="item.module != null">
+	module = #{item.module,jdbcType=VARCHAR},</if>
+	</set>
+WHERE
+	batch_id = #{item.batch_id}
+	</foreach>
+</update>
+<delete id="DeleteBatch" >
+	DELETE  FROM c_batch WHERE batch_id in (
+<foreach collection="list" item = "item" separator=",">
+#{item.batch_id}
+</foreach>
+)
+	</delete>
+</mapper>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
+    <title>Title</title>
+    <link rel="stylesheet" href="#springUrl('')/js/bootstrap/css/bootstrap.css">
+    <!--<link rel="stylesheet" href="#springUrl('')/js/login.css">-->
+    <link rel="stylesheet" href="#springUrl('')/js/webuploader-0.1.5/webuploader.css">
+    <link rel="stylesheet" href="#springUrl('')/js/webuploader-0.1.5/style.css">
+    <link rel="stylesheet" href="#springUrl('')/css/reg.css">
+    <script src="#springUrl('')/js/jquery-1.11.0.js"></script>
+    <script src="#springUrl('')/js/webuploader-0.1.5/webuploader.min.js"></script>
+    <script src="#springUrl('')/js/webuploader-0.1.5/upload.js"></script>
+  #set ($contextRoot = "#springUrl('')")
+   <script>
+    function makeLoginUrl(path) {
+        return '$contextRoot' + path
+    }
+</script>
+</head>
+<body>
+<div class="dx-reg" id="dx-reg-corp">
+    <header class="dx-header">
+    </header>
+    <section class="content_box corp-info-bd">
+        <div  class="reg-title-o">
+            <div href="#1">
+                <img src="#springUrl('')/img/logo-.png" />
+                欢迎加入我们
+            </div>
+        </div>
+    <div class="corp-info">
+        <div class="corp-info-main form-signin">
+            <h2>公司基本信息</h2>
+            <form action="#springUrl('')/auth/saveCompany.view" enctype="multipart/form-data" method="post">
+                <div class="form-div">
+                    <label><span>*</span>公司账号</label>
+                    <input type="text" class="input-control" name="companyId" value="#if($companyId) $companyId #end" placeholder="3-10位字母、数字、下划线组成">
+                    #if ($massage)
+                		<span class="glyphicon glyphicon-exclamation-sign">$massage</span>
+           			#end
+                </div>
+                <div class="form-div">
+                    <label><span>*</span>公司全称</label>
+                    <input type="text" class="input-control" name="companyName" value="#if($companyName) $companyName #end" placeholder="需要与营业执照上完全一致">
+                </div>
+                <div class="form-div">
+                    <label><span>*</span>公司简称</label>
+                    <input type="text" class="input-control" name="companyName_abbreviation" value="#if($companyName_abbreviation) $companyName_abbreviation #end">
+                </div>
+                <div class="form-div clearfix">
+                    <label class="form-div-label"><span>*</span>公司LOGO</label>
+                    <div class="queueList">
+                        <label class="uploader-label">
+                            <img src="" id="file-corplogo"/>
+                            <input type="file" accept="image/png, image/jpeg" id="slccorplogo" name="logo"/>
+                            +
+                        </label>
+                    </div>
+                    <p class="uploader-text">48*48以上，不超过2MB，最好为png透明格式</p>
+
+                    <!--<div id="uploader">
+                        <div class="queueList">
+                            <div id="dndArea" class="placeholder">
+                                <div id="filePicker"></div>
+                                <p>48*48以上，不超过2MB，最好为png透明格式</p>
+                            </div>
+                        </div>
+                        <div class="statusBar" style="display:none;">
+                            <div class="progress">
+                                <span class="text">0%</span>
+                                <span class="percentage"></span>
+                            </div><div class="info"></div>
+                            &lt;!&ndash;<div class="btns">
+                                <div id="filePicker2"></div><div class="uploadBtn">开始上传</div>
+                            </div>&ndash;&gt;
+                        </div>
+                    </div>-->
+                    <!--<div id="uploader-demo">
+                        &lt;!&ndash;用来存放item&ndash;&gt;
+                        <div id="fileList" class="uploader-list"></div>
+                        <div id="filePicker" class="glyphicon glyphicon-plus"></div>
+                    </div>-->
+                </div>
+               
+                <button type="submit" class="btn-OK aaaaa">进入首页</button>
+            </form>
+        </div>
+    </div>
+    <form action="#springUrl('')/auth/joinCompany.view" class="join_company_form"></form>
+</section>
+</div>
+<script type="text/javascript">
+	 function getRootPath(){
+	 return makeLoginUrl('');
+} 
+
+    $("#slccorplogo").change(function(e){
+        $("#file-corplogo").css({"display":"block"});
+
+        var preview = document.querySelector("#file-corplogo");
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
+        reader.onloadend = function () {
+
+            preview.src = reader.result;
+            $("#dx-reg-corp").css("background",reader.result);
+        }
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "";
+            $("#file-corplogo").css({"display":"none"});
+        }
+    });
+</script>
+</body>
+</html>

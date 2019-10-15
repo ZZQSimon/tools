@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.LogDao">
+	<insert id="insertLogNew">
+		insert into c_log (
+		id,
+		ts,
+		user_id,
+		type,
+		target_id,
+		context,
+		status,
+		exception
+		) values (
+		#{id},
+		#{ts},
+		#{user_id},
+		#{type},
+		#{target_id},
+		#{context},
+		#{status},
+		#{exception}
+		)
+	</insert>
+	<insert id="insertLogTemp">
+		insert into c_log (
+		id,
+		ts,
+		user_id,
+		type
+		) values (
+		#{id},
+		#{ts},
+		#{user_id},
+		#{type}
+		)
+	</insert>
+	<update id="updateLogNormal">
+		update c_log set
+		`target_id` = #{target_id},
+		`context` = #{context},
+		`status` = #{status}
+		where `id` = #{id}
+	</update>
+	<update id="updateLogException">
+		update c_log set
+		`target_id` = #{target_id},
+		`context` = #{context},
+		`status` = #{status},
+		`exception` = #{exception}
+		where `id` = #{id}
+	</update>
+</mapper>

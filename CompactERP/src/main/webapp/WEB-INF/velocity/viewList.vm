@@ -1,0 +1,62 @@
+#dxFormHead($form)
+<div id="$form.id" class="dx-form" name="$form.widgetName">
+##    <div>
+	#dxMenuBarHead($form)
+        #set($table =$dx.table($form.grid.table))
+        <div class="dx-form-top-bar-left lex-dx-form-top-bar-left">
+            #dxHeardButton($table.triggers, $table)
+            #if ($table.is_approve == 1)
+                <div class="dropdown dx-operate-menu">
+                    <button type="button" class="btn dropdown-toggle dx-grid-approve" data-toggle="dropdown">
+                        <span class="approve-state"></span>$dx.msg('WaitMeApprove')
+                        <b class="caret"></b>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-left batch-approve" role="menu" aria-labelledby="">
+
+                    </ul>
+                </div>
+                ## 我审批过的数据
+                <button type="button" class="btn my-already-approve">$dx.msg('my already approve')</button>
+            #end
+##            #if($dx.hasLeftGroup($table))
+##                <button type="button" class="btn dx-grid-left-group-button">$dx.msg("left-group")</button>
+##            #end
+        </div>
+    ##	#if ($form.button('view'))
+    ##		<button type="button" class="btn btn-default btn-sm dx-grid-view">$dx.msg("View")</button>
+    ##	#end
+    ##	#if ($form.button('export'))
+    ##		<button type="button" class="btn btn-default btn-sm dx-grid-export">$dx.msg("Export")</button>
+    ##	#end
+    ##	#dxOpMenu(${form.grid.id}, $dx.table($form.grid.table).operations, $dx.table($form.grid.table).shortcuts)
+        <div class="btn-toolbar-right dx-form-top-bar-right">
+            #if($dx.hasFilter($table))
+            <button class="btn more-select">$dx.msg("more-select")</button>
+            #end
+            <div class="grid_search_box">
+                <input type="text" class="grid_search" placeholder="请输入您要搜索的关键字"/>
+                <button type="button" class="btn search grid_search_button" style="display:none">$dx.msg("Search")</button>
+            </div>
+        </div>
+    #dxMenuBarFoot()
+    <div class="dx-form-con">
+        <div class="dx-filter-select" style="display: none">
+            #dxFilter($form.filter)
+        </div>
+
+        <div class="dx-auto-expand row" >
+            #if(!$table.block_view_style)
+                <div class="dx-grid-left-select col-xs-2">
+                    #dxGridLeftSelect($form)
+                </div>
+            #end
+            <div class="dx-grid-right-grid">
+                #dxGrid($form.grid)
+            </div>
+        </div>
+    </div>
+    </div>
+<div class="create-edit" style="height: 100%"></div>
+</div>
+
+#dxFormTail($form)

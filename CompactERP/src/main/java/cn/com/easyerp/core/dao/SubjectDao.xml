@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.SubjectDao">
+	<select id="selectSubject" resultType="java.util.Map">
+		select * from sys_subject
+		where subjectID=#{subjectID}
+	</select>
+	<insert id="addBackground">
+		insert into sys_background values
+		(#{backgroundImg})
+	</insert>
+</mapper>

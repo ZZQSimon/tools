@@ -1,0 +1,53 @@
+#dxFormHead($form)
+<div id="$form.id" class="dx-form" name="$form.widgetName">
+	#dxMenuBarHead($form)
+	<button type="button" class="btn btn-default btn-sm dx-map-save">$dx.msg("Save")</button>
+	#dxMenuBarFoot()
+	<div class="dx-auto-expand">
+		<table class="dx-map-select-table" width="450px">
+			<tr>
+				<td>
+					<div style="width: 300px;overflow:auto;height: 350px;">
+						<table class="dx-map-table dx-map-all display">
+							<thead>
+							<tr>
+								<th><input type="checkbox" class="dx-map-checkall"/></th>
+								<th>$dx.formatEmpty($form.idText)</th>
+								#if ($form.nameText)
+									<th>$dx.formatEmpty($form.nameText)</th>
+								#end
+							</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</td>
+				<td width="50px" align="center" valign=>
+					<div class="btn-group-vertical">
+						<button class="btn btn-default btn-sm dx-map-add">$dx.msg('w.map.add')</button>
+						<button class="btn btn-default btn-sm dx-map-remove">$dx.msg('w.map.remove')</button>
+					</div>
+				</td>
+				<td>
+					<div style="width: 300px;overflow:auto;height: 350px;">
+						<table class="dx-map-table dx-map-selected display">
+							<thead>
+							<tr>
+								<th><input type="checkbox" class="dx-map-checkall"/></th>
+								<th>$dx.formatEmpty($form.idText)</th>
+								#if ($form.nameText)
+									<th>$dx.formatEmpty($form.nameText)</th>
+								#end
+							</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+#dxFormTail($form)

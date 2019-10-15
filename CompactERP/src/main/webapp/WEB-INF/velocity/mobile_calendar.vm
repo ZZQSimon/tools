@@ -1,0 +1,16 @@
+#dxFormHead($form) 
+<form id="$form.id" name="mobile_calendar" class="form-inline dx-form clearfix pc-tab-form" role="form""> 
+    <div>
+        <div class="calendar-container">
+            
+        </div>
+        <!--<div class="calendar-event">
+            <div class="event-title">$dx.msg("today's events")</div>
+            <div class="event-list">
+                
+            </div>
+            <div class="event-footer">$dx.msg("there are no more events")</div>
+        </div>-->
+    </div>
+</form>
+#dxFormTail($form)

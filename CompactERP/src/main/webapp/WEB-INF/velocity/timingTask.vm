@@ -1,0 +1,171 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="timingTask" class="form-inline dx-form" role="form""> 
+      ##基本上照抄即可
+    <div class="rowContentTop btn-toolbar dx-menu-bar">
+         <a href="javascript:void(0)" class="btn dx-grid-add accept" >$dx.msg("Save")</a>
+         <div class="dropdown dropdown-add">
+            <button type="button" class="btn tab-config-new" id=""
+                     	    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">$dx.msg("Add")</button>
+            <div class="dropdown-menu" aria-labelledby="">
+                <div class="clearfix">
+                    <label class="label-1">$dx.msg("name")：</label>
+                    <input type="text" class="input-1" name='addTimeTaskValue' autocomplete="off" />
+                </div>
+                <div class="dropdown-footer">
+                    <button data-toggle="dropdown" class="button-color4">$dx.msg("Cancel")</button>
+                    <button data-toggle="dropdown" class="button-color3 addTimeTask" value="保存">$dx.msg("Save")</button>
+                </div>
+            </div>
+         </div>
+    </div>
+    <div class="rowContent">
+        <div class="col-xs-2 deploy-left-menu">
+            <div class="search">
+                <input type="text" class="retrieve_input" placeholder="检索定时任务"/>
+            </div>
+            <ul class="menuItemWrap timingTaskItem treeScroll">
+
+            </ul>
+            <div class="deploy-left-tree-delete">
+                <button type="button" class="btn deleteTimeTask">$dx.msg("Delete")</button>
+            </div>
+        </div>
+        <div class="deploy-main-table-data  dicContent col-xs-10">
+                <ul class="nav deploy-tab-ul" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#taskContent" aria-controls="taskContent" data-toggle="tab" aria-expanded="true" class="interface">
+                            任务内容</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#taskStartTime" aria-controls="taskStartTime" data-toggle="tab" aria-expanded="true" class="deploy-column">
+                            启动时间</a>
+                    </li>
+                </ul>
+                <div class="tab-content deploy-tab-pane">
+                    <div role="tabpanel" class="tab-pane datagrid-content active" id="taskContent">
+                        <div class="datagrid-main">
+                            <table id="timingTaskTable" class="easyui-datagrid timingTaskTable"></table>
+                        </div>
+                        <div class="datagrid-foot">
+                            <button class="btn append" type="button">$dx.msg("Add")</button>
+                            <button class="btn removeit"type="button">$dx.msg("Delete")</button>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="taskStartTime">
+                        <div class="col-xs-6">
+                            <label class="taskPanelTitle icheckbox"><input type="checkbox" class="sysTimeCheckBok"/>系统时间</label>
+                            <div class="taskPanel clearfix">
+                                <div class="form-group col-xs-12 ">
+                                    <label class="label-1">
+                                        开始时间
+                                    </label>
+                                    <input type="text" class="input-1 begin_date">
+                                </div>
+
+                                <div class="form-group col-xs-12 ">
+                                    <label class="icheckbox">
+                                        <input type="checkbox" class="input-1 endDateCheckbox">
+                                    </label>
+                                    <label class="label-1 ">
+                                         结束时间
+                                    </label>
+                                    <input type="text" class="input-1 end_date">
+                                </div>
+                                <div class="form-group col-xs-12 ">
+                                    <label class="label-1">
+                                        循环
+                                    </label>
+                                    <div class="input-bt-Switcher-wrap sysTimeIsLoop">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" class="isLoopCheckBox"/><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-12 form-group-two">
+                                    <label class="label-1">每隔</label>
+                                    <div class="input-1">
+                                        <input type="number" class="dx-field-6 space_sysTime">
+                                        <select class="dx-field-6 pull-right loop_type">
+	                                        <option value="min">分钟</option>
+	                                        <option value="hour">小时</option>
+	                                        <option value="day">天</option>
+	                                        <option value="mouth">月</option>
+	                                        <option value="year">年</option>
+	                                        <option value="week">周</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                 <div class="form-group col-xs-12 form-group-two">
+                                    <label class="label-1">提前量</label>
+                                    <div class="input-1">
+                                        <input type="number" class="dx-field-6 lead_sysTime">
+                                        <select class="dx-field-6 pull-right lead_type_sysTime">
+                                            <option value="min">分钟</option>
+	                                        <option value="hour">小时</option>
+	                                        <option value="day">天</option>
+	                                        <option value="mouth">月</option>
+	                                        <option value="year">年</option>
+	                                        <option value="week">周</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <label class="taskPanelTitle icheckbox"><input type="checkbox" class="businessTimeCheckBox"/>业务时间</label>
+                            <div class="taskPanel clearfix">
+                                <div class="form-group col-xs-12 ">
+                                    <label class="label-1">
+                                        业务表
+                                    </label>
+                                    #set($tables = $dx.getTables(true))
+			                        <select class="input-1 businessTable">
+			                            <option value=""></option>
+			                            #foreach ($table in $tables)
+			                                <option value="$table.dictKey">$table.dictText</option>
+			                            #end
+			                        </select>
+                                </div>
+                                <div class="form-group col-xs-12 ">
+                                    <label class="label-1">
+                                        字段
+                                    </label>
+                                    <select class="input-1 businessColumn">
+                                    	
+                                    </select>
+                                </div>
+                                <div class="form-group col-xs-12 form-group-two">
+                                    <label class="label-1">提前量</label>
+                                    <div class="input-1">
+                                        <input type="number" class="dx-field-6 task_lead">
+                                        <select class="dx-field-6 lead_type pull-right">
+                                            <option value="min">分钟</option>
+	                                        <option value="hour">小时</option>
+	                                        <option value="day">天</option>
+	                                        <option value="mouth">月</option>
+	                                        <option value="year">年</option>
+	                                        <option value="week">周</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-12 ">
+                                    <label class="label-1">
+                                        数据筛选条件
+                                    </label>
+                                    <textarea class="input-1 filter_sql"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+
+
+

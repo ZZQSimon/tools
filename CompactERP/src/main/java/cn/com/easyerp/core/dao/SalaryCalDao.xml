@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.SalaryCalDao">
+
+
+
+	<select id="selectEmpIds" resultType="cn.com.easyerp.module.salaryCal.EmpInfo">
+		select
+		emp_id,name,emp_number,base_salary,performance_salary,subsidy,is_company_deputy,is_foreign
+		,term_of_validity as allDaysAward,workday as loss,weekday as late from
+		m_emp me,m_salary_rule ms where me.salary_id = ms.salary_id
+	</select>
+
+	<select id="selectUserHoliday" resultType="cn.com.easyerp.module.salaryCal.UserHoliday">
+		select
+		m.type,DATE_FORMAT(m.begin_date,'%Y-%m-%d') as
+		begin_date,DATE_FORMAT(m.end_date,'%Y-%m-%d') as
+		end_date,m.begin_forenoon_afternoon as
+		begin_time,m.end_forenoon_afternoon as
+		end_time,m.how_long
+		,mr.salary_percent as percent from m_holiday_rule
+		mr,m_holiday
+		m,c_approve_flow c
+		where m.type = mr.holiday_id and m.id =
+		c.data_id and
+		c.state = '3' and
+		m.cre_user=#{user}
+	</select>
+
+	<select id="selectUserAddWork" resultType="java.util.Map">
+		select
+		type,sum(add_work_time) as times from m_add_work_apply where
+		cre_user=#{user}
+		group by type
+	</select>
+
+	<select id="selectAddWorkRule" resultType="java.util.Map">
+		select
+		workday,weekday,holiday from m_add_work_rule
+	</select>
+
+	<select id="selectSecurityScale" resultType="java.util.Map">
+		select
+		social_security s,common_reserve c,endowment_insurance_personal
+		s1,medical_insurance_personal s2,unemployed_insurance_personal
+		s3,ssdi_personal_personal s4,
+		housing_fund_personal c1 from
+		m_security_scale
+	</select>
+
+	<insert id="savaUserSalary">
+		insert into m_salary(emp_id,
+		salary_date,
+		name,
+		emp_number,
+		reality_salary,
+		base_salary,
+		performance_salary,
+		add_work_salary,
+		term_of_validity,
+		subsidy_salary,
+		deputy_security,
+		deputy_accumulation,
+		personal_income_tax,
+		leave_salary,
+		absence_work_salary,
+		salary_status,
+		cre_user,
+		upd_user,
+		cre_date,
+		upd_date
+		) value
+		<foreach collection="salaries" item="salary" separator=",">
+
+			('${salary.emp_id}','${salary.salary_date}','${salary.name}','${salary.emp_number}',ROUND(${salary.reality_salary},2),
+			ROUND(${salary.base_salary},2),ROUND(${salary.performance_salary},2),ROUND(${salary.add_work_salary},2),ROUND(${salary.term_of_validity},2),ROUND(${salary.subsidy_salary},2),
+			ROUND(${salary.deputy_security},2),ROUND(${salary.deputy_accumulation},2),
+			ROUND(${salary.personal_income_tax},2),ROUND(${salary.leave_salary},2),ROUND(${salary.absence_work_salary},2),'${salary.salary_status}',
+			'${salary.cre_user}','${salary.upd_user}','${salary.cre_date}','${salary.upd_date}')
+		</foreach>
+
+	</insert>
+
+	<delete id="deleteSalary">
+		delete from m_salary where salary_date=#{date}
+	</delete>
+</mapper>
+
+
+
+
+

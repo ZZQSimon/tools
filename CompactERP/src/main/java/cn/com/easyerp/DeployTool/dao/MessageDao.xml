@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.MessageDao">
+	<select id="getMessageByType" resultType="cn.com.easyerp.core.widget.message.MessageDescribe">
+        SELECT 
+			receive_id,
+			s.send_id,
+			title,
+			content,
+			send_date,
+			sender,
+			receiver,
+			type,
+			`status`
+		FROM c_message_receive r
+		JOIN c_message_send s
+		ON r.send_id=s.send_id
+        WHERE 
+        	type=#{type}
+        AND receiver=#{receiver}
+        ORDER BY send_date DESC
+        LIMIT ${pageNumber},${pageSize}
+    </select>
+    
+    <select id="getUnreadMessageByType" resultType="java.lang.Integer">
+        SELECT 
+        	count(*)
+        FROM c_message_receive r
+		JOIN c_message_send s
+		ON r.send_id=s.send_id
+        WHERE 
+        	type=#{type}
+        AND receiver=#{receiver}
+        AND status='0'
+    </select>
+    
+    <select id="getMessageById" resultType="cn.com.easyerp.core.widget.message.MessageDescribe">
+        SELECT 
+			receive_id,
+			s.send_id,
+			title,
+			content,
+			send_date,
+			sender,
+			receiver,
+			type,
+			`status`
+		FROM c_message_receive r
+		JOIN c_message_send s
+		ON r.send_id=s.send_id
+        WHERE 
+        	receive_id=#{receive_id}
+    </select>
+    
+    <update id="updMessageByIdList" parameterType="java.util.List">
+    	UPDATE
+    		c_message_receive
+    	SET
+    		status='1'
+    	WHERE
+    		receive_id in(
+			<foreach collection="ids" item="id" index="index" separator=",">
+				#{id}
+			</foreach>
+			)
+	</update>
+	
+	<delete id="delMessageByIdList" parameterType="java.util.List">
+		DELETE FROM
+    		c_message_receive
+    	WHERE
+    		receive_id in(
+			<foreach collection="ids" item="id" index="index" separator=",">
+				#{id}
+			</foreach>
+			)
+	</delete>
+	
+	<select id="getCountByType" resultType="java.lang.Integer">
+        SELECT 
+        	count(*)
+        FROM c_message_receive r
+		JOIN c_message_send s
+		ON r.send_id=s.send_id
+        WHERE 
+        	type=#{type}
+        AND receiver=#{receiver}
+    </select>
+    
+    <select id="getUnreadCount" resultType="java.lang.Integer">
+        SELECT 
+        	count(*)
+        FROM c_message_receive r
+		JOIN c_message_send s
+		ON r.send_id=s.send_id
+        WHERE 
+        	status='0'
+        AND receiver=#{receiver}
+    </select>
+    
+    <insert id="addSendMessage" useGeneratedKeys="true" parameterType="cn.com.easyerp.core.widget.message.MessageDescribe">
+        INSERT INTO 
+			`c_message_send` 
+			( 
+				`send_id`,
+				`title`,
+				 `content`, 
+				 `send_date`, 
+				 `sender`, 
+				 `type`
+			 ) 
+		VALUES 
+			( 
+				#{message.send_id},
+				#{message.title}, 
+				#{message.content}, 
+				now(), 
+				#{message.sender}, 
+				#{message.type}
+			)
+    </insert>
+    
+    <insert id="addReceiveMessage"  parameterType="cn.com.easyerp.core.widget.message.MessageDescribe">
+        INSERT INTO 
+			`c_message_receive` 
+			( 
+				`receive_id`,
+				`send_id`,
+				 `receiver`, 
+				 `status`
+			 ) 
+		VALUES 
+			( 
+				#{receive_id},
+				#{message.send_id}, 
+				#{message.receiver}, 
+				'0'
+			)
+    </insert>
+    
+</mapper>

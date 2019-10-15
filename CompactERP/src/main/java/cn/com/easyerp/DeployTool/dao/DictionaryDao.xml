@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.DictionaryDao">
+	<select id="selectDictionary" resultType="cn.com.easyerp.DeployTool.service.DictionaryDetails">
+		SELECT
+			c1.`dic_id`,
+			c1.`dic_key`,
+			c1.`id_international`,
+			c1.`key_international`,
+			c1.`seq`,
+			c1.`level`,
+			c1.`module`,
+			c1.`hidden`
+		FROM
+			(
+				SELECT
+					*
+				FROM
+					`c_dictionary`
+				GROUP BY
+					dic_id
+			) c1
+		LEFT JOIN c_international c2 ON c1.id_international = c2.international_id
+		<if test="userId!='Super'">
+			where c1.is_system != '1'
+		</if>
+		
+		<if test="languageId=='cn'">
+			ORDER BY
+			CONVERT(c2.cn USING gbk);
+		</if>
+		<if test="languageId=='en'">
+			ORDER BY
+			CONVERT(c2.en USING gbk);
+		</if>
+		<if test="languageId=='jp'">
+			ORDER BY
+			CONVERT(c2.jp USING gbk);
+		</if>
+		<if test="languageId=='other1'">
+			ORDER BY
+			CONVERT(c2.other1 USING gbk);
+		</if>
+		<if test="languageId=='other2'">
+			ORDER BY
+			CONVERT(c2.other2 USING gbk);
+		</if>
+	</select>
+	<select id="retrieveDictionary" resultType="cn.com.easyerp.DeployTool.service.DictionaryDetails">
+		SELECT
+			c1.`dic_id`,
+			c1.`dic_key`,
+			c1.`id_international`,
+			c1.`key_international`,
+			c1.`seq`,
+			c1.`level`,
+			c1.`module`,
+			c1.`hidden`
+		FROM
+			`c_dictionary` c1
+		LEFT JOIN c_international c2 ON c1.dic_id = c2.international_id
+		<if test="languageId=='cn'">
+			where cn like binary #{retrieveValue}
+		</if>
+		<if test="languageId=='en'">
+			where en like binary #{retrieveValue}
+		</if>
+		<if test="languageId=='jp'">
+			where jp like binary #{retrieveValue}
+		</if>
+		<if test="languageId=='other1'">
+			where other1 like binary #{retrieveValue}
+		</if>
+		<if test="languageId=='other2'">
+			where other2 like binary #{retrieveValue}
+		</if>
+		<if test="userId!='Super'">
+			and c1.is_system != '1'
+		</if>
+		
+		GROUP BY
+			c1.dic_id
+	</select>
+	<select id="dictionaryById" resultType="cn.com.easyerp.DeployTool.service.DictionaryDetails">
+		SELECT
+			c1.`dic_id`,
+			c1.`dic_key`,
+			c1.`id_international`,
+			c1.`key_international`,
+			c1.`seq`,
+			c1.`level`,
+			c1.`module`,
+			c1.`hidden`,
+			c2.international_id,
+			replace(replace(c2.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as cn,
+			replace(replace(c2.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as en,
+			replace(replace(c2.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as jp,
+			replace(replace(c2.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other1,
+			replace(replace(c2.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other2,
+			c2.type,
+			c2.module 'module_inter'
+		FROM
+			`c_dictionary` c1
+		LEFT JOIN c_international c2 ON c1.key_international = c2.international_id
+		where `dic_id`=#{dicId} 
+		<if test="userId!='Super'">
+			and c1.is_system != '1'
+		</if>
+	</select>
+	<insert id="addDictionary">
+		INSERT INTO `c_dictionary` (
+			`dic_id`,
+			`dic_key`,
+			`id_international`,
+			`key_international`,
+			`seq`,
+			`level`,
+			`module`,
+			`hidden`,
+			is_system
+		)
+		VALUES
+			(
+				#{dictionary.dic_id},
+				#{dictionary.dic_key},
+				#{dictionary.id_international},
+				#{dictionary.key_international},
+				#{dictionary.seq},
+				#{dictionary.level},
+				#{dictionary.module},
+				#{dictionary.hidden},
+				0
+			);
+	</insert>
+	<insert id="addInternational">
+		INSERT INTO `c_international` (
+			`international_id`,
+			`type`,
+			`cn`,
+			`en`,
+			`jp`,
+			`other1`,
+			`other2`,
+			`module`
+		)
+		VALUES
+			(
+				#{international.key_international},
+				#{international.type},
+				#{international.cn},
+				#{international.en},
+				#{international.jp},
+				#{international.other1},
+				#{international.other2},
+				#{international.module_inter}
+			);
+	</insert>
+	<delete id="deleteDicById">
+		DELETE FROM
+			c_dictionary
+		WHERE
+		dic_id = #{dicId}
+	</delete>
+</mapper>

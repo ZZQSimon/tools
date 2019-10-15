@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.InternationalDao">
+
+	<select id="getInternationalCount" resultType="java.lang.Integer">
+	SELECT
+		count(*)
+	FROM
+		c_international  ORDER BY cre_date DESC
+	</select>
+
+	<select id="selectInternational" resultType="cn.com.easyerp.DeployTool.service.International">
+	SELECT
+		international_id,
+		type,
+		replace(replace(`cn`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as cn,
+		replace(replace(`en`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as en,
+		replace(replace(`jp`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as jp,
+		replace(replace(`other1`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other1,
+		replace(replace(`other2`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other2,
+		module,
+		cre_date
+	FROM
+		c_international  ORDER BY cre_date DESC LIMIT ${start},${end}
+	</select>
+
+	<select id="selectLikeInternational" resultType="cn.com.easyerp.DeployTool.service.International">
+	SELECT
+	international_id,
+		type,
+		replace(replace(`cn`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as cn,
+		replace(replace(`en`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as en,
+		replace(replace(`jp`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as jp,
+		replace(replace(`other1`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other1,
+		replace(replace(`other2`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other2,
+		module,
+		cre_date
+	FROM
+		c_international
+	WHERE
+		CONCAT(
+			IFNULL(international_id, ''),
+			IFNULL(type, ''),
+			IFNULL(cn, ''),
+			IFNULL(en, ''),
+			IFNULL(jp, ''),
+			IFNULL(other1, ''),
+			IFNULL(other2, ''),
+			IFNULL(module, '')
+		) LIKE #{params} limit ${start},${end}
+	</select>
+	
+	<select id="countInternational" resultType="Integer">
+		SELECT COUNT(*) FROM c_international 
+	</select>
+	
+	<insert id="addInternational" parameterType="java.util.List">
+	INSERT INTO c_international (
+		international_id,
+		type,
+		cn,
+		en,
+		jp,
+		other1,
+		other2,
+		module,
+		cre_date
+	)
+	VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.international_id},#{item.type},#{item.cn},#{item.en},#{item.jp},#{item.other1},#{item.other2},#{item.module},#{item.cre_date})
+		</foreach>
+	</insert>
+	
+	<update id="updInternational" parameterType="java.util.List">
+	<foreach collection="list" item="item" index="index" separator=";">
+	UPDATE c_international
+	<set>
+		<if test="item.type != null">
+		type = #{item.type,jdbcType=INTEGER},</if>
+		<if test="item.cn != null">
+		cn = #{item.cn,jdbcType=VARCHAR},</if>
+		<if test="item.en != null">
+		en = #{item.en,jdbcType=VARCHAR},</if>
+		<if test="item.jp != null">
+		jp = #{item.jp,jdbcType=VARCHAR},</if>
+		<if test="item.other1 != null">
+		other1 = #{item.other1,jdbcType=VARCHAR},</if>
+		<if test="item.other2 != null">
+		other2 = #{item.other2,jdbcType=VARCHAR},</if>
+		<if test="item.module != null">
+		module = #{item.module,jdbcType=VARCHAR},</if>
+		<if test="item.cre_date != null">
+		cre_date = #{item.cre_date,jdbcType=DATE},</if>
+	</set>
+	WHERE
+		international_id = #{item.international_id}
+	</foreach>
+	</update>
+
+	<delete id="delInternational">
+		DELETE  FROM c_international WHERE international_id in (
+		<foreach collection="list" item = "item" separator=",">
+		#{item.}
+		</foreach>
+		)
+	</delete>
+
+	<select id="retrievalInter" resultType="cn.com.easyerp.DeployTool.service.International">
+		SELECT
+			international_id,
+			type,
+			replace(replace(`cn`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as cn,
+			replace(replace(`en`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as en,
+			replace(replace(`jp`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as jp,
+			replace(replace(`other1`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other1,
+			replace(replace(`other2`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other2,
+			module,
+			cre_date
+		FROM
+			c_international
+			<if test="language_id=='cn'">
+				where cn like binary #{retrievalValue}
+			</if>
+			<if test="language_id=='en'">
+				where en like binary #{retrievalValue}
+			</if>
+			
+			<if test="language_id=='jp'">
+				where jp like binary #{retrievalValue}
+			</if>
+			<if test="language_id=='other1'">
+				where other1 like binary #{retrievalValue}
+			</if>
+			<if test="language_id=='other2'">
+				where other2 like binary #{retrievalValue}
+			</if>
+	</select>
+
+	<insert id="saveRetrievalInter">
+			INSERT INTO `c_international` (
+				`international_id`,
+				`type`,
+				`cn`,
+				`en`,
+				`jp`,
+				`other1`,
+				`other2`,
+				`module`
+			)
+			VALUES
+				(
+					#{international.international_id},
+					#{international.type},
+					#{international.cn},
+					#{international.en},
+					#{international.jp},
+					#{international.other1},
+					#{international.other2},
+					#{international.module}
+				);
+	</insert>
+
+	<delete id="deleteRetrievalInter">
+		delete from c_international where international_id=#{international.international_id}
+	</delete>
+
+	<update id="I18NReplace">
+	   CALL I18NReplace(#{findContext},#{replaceWith},#{scope})
+	</update>
+    
+    <update id="I18nUpdate">
+    	update c_international set 
+    		type=#{i18n.type},
+	    	cn=#{i18n.cn},
+	    	en=#{i18n.en},
+	    	jp=#{i18n.jp},
+	    	other1=#{i18n.other1},
+	    	other2=#{i18n.other2}
+    	where international_id=#{i18n.international_id}
+    </update>
+    
+    <select id="isExistsi18n" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM
+			c_international  
+		WHERE international_id=#{international_id}
+	</select>
+	
+	<select id="selectI18nWithCondition" resultType="cn.com.easyerp.core.data.DatabaseDataMap">
+		SELECT
+			international_id,
+			type,
+			replace(replace(`cn`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as cn,
+			replace(replace(`en`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as en,
+			replace(replace(`jp`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as jp,
+			replace(replace(`other1`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other1,
+			replace(replace(`other2`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other2,
+			module,
+			cre_date
+		FROM
+			c_international
+		WHERE
+			CONCAT(
+				IFNULL(international_id, ''),
+				IFNULL(type, ''),
+				IFNULL(cn, ''),
+				IFNULL(jp, ''),
+				IFNULL(other1, ''),
+				IFNULL(other2, ''),
+				IFNULL(module, '')
+			) LIKE #{params}
+	</select>
+</mapper>

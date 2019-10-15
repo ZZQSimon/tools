@@ -1,0 +1,17 @@
+#dxFormHead($form)
+
+<form id="$form.id" name="$form.widgetName" class="form-inline dx-form" role="form">
+	#dxMenuBarHead($form)
+	<input type="button" id="${form.id}_submit" name="create" class="btn btn-default dx-submit"
+	       value="$dx.msg($form.buttonText)"/>
+	#if ($form.hasNext)
+		<input type="button" id="${form.id}_submit_next" value="$dx.msg("continue")" name="create"
+		       class="btn btn-default dx-submit dx-next"/>
+	#end
+	#dxMenuBarFoot()
+	<div class="container dx-auto-expand dx-div-with-scroll" style="padding:0;">
+		#dxDetail($form)
+	</div>
+</form>
+
+#dxFormTail($form)

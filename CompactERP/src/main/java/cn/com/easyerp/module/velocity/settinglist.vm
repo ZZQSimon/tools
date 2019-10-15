@@ -1,0 +1,60 @@
+
+	#set($no=1)
+		#foreach($setting in ${form.settingList})
+			<tr>
+				<td width = "30">
+					<input type = "text" id = "txtno$no" width = "30" name = "txtno" value = $no class = "dx-filter dx-filter-inputbox-uno" disabled/>				
+				</td>
+				<td>
+					<input type = "text" id = "txtdxcode$no" name = "txtdxcode" value = $setting.get('DXCODE') class = "dx-filter dx-filter-inputbox-dxcode"disabled/>
+				</td>																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	
+				<td>
+					<input type = "text" id = "txtdxname$no" name = "txtdxname" value = $setting.get('DXNAME') class = "dx-filter dx-filter-inputbox-dxname"disabled/>
+				</td>
+				<td >
+					#if($setting.get('UCODE')&&"0"!=$setting.get('UCODE'))
+						<input type = "text" id = "txtucode$no" name = "ucode" value = $setting.get('UCODE')  class = "dx-filter dx-filter-inputbox-ucode" onfocus="autoComplete('txtucode$no','');" onKeydown="autoComplete('txtucode$no','');" />				
+					#else
+						<input type = "text" id = "txtucode$no" name = "ucode" value = "代码未匹配"  class = "dx-filter dx-filter-inputbox-ucode" onfocus="autoComplete('txtucode$no','');" onKeydown="autoComplete('txtucode$no','');"/>
+					#end																																																																																																																																								
+				</td>
+				<td>
+					#if($setting.get('UNAME'))
+						<input type = "text" id = "txtuname$no" name = "uname" value = $setting.get('UNAME')  class = "dx-filter dx-filter-inputbox-uname"/ disabled>
+					#else
+						<input type = "text" id = "txtuname$no" name = "uname" value = "名称未匹配"  class = "dx-filter dx-filter-inputbox-uname"/ disabled>
+					#end			
+				</td>
+				<td>
+					
+					#if($setting.get('UACCCODE') &&"0"!=$setting.get('UACCCODE'))
+							<input type = "text" id = "txtuacccode$no" name = "uacccode" value = $setting.get('UACCCODE')  
+							class = "dx-filter dx-filter-inputbox-uacccode"   onfocus="autoCompleteSB('txtuacccode$no','');"  onKeyUp="autoCompleteSB('txtuacccode$no','');"/ >
+					#else
+							<input type = "text" id = "txtuacccode$no" name = "uacccode" value =  "科目未匹配"  
+							class = "dx-filter dx-filter-inputbox-uacccode"  onfocus="autoCompleteSB('txtuacccode$no','');" onKeyUp="autoCompleteSB('txtuacccode$no','');"/ >
+					#end
+						
+				</td>
+				
+				<td>
+					
+					#if($setting.get('UACNAME'))
+							<input type = "text" id = "txtuaccname$no" name = "uaccname" value = $setting.get('UACCNAME')  class = "dx-filter dx-filter-inputbox-uaccname" disabled/ >
+					#else
+							<input type = "text" id = "txtuaccname$no" name = "uaccname" value =  "科目未匹配"  class = "dx-filter dx-filter-inputbox-uaccname"  disabled/ >
+					#end
+						
+				</td>
+			</tr>
+		#set($no = $no+1)
+		#end
+	
+<script type="text/javascript">		
+	function changename(no){
+		$("#uname"+no).val($("#ucode"+no).val());
+	}
+
+			</script> 
+
+			

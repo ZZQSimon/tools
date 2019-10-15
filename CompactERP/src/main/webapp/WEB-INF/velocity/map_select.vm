@@ -1,0 +1,18 @@
+#dxFormHead($form)
+<form id="$form.id" name="map_select" class="form-inline dx-form" role="form"">
+<div class="dx-form">
+    <ul class="map-dropdown-menu">
+        #foreach($data in $form.all.entrySet())
+            <li class="select-data">
+                <span name="key">$dx.formatEmpty(${data.key})</span>
+                <span name="value">$dx.formatEmpty(${data.value})</span>
+            </li>
+        #end
+        <li class="more-select">
+            <span class="more-select">more select</span>
+            <span class="create-data">create data</span>
+        </li>
+    </ul>
+</div>
+</form>
+#dxFormTail($form)

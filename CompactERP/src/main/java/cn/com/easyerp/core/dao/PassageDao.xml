@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.easyerp.core.dao.PassageDao">
+	<select id="selectPassages" resultType="cn.com.easyerp.passage.PassageDescribe">
+		select
+		id,
+		name,
+		type,
+		main_table,
+		group_cols,
+		disp_cols,
+		filter_tables,
+		filter_sql
+		from c_passage
+	</select>
+	<select id="selectPassageRows" resultType="cn.com.easyerp.passage.PassageRowDescribe">
+		select
+		id,
+		passage_id,
+		disp_name_key,
+		upd_statement,
+		edit_cond,
+		edit_part_bg_color,
+		edit_part_fg_color,
+		unedit_part_bg_color,
+		unedit_part_fg_color,
+		decimal_digit,
+		total_row,
+		detail_sql
+		from c_passage_row
+	</select>
+	<select id="selectPassageRowFormulas" resultType="cn.com.easyerp.passage.PassageRowFormulaModel">
+		select
+		id,
+		passage_row_id,
+		level,
+		cond,
+		formula,
+		case datalength(sql)
+		when 0 then null
+		else sql end sql,
+		type
+		from c_passage_row_formula
+		order by level
+	</select>
+</mapper>

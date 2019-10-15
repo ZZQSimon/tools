@@ -1,0 +1,23 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="functionPoint" class="form-inline dx-form" role="form"">
+
+<div class="datagrid-content">
+<div class="datagrid-main">
+<div id="fun_point_btn" class="btn-toolbar grid-toolbar" style="height:auto">
+    <a href="javascript:void(0)" class="easyui-linkbutton dx-grid-add accept" >$dx.msg("Save")</a>
+    <div class="funPointSea searchDiv">
+        <input type="text" placeholder="$dx.msg("Please enter a keyword")"/>
+        <span class="search button-color3">$dx.msg("search")</span>
+    </div>
+</div>
+
+<table id="funPointTb" class="easyui-datagrid"></table>
+</div>
+    <div class="datagrid-foot">
+        <button class="easyui-linkbutton append" type="button">＋</button>
+        <button class="easyui-linkbutton removeit"type="button">－</button>
+    </div>
+</div>
+
+
+#dxFormTail($form)

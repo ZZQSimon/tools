@@ -1,0 +1,110 @@
+
+
+#set ($contextRoot = "#springUrl('')")
+<script>
+    function makeLoginUrl(path) {
+        return '$contextRoot' + path
+    }
+    function makeUrl(path) {
+		return '$contextRoot' + path
+	}
+</script>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="icon" href="#springUrl('')/img/g1.ico" type="image/x-icon"/>
+
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/bootstrap/css/bootstrap.min.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/js/g1up.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/js/index.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/js/home.css"/>
+##<link type="text/css" rel="stylesheet" href="$contextRoot/js/g1-plus.css"/>
+<link type="text/css" rel="stylesheet"
+      href="$contextRoot/js/jquery-ui-1.10.4.custom/css/flick/jquery-ui-1.10.4.custom.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/js/jsTree/themes/default/style.min.css"/>
+
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/g1-pluss.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/g1-tab.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/g1up.css"/>
+<link type="text/css" rel="stylesheet" href="$contextRoot/css/external.css"/>
+<style>
+.modal-dialog{
+    width:80%;
+    top:53%;
+    max-height:400px;
+    overflow:scroll;
+}
+</style>
+<div class="externalBody">
+
+
+
+       <h1 class="externalTitle">$dx.msg("external_title")</h1>
+    <div class="externalHead">
+
+        <div class="externalTip">
+            <p>$dx.msg("external_prompt1")</p>
+            <p>$dx.msg("external_prompt2")</p>
+        </div>
+    </div>
+
+    <div class="externalSuccess">
+        <img src="#springUrl('')/img/reg-suc.png"/>
+        <p>提交成功<p>
+    </div>
+    <div class="externalForm"></div>
+<div>
+
+</head>
+
+
+
+
+<script src="#springUrl('')/js/jquery-1.11.0.js"></script>
+
+<script src="$contextRoot/js/jquery-validation-1.12.0/jquery.validate.js"></script>
+<script src="$contextRoot/js/jquery-validation-1.12.0/jquery.validate.min.js"></script>
+
+<script src="$contextRoot/js/bootstrap/js/bootstrap.min.js"></script>
+<script src="$contextRoot/js/DataTables-1.10.13/media/js/dataTables.bootstrap.js"></script>
+<script src="$contextRoot/js/DataTables-1.10.13/media/js/jquery.dataTables.js"></script>
+<script src="$contextRoot/js/DataTables-1.10.13/media/js/dataTables.bootstrap.js"></script>
+<script src="$contextRoot/js/DataTables-1.10.13/extensions/ColReorder/js/dataTables.colReorder.js"></script>
+<script src="$contextRoot/js/DataTables-1.10.13/extensions/RowReorder/js/dataTables.rowReorder.js"></script>
+<script src="$contextRoot/js/DataTables-1.10.13/extensions/pagination/input.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="$contextRoot/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="$contextRoot/js/easyui-datagrid/jquery.easyui.min.js"></script>
+<script src="$contextRoot/js/easyui-datagrid/datagrid-dnd.js"></script>
+<script src="$contextRoot/js/dialog/js/bootstrap-dialog.js"></script>
+<script src="$contextRoot/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="$contextRoot/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="$contextRoot/js/bootstrap-multiselect-0.9.12/js/bootstrap-multiselect.js"></script>
+<script src="$contextRoot/js/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jsTree/jstree.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/jsTree/plugins/jstreegrid.js"></script>
+
+
+<script src="$contextRoot/js/jquery-ui-1.10.4.custom/jquery-ui-1.10.4.custom.js"></script>
+<script src="$contextRoot/js/jQuery-File-Upload-9.8.1/js/jquery.fileupload.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/summernote-master/dist/summernote.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="$contextRoot/js/summernote-master/dist/lang/summernote-zh-CN.min.js"></script>
+<script src="$contextRoot/js/g1.js"></script>
+<script src="$contextRoot/js/g1-list.js"></script>
+<script src="$contextRoot/js/g1-detail.js"></script>
+<script src="$contextRoot/js/g1-easyUi-grid.js"></script>
+<script src="$contextRoot/js/g1-field.js"></script>
+<script src="$contextRoot/js/g1-complex.js"></script>
+<script src="$contextRoot/js/g1-formula.js"></script>
+<script src="$contextRoot/js/g1-api.js"></script>
+<script src="$contextRoot/js/jquery-dateFormat.js"></script>
+<script src="$contextRoot/js/autoNumeric.js"></script>
+
+
+<script src="$contextRoot/js/externalForm.js"></script>

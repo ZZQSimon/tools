@@ -14,6 +14,10 @@ public class EDIException extends RuntimeException {
 
     private Result errorCode;
 
+    public EDIException(Throwable cause) {
+        super(cause);
+    }
+
     public EDIException(String message, Throwable cause) {
         super(message, cause);
     }

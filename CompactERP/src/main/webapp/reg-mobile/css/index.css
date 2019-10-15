@@ -1,0 +1,275 @@
+/*css 初始化*/
+body,
+ol,
+ul,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+th,
+td,
+dl,
+dd,
+form,
+fieldset,
+legend,
+input,
+textarea,
+select {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "PingFangSC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #fff;
+  -webkit-text-size-adjust: 100%;
+  color: #333333;
+}
+a {
+  color: #2d374b;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+em {
+  font-style: normal;
+}
+li {
+  list-style: none;
+}
+img {
+  border: 0;
+  vertical-align: middle;
+}
+input,
+select {
+  outline: none;
+  border: none;
+  box-sizing: border-box;
+}
+input::-webkit-input-placeholder,
+select::-webkit-input-placeholder {
+  color: #cccccc;
+  line-height: 0.8rem;
+  font-size: 0.65rem;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+p {
+  word-wrap: break-word;
+}
+label {
+  font-weight: 400;
+  margin-bottom: 0;
+}
+button {
+  outline: none;
+}
+html {
+  font-size: 18px;
+}
+@media only screen and (min-width: 355px) {
+  html {
+    font-size: 19px !important;
+  }
+}
+@media only screen and (min-width: 374px) {
+  html {
+    font-size: 20px !important;
+  }
+}
+@media only screen and (min-width: 401px) {
+  html {
+    font-size: 21px !important;
+  }
+}
+@media only screen and (min-width: 428px) {
+  html {
+    font-size: 22px !important;
+  }
+}
+@media only screen and (min-width: 481px) {
+  html {
+    font-size: 24px !important;
+  }
+}
+@media only screen and (min-width: 569px) {
+  html {
+    font-size: 25px !important;
+  }
+}
+@media only screen and (min-width: 641px) {
+  html {
+    font-size: 26px !important;
+  }
+}
+.secMain {
+  position: relative;
+  padding: 0 0.6rem;
+}
+.secMain .errorTip {
+  width: 80%;
+  display: none;
+  position: absolute;
+  left: 8%;
+  top: 10px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+}
+.errorItem {
+  padding-right: 20px;
+  background: url(../img/errortip.png) no-repeat right center;
+  background-size: 12px;
+}
+.section {
+  display: none;
+  padding-top: 2rem;
+  font-size: 0;
+}
+.section h2 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #333333;
+  margin-bottom: 1.6rem;
+}
+.section h2 span {
+  font-size: 0.6rem;
+  color: #333333;
+}
+.section .form-group {
+  padding: 0 0 0 7px;
+  margin-bottom: 1.2rem;
+  border-bottom: 1px solid #e6e6e6;
+}
+.section .form-group input:not([type=button]),
+.section .form-group select {
+  width: 100%;
+  padding: 6px 0 6px 3.2rem;
+  font-size: 0.65rem;
+  color: #333333;
+  line-height: 0.8;
+  text-align: left;
+}
+.section .form-group input.vailCode {
+  width: 70% ;
+}
+.section .form-group .getvailCode {
+  float: right;
+  padding-top: 5px;
+  font-size: 0.65rem;
+  text-align: center;
+  color: #52abd2;
+  background: white;
+}
+.section label {
+  position: absolute;
+  display: inline-block;
+  padding-top: 6px;
+  line-height: 0.8rem;
+  width: 3.2rem;
+  font-size: 0.65rem;
+  color: #333333;
+}
+.section.staff label {
+  width: 5.05rem;
+}
+.section.staff input,
+.section.staff select {
+  padding-left: 5.05rem !important;
+}
+.section.success .head {
+  padding-top: 0.75rem;
+  font-size: 0.65rem;
+  color: #333333;
+  text-align: center;
+}
+.section.success .head h3 {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+.section.success .head img {
+  width: 5.6rem;
+  height: 4.75rem;
+  margin-top: 1.4rem;
+  margin-bottom: 0.75rem;
+}
+.section.success .tip {
+  line-height: 0.9rem;
+  font-size: 0.6rem;
+  font-family: "Adobe Heiti Std";
+  color: #999999;
+}
+.section.success .weixin img {
+  display: block;
+  width: 8.5rem;
+  height: 8.5rem;
+  margin: 2rem auto 0;
+}
+.section.success .footer {
+  margin-top: 1.35rem;
+}
+.section.success .footer ul li {
+  display: inline-block;
+  width: 33.3333%;
+}
+.section.success .footer ul li > div {
+  width: 2rem;
+  height: 2rem;
+  position: relative;
+  margin: 0 auto;
+}
+.section.success .footer ul li > div span {
+  position: absolute;
+  top: 0;
+  left: -0.4rem;
+}
+.section.success .footer ul li > div > img {
+  width: 100%;
+  height: 100%;
+}
+.section.success .footer ul li.first-part span img {
+  width: 0.7rem;
+  height: 0.625rem;
+}
+.section.success .footer ul li.second-part span img {
+  width: 0.875rem;
+  height: 0.625rem;
+}
+.section.success .footer ul li.thirth-part span img {
+  width: 0.9rem;
+  height: 0.625rem;
+}
+.section.success .footer ul li p {
+  font-size: 0.6rem;
+  font-family: "PingFangSC";
+  color: #333333;
+  line-height: 1.5;
+  text-align: center;
+  margin-top: 0.6rem;
+}
+.section .btn {
+  width: 100%;
+  line-height: 2rem;
+  margin-top: 0.8rem;
+  font-size: 0.75rem;
+  color: white;
+  background-color: #52abd2;
+  border: none;
+  border-radius: 2px;
+}
+.section .btn.btn-disable {
+  background-color: #cccccc;
+}
+.section.active {
+  display: block;
+}

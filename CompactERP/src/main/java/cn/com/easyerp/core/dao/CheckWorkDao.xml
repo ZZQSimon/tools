@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.CheckWorkDao">
+
+
+	<select id="selectAttendanceCount" resultType="cn.com.easyerp.core.companyCalendar.CheckWorkJson">
+		select user_id as user, group_concat(`workDate` separator ',') as
+		dates from m_attendance
+		where DATE_FORMAT(workDate,'%Y-%m')=#{date}
+		<if test="name !=null and name != ''">
+			and user_id like
+			'%${name}%'
+		</if>
+		group by user_id order by user_id asc
+	</select>
+
+	<select id="selectAttendanceCountUser" resultType="java.lang.String">
+		select user_id as user from m_attendance
+		where
+		DATE_FORMAT(workDate,'%Y-%m')=#{date}
+		<if test="name !=null and name != ''">
+			and user_id like
+			'%${name}%'
+		</if>
+		group by user_id order by user_id asc limit #{offset},#{size}
+	</select>
+
+	<select id="selectAttendanceCountUserCount" resultType="java.lang.String">
+		select user_id from m_attendance
+		where
+		DATE_FORMAT(workDate,'%Y-%m')=#{date}
+		<if test="name !=null and name != ''">
+			and user_id like
+			'%${name}%'
+		</if>
+		group by user_id
+	</select>
+
+
+	<select id="selectAttendances" resultType="cn.com.easyerp.core.companyCalendar.AttendanceInfo">
+		select
+		workDate,start_work_time,end_work_time,is_late,is_leave from
+		m_attendance where user_id=#{user_id} and workDate between
+		#{beginDate} AND #{endDate}
+	</select>
+</mapper>
+
+
+
+
+

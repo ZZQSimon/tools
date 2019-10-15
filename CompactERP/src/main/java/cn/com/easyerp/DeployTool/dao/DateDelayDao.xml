@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.DateDelayDao">
+	<select id="selectPassage" resultType="cn.com.easyerp.DeployTool.service.Passage">
+		SELECT
+		id,
+		`name`,
+		type,
+		main_table,
+		group_cols,
+		disp_cols,
+		filter_tables,
+		filter_sql,
+		has_append
+		FROM
+		`c_passage`
+	</select>
+	<select id="selectPassageRow" resultType="cn.com.easyerp.DeployTool.service.PassageRow">
+		SELECT
+		id,
+		passage_id,
+		disp_name_key,
+		upd_statement,
+		edit_cond,
+		edit_part_bg_color,
+		edit_part_fg_color,
+		unedit_part_bg_color,
+		unedit_part_fg_color,
+		decimal_digit,
+		total_row,
+		total_col,
+		detail_sql,
+		module
+		FROM
+		c_passage_row
+	</select>
+	<select id="selectPassageRowFormula" resultType="cn.com.easyerp.DeployTool.service.PassageRowFormula">
+		SELECT
+		id,
+		passage_row_id,
+		`level`,
+		cond,
+		formula,
+		`sql`,
+		type,
+		module
+		FROM
+		c_passage_row_formula
+	</select>
+	<!-- c_passage表 新增，编辑，删除操作 -->
+	<insert id="addDateDelay" parameterType="java.util.List">
+		INSERT INTO c_passage (
+		`id`,
+		`name`,
+		`main_table`,
+		`group_cols`,
+		`disp_cols`,
+		`filter_sql`,
+		`filter_tables`,
+		`has_append`
+		)
+		VALUES
+		<foreach collection="passageList" item="item" index="index"
+			separator=",">
+			(#{item.id},#{item.name},#{item.main_table},#{item.group_cols},#{item.disp_cols},#{item.filter_sql},#{item.filter_tables},#{item.has_append})
+		</foreach>
+	</insert>
+	<update id="updDateDelay" parameterType="java.util.List">
+		<foreach collection="passageList" item="item" index="index"
+			separator=";">
+			UPDATE c_passage
+			<set>
+				<if test="item.name != null">
+					`name` = #{item.name,jdbcType=VARCHAR},
+				</if>
+				<if test="item.type != null">
+					`type` = #{item.type,jdbcType=INTEGER},
+				</if>
+				<if test="item.main_table != null">
+					`main_table` = #{item.main_table,jdbcType=VARCHAR},
+				</if>
+				<if test="item.group_cols != null">
+					`group_cols` = #{item.group_cols,jdbcType=VARCHAR},
+				</if>
+				<if test="item.disp_cols != null">
+					`disp_cols` = #{item.disp_cols,jdbcType=VARCHAR},
+				</if>
+				<if test="item.filter_sql != null">
+					`filter_sql` = #{item.filter_sql,jdbcType=VARCHAR},
+				</if>
+				<if test="item.filter_tables != null">
+					`filter_tables` = #{item.filter_tables,jdbcType=VARCHAR},
+				</if>
+				<if test="item.has_append != null">
+					`has_append` = #{item.has_append,jdbcType=INTEGER},
+				</if>
+			</set>
+			WHERE
+			`id`= #{item.id}
+		</foreach>
+	</update>
+	<delete id="delDateDelay">
+		DELETE FROM c_passage WHERE `id` in (
+		<foreach collection="passageList" item="item" separator=",">
+			#{item.id}
+		</foreach>
+		)
+	</delete>
+	<!-- c_PassageRow表 新增，编辑，删除操作 -->
+	<insert id="addPassageRow" parameterType="java.util.List">
+		INSERT INTO c_passage_row (
+		`id`,
+		`passage_id`,
+		`disp_name_key`,
+		`upd_statement`,
+		`edit_cond`,
+		`edit_part_bg_color`,
+		`edit_part_fg_color`,
+		`unedit_part_bg_color`,
+		`unedit_part_fg_color`,
+		`decimal_digit`,
+		`total_row`,
+		`total_col`,
+		`detail_sql`,
+		`module`
+		)
+		VALUES
+		<foreach collection="passageRowList" item="item" index="index"
+			separator=",">
+			(#{item.id},#{item.passage_id},#{item.disp_name_key},#{item.upd_statement},#{item.edit_cond},#{item.edit_part_bg_color},#{item.edit_part_fg_color},#{item.unedit_part_bg_color},#{item.unedit_part_fg_color},#{item.decimal_digit},#{item.total_row},#{item.total_col},#{item.detail_sql},#{item.module})
+		</foreach>
+	</insert>
+	<update id="updPassageRow" parameterType="java.util.List">
+		<foreach collection="passageRowList" item="item" index="index"
+			separator=";">
+			UPDATE c_passage_row
+			<set>
+				<if test="item.passage_id != null">
+					`passage_id` = #{item.passage_id,jdbcType=VARCHAR},
+				</if>
+				<if test="item.disp_name_key != null">
+					`disp_name_key` = #{item.disp_name_key,jdbcType=INTEGER},
+				</if>
+				<if test="item.upd_statement != null">
+					`upd_statement` = #{item.upd_statement,jdbcType=VARCHAR},
+				</if>
+				<if test="item.edit_cond != null">
+					`edit_cond` = #{item.edit_cond,jdbcType=VARCHAR},
+				</if>
+				<if test="item.edit_part_bg_color != null">
+					`edit_part_bg_color` =
+					#{item.edit_part_bg_color,jdbcType=VARCHAR},
+				</if>
+				<if test="item.edit_part_fg_color != null">
+					`edit_part_fg_color` =
+					#{item.edit_part_fg_color,jdbcType=VARCHAR},
+				</if>
+				<if test="item.unedit_part_bg_color != null">
+					`unedit_part_bg_color` =
+					#{item.unedit_part_bg_color,jdbcType=VARCHAR},
+				</if>
+				<if test="item.unedit_part_fg_color != null">
+					`unedit_part_fg_color` =
+					#{item.unedit_part_fg_color,jdbcType=VARCHAR},
+				</if>
+				<if test="item.decimal_digit != null">
+					`decimal_digit` = #{item.decimal_digit,jdbcType=INTEGER},
+				</if>
+				<if test="item.total_row != null">
+					`total_row` = #{item.total_row,jdbcType=INTEGER},
+				</if>
+				<if test="item.total_col != null">
+					`total_col` = #{item.total_col,jdbcType=INTEGER},
+				</if>
+				<if test="item.detail_sql != null">
+					`detail_sql` = #{item.detail_sql,jdbcType=VARCHAR},
+				</if>
+				<if test="item.module != null">
+					`module` = #{item.module,jdbcType=VARCHAR},
+				</if>
+			</set>
+			WHERE
+			`id` = #{item.id}
+		</foreach>
+	</update>
+	<delete id="delPassageRow">
+		DELETE FROM c_passage_row WHERE `passage_id` in (
+		<foreach collection="passageRowList" item="item" separator=",">
+			#{item.passage_id}
+		</foreach>
+		)
+	</delete>
+	<!-- c_passage_row_formula表 新增，编辑，删除操作 -->
+	<insert id="addPassageRowFormula" parameterType="java.util.List">
+		INSERT INTO c_passage_row_formula (
+		`id`,
+		`passage_row_id`,
+		`level`,
+		`cond`,
+		`formula`,
+		`sql`,
+		`type`,
+		`module`
+		)
+		VALUES
+		<foreach collection="passageRowFormulaList" item="item" index="index"
+			separator=",">
+			(#{item.id},#{item.passage_row_id},#{item.level},#{item.cond},#{item.formula},#{item.sql},#{item.type},#{item.module})
+		</foreach>
+	</insert>
+	<update id="updPassageRowFormula" parameterType="java.util.List">
+		<foreach collection="passageRowFormulaList" item="item" index="index"
+			separator=";">
+			UPDATE c_passage_row_formula
+			<set>
+				<if test="item.passage_row_id != null">
+					`passage_row_id` = #{item.passage_row_id,jdbcType=VARCHAR},
+				</if>
+				<if test="item.level != null">
+					`level` = #{item.level,jdbcType=INTEGER},
+				</if>
+				<if test="item.cond != null">
+					`cond` = #{item.cond,jdbcType=VARCHAR},
+				</if>
+				<if test="item.formula != null">
+					`formula` = #{item.formula,jdbcType=VARCHAR},
+				</if>
+				<if test="item.sql != null">
+					`sql` = #{item.sql,jdbcType=VARCHAR},
+				</if>
+				<if test="item.type != null">
+					`type` = #{item.type,jdbcType=INTEGER},
+				</if>
+				<if test="item.module != null">
+					`module` = #{item.module,jdbcType=VARCHAR},
+				</if>
+			</set>
+			WHERE
+			`id` = #{item.id}
+		</foreach>
+	</update>
+	<delete id="delPassageRowFormula">
+		DELETE FROM c_passage_row_formula WHERE passage_row_id in (
+		<foreach collection="passageRowFormulaList" item="item"
+			separator=",">
+			#{item.passage_row_id}
+		</foreach>
+		)
+	</delete>
+</mapper>

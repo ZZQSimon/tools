@@ -74,7 +74,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
         if (generateForJava5) {
             method.addBodyLine("oredCriteria = new ArrayList<Criteria>();"); //$NON-NLS-1$
         } else {
-            method.addBodyLine("oredCriteria = new ArrayList();"); //$NON-NLS-1$
+            method.addBodyLine("oredCriteria = new ArrayList<>();"); //$NON-NLS-1$
         }
 
         commentGenerator.addGeneralMethodComment(method, introspectedTable);
@@ -291,10 +291,10 @@ public class ExampleGenerator extends AbstractJavaGenerator {
                     .addBodyLine("criteriaWithBetweenValue = new ArrayList<Map<String, Object>>();"); //$NON-NLS-1$
 
         } else {
-            method.addBodyLine("criteriaWithoutValue = new ArrayList();"); //$NON-NLS-1$
-            method.addBodyLine("criteriaWithSingleValue = new ArrayList();"); //$NON-NLS-1$
-            method.addBodyLine("criteriaWithListValue = new ArrayList();"); //$NON-NLS-1$
-            method.addBodyLine("criteriaWithBetweenValue = new ArrayList();"); //$NON-NLS-1$
+            method.addBodyLine("criteriaWithoutValue = new ArrayList<>();"); //$NON-NLS-1$
+            method.addBodyLine("criteriaWithSingleValue = new ArrayList<>();"); //$NON-NLS-1$
+            method.addBodyLine("criteriaWithListValue = new ArrayList<>();"); //$NON-NLS-1$
+            method.addBodyLine("criteriaWithBetweenValue = new ArrayList<>();"); //$NON-NLS-1$
         }
         answer.addMethod(method);
 
@@ -450,7 +450,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
             method
                     .addBodyLine("Map<String, Object> map = new HashMap<String, Object>();"); //$NON-NLS-1$
         } else {
-            method.addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
+            method.addBodyLine("Map map = new HashMap<>();"); //$NON-NLS-1$
         }
 
         method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
@@ -482,7 +482,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
             method
                     .addBodyLine("Map<String, Object> map = new HashMap<String, Object>();"); //$NON-NLS-1$
         } else {
-            method.addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
+            method.addBodyLine("Map map = new HashMap<>();"); //$NON-NLS-1$
         }
 
         method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
@@ -508,7 +508,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
         if (generateForJava5) {
             method.addBodyLine("List<Object> list = new ArrayList<Object>();"); //$NON-NLS-1$
         } else {
-            method.addBodyLine("List list = new ArrayList();"); //$NON-NLS-1$
+            method.addBodyLine("List list = new ArrayList<>();"); //$NON-NLS-1$
         }
 
         method.addBodyLine("list.add(value1);"); //$NON-NLS-1$
@@ -517,7 +517,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
             method
                     .addBodyLine("Map<String, Object> map = new HashMap<String, Object>();"); //$NON-NLS-1$
         } else {
-            method.addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
+            method.addBodyLine("Map map = new HashMap<>();"); //$NON-NLS-1$
         }
         method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
         method.addBodyLine("map.put(\"values\", list);"); //$NON-NLS-1$
@@ -575,7 +575,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
                         .addBodyLine("dateList.add(new java.sql.Date(iter.next().getTime()));"); //$NON-NLS-1$
                 method.addBodyLine("}"); //$NON-NLS-1$
             } else {
-                method.addBodyLine("List dateList = new ArrayList();"); //$NON-NLS-1$
+                method.addBodyLine("List dateList = new ArrayList<>();"); //$NON-NLS-1$
                 method.addBodyLine("Iterator iter = values.iterator();"); //$NON-NLS-1$
                 method.addBodyLine("while (iter.hasNext()) {"); //$NON-NLS-1$
                 method
@@ -648,7 +648,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
                         .addBodyLine("timeList.add(new java.sql.Time(iter.next().getTime()));"); //$NON-NLS-1$
                 method.addBodyLine("}"); //$NON-NLS-1$
             } else {
-                method.addBodyLine("List timeList = new ArrayList();"); //$NON-NLS-1$
+                method.addBodyLine("List timeList = new ArrayList<>();"); //$NON-NLS-1$
                 method.addBodyLine("Iterator iter = values.iterator();"); //$NON-NLS-1$
                 method.addBodyLine("while (iter.hasNext()) {"); //$NON-NLS-1$
                 method
@@ -806,7 +806,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
             sb
                     .append("CriteriaWithSingleValue = new ArrayList<Map<String, Object>>();"); //$NON-NLS-1$;
         } else {
-            sb.append("CriteriaWithSingleValue = new ArrayList();"); //$NON-NLS-1$;
+            sb.append("CriteriaWithSingleValue = new ArrayList<>();"); //$NON-NLS-1$;
         }
         constructor.addBodyLine(sb.toString());
 
@@ -816,7 +816,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
             sb
                     .append("CriteriaWithListValue = new ArrayList<Map<String, Object>>();"); //$NON-NLS-1$
         } else {
-            sb.append("CriteriaWithListValue = new ArrayList();"); //$NON-NLS-1$
+            sb.append("CriteriaWithListValue = new ArrayList<>();"); //$NON-NLS-1$
         }
         constructor.addBodyLine(sb.toString());
 
@@ -826,7 +826,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
             sb
                     .append("CriteriaWithBetweenValue = new ArrayList<Map<String, Object>>();"); //$NON-NLS-1$
         } else {
-            sb.append("CriteriaWithBetweenValue = new ArrayList();"); //$NON-NLS-1$
+            sb.append("CriteriaWithBetweenValue = new ArrayList<>();"); //$NON-NLS-1$
         }
         constructor.addBodyLine(sb.toString());
 
@@ -862,7 +862,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
             method
                     .addBodyLine("Map<String, Object> map = new HashMap<String, Object>();"); //$NON-NLS-1$
         } else {
-            method.addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
+            method.addBodyLine("Map map = new HashMap<>();"); //$NON-NLS-1$
         }
         method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
         method.addBodyLine("map.put(\"value\", value);"); //$NON-NLS-1$
@@ -907,7 +907,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
             method
                     .addBodyLine("Map<String, Object> map = new HashMap<String, Object>();"); //$NON-NLS-1$
         } else {
-            method.addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
+            method.addBodyLine("Map map = new HashMap<>();"); //$NON-NLS-1$
         }
         method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
         method.addBodyLine("map.put(\"values\", values);"); //$NON-NLS-1$
@@ -965,7 +965,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
             sb.append(">();"); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
         } else {
-            method.addBodyLine("List list = new ArrayList();"); //$NON-NLS-1$
+            method.addBodyLine("List list = new ArrayList<>();"); //$NON-NLS-1$
         }
         method.addBodyLine("list.add(value1);"); //$NON-NLS-1$
         method.addBodyLine("list.add(value2);"); //$NON-NLS-1$
@@ -973,7 +973,7 @@ public class ExampleGenerator extends AbstractJavaGenerator {
             method
                     .addBodyLine("Map<String, Object> map = new HashMap<String, Object>();"); //$NON-NLS-1$
         } else {
-            method.addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
+            method.addBodyLine("Map map = new HashMap<>();"); //$NON-NLS-1$
         }
         method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
         method.addBodyLine("map.put(\"values\", list);"); //$NON-NLS-1$

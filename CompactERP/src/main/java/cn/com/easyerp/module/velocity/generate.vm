@@ -1,0 +1,157 @@
+#dxFormHead($form)
+<form id="$form.id" name="ttt" class="form-inline dx-form" role="form">
+<div id="$form.id">
+	#dxMenuBarHead($form)
+	<button type="button" class="btn btn-default dx-submit" id="generate_btn" disabled>生成</button>
+	#dxMenuBarFoot()
+	<div class="container" style="height:auto;padding:0;">
+		<div class="dx-detail-container">
+			<div class="row dx-detail-row">
+				<div class="form-group dx-field-6 dx-field-container">
+					<label class="control-label label-1" for="w_P99EjMp">开始日期</label>
+					<div class="input-group input-1">
+						<input type="text" class="start_date_g" dx-date="true" readonly="true"  />
+					</div>
+				</div>
+				<div class="form-group dx-field-6 dx-field-container">
+					<label class="control-label label-1" for="w_P99EjMp">结束日期</label>
+					<div class="input-group input-1">
+						<input type="text" class="end_date_g"  dx-date="true" readonly="true" disabled />
+					</div>
+				</div>
+			</div>
+				
+		<div class="dx-grid-container dx-div-with-scroll" style="overflow:auto;height:300px; margin-top: 10px">
+			#foreach($typeName in ${form.typeName})
+				#set($i=0)
+			<table table="" class="dx-grid display dataTable no-footer dx-import-table" cellspacing="0" width="100%" style="margin-top: 10px">
+				<thead>
+					<tr><th>$!{typeName}</th></tr>
+				</thead>
+				<tbody>
+					<tr><td style="padding-top: 10px; padding-bottom: 10px">
+					#foreach($type in ${form.typeList.get($typeName)})
+					<div style="float: left; min-width: 120px; padding-left: 10px"><label><input type="checkbox" class="type" name="type" value="$!{type.get('CODE')}" style="margin-right: 5px" />$!{type.get('NAME')}</label></div>
+					#end
+					</td></tr>
+				</tbody>
+			</table>
+			#end
+		</div>
+	</div>
+</div>
+</form>
+#dxFormTail($form)
+<div class="hidden" id="${form.id}_msg">
+</div>
+
+
+<script type="text/javascript">
+$(".type").change(function(){
+	if($(".start_date_g").val()!=""&&$(".end_date_g").val()!=""&&$(".type:checked").length>0){
+		$("#generate_btn").attr("disabled", false).html("生成");
+	}
+	else{
+		$("#generate_btn").attr("disabled", true).html("生成");
+	}
+});
+
+var datepickerParams={
+	format: "yyyy-mm-dd",
+	language: "zh-CN",
+	autoclose: true,
+};
+
+$("input[dx-date='true']").datepicker(datepickerParams);
+
+$(".start_date_g").change(function(e){
+	if($(this).val()!=""){
+		$(".end_date_g").attr("disabled", false).change();
+	}
+	else
+	{
+		$(".end_date_g").attr("disabled", true).html("");
+	}
+});
+
+//判断时间大小
+$(".end_date_g").change(function(e){
+	if($(this).val()!=""){
+		var minDate=$(".start_date_g").val().split("-");
+		var current=$(this).val().split("-");
+		//比较年
+		if(parseInt(minDate[0])>parseInt(current[0])){
+			$(this).val("").attr("placeholder", "结束日期应大于开始日期！");
+			changeBtn();
+		}
+		else if(parseInt(minDate[0])<parseInt(current[0])){
+			 changeBtn();
+		}
+		else{
+			//比较月
+			if(parseInt(minDate[1])>parseInt(current[1])){
+				$(this).val("").attr("placeholder", "结束日期应大于开始日期！");
+				changeBtn();
+			}
+			else if(parseInt(minDate[1])<parseInt(current[1])){
+				changeBtn();
+			}
+			else{
+				//比较日
+				if(parseInt(minDate[2])>parseInt(current[2])){
+					$(this).val("").attr("placeholder", "结束日期应大于开始日期！");
+					changeBtn();
+				}
+				else{
+					changeBtn();
+				}
+			}
+		}
+	}
+});
+
+function changeBtn(){
+	if($(".type:checked").length!=0&&$(".start_date_g").val()!=""&&$(".end_date_g").val()!=""){
+		$("#generate_btn").attr("disabled", false).html("生成");
+	}
+	else
+	{
+		$("#generate_btn").attr("disabled", true).html("生成");
+	}
+}
+
+$("#generate_btn").click(function(){
+	var request = {};
+	request.type =new Array();
+	$(".type:checked").map(function(index){
+		request.type.push($(this).val());
+	});
+	request.start=$(".start_date_g").val();
+	request.end=$(".end_date_g").val();
+	$(this).attr("disabled", true).html("正在生成，请稍候...");
+	$(".type").attr("disabled", true);
+	//提交返回数据
+	postJson('/generate/generate.do',request, function (msg) {
+		if(msg=="0"){
+			alert("生成成功！");
+			$("#generate_btn").attr("disabled", true).html("生成完毕！");
+		}
+		else{
+			if(msg=="11"){
+				alert("发生SQL错误！生成失败！");
+			}
+			else{
+				alert("存储过程异常！生成失败！");
+			}
+			$("#generate_btn").attr("disabled", false).html("生成");
+		}
+		
+		$(".type").attr("disabled", false);
+		
+	} , function (msg) {
+		messageBox(msg);	//失败Msg
+	} );
+});
+
+</script> 
+

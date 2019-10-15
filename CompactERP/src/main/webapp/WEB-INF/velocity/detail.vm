@@ -1,0 +1,185 @@
+#macro(addApprovers)
+<div class="g-cell-wrap  add-approver-model">
+    <label class="control-label">添加审批人</label>
+    <div class="approvers input-group clearfix">
+        <span class="btn dx-upload-button add-approver">
+            <label></label>
+        </span>
+        <p class="approver-add-tip">点击头像可删除</p>
+    </div>
+</div>
+#end
+
+
+#dxFormHead($form)
+<form id="$form.id" name="$dx.formatEmpty($form.widgetName)" class="form-inline  dx-${form.widgetName}-form dx-form" role="form"
+      xmlns="http://www.w3.org/1999/html" free="$form.freeApprove">
+
+    #set($table =$dx.table($form.tableName))
+    <div  class="main-view add-form-detail lex-btn-toolbar #if($form.action != 'create' && $table.is_approve == 1 && !$dx.empty($form.approveFlow))col-xs-9#end">
+    #if(!$dx.empty($dx.user) && $dx.user.isMobileLogin==1)
+        <div class="gm-top-menu #if($form.action == 'create') mobile-create  #elseif($form.action == 'view')  mobile-view #elseif($form.action == 'edit') moble-edit #else #end" >
+            #if($form.action == "create")
+                <div class="top-menu-title pull-left">$dx.msg($table.international_id)</div>
+                <button type="button" class="dx-more-record pull-right" name="$form.pageId">$dx.msg("CheckTheRecord")</button>
+            #else
+                #if(!$dx.empty($dx.user) &&  $form.initiatorId==$dx.user.id && $table.is_approve == 1)
+                    <div class="top-menu-title pull-left">$dx.msg("ApplicationDetails")</div>
+                    #if(!$dx.empty($form.approveFlow))
+                        <label for="${form.id}_submit" style="float: right"><img src="../DX_CLOUD/icons/edit.png" alt="" style="height: 12px;line-height: 12px;width: 12px; vertical-align: middle"><input type="button" id="${form.id}_submit" name="${form.action}" class="dx-submit approve-edit" style="height: 26px;line-height: 26px;width: 51px;background-color:white; vertical-align: middle"
+                                                                                                                                                                                      value="$dx.msg($form.buttonText)"/></label>
+
+                    #end
+                #elseif($table.is_approve == 1)
+                    <div class="top-menu-title pull-left">$dx.msg("ApproveDetails")</div>
+                    #if(!$dx.empty($form.approveFlow))
+                        <input type="button" id="${form.id}_submit" name="${form.action}" class="dx-submit approve-edit"
+                               value="$dx.msg($form.buttonText)"/>
+                    #end
+                #else 
+                    <div class="top-menu-title pull-left">$dx.msg("RecordDetails")</div>
+                #end
+            #end
+        </div>
+    #end
+    #if($dx.empty($dx.user) || $dx.user.isMobileLogin!=1)
+        #dxMenuBarHead($form)
+        #set($auth = $dx.auth($dx.user, $table))
+        #if ($auth && ($form.action != "view" || $form.button("edit")))
+            #if($form.isIndexView != 1)
+                <input type="button"  name="$dx.formatEmpty(${form.action})" class="dx-back btn"
+                       value="$dx.msg('Back')"/>
+            #end
+            ## 审批块配置可编辑字段
+            #if($dx.empty($form.approveFlow) || ($table.is_approve == 1 && $form.hasEditButton))
+                #if($form.action == "create" || $dx.editAuth($dx.user, $table, $form.fieldMap))
+                <input type="button" id="${form.id}_submit" name="$dx.formatEmpty(${form.action})" class="dx-submit btn"
+                       value="$dx.msg($form.buttonText)"/>
+                #end
+                #if($form.action == "view" && $dx.editAuth($dx.user, $table, $form.fieldMap)
+                        && $dx.empty($form.approveFlow) && $table.is_approve == 1)
+                    <input type="button" class="g1-approve-submit btn"
+                           value="$dx.msg('approve submit')"/>
+                #end
+            #end
+##            #dxOperationButton($table.listTriggers)
+        #end
+        #if($table.is_approve == 1 && $form.hasSaveAndSubmitButton)
+                <input type="button" name="${form.action}" class="btn dx-submit save-and-submit "
+                style=#if($form.action == 'view') "display: none" #else "display: ''" #end
+            value="$dx.msg('save and submit')"/>
+        #end
+        #if ($form.hasNext && $form.button("next") && false)
+                <input type="button" id="${form.id}_submit_next" value="$dx.msg("continue")"
+                name=#if ($form.action == "view") "" #else "${form.action}" #end class="dx-submit btn dx-next lex-btn" />
+        #end
+        #if($form.action == "create")
+            <input type="button" name="${form.action}" class="btn dx-submit dx-next lex-btn"
+                value="$dx.msg('submit and next')"/>
+        #end
+        #if ($form.action != "edit" && $form.action != "create")
+            #dxOperationButton($form, $table.listTriggers)
+        #end
+        #if (!$dx.empty($form.children))
+            #dxAgMenu($form.id $form.children ${form.action})
+        #end
+        <button type="button" class="btn pull-right detail-before-after-data after" style="display: none">$dx.msg("after data")</button>
+        <button type="button" class="btn pull-right detail-before-after-data before" style="display: none">$dx.msg("before data")</button>
+        #dxMenuBarFoot()
+    #end
+        <div class="dx-form-con #if($form.action == 'create') mobile-create  #elseif($form.action == 'view')  mobile-view #elseif($form.action == 'edit') moble-edit #else #end">
+        <div class="container dx-auto-expand dx-div-with-scroll" style="padding:0;">
+        #if($dx.empty($dx.user) || $dx.user.isMobileLogin!=1)
+            #if($dx.empty($form.children) && $dx.empty($form.refChildTables))
+                #dxDetail($form)
+            #else
+                <div class="dx-sub-tabs dx-tabs">
+                    <ul class="nav-submenu nav nav-tabs ">
+                        <li class="active">
+                            <a data-toggle="tab" href="#${form.id}-tab"
+                               aria-controls="#$form.id" aria-expanded="true">$dx.label($table)</a>
+                        </li>
+                        #foreach($child in ${form.children})
+                            <li>
+                                <a data-toggle="tab" href="#${child.id}-tab"
+                                   aria-controls="#$child.id" aria-expanded="true">$dx.label($child)
+                                    <span class="child-data-count"></span>
+                                </a>
+                            </li>
+                        #end
+                        #if (!$dx.empty($form.refChildTables))
+                            #foreach($refChild in ${form.refChildTables})
+                                <li>
+                                    <a data-toggle="tab" href="#${refChild.id}-tab"
+                                       aria-controls="#$refChild.id" aria-expanded="true">$dx.label($refChild.table)
+                                        <span class="child-data-count"></span>
+                                    </a>
+                                </li>
+                            #end
+                        #end
+                    </ul>
+                    <div class="tab-content add-form-grid">
+                        <div id="${form.id}-tab" class="tab-pane active">
+                            #dxDetail($form)
+                        </div>
+                        #if($dx.empty($dx.user) || $dx.user.isMobileLogin!=1)
+                        #if(!$dx.empty($form.children))
+                            #foreach($child in ${form.children})
+                                <div id="${child.id}-tab" class="tab-pane has-foot-btn sub-grid-tab">
+                                    #dxGrid($child, false)
+                                    <div class="datagrid-foot" >
+                                        <button class="dx-grid-child-add" #if($form.action != "create") style="display: none" #end>$dx.msg('Add')</button>
+                                        <button class="dx-grid-child-delete" #if($form.action != "create") style="display: none" #end>$dx.msg('Delete')</button>
+                                    </div>
+                                </div>
+                            #end
+                        #end
+                        #if(!$dx.empty($form.refChildTables))
+                            #foreach($refChild in ${form.refChildTables})
+                                <div id="${refChild.id}-tab" class="tab-pane sub-grid-tab">
+                                    #dxGrid($refChild, true)
+                                </div>
+                            #end
+                        #end
+                        #end
+                    </div>
+                </div>
+            #end
+        #else
+            #dxDetail($form)
+        #end
+        </div>
+        </div>
+        #if(!$dx.empty($dx.user) && $dx.user.isMobileLogin==1)
+            #dxMenuBarHead($form)
+                 #set($auth = $dx.auth($dx.user, $table))
+                 #if ($auth && ($form.action != "view" || $form.button("edit")))
+                    #if($dx.empty($form.approveFlow) || ($table.is_approve == 1 && $form.hasSaveAndSubmitButton))
+                        <input type="button" id="${form.id}_submit" name="${form.action}" class="dx-submit"
+                           value="$dx.msg($form.buttonText)"/>
+                    #end
+                #end
+            #dxMenuBarFoot()
+        #end
+    </div>
+
+    #if(!$dx.empty($form.approveFlow))
+        #if($form.approveFlow.state!=5)
+            #detailApprove($form)
+        #end
+    #elseif($form.freeApprove==0)
+        #addApprovers($form.freeApprove)
+    #end
+	#addPoint($form)
+</form>
+
+#if(!$dx.empty($form.children))
+    <div class="add-detail row-blue-btn" style="display:none"><span style="font-size:22px;margin-right:5px">＋</span>增加明细</div>
+    #foreach($child in ${form.children})
+        <div id="${child.id}" class="main-view mobile-child">
+        </div>
+    #end
+#end
+
+
+#dxFormTail($form)

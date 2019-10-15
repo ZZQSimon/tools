@@ -1,0 +1,50 @@
+#dxFormHead($form)                  ##必须
+<form action="#springUrl('')/auth/addCompany.view" id="$form.id" name="selectcorp" class="form-inline dx-form clearfix" role="form"">       ##基本上照抄即可
+
+    #set ($contextRoot = "#springUrl('')")
+   	<script>
+	    function makeLoginUrl(path) {
+	        return '$contextRoot' + path
+	    }
+	</script>
+    <link rel="stylesheet" href="#springUrl('')/js/reg.css">
+
+    <script src="#springUrl('')/js/jquery-1.11.0.js"></script>
+<div class="dx-reg">
+    <!--选择企业***************************-->
+    <header class="dx-header">
+    </header>
+    <section class="content_box cleafix select-company " >
+        <div  class="reg-title-t">
+            <div href="#1">
+                <img src="#springUrl('')/img/logo-.png" alt="logo">
+                选择您的企业
+            </div>
+        </div>
+        <div class="select-cp-head">
+            <div class="select-cp-st fl">
+                <input type="text" placeholder="输入企业中文名或英文名">
+                <button>搜索</button>
+            </div>
+            <div class="select-cp-find fl">
+                <span>没找到？</span>
+                <a href="#" class="addCompany">添加企业</a>
+            </div>
+        </div>
+        <div class="select-cp-result">
+            <ul>
+                #foreach($corp in $form.corp)
+					<li>
+						<a href="#" name="$corp.name">$corp.companyName</a>
+					</li>
+				#end
+            </ul>
+        </div>
+    </section>
+</div>
+<script>
+	$(".addCompany").on("click",function(){
+		$('form[name="selectcorp"]').submit();
+	});
+</script>
+#dxFormTail($form)

@@ -1,0 +1,52 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="appointment" class="form-inline fc-event-detail dx-detail-form dx-form clearfix pc-tab-form" role="form"">       ##基本上照抄即可
+    #set($table = $dx.table($form.appointment.table))
+    <h4 style="padding-top: 1%;padding-left:2%">$dx.msg('appointment detail')</h4>
+    <ul class=" col-xs-12 reservation-ul-ui">
+        <li class="form-group dx-field-12 dx-field-container">
+            <div class="col-xs-3 ">$dx.i18n($table.i18n)</div>
+            <div class="col-xs-9 ">
+                <input type="text" value="" class="appointment-source-name input-4"   readonly/>
+            </div>
+        </li>
+        <li class="form-group dx-field-12 dx-field-container">
+            <div class="col-xs-3 "><i class="ipt-require"></i>$dx.msg('appointment persion')</div>
+            <div class="col-xs-9 ">
+                <input type="text" value="$dx.formatEmpty($form.appointment.user.name)" class="appointment-persion  input-4 event-title ui-widget dx-field" readonly/>
+            </div>
+        </li>
+        <li class="form-group dx-field-12 dx-field-container">
+                <div class="col-xs-3 "><i class="ipt-require"></i>$dx.msg('begin time')</div>
+                <div class="col-xs-9  ">
+                    <input type="text" value="$dx.formatDate($form.appointment.begin_time)" class="appointment-begin-time g1-datetime input-4"
+                        #if($form.action == 'view') readonly #end/>
+        </li>
+        <li class="form-group dx-field-12 dx-field-container">
+            <div class="col-xs-3"><i class="ipt-require"></i>$dx.msg('end time')</div>
+            <div class="col-xs-9 ">
+                <input type="text" value="$dx.formatDate($form.appointment.end_time)" class="appointment-end-time g1-datetime input-4"
+                    #if($form.action == 'view') readonly #end/>
+            </div>
+        </li>
+
+        <li class="form-group dx-field-12 dx-field-container">
+            <div class="col-xs-3">$dx.msg('memo')</div>
+            <div class="col-xs-9 ">
+                <textarea type="text" class="appointment-memo input-4" style="height: 220px" #if($form.action == 'view') readonly #end>$dx.formatEmpty($form.appointment.memo)</textarea>
+            </div>
+        </li>
+##        <li>
+##            <div class="col-xs-3">$dx.msg('is true')</div>
+##            <div class="col-xs-9">$dx.formatEmpty($form.appointment.status)</div>
+##        </li>
+
+    </ul>
+##    <button type="button" class="btn appointment-hide">$dx.msg('hide')</button>
+    <button type="button" class="btn save-appointment blue-color-text" style="#if($form.action != 'create')
+        display: none #end">$dx.msg('save')</button>
+    #if($form.action != 'create')
+        <button type="button" class="btn appointment-edit">$dx.msg('edit')</button>
+        <button type="button" class="btn appointment-delete">$dx.msg('delete')</button>
+    #end
+</form>
+#dxFormTail($form)

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.IndexDao">
+	<select id="selectBullList" parameterType="String"
+		resultType="cn.com.easyerp.core.view.form.index.BullModel">
+		select
+		desk.id,
+		desk.name,
+		desk.end_col,
+		desk.start_col,
+		desk.end_row,
+		desk.start_row,
+		desk.background_color,
+		desk.item_type itemType,
+		bull.id,
+		bull.send_time,
+		bull.content
+		from c_desktop_item desk,
+		c_bulletin bull
+		where desk.bulletin_id = #{id}
+		and desk.bulletin_id = bull.id
+		and desk.owner = #{owner}
+	</select>
+	<select id="getReList" parameterType="String" resultType="hashmap">
+		select
+		desk.name,
+		desk.item_type,
+		desk.end_col,
+		desk.start_col,
+		desk.end_row,
+		desk.start_row,
+		desk.background_color,
+		desk.date_reminder_id id,
+		re.table_id,
+		re.type,
+		re.column_name,
+		re.name_column
+		from c_desktop_item desk,
+		c_date_reminder re
+		where desk.date_reminder_id = #{id}
+		and desk.date_reminder_id = re.id
+		and desk.item_type = '30'
+		and desk.owner = #{owner}
+	</select>
+	<select id="getSuserList" parameterType="String" resultType="hashmap">
+		select
+		<if test="name_column != null || name_column != '' ">
+			td.${name_column},
+		</if>
+		td.${column_name} from ${tableId} td, c_date_reminder re where re.id =
+		#{id}
+		<if test="type == 1">
+			and ${column_name} between GETDATE() and dateadd(MONTH,+1,getdate())
+		</if>
+		<if test="type == 2">
+			and substring(convert(varchar,${column_name},112),5,4) between
+			substring(CONVERT(varchar,getdate(),112),5,4)
+			and substring(convert(varchar,DATEADD(month,1,GETDATE()),112),5,4)
+		</if>
+	</select>
+	<select id="selectWorkList" parameterType="String"
+		resultType="cn.com.easyerp.core.view.form.index.WorkModel">
+		select
+		desk.id,
+		desk.name,
+		desk.end_col,
+		desk.start_col,
+		desk.end_row,
+		desk.start_row,
+		desk.background_color,
+		desk.item_type itemType,
+		splan.end_date,
+		splan.id,
+		splan.[plan],
+		splan.start_date,
+		splan.sql
+		from c_desktop_item desk,
+		c_work_plan splan
+		where desk.work_plan_id = #{id}
+		and desk.work_plan_id = splan.id
+		and desk.owner = #{owner}
+	</select>
+	<select id="getValueBySql" parameterType="String" resultType="String">
+		${sql}
+	</select>
+	<select id="selectShortList" parameterType="String"
+		resultType="cn.com.easyerp.core.view.form.index.ShortModel">
+		select
+		desk.id,
+		desk.name,
+		desk.item_type itemType,
+		desk.end_col,
+		desk.start_col,
+		desk.end_row,
+		desk.start_row,
+		desk.background_color,
+		shct.page_id,
+		shct.id
+		from c_desktop_item desk,
+		c_menu shct,
+		c_page pa
+		where desk.shortcut_id = #{id}
+		and desk.shortcut_id = shct.id
+		and shct.type = '2'
+		and shct.page_id = pa.id
+		and desk.owner = #{owner}
+	</select>
+	<select id="selectChartList" parameterType="String"
+		resultType="cn.com.easyerp.core.view.form.index.DeskModel">
+		select
+		desk.id,
+		desk.name,
+		desk.end_col,
+		desk.start_col,
+		desk.end_row,
+		desk.start_row,
+		desk.background_color,
+		desk.item_type itemType,
+		desk.chart_id
+		from c_desktop_item desk,
+		c_report ret
+		where desk.chart_id = #{id}
+		and desk.chart_id = ret.id
+		and desk.owner = #{owner}
+	</select>
+	<select id="selectdata"
+		resultType="cn.com.easyerp.core.view.form.index.DesktopItemModel">
+		select *
+		from c_desktop_item
+		where owner = #{owner}
+	</select>
+	<select id="selectActionLogData"
+		resultType="cn.com.easyerp.core.view.form.index.IndexStatusModel">
+		select
+		c_action_log.table_id,
+		c_action_log.status_col,
+		c_action_log.status_now,
+		c_action_log.key_value,
+		DATE_FORMAT(c_action_log.cre_date, '%Y/%m/%d') cre_date,
+		m_user.id cre_user_id,
+		m_user.name cre_user
+		from c_action_log, m_user, (select distinct
+		table_id,
+		column_name,
+		status_id_from
+		from c_action
+		where backlog_event = 1) T2, (select max(c_action_log.id) id
+		from c_action_log
+		group by c_action_log.table_id,
+		c_action_log.status_col,
+		c_action_log.key_value) T1
+		where
+		c_action_log.id = T1.id and c_action_log.status_now = T2.status_id_from and
+		c_action_log.table_id = T2.table_id and c_action_log.status_col =
+		T2.column_name and
+		c_action_log.cre_user = m_user.id
+		order by c_action_log.table_id, cre_date
+	</select>
+	<select id="selectStatus" resultType="String">
+		select ${column_name}
+		from ${table}
+		where ${key} = #{key_value}
+	</select>
+	<select id="selectDesktopList"
+		resultType="cn.com.easyerp.core.view.form.index.DesktopListModel">
+		select
+		id,
+		view_id,
+		'sql',
+		case LENGTH(url)
+		when 0
+		then null
+		else url end url
+		from c_desktop_list
+		where id = #{list_id}
+	</select>
+</mapper>

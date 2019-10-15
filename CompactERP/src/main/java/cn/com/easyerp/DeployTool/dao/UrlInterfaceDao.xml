@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.UrlInterfaceDao">
+    <insert id="insertTable">
+        INSERT INTO `c_table` (
+            `id`, `parent_id_column`, `children_id_column`, `name_expression`,
+            `readonly`, `parent_id`,  `group_name`, `mb_block_view_style`,
+            `pc_block_view_style`,  `default_group_column`, `check_condition`, `logable`,
+            `view_style`, `view_main_table`, `table_type`, `detail_disp_cols`,
+            `valid_date_cols`, `valid_date_cond_disp`, `valid_date_group_cols`, `seq`,
+            `level`, `memo`, `key_formula`, `auto_gen_sql`,
+            `type`, `export_sql`, `import_sql`, `importable`,
+            `international_id`, `is_approve`, `is_auth`, `module`,
+            `is_approve_state`, `block_view_style`
+        )VALUES(
+            #{table.id}, #{table.parent_id_column}, #{table.children_id_column}, #{table.name_column},
+            #{table.readonly}, #{table.parent_id}, #{table.group_name}, '',
+            '', #{table.default_group_column}, #{table.check_condition}, #{table.logable},
+            '', '', #{table.table_type}, #{table.detail_disp_cols},
+            #{table.valid_date_cols}, #{table.valid_date_cond_disp}, #{table.valid_date_group_cols}, #{table.seq},
+            '', #{table.memo}, '', '',
+            '', #{table.export_sql}, #{table.import_sql}, #{table.importable},
+            #{table.international_id}, #{table.is_approve}, #{table.is_auth}, #{table.module},
+            #{table.is_approve_state}, ''
+        )
+    </insert>
+    <insert id="insertUrl">
+        INSERT INTO c_url
+        (id, `name`, url, param,
+        memo, router_url, `type`, `module`, summary, prodSql)
+        VALUES
+        (#{urlInterface.id}, #{urlInterface.name}, #{urlInterface.url}, #{urlInterface.param},
+        #{urlInterface.memo}, #{urlInterface.router_url}, #{urlInterface.type},
+        #{urlInterface.module}, #{urlInterface.summary}, #{urlInterface.prodSql})
+    </insert>
+    <update id="updateUrl">
+        UPDATE c_url
+        SET `name` = #{urlInterface.name},
+        url = #{urlInterface.url},
+        param = #{urlInterface.param},
+        memo = #{urlInterface.memo},
+        router_url = #{urlInterface.router_url},
+        `type` = #{urlInterface.type},
+        `module` = #{urlInterface.module},
+        summary = #{urlInterface.summary},
+        prodSql = #{urlInterface.prodSql}
+        WHERE id = #{urlInterface.id}
+    </update>
+    <delete id="deleteUrl">
+        DELETE FROM c_url
+        WHERE id = #{url_id}
+    </delete>
+    <insert id="insertColumn">
+        INSERT INTO c_column
+        (table_id, `column_name`, url_id, nesting_column_name, `virtual`,
+        tab_name, group_name, data_type, data_format, min_len,
+        max_len, is_condition, dic_id, ref_table_name, ref_table_cols,
+        ref_table_sql, ref_table_display, ref_table_filter, quick_filter, is_multiple,
+        formula, default_value, prefix, suffix, sum_flag,
+        ro_insert, ro_update, read_only_condition, hidden, wrap,
+        view_style, cell_cnt, seq, `level`, memo,
+        read_only_clear, ref_table_new, ref_table_tree, link_json, international_id,
+        is_id_column, `module`)
+        VALUES
+        (#{column.table_id}, #{column.column_name}, #{column.url_id}, #{column.nesting_column_name}, #{column.virtual},
+        #{column.tab_name}, #{column.group_name}, #{column.data_type}, #{column.data_format}, #{column.min_len},
+        #{column.max_len}, #{column.is_condition}, #{column.dic_id}, #{column.ref_table_name}, #{column.ref_table_cols},
+        #{column.ref_table_sql}, #{column.ref_table_display}, #{column.ref_table_filter}, #{column.quick_filter}, #{column.is_multiple},
+        #{column.formula}, #{column.default_value}, #{column.prefix}, #{column.suffix}, #{column.sum_flag},
+        #{column.ro_insert}, #{column.ro_update}, #{column.read_only_condition}, #{column.hidden}, #{column.wrap},
+        #{column.view_style}, #{column.cell_cnt}, #{column.seq}, #{column.level}, #{column.memo},
+        #{column.read_only_clear}, #{column.ref_table_new}, #{column.ref_table_tree}, #{column.link_json}, #{column.international_id},
+        #{column.is_id_column}, #{column.module})
+    </insert>
+    <update id="updateColumn">
+        UPDATE c_column
+        SET nesting_column_name = #{column.nesting_column_name},
+        `virtual` = #{column.virtual},
+        tab_name = #{column.tab_name},
+        group_name = #{column.group_name},
+        data_type = #{column.data_type},
+        data_format = #{column.data_format},
+        min_len = #{column.min_len},
+        max_len = #{column.max_len},
+        is_condition = #{column.is_condition},
+        dic_id = #{column.dic_id},
+        ref_table_name = #{column.ref_table_name},
+        ref_table_cols = #{column.ref_table_cols},
+        ref_table_sql = #{column.ref_table_sql},
+        ref_table_display = #{column.ref_table_display},
+        ref_table_filter = #{column.ref_table_filter},
+        quick_filter = #{column.quick_filter},
+        is_multiple = #{column.is_multiple},
+        formula = #{column.formula},
+        default_value = #{column.default_value},
+        prefix = #{column.prefix},
+        suffix = #{column.suffix},
+        sum_flag = #{column.sum_flag},
+        ro_insert = #{column.ro_insert},
+        ro_update = #{column.ro_update},
+        read_only_condition = #{column.read_only_condition},
+        hidden = #{column.hidden},
+        wrap = #{column.wrap},
+        view_style = #{column.view_style},
+        cell_cnt = #{column.cell_cnt},
+        seq = #{column.seq},
+        `level` = #{column.level},
+        memo = #{column.memo},
+        read_only_clear = #{column.read_only_clear},
+        ref_table_new = #{column.ref_table_new},
+        ref_table_tree = #{column.ref_table_tree},
+        link_json = #{column.link_json},
+        international_id = #{column.international_id},
+        is_id_column = #{column.is_id_column},
+        `module` = #{column.module}
+        WHERE `column_name` = #{column.column_name}
+        AND url_id = #{column.url_id}
+    </update>
+    <delete id="deleteColumn">
+        DELETE FROM c_column
+        WHERE `column_name` = #{column.column_name}
+        AND url_id = #{column.url_id}
+    </delete>
+    <delete id="deleteColumnByUrlId">
+        DELETE FROM c_column
+        WHERE url_id = #{url_id}
+    </delete>
+     <delete id="daleteTableByUrlId">
+        DELETE FROM c_table
+        WHERE id = #{url_id}
+    </delete>
+    <delete id="deleteColumnI18NByUrlId">
+        DELETE c2 FROM c_column c1
+        INNER JOIN c_international c2
+        ON c1.international_id = c2.international_id
+        WHERE c1.url_id = #{url_id}
+    </delete>
+    <insert id="insertUrlCheck">
+        INSERT INTO c_table_check
+        (table_id, seq, url_id, `column_name`, formula,
+        error_msg_id, error_msg_param, memo, check_level, `type`,
+        create_submit, edit_submit, input_blur, `module`)
+        VALUES
+        (#{tableCheckRule.table_id}, #{tableCheckRule.seq}, #{tableCheckRule.url_id}, #{tableCheckRule.column_name}, #{tableCheckRule.formula},
+        #{tableCheckRule.error_msg_id}, #{tableCheckRule.error_msg_param}, #{tableCheckRule.memo}, #{tableCheckRule.check_level}, #{tableCheckRule.type},
+        #{tableCheckRule.create_submit}, #{tableCheckRule.edit_submit}, #{tableCheckRule.input_blur}, #{tableCheckRule.module})
+    </insert>
+    <update id="updateUrlCheck">
+        UPDATE c_table_check
+        SET `column_name` = #{tableCheckRule.column_name},
+        formula = #{tableCheckRule.column_name},
+        error_msg_id = #{tableCheckRule.error_msg_id},
+        error_msg_param = #{tableCheckRule.error_msg_param},
+        memo = #{tableCheckRule.memo},
+        check_level = #{tableCheckRule.check_level},
+        `type` = #{tableCheckRule.type},
+        create_submit = #{tableCheckRule.create_submit},
+        edit_submit = #{tableCheckRule.edit_submit},
+        input_blur = #{tableCheckRule.input_blur},
+        `module` = #{tableCheckRule.module}
+        WHERE seq = #{tableCheckRule.seq}
+        AND url_id = #{tableCheckRule.url_id}
+    </update>
+    <delete id="deleteUrlCheck">
+        DELETE FROM c_table_check
+        WHERE seq = #{tableCheckRule.seq}
+        AND url_id = #{tableCheckRule.url_id}
+    </delete>
+    <delete id="deleteUrlCheckByUrlId">
+         DELETE FROM c_table_check
+        WHERE url_id = #{url_id}
+    </delete>
+    
+     <select id="getUrlIdByUrl" resultType="java.lang.String">
+        SELECT
+        	id
+        FROM c_url
+        WHERE 
+        	url=#{url}
+    </select>
+</mapper>

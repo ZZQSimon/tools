@@ -1,0 +1,6 @@
+#dxFormHead($form)
+<div id="$form.id" class="dx-form" name="$form.widgetName">
+	    <div id="${form.id}_div" class="" style="heigth:340px">
+	    </div>
+</div>
+#dxFormTail($form)

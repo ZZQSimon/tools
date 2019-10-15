@@ -1,0 +1,288 @@
+/*css 初始化*/
+body, ol, ul, h1, h2, h3, h4, h5, h6, p, th, td, dl, dd, form, fieldset, legend, input, textarea, select {
+  margin: 0;
+  padding: 0
+}
+
+body {
+  font-family: "PingFangSC", "Helvetica Neue", Helvetica, Arial, sans-serif;;
+  background: #fff;
+  -webkit-text-size-adjust: 100%;
+  color: rgb(51, 51, 51);
+}
+
+a {
+  color: #2d374b;
+  text-decoration: none
+}
+
+a:hover {
+  text-decoration: none
+}
+
+em {
+  font-style: normal
+}
+
+li {
+  list-style: none
+}
+
+img {
+  border: 0;
+  vertical-align: middle
+}
+
+input, select{
+  outline: none;
+  border: none;
+  box-sizing: border-box;
+}
+
+input::-webkit-input-placeholder,select::-webkit-input-placeholder {
+  color: rgb(204, 204, 204);
+  line-height: 0.8rem;
+  font-size: 0.65rem;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0
+}
+
+p {
+  word-wrap: break-word
+}
+
+label {
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+button {
+  outline: none;
+}
+
+html {
+  font-size: 18px;
+}
+@media only screen and (min-width: 355px) {
+  html {
+    font-size: 19px !important;
+  }
+}
+@media only screen and (min-width: 374px) {
+  html {
+    font-size: 20px !important;
+  }
+}
+
+@media only screen and (min-width: 401px) {
+  html {
+    font-size: 21px !important;
+  }
+}
+
+@media only screen and (min-width: 428px) {
+  html {
+    font-size: 22px !important;
+  }
+}
+
+@media only screen and (min-width: 481px) {
+  html {
+    font-size: 24px !important;
+  }
+}
+
+@media only screen and (min-width: 569px) {
+  html {
+    font-size: 25px !important;
+  }
+}
+
+@media only screen and (min-width: 641px) {
+  html {
+    font-size: 26px !important;
+  }
+}
+
+
+
+.secMain {
+  position: relative;
+  padding: 0 0.6rem;
+  .errorTip{
+    width:80%;
+    display: none;
+    position: absolute;
+    left:8%;
+    top:10px;
+    padding:5px 10px;
+    border-radius: 3px;
+    font-size: 0.65rem;
+    color: white;
+    background: rgba(0,0,0,0.5);
+  }
+}
+.errorItem{
+  padding-right: 20px;
+  background: url(../img/errortip.png) no-repeat right center;
+  background-size: 12px;
+}
+
+.section {
+  display: none;
+  padding-top: 2rem;
+  font-size: 0;
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: rgb(51, 51, 51);
+    margin-bottom: 1.6rem;
+    span {
+      font-size: 0.6rem;
+      color: rgb(51, 51, 51);
+    }
+  }
+  .form-group {
+    padding: 0 0 0 7px;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid rgb(230, 230, 230);
+
+    input:not([type=button]), select {
+      width: 100%;
+      padding: 6px 0 6px 3.2rem;
+      font-size: 0.65rem;
+      color: rgb(51, 51, 51);
+      line-height: 0.8;
+      text-align: left;
+    }
+    input.vailCode {
+      width: 70% ;
+      //padding-right: 3.2rem;
+    }
+    .getvailCode {
+      float: right;
+      padding-top: 5px;
+      font-size: 0.65rem;
+      text-align: center;
+      color: rgb(82, 171, 210);
+      background: white;
+    }
+
+  }
+  label {
+    position: absolute;
+    display: inline-block;
+    padding-top: 6px;
+    line-height: 0.8rem;
+    width: 3.2rem;
+    font-size: 0.65rem;
+    color: rgb(51, 51, 51);
+  }
+  &.staff {
+    label {
+      width: 5.05rem;
+    }
+    input, select {
+      padding-left: 5.05rem !important;
+    }
+  }
+  &.success {
+    .head {
+      padding-top: 0.75rem;
+      font-size: 0.65rem;
+      color: rgb(51, 51, 51);
+      text-align: center;
+      h3 {
+        margin-top: 0.6rem;
+        font-size: 0.9rem;
+        font-weight: 400;
+      }
+      img {
+        width: 5.6rem;
+        height: 4.75rem;
+        margin-top: 1.4rem;
+        margin-bottom: 0.75rem;
+      }
+    }
+    .tip {
+      line-height: 0.9rem;
+      font-size: 0.6rem;
+      font-family: "Adobe Heiti Std";
+      color: rgb(153, 153, 153);
+    }
+    .weixin img {
+      display: block;
+      width: 8.5rem;
+      height: 8.5rem;
+      margin: 2rem auto 0;
+    }
+    .footer {
+      margin-top: 1.35rem;
+      ul li {
+        display: inline-block;
+        width: 33.3333%;
+        > div {
+          width: 2rem;
+          height: 2rem;
+          position: relative;
+          margin: 0 auto;
+          span {
+            position: absolute;
+            top: 0;
+            left: -0.4rem;
+          }
+          > img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+
+        &.first-part span img {
+          width: 0.7rem;
+          height: 0.625rem;
+        }
+        &.second-part span img {
+          width: 0.875rem;
+          height: 0.625rem;
+        }
+        &.thirth-part span img {
+          width: 0.9rem;
+          height: 0.625rem;
+        }
+        p {
+          font-size: 0.6rem;
+          font-family: "PingFangSC";
+          color: rgb(51, 51, 51);
+          line-height: 1.5;
+          text-align: center;
+          margin-top: 0.6rem;
+
+        }
+      }
+    }
+
+  }
+
+  .btn {
+    width: 100%;
+    line-height: 2rem;
+    margin-top: 0.8rem;
+    font-size: 0.75rem;
+    color: white;
+    background-color: rgb(82, 171, 210);
+    border: none;
+    border-radius: 2px;
+    &.btn-disable {
+      background-color: rgb(204, 204, 204);
+    }
+  }
+
+}
+
+.section.active {
+  display: block;
+}
+

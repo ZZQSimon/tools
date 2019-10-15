@@ -1,0 +1,27 @@
+input.dx-import-input {
+	 border-left:0px;
+	 border-top:0px;
+ 	 border-right:0px;
+	 border-bottom:0px;
+	 background-color:transparent !important;
+}
+
+.dx-import-table tr.has-error-row {
+	background-color: #ff0000 !important;
+}
+
+.dx-import-table tr.has-warning-row {
+	background-color: #ffd900 !important;
+}
+
+.dx-import-notify-error {
+	background-color: #ff0000 !important;
+}
+
+.dx-import-notify-warning {
+	background-color: #ffd900 !important;
+}
+
+.dx-import-table input.has-error {
+	background-color: #FDFFB1 !important;
+}

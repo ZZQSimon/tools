@@ -1,0 +1,72 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="postInfo" class="form-inline dx-form" role="form"">       ##基本上照抄即可
+
+<div class="jobHead">
+    <h3>当前职务</h3>
+    <div class="jobHeadList">
+        <div class="jobSelectList" >
+            
+        </div>
+    </div>
+    <div class="dropdown">
+        <button id="addCorpJob" class="button-color1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            ＋ 新建职务
+        </button>
+        <div class="dropdown-menu " aria-labelledby="addCorpJob">
+            <div class="clearfix">
+                <label class="label-1">职务名称：</label>
+                <input type="text" class="postName input-1" name='' >
+            </div>
+            <div class="text-right">
+                <button data-toggle="dropdown" class="button-color4">取消</button>
+                <button data-toggle="dropdown" class="tabConfigNew button-color3" value="保存">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="corpJobBd">
+    <div class="col-xs-6">
+        <div class="corpJobPosi">
+        <div class="jobTitle">
+            按职务
+        </div>
+        <div class="jobList">
+            <div class="col-xs-4">
+                <label><input type="checkbox" name="总经理" postId="000001">总经理</label>
+            </div>
+            <div class="col-xs-4">
+                <label><input type="checkbox" name="副总经理" postId="000002">副总经理</label>
+            </div>
+            <div class="col-xs-4">
+                <label><input type="checkbox" name="部门总经理" postId="000003">部门总经理</label>
+            </div>
+        </div>
+        <div class="jobFooter">
+            <button type="button" name="corpJobPosi">全部添加</button>
+        </div>
+        </div>
+    </div>
+    <div class="col-xs-6 ">
+        <div class="corpJobFun">
+        <div class="jobTitle">
+            按职能
+        </div>
+        <div class="jobList">
+            <div class="col-xs-4">
+                <label><input type="checkbox" name="销售" postId="000004">销售</label>
+            </div>
+            <div class="col-xs-4">
+                <label><input type="checkbox" name="行政" postId="000005">行政</label>
+            </div>
+            <div class="col-xs-4">
+                <label><input type="checkbox" name="人事" postId="000006">人事</label>
+            </div>
+        </div>
+        <div class="jobFooter">
+            <button type="button"  name="corpJobFun">全部添加</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+#dxFormTail($form)

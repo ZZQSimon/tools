@@ -1,0 +1,45 @@
+#* @implicitly included *#
+#* @vtlvariable name="form" type="com.gainit.g1.core.widget.map.MapSelectFormModel" file="../web/WEB-INF/velocity/map.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.tg.TreeGridFormModel" file="../web/WEB-INF/velocity/tg.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.core.data.ImportFormModel" file="../web/WEB-INF/velocity/import.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.tree.TreeFormModel" file="../web/WEB-INF/velocity/tree.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.auth.AuthMenuFormModel" file="../web/WEB-INF/velocity/authMenu.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.auth.AuthGroupFormModel" file="../web/WEB-INF/velocity/authGroup.vm"*#
+#* @vtlvariable name="form" type="com.gainit.g1.core.widget.complex.ComplexInputDetailFormModel" file="../web/WEB-INF/velocity/complexDetail.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.core.view.FormController.EmptyFormModel" file="../web/WEB-INF/velocity/empty.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.generate.AutoGenerateFormModel" file="../web/WEB-INF/velocity/ag.vm"*#
+#* @vtlvariable name="form" type="com.gainit.g1.generate.AutoGenerateSingleModeFormModel" file="../web/WEB-INF/velocity/agSingle.vm"*#
+#* @vtlvariable name="form" type="com.gainit.g1.passage.PassageFormModel" file="../web/WEB-INF/velocity/passage.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.core.widget.complex.ComplexInputFormModel" file="../web/WEB-INF/velocity/complex.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.ril.ReferenceInputListFormModel" file="../web/WEB-INF/velocity/ril.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.range.RangeFormModel" file="../web/WEB-INF/velocity/range.vm" *#
+#* @vtlvariable name="detail" type="com.gainit.g1.core.view.form.detail.DetailFormModel" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.chart.ChartFormModel" file="../web/WEB-INF/velocity/chart.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.core.view.FormModelBase" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.core.view.form.index.IndexModel" file="../web/WEB-INF/velocity/index.vm" *#
+#* @vtlvariable name="filter" type="com.gainit.g1.core.filter.FilterModel" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="filterData" type="com.gainit.g1.core.filter.FilterDescribe" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="field" type="com.gainit.g1.core.widget.FieldModelBase" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="group" type="com.gainit.g1.core.widget.group.GroupModel" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="check" type="com.gainit.g1.core.widget.CheckBoxField" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="refField" type="com.gainit.g1.core.widget.FieldWithRefModel" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="textField" type="com.gainit.g1.core.widget.FieldWithRepresentationModel" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="mapField" type="com.gainit.g1.core.widget.MapFieldModel" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="inputEntry" type="com.gainit.g1.core.widget.InputEntry" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="grid" type="com.gainit.g1.core.widget.grid.GridModel" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="menu" type="com.gainit.g1.auth.AuthDetails.UserMenu" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="desc" type="com.gainit.g1.core.cache.ColumnDescribe" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="table" type="com.gainit.g1.core.cache.TableDescribe" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="tab" type="com.gainit.g1.core.cache.TableTabDescribe" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="group" type="com.gainit.g1.core.cache.TableGroupDescribe" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="homeForm" type="com.gainit.g1.core.view.form.index.IndexModel" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="treeForm" type="com.gainit.g1.tree.TreeFormModel" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="operations" type="java.util.Map<java.lang.String, java.util.List<java.lang.String>>" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="shortcuts" type="java.util.List<java.lang.String>" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="authOptions" type="java.util.List<com.gainit.g1.auth.AuthOption>" file="../web/WEB-INF/velocity/dxLibrary.vm" *#
+#* @vtlvariable name="dx" type="com.gainit.g1.core.velocity.DxTool" *#
+#* @vtlvariable name="list" type="org.apache.velocity.tools.generic.ListTool" *#
+#* @vtlvariable name="math" type="org.apache.velocity.tools.generic.MathTool" *#
+#* @vtlvariable name="form" type="com.gainit.g1.core.view.form.list.ListFormModel" file="../web/WEB-INF/velocity/list.vm" *#
+#* @vtlvariable name="form" type="com.gainit.g1.core.view.form.detail.DetailFormModel" file="../web/WEB-INF/velocity/detail.vm" *#
+#* @vtlmacrolibrary path="../web/WEB-INF/velocity/dxLibrary.vm" *#

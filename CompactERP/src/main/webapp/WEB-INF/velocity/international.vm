@@ -1,0 +1,68 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="international" class="form-inline dx-form" role="form"">
+
+<div class="btn-toolbar rowContentTop">
+            <button type="button" class="btn dx-grid-add accept" >$dx.msg("Save")</button>
+
+            <button class="btn append" type="button">$dx.msg("Add")</button>
+            <button class="btn delete removeit" type="button">$dx.msg("Delete")</button>
+
+            <button type="button" class="btn" data-toggle="modal" data-target="#replaceModal">$dx.msg("Replace")</button>
+            <input type="file" id="import_context" class="import_context" style="display:none" />
+            <button  class="btn i18n-import" type="button">$dx.msg("Import")</button>
+            <button type="button" class="btn i18n-export" >$dx.msg("export")</button>
+            <div class="international_Sea grid_search_box searchDiv">
+                <input type="text" class="grid_search" placeholder="$dx.msg("please input keyword")"/>
+                <button type="button" class="btn search">$dx.msg("Search")</button>
+            </div>
+</div>
+<div class="rowContent datagrid-content">
+
+    <div class="internationalDeployTb easyui-datagrid"></div>
+    ##<div class="datagrid-foot border-top-3px">
+       ## <button class="easyui-linkbutton append" type="button">＋</button>
+       ## <button class="easyui-linkbutton removeit" type="button">－</button>
+    ##</div>
+    <!-- 模态框（Modal） -->
+    <div class="modal " id="replaceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        $dx.msg("quick_replace")
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group  clearfix">
+                        <label class="label-1">$dx.msg("findContext")</label>
+                        <input class="input-1 findContext" type="text"/>
+                    </div>
+                    <div class="form-group  clearfix">
+                        <label class="label-1">$dx.msg("replaceWith")</label>
+                        <input class="input-1 replaceWith" type="text"/>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label class="label-1">$dx.msg("Scope")</label>
+                        <select class="input-1 scope">
+                            <option value="global">请选择替换范围</option>
+                            <option value="cn">$dx.msg("cn")</option>
+                            <option value="en">$dx.msg("en")</option>
+                            <option value="jp">$dx.msg("jp")</option>
+                            <option value="other1">$dx.msg("other1")</option>
+                            <option value="other2">$dx.msg("other2")</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:void(0)" class="easyui-linkbutton button-color4" data-dismiss="modal">$dx.msg("Close")</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton button-color3 confirmReplace">$dx.msg("Replace")</a>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+
+#dxFormTail($form)

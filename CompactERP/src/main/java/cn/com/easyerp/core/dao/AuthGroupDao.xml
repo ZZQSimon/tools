@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.AuthGroupDao">
+	<select id="selectMenuName" resultType="cn.com.easyerp.core.authGroup.MenuGroup">
+		select replace(replace(`menu_group_id`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as menu_group_id
+		FROM c_menu_group group by menu_group_id;
+	</select>
+	<select id="selectMenu" resultType="cn.com.easyerp.core.authGroup.MenuGroup">
+		select replace(replace(`menu_group_id`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as menu_group_id,`menu_id`
+		FROM c_menu_group where menu_group_id=#{menuGroupId};
+	</select>
+	<select id="selectAllMenu" resultType="cn.com.easyerp.core.widget.menu.MenuModel">
+		select
+		`id`,
+		`international_id`,
+		`type`,
+		`icon`,
+		`page_id`,
+		`parent_id`,
+		`seq`,
+		`module`,
+		`icon_out`,
+		`is_mobile_menu`,
+		`is_system`
+		from c_menu;
+	</select>
+	<select id="selectAllLeafMenu" resultType="cn.com.easyerp.core.widget.menu.MenuModel">
+		SELECT
+		`id`,
+		`international_id`,
+		`type`,
+		`icon`,
+		`page_id`,
+		`parent_id`,
+		`seq`,
+		`module`,
+		`icon_out`,
+		`is_mobile_menu`,
+		`is_system`
+		FROM
+		c_menu
+		WHERE
+		`id` NOT IN (
+		SELECT DISTINCT `parent_id` FROM c_menu where parent_id IS NOT NULL
+		);
+	</select>
+	<select id="selectTable" resultType="cn.com.easyerp.core.authGroup.Table">
+		select `id`,
+		`parent_id_column`, `children_id_column`, `name_expression`,
+		`readonly`,
+		`parent_id`, `group_name`, `check_condition`, `logable`, `view_style`,
+		`view_main_table`,
+		`table_type`, `detail_disp_cols`, `valid_date_cols`, `valid_date_cond_disp`,
+		`valid_date_group_cols`,
+		`seq`, `level`, `memo`, `key_formula`, `auto_gen_sql`, `type`, `export_sql`,
+		`import_sql`, `importable`,
+		`block_view_style`, `default_group_column`, `international_id` FROM c_table where
+		is_auth='1' and table_type!='0';
+	</select>
+	<insert id="addMenuGroup">
+		insert into c_menu_group values
+		<foreach collection="menuId" item="menuId" index="index"
+			separator=",">
+			(
+			#{menuGroupId},#{menuId}
+			)
+		</foreach>
+	</insert>
+	<select id="selectMember" resultType="cn.com.easyerp.core.authGroup.AuthGroup">
+		SELECT
+		c.`department`,
+		c.`department_relation`,
+		c.`role`,
+		c.`user`,
+		c.`user_relation`,
+		c.`read`,
+		c.`create`,
+		c.`update`,
+		c.`delete`,
+		c.`operate`,
+		c.`import_auth`,
+		c.`export_auth`,
+		c.`type`,
+		c.`table`,
+		c.`column`,
+		c.`menu`,
+		c.`data_group_id`,
+		replace(replace(c.`template`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as template,
+		v1.`name` department_relation_name,
+		v2.`name` user_relation_name,
+		v2.`name` userName,
+		v1.`name` deptName,
+		v3.`name` roleName
+		FROM
+		c_auth_group c
+		<if test="authGroup.type==2">
+			LEFT JOIN v_auth_group_dept_data v1 ON c.department_relation = v1.id or
+			c.department=v1.id
+			LEFT JOIN v_auth_group_user_data v2 ON c.user_relation = v2.id or
+			c.user=v2.id
+			LEFT JOIN v_auth_group_role v3 ON c.role = v3.id
+		</if>
+		<if test="authGroup.type!=2">
+			LEFT JOIN v_auth_group_dept v1 ON c.department_relation =
+			v1.id or c.department=v1.id
+			LEFT JOIN v_auth_group_user v2 ON
+			c.user_relation = v2.id or c.user=v2.id
+			LEFT JOIN v_auth_group_role v3
+			ON c.role = v3.id
+		</if>
+		where c.table=#{authGroup.table} and c.type=#{authGroup.type} and
+		c.column=#{authGroup.column} and c.menu=#{authGroup.menu};
+	</select>
+	<insert id="deleteAuthGroup">
+		delete from `c_auth_group` where
+		`table`=#{authGroup.table} and `type`=#{authGroup.type} and
+		`column`=#{authGroup.column} and `menu`=#{authGroup.menu};
+	</insert>
+	<insert id="deleteMenuGroup">
+		delete from c_menu_group where
+		menu_group_id=#{menuGroupId};
+	</insert>
+	<update id="updateMenuGroup">
+		update c_menu_group set
+		menu_group_id=#{upMenuGroupId} where menu_group_id=#{menuGroupId};
+	</update>
+	<update id="updateAuthGroup">
+		update `c_auth_group` set `menu`=#{upMenuGroupId}
+		where `table`=#{authGroup.table} and `type`=#{authGroup.type} and
+		`column`=#{authGroup.column} and `menu`=#{authGroup.menu};
+	</update>
+	<insert id="addAuthGroup">
+		INSERT INTO `c_auth_group` (`department`, `department_relation`,
+		`role`, `user`, `user_relation`, `read`, `create`, `update`,
+		`delete`, `operate`, `import_auth`,`export_auth`,`type`, `table`, `column`,
+		`menu`, `template`, `data_group_id`)
+		VALUES
+		<foreach collection="authGroup" item="authGroup" index="index"
+			separator=",">
+			(
+			#{authGroup.department},#{authGroup.department_relation},#{authGroup.role},
+			#{authGroup.user},#{authGroup.user_relation},#{authGroup.read},#{authGroup.create},
+			#{authGroup.update},#{authGroup.delete},#{authGroup.operate},#{authGroup.import_auth},
+			#{authGroup.export_auth},#{authGroup.type},#{authGroup.table},
+			#{authGroup.column},#{authGroup.menu},#{authGroup.template},#{authGroup.data_group_id}
+			)
+		</foreach>
+	</insert>
+	<select id="selectTableByColumn" resultType="cn.com.easyerp.core.authGroup.Table">
+		select `id`,
+		`parent_id_column`, `children_id_column`, `name_expression`,
+		`readonly`,
+		`parent_id`, `group_name`, `check_condition`, `logable`, `view_style`,
+		`view_main_table`,
+		`table_type`, `detail_disp_cols`, `valid_date_cols`, `valid_date_cond_disp`,
+		`valid_date_group_cols`,
+		`seq`, `level`, `memo`, `key_formula`, `auto_gen_sql`, `type`, `export_sql`,
+		`import_sql`, `importable`,
+		`block_view_style`, `default_group_column`, `international_id` FROM c_table where id
+		in(select DISTINCT table_id from c_column where is_auth='1') and
+		table_type!='0';
+	</select>
+	<select id="selectTemplate" resultType="cn.com.easyerp.core.authGroup.AuthGroup">
+		SELECT
+		c.`department`,
+		c.`department_relation`,
+		c.`role`,
+		c.`user`,
+		c.`user_relation`,
+		c.`read`,
+		c.`create`,
+		c.`update`,
+		c.`delete`,
+		c.`operate`,
+		c.`import_auth`,
+		c.`export_auth`,
+		c.`type`,
+		c.`table`,
+		c.`column`,
+		c.`menu`,
+		replace(replace(c.`template`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+		as template,
+		v1.`name` department_relation_name,
+		v2.`name` user_relation_name,
+		v2.`name` userName,
+		v1.`name` deptName,
+		v3.`name` roleName
+		FROM
+		c_auth_group c
+		LEFT JOIN v_auth_group_dept_data v1 ON c.department_relation = v1.id
+		or c.department=v1.id
+		LEFT JOIN v_auth_group_user_data v2 ON
+		c.user_relation = v2.id or c.user=v2.id
+		LEFT JOIN v_auth_group_role v3
+		ON c.role = v3.id
+		WHERE
+		c.type = #{type} and c.template!='' ORDER BY template;
+	</select>
+	<select id="selectAllCheckBox" resultType="cn.com.easyerp.core.authGroup.TableAction">
+		select
+		`action_id`,`table_id`,`system_type`,`action_name_international`,`is_using`,`memo`,`report_id`
+		FROM `c_table_action`
+		where is_using=1 and table_id=#{table_id};
+	</select>
+	<select id="selectAuthDataGroup" resultType="cn.com.easyerp.core.authGroup.AuthDataGroupDetail">
+		SELECT
+		c2.table_id,c1.group_id,c1.group_detail_id,c1.column_name,c1.symbol,c1.`value`,c2.international_id
+		FROM `c_auth_data_group_detail` c1
+		INNER JOIN c_auth_data_group c2 on c1.group_id=c2.group_id
+		where c1.group_id=#{data_group_id};
+	</select>
+	<insert id="addAuthDataGroup">
+		INSERT INTO `c_auth_data_group`
+		(`international_id`, `group_id`, `table_id`)
+		VALUES
+		(#{authDataGroup.international_id},#{authDataGroup.group_id},#{authDataGroup.table_id});
+	</insert>
+	<insert id="addAuthDataGroupDetail">
+		INSERT INTO
+		`c_auth_data_group_detail` (`column_name`, `symbol`, `value`,
+		`group_id`, `group_detail_id`)
+		VALUES (#{authDataGroupDetail.column_name}, #{authDataGroupDetail.symbol},
+		#{authDataGroupDetail.value},
+		#{authDataGroupDetail.group_id}, #{authDataGroupDetail.group_detail_id});
+	</insert>
+	<delete id="deleteAuthDataGroup">
+		delete c1,c2 from c_auth_data_group c1,c_auth_data_group_detail c2 where
+		c1.group_id=c2.group_id and c1.table_id=#{authGroup.table};
+	</delete>
+	<select id="selectImportUpdate" resultType="java.lang.Integer">
+		SELECT is_update FROM
+		`c_batch` where table_id=#{authGroup.table};
+	</select>
+	<select id="selectImportInsert" resultType="java.lang.Integer">
+		SELECT is_insert FROM
+		`c_batch` where table_id=#{authGroup.table};
+	</select>
+</mapper>

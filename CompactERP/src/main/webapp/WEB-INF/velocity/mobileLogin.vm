@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>$companyName</title>
+
+	<link href="#springUrl('')/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="#springUrl('')/js/jqueryui-slider/jquery-ui.css" rel="stylesheet">
+
+	<link href="#springUrl('')/css/login.css" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="#springUrl('')/js/mobile-css/mobileIndex.css"/>
+
+	<script src="#springUrl('')/js/jquery-1.11.0.min.js"></script>
+	<script src="#springUrl('')/js/bootstrap/js/bootstrap.min.js"></script>
+    <script src="#springUrl('')/js/dialog/js/bootstrap-dialog.min.js"></script>
+    <script src="#springUrl('')/js/jqueryui-slider/jquery-ui.min.js"></script>
+    ##<script src="#springUrl('')/js/login.js"></script>
+	<script>
+		function makeUserName() {
+			$('#username').val($('#susername').val() + '@' + $('#datasource').val())
+		}
+	</script>
+</head>
+<body onload='document.loginForm.username.focus();'">
+
+<form class="form-horizontal login-form" role="form" name='loginForm' action="#springUrl('')/auth/login.do" method='POST' >
+
+<div class="login-title">用户登录</div>
+	<div class="form-group">
+        <label class="col-xs-3" for="domain">账套</label>
+        <div class="col-xs-9">
+            <select class="input-control" id="domain" name="domain">
+				#foreach($company in $companys)  
+					<option value="$company">$company</option>
+				#end  
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-3" for="username">账号</label>
+        <div class="col-xs-9">
+            <input type="text" class="input-control" id="susername" name="susername" autocomplete="off" placeholder="$dx.formatEmpty($inputPhoneNum)"/>
+            <input type="hidden" id="username" name="username" autocomplete="off"  value="$dx.formatEmpty($username)"/>
+            <input type="hidden" id="openid" name="openid" autocomplete="off"  value="$dx.formatEmpty($openid)"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-3" for="password">密码</label>
+        <div class="col-xs-9">
+            <input type="password" class="input-control" id="password" name="password" autocomplete="off" placeholder="$dx.formatEmpty($inputPassword)" value="$dx.formatEmpty($password)"/>
+        </div>
+    </div>
+    <div class="row">
+        <button type="button" class="btn btn-OK login-btn">登录</button>
+        <button class="show-none btn btn-Cancel" type="button" onclick="window.close();">Cancel</button>
+    </div>
+</form>
+<!-- <script src="#springUrl('')/js/mobile-js/mobilelogin.js"></script> -->
+<script>
+	function getWebRoot() {
+	    //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+	    var curWwwPath = window.document.location.href;
+	    //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+	    var pathName = window.document.location.pathname;
+	    var pos = curWwwPath.indexOf(pathName);
+	    //获取主机地址，如： http://localhost:8083
+	    var localhostPaht = curWwwPath.substring(0, pos);
+	    //获取带"/"的项目名，如：/uimcardprj
+	    var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+	    return (localhostPaht + projectName);
+	 }
+
+	function makeUrl(url){
+		return getWebRoot()+url;
+	}
+
+	var ifCheck=$ifCheck;
+	var openid=$("#openid").val();
+	var domain=$("#domain").val();
+
+	$('.btn-OK.login-btn').on('click', function () {
+    	var susername=$("#susername").val();
+		var password=$("#password").val();
+		$.ajax({
+	        url: makeUrl("/auth/checkMobileLogin.do"),
+	        type: 'post',
+	        data: {susername: susername, password: password, openid: openid,domain:domain},
+	        success: function (data) {
+	            if (data.data.ret==true) {
+	               $("#username").val(data.data.username);
+	               $("#password").val(data.data.password);
+	               $('.form-horizontal').submit();
+	            } else {
+	                alert(data.data.msg);
+	            }
+	        }
+    	});
+	});
+	
+	if(ifCheck){
+		$('.form-horizontal').submit();
+		$(".login-form").css("display","none");
+	}
+</script>
+
+</body>
+</html>

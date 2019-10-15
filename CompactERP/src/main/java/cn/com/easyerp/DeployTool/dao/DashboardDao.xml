@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.DashboardDao">
+	
+    <insert id="addDashBoard" parameterType="cn.com.easyerp.DeployTool.service.DashboardDescribe">
+  		INSERT INTO `c_dashboard` 
+		(
+			`dashboard_id`, 
+			`dashboard_name`, 
+			`dashboard_title`, 
+			`dashboard_size`, 
+			`dashboard_type`, 
+			`dashboard_param`, 
+			`dashboard_richtext`, 
+			`subscribe_type`
+		) 
+		VALUES 
+		(
+			#{dash.dashboard_id}, 
+			#{dash.dashboard_name}, 
+			#{dash.dashboard_title}, 
+			#{dash.dashboard_size}, 
+			#{dash.dashboard_type}, 
+			#{dash.dashboard_param}, 
+			#{dash.dashboard_richtext}, 
+			#{dash.subscribe_type}
+		)
+    </insert>
+    
+    <select id="getDashboards" resultType="cn.com.easyerp.DeployTool.service.DashboardDescribe">
+    	SELECT
+			dashboard_id,
+			dashboard_name,
+			dashboard_title,
+			dashboard_size,
+			dashboard_type,
+			dashboard_param,
+			dashboard_richtext,
+			subscribe_type
+		FROM c_dashboard
+    </select>
+    
+    
+    <select id="getTableList" resultType="cn.com.easyerp.core.data.DatabaseDataMap">
+    	SELECT
+			*
+		FROM ${table}
+		WHERE 
+			1=1
+		<if test="where!=null and where!=''">
+			${where}
+		</if>
+		<if test="authCondition!=null and authCondition!=''">
+			AND ${authCondition}
+		</if>
+		<if test="orderBy!=null and orderBy!=''">
+			ORDER BY ${orderBy} DESC
+		</if>
+		<if test="defaultCount!=null and defaultCount!=''">
+			LIMIT 0, ${defaultCount}
+		</if>
+		
+    </select>
+    
+    <select id="getTableCount" resultType="java.lang.Integer">
+    	SELECT
+			count(*)
+		FROM ${table}
+		<if test="where!=null and where!=''">
+		WHERE 1=1
+		${where}
+		</if>
+    </select>
+    
+    <select id="getChartList" resultType="cn.com.easyerp.core.data.DatabaseDataMap">
+    	SELECT
+			`id`,
+			`international_id`,
+			`table_id`,
+			`report_type`,
+			`report_column`,
+			`report_column_name`,
+			`group_column`,
+			`date_column`,
+			`condition`,
+			`SQL`,
+			`SQL2`,
+			`file_name`,
+			`report_file_type`,
+			`report_disp_type`,
+			`pre_api_json`,
+			`api_json`,
+			`service_name`,
+			`service_param`,
+			`module`
+		FROM
+			c_report 
+    </select>
+     
+    <select id="getUsers" resultType="String">
+    	SELECT
+			id
+		FROM
+			m_user
+    </select>
+    
+    <insert id="addSubscribe">
+    	INSERT INTO `c_dashboard_subscribe` (
+			`subscribe_id`,
+			`dashboard_id`,
+			`subscribe_status`,
+			`subscriber`,
+			`seq`
+		)
+		VALUES(
+			#{subscribe_id}, 
+			#{dashboard_id}, 
+			#{subscribe_status}, 
+			#{subscriber},
+			999
+		)
+    </insert>
+    
+    <select id="getSubscribesBysubscriber" resultType="cn.com.easyerp.core.data.DatabaseDataMap">	
+		SELECT
+			dashboard_id,
+			subscribe_status,
+			seq,
+			subscriber
+		FROM
+			c_dashboard_subscribe
+		WHERE
+			subscriber = #{subscriber}
+		ORDER BY
+			seq
+    </select>
+    
+    <update id="updateSubscribe" parameterType="cn.com.easyerp.DeployTool.service.SubscribeDescribe">
+    	UPDATE c_dashboard_subscribe
+		SET 
+		 subscribe_status = 1,
+		 seq = #{sub.seq}
+		WHERE
+			dashboard_id = #{sub.dashboard_id}
+		AND subscriber=#{subscriber}
+    </update>
+    
+     <update id="updateSubscribeStatus" parameterType="cn.com.easyerp.DeployTool.service.SubscribeDescribe">
+    	UPDATE c_dashboard_subscribe
+		SET 
+		 subscribe_status = 1
+		WHERE
+			dashboard_id = #{dashboard_id}
+		AND subscriber=#{subscriber}
+    </update>
+    
+    <update id="updateSubscribesSeq" parameterType="cn.com.easyerp.DeployTool.service.SubscribeDescribe">
+    	UPDATE c_dashboard_subscribe
+		SET 
+		 subscribe_status = 1,
+		 seq = #{sub.seq}
+		WHERE
+			subscribe_id = #{sub.subscribe_id}
+		AND subscriber=#{subscriber}
+    </update>
+    
+    <update id="reloadStatus" >
+    	UPDATE c_dashboard_subscribe
+		SET 
+		 subscribe_status = 0,
+		 seq = 999
+		WHERE
+			subscriber=#{subscriber}
+    </update>
+    
+    <select id="getHomeSubscribes" resultType="cn.com.easyerp.core.data.DatabaseDataMap">
+    	SELECT
+			#db.dashboard_id,
+			#db.dashboard_name,
+			#db.dashboard_title,
+			#db.dashboard_type,
+			#db.dashboard_size,
+			#db.dashboard_param,
+			#db.dashboard_richtext,
+			#db.subscribe_type,
+			ds.subscribe_id,
+			ds.dashboard_id,
+			ds.subscribe_status,
+			ds.seq,
+			ds.subscriber
+		FROM
+			c_dashboard_subscribe ds
+		#LEFT JOIN c_dashboard db ON db.dashboard_id = ds.dashboard_id
+		WHERE
+			ds.subscriber = #{subscriber}
+		AND
+			ds.subscribe_status='1'
+		ORDER BY ds.seq
+    </select>
+    <select id="getSubscribes" resultType="java.util.Map">
+        SELECT
+        db.dashboard_id,
+        db.dashboard_name,
+        db.dashboard_title,
+        db.dashboard_type,
+        db.dashboard_size,
+        db.dashboard_param,
+        db.dashboard_richtext,
+        db.subscribe_type
+        FROM
+         c_dashboard db
+    </select>
+     <select id="isExistsDashboard" resultType="java.lang.Integer">
+    	SELECT
+			COUNT(*)
+		FROM
+			c_dashboard
+		WHERE
+			dashboard_id = #{dash.dashboard_id}
+    </select> 
+    
+    <update id="updateDashboard" parameterType="cn.com.easyerp.DeployTool.service.DashboardDescribe">
+    	UPDATE `c_dashboard`
+		SET 
+			 `dashboard_name` = #{dash.dashboard_name},
+			 `dashboard_title` = #{dash.dashboard_title},
+			 `dashboard_size` = #{dash.dashboard_size},
+			 `dashboard_type` = #{dash.dashboard_type},
+			 `dashboard_param` = #{dash.dashboard_param},
+			 `dashboard_richtext` = #{dash.dashboard_richtext},
+			 `subscribe_type` = #{dash.subscribe_type}
+		WHERE
+			`dashboard_id` = #{dash.dashboard_id}
+    </update> 
+    
+    <delete id="deleteDashboard">
+    	DELETE
+		FROM
+			c_dashboard
+		WHERE
+			dashboard_id=#{dashboard_id}
+    </delete>
+    
+    <delete id="deleteSubscribe">
+    	DELETE
+		FROM
+			c_dashboard_subscribe
+		WHERE
+			dashboard_id=#{dashboard_id}
+    </delete>
+    
+    <update id="cancelSubscribe">
+    	UPDATE c_dashboard_subscribe
+		SET 
+		 subscribe_status = 0
+		WHERE
+			subscribe_id = #{subscribe_id}
+    </update>
+    
+    <select id="existSubscribe" resultType="java.lang.Integer">
+    	SELECT
+			count(1)
+		FROM
+			c_dashboard_subscribe
+		WHERE
+			subscriber = #{user.id}
+    </select>
+    
+    <select id="existTheSubscribe" resultType="java.lang.Integer">
+    	SELECT
+			count(1)
+		FROM
+			c_dashboard_subscribe
+		WHERE
+			subscriber = #{user.id}
+		AND dashboard_id=#{dahsboard_id}
+    </select>
+</mapper>

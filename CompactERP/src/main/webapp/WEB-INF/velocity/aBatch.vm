@@ -1,0 +1,25 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="abatch" class="form-inline dx-form" role="form"">
+ #set ($contextRoot = "#springUrl('')")
+<script>
+	    function makeLoginUrl(path) {
+	        return '$contextRoot' + path
+	    }
+    </script>
+
+<div class="datagrid-content">
+    <div class="datagrid-main">
+        <div id="url_deploy_btn" class="btn-toolbar grid-toolbar" style="height:auto">
+            <a href="javascript:void(0)" class="easyui-linkbutton dx-grid-add accept" >$dx.msg("Save")</a>
+        </div>
+        <table id="abatchDeployTb" class="easyui-datagrid"></table>
+
+    </div>
+
+    <div class="datagrid-foot">
+        <button class="easyui-linkbutton append" type="button">＋</button>
+        <button class="easyui-linkbutton removeit"type="button">－</button>
+    </div>
+</div>
+
+#dxFormTail($form)

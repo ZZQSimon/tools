@@ -1,0 +1,119 @@
+#dxFormHead($form)
+<form id="$form.id" name="importDeploy" class="form-inline dx-form" role="form"">
+
+    <div class="deploy-import-toolbar btn-toolbar rowContentTop">
+            <a href="javascript:void(0)" class="btn save deploy-import-submit">$dx.msg("Save")</a>
+            <input type="file" id="upload_context" class="upload_context" style="display:none" />
+            <button class="btn deploy-file-upload" type="button" >$dx.msg("upload")</button><!-- onclick="document.getElementById('upload_context').click();" -->
+    </div>
+    <div div class="deploy-import-body">
+        <div class="deploy-left-menu dx-field-2">
+            <div class="search">
+                <input type="text" class="deploy-left-tree-search" placeholder="检索配置过的表单"/>
+            </div>
+            <div class="deploy-left-table-data g1-tree-icon-left"></div>
+        </div>
+
+        <div class="rowContent dx-field-10">
+            <div class="empty-form">
+                <p>请选择表单</p>
+            </div>
+            <div class="deploy-middle-import dx-field-6">
+                <div>
+                    <table class="table table-striped mapper-table">
+                            <thead>
+                                <tr>
+                                    <th>$dx.msg("cloumn")</th>
+                                    <th class="text-center">$dx.msg("template_cloumn")</th>
+                                </tr>
+                            </thead>
+                    </table>
+                </div>
+                    <div class="table-warp">
+                        <table class="table table-striped mapper-table" >
+                            <tbody class="mapper-table-body">
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+
+                <div class="deploy-right-import dx-field-6">
+                    <div class="form-group deploy-config deploy_table_import_column clearfix">
+                        <label class="label-1">
+                            ##<span class="vail-require">*</span>
+                            $dx.msg("API")</label>
+                        <input class="input-1 api_id" type="text" name="api_id"/>
+                        <button class="parameterInput" type="button"></button>
+                    </div>
+                     <div class="form-group deploy-config deploy_table_import_column clearfix">
+                        <label class="label-1">
+                            ##<span class="vail-require">*</span>
+                            $dx.msg("create_trigger")</label>
+                        <input class="input-1 create_trigger" type="text" name="create_trigger"/>
+                        <button class="parameterInput" type="button"></button>
+                    </div>
+                    <div class="form-group deploy-config deploy_table_import_column clearfix">
+                        <label class="label-1">
+                            ##<span class="vail-require">*</span>
+                            $dx.msg("update_api")</label>
+                        <input class="input-1 update_api" type="text" name="update_api"/>
+                        <button class="parameterInput" type="button"></button>
+                    </div>
+                    <div class="form-group deploy_table_import_column clearfix" style="display:none">
+                        <label class="label-1">
+                            ##<span class="vail-require">*</span>
+                            $dx.msg("interceptor_service")</label>
+                        <input type="text" class="input-1 interceptor_service" value="csv-import"/>
+                    </div>
+                    <div class="form-group deploy_table_import_column clearfix">
+                         <label class="label-1">
+                            ##<span class="vail-require">*</span>
+                            $dx.msg("charset")</label>
+                            <select class="input-1 charset">
+                                    <option value="">$dx.msg("please select an option")</option>
+                                    <option value="GB2312">GB2312</option>
+                                    <option value="UTF-8">UTF-8</option>
+                            </select>
+                    </div>
+                    <div class="form-group deploy_table_import_column clearfix">
+                         <label class="label-1">
+                            ##<span class="vail-require">*</span>
+                            $dx.msg("import")</label>
+                            <div class="input-bt-Switcher-wrap">
+                                <div class="input-bt-Switcher">
+                                    <input type="checkbox" class="is_insert"><label></label>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="form-group deploy_table_import_column clearfix">
+                         <label class="label-1">
+                            ##<span class="vail-require">*</span>
+                            $dx.msg("import update")</label>
+                            <div class="input-bt-Switcher-wrap">
+                                <div class="input-bt-Switcher">
+                                    <input type="checkbox" class="is_update"><label></label>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="form-group deploy_table_import_column clearfix">
+                         <label class="label-1">
+                            ##<span class="vail-require">*</span>
+                            $dx.msg("the keyword")</label>
+                            <botton class="dropdown-toggle input-1 keywork" data-toggle="dropdown">$dx.msg("none selected")</botton>
+                              <ul class="dropdown-menu">
+                                <li><input type="checkbox" name="keyword" class="multiselect-all"/>$dx.msg("select all")</li>
+                              </ul>
+                    </div>
+                    <div class="form-group deploy_table_import_column clearfix">
+                        <label class="label-1">
+                            ##<span class="vail-require">*</span>
+                            $dx.msg("batch_id")</label>
+                        <input type="text" class="input-1 batch_id" readonly="true" />
+                    </div>
+
+                </div>
+        </div>
+    </div>
+</form>
+#dxFormTail($form)
+

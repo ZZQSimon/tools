@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.UserColumnDao">
+	<select id="selectUserColumnByTableName" resultType="cn.com.easyerp.core.widget.grid.UserColumn">
+		SELECT
+		user_id,
+		table_name,
+		column_name,
+		seq,
+		memo,
+		cre_user,
+		cre_date,
+		upd_user,
+		upd_date
+		FROM m_user_column
+		WHERE user_id = #{userId} AND table_name = #{tableName}
+		ORDER BY seq
+	</select>
+	<select id="selectUserColumnByUser" resultType="cn.com.easyerp.core.widget.grid.UserColumn">
+		SELECT
+		user_id,
+		table_name,
+		column_name,
+		seq,
+		memo,
+		cre_user,
+		cre_date,
+		upd_user,
+		upd_date
+		FROM m_user_column
+		WHERE user_id = #{userId}
+		ORDER BY table_name, seq
+	</select>
+	<delete id="deleteUserColumn">
+		DELETE FROM m_user_column
+		WHERE user_id = #{userId}
+		AND table_name = #{tableName}
+	</delete>
+	<insert id="insertUserColumn">
+		<foreach collection="UserColumns" item="userColumn" separator=";">
+			INSERT INTO m_user_column
+			(user_id, table_name, column_name, seq, memo, cre_user, cre_date, upd_user,
+			upd_date)
+			VALUES
+			(#{userId}, #{userColumn.table_name}, #{userColumn.column_name},
+			#{userColumn.seq}, #{userColumn.memo}, #{userId}, now() ,
+			#{userId}, now())
+		</foreach>
+	</insert>
+</mapper>

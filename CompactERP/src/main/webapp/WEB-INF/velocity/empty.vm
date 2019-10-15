@@ -1,0 +1,5 @@
+#dxFormHead($form)
+<div id="$form.id" class="dx-form" name="$form.widgetName">
+	$dx.msg("Unimplemented")
+</div>
+#dxFormTail($form)

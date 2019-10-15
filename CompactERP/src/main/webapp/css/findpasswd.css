@@ -1,0 +1,312 @@
+body, h1, h2, h3, h4, h5, h6, dl, dt, dd, ul, ol, li, th, td, p, form, fieldset, legend, input, button, textarea {
+    margin: 0;
+    padding: 0
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: 100%;
+    font-weight: normal
+}
+
+li {
+    list-style: none
+}
+
+img {
+    border: 0
+}
+
+a {
+    text-decoration: none
+}
+
+a:hover {
+    text-decoration: none;
+}
+input{
+    outline:none;
+}
+*::-webkit-input-placeholder {
+    color: rgb(179,179,179);
+}
+*:-moz-placeholder {
+    color: rgb(179,179,179);
+}
+*:-ms-input-placeholder {
+    /* IE10+ */
+    color: rgb(179,179,179);
+}
+
+
+
+html, body {
+    width: 100%;
+    min-width: 992px;
+    background: white;
+    font-size:12px;
+}
+body>div{
+    min-width: 992px;
+}
+.top {
+    padding: 10px 0;
+    border: 1px solid #e6e6e6;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.2);
+}
+
+.top-body {
+    width: 800px;
+    height: 35px;
+    margin: 0 auto;
+
+    line-height: 30px;
+}
+
+.fp-top span{
+    font-size: 22px;
+}
+.fp-top{
+    font-size:16px;
+    color:#b3b3b3;
+}
+/*top上颜色的显示*/
+.show-color{
+    color:black;
+}
+.show-color span{
+    color:#ffb142;
+}
+
+.find-top-left {
+    width: 50%;
+    height: 35px;
+    float: left;
+}
+
+.find-top-left a {
+    display: inline-block;
+    float: left;
+    width: 50px;
+    height: 35px;
+    background: url(../img/fp-logo.png) no-repeat ;
+    background-size: cover;
+}
+
+.find-top-left span {
+    display: inline-block;
+    float: left;
+    padding-left: 10px;
+    line-height: 35px;
+    font-size: 21px;
+    font-family: "SourceHanSansCN";
+    color: rgb(38, 38, 38);
+}
+
+.find-top-right{
+    width:50%;
+    height:100%;
+    float:left;
+}
+.find-top-right a {
+    display: inline-block;
+    font-size: 12px;
+    width:60px;
+    float: right;
+    line-height: 18px;
+    padding: 3px 5px;
+    border:1px solid rgb(254, 187, 89);
+    text-align: center;
+    border-radius:3px;
+    color: rgb(237, 152, 29);
+}
+
+/*表单部分***************88*88*/
+
+.find-body{
+    width:600px;
+    margin:0 auto;
+    padding:20px 50px;
+}
+.find-phone{
+    display: none;
+    padding:0 20px;
+}
+.find-phone .pholine{
+    width:60%;
+    height:15px;
+    margin:20px auto;
+    background: url(../img/one_phone.png) center bottom no-repeat;
+    -moz-background-size:100% 100%;
+    background-size:100% 100%;
+}
+.find-phone .phtline{
+    width:60%;
+    height:15px;
+    margin:20px auto;
+    background: url(../img/two_phone.png) center bottom no-repeat;
+    -moz-background-size:100% 100%;
+    background-size:100% 100%;
+}
+.find-email .pholine{
+    width:60%;
+    height:15px;
+    margin:20px auto;
+    background: url(../img/one_email.png) center bottom no-repeat;
+    -moz-background-size:100% 100%;
+    background-size:100% 100%;
+}
+.find-email .phtline{
+    width:60%;
+    height:15px;
+    margin:20px auto;
+    background: url(../img/two_email.png) center bottom no-repeat;
+    -moz-background-size:100% 100%;
+    background-size:100% 100%;
+}
+.find-email .phhline{
+    width:60%;
+    height:15px;
+    margin:20px auto;
+    background: url(../img/three_email.png) center bottom no-repeat;
+    -moz-background-size:100% 100%;
+    background-size:100% 100%;
+}
+
+.fp-top{
+    overflow: hidden;
+
+}
+.fp-top>div{
+    width:50%;
+    float:left;
+    text-align: center;
+    font-size: 16px;
+}
+
+
+.errorItem{
+    border:1px solid red !important;
+    border-radius: 4px;
+}
+.errorTip{
+    position: absolute;
+    margin-left: 20px;
+    padding-left: 15px;
+    line-height: 32px;
+    font-size: 12px;
+    color: red;
+    background: url(../img/errortip.png) no-repeat left center;
+    background-size: 12px;
+    font-style:normal;
+}
+
+/*表单***********************/
+.fp-form>div,.fp-form-set>div{
+    width:420px;
+    height:35px;
+    padding:0 20px;
+    margin:30px auto 0;
+}
+.fp-form label,.fp-form-set label{
+    display: inline-block;
+    width:100px;
+    line-height: 33px;
+    text-align: right;
+}
+
+.fp-form input,.fp-form-set input{
+    width:220px;
+    height: 23px;
+    line-height: 23px;
+    padding:5px 8px;
+    margin:0 20px;
+    border:1px solid rgb(229,229,229);
+    border-radius: 4px;
+}
+
+#fp-phone-vail{
+    width:118px;
+    margin-right:0;
+}
+.fp-form .fp-phone-vail .fp-send-vail,.find-button{
+    display: inline-block;
+    width:90px;
+    height:34px;
+    line-height:23px;
+    padding:5px 0;
+    margin-left:10px;
+    text-align: center;
+    color: rgb(239, 177, 84);
+    border:1px solid #ffb03d;
+    background:#ffe3bb;
+    border-radius: 3px;
+}
+
+.find-button{
+    width:134px;
+    height:23px;
+    padding:5px 8px;
+    margin-left:122px;
+    color:white;
+    background-image: -moz-linear-gradient( 90deg, rgb(255,171,47) 0%, rgb(254,187,89) 100%);
+    background-image: -webkit-linear-gradient( 90deg, rgb(255,171,47) 0%, rgb(254,187,89) 100%);
+    background-image: -ms-linear-gradient( 90deg, rgb(255,171,47) 0%, rgb(254,187,89) 100%);
+    border: 1px solid rgb(255,171,47);
+}
+
+.by-eamil{
+    display: block;
+    width:400px;
+    margin:40px auto;
+    margin:40px 20px 10px 120px;
+    color:#ffb03d;
+    text-align: center;
+}
+
+/*邮箱找回********************8*/
+.find-email{
+    display: none;
+}
+.find-email .fp-top>div{
+    width:33.3333%;
+}
+
+.fp-form .fp-vail-emt{
+    height:200px;
+    padding:40px 0 0 0;
+}
+.fp-vail-emt>img{
+    display:block;
+    margin:0 auto;
+    margin-bottom: 30px;
+    height:50px;
+}
+.fp-vail-emt>p{
+    line-height: 25px;
+    font-size: 16px;
+    text-align: center;
+}
+.fp-vail-emt>span{
+    display: block;
+    margin:20px auto;
+    text-align: center;
+    color:#b3b3b3;
+}
+.fp-vail-emt .find-button{
+    display: block;
+    margin:0 auto;
+}
+.fp-form{
+    display: none;
+}
+
+.active{
+    display: block;
+}
+
+.hidden{
+    display: none;
+}
+
+

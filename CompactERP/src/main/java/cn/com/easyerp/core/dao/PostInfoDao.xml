@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.PostInfoDao">
+	<select id="selectPostInfo" resultType="java.util.Map">
+		SELECT * FROM `m_role`;
+	</select>
+	<insert id="addPostInfo">
+		INSERT INTO `gc_test1`.`m_role` (
+		`id`,
+		`name`,
+		`cre_user`,
+		`cre_date`,
+		`upd_user`,
+		`upd_date`
+		)
+		VALUES
+		(
+		#{id},
+		#{name},
+		#{userId},
+		#{date},
+		#{userId},
+		#{date}
+		);
+	</insert>
+	<select id="getPostInfoId" resultType="java.lang.String">
+		CALL c_get_next_id
+		(#{table}, #{parentTable}, @new_id);
+		SELECT @new_id;
+	</select>
+	<delete id="deletePostInfo">
+		delete from m_role where `id`=#{id}
+	</delete>
+	<select id="selectPostById" resultType="java.lang.Integer">
+		SELECT count(*) FROM
+		`m_role` where `id`=#{id};
+	</select>
+</mapper>

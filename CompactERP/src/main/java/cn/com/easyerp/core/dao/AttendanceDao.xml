@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.AttendanceDao">
+
+
+	<select id="selectAttendanceAreaByArea" resultType="java.lang.String">
+		select
+		attendance_area from m_attendance_rule where attendance_area =
+		#{attendanceArea}
+	</select>
+
+	<insert id="saveAttendanceArea">
+		insert into
+		m_attendance_rule(attendance_id,attendance_name,attendance_area,attendance_lon,attendance_lat,cre_user,cre_date)
+		value(#{id},#{name},#{area},#{lon},#{lat},#{user},#{date})
+	</insert>
+
+	<update id="updateAttendanceTime">
+		update m_attendance_rule set
+		begin_time=#{begin},end_time=#{end}
+		where
+		attendance_id=#{id}
+	</update>
+
+	<select id="selectAttendanceArea" resultType="cn.com.easyerp.core.map.AttendanceArea">
+		select
+		attendance_id as attendanceId,attendance_area as
+		attendanceArea,attendance_name as attendanceName,attendance_lon as
+		attendanceLon,attendance_lat as attendanceLat,begin_time as
+		beginTime,end_time as endTime
+		from
+		m_attendance_rule
+	</select>
+
+	<delete id="removeAttendanceArea">
+		delete from m_attendance_rule
+		<if test="ids != null and ids.size() != 0">
+			<foreach collection="ids" item="id" index="i" separator="||"
+				open="where">
+				attendance_id = '${id}'
+			</foreach>
+		</if>
+	</delete>
+
+
+</mapper>
+
+
+
+
+

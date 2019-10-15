@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gainit手机注册</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="#springUrl('')/reg-mobile/css/index.css">
+    <script src="#springUrl('')/reg-mobile/js/jquery-1.11.0.js"></script>
+    <script src="#springUrl('')/reg-mobile/js/index.js"></script>
+    #set ($contextRoot = "#springUrl('')")
+   	<script>
+		function makeLoginUrl(path) {
+		    return '$contextRoot' + path
+		}
+	</script>
+</head>
+<body>
+  <div class="secMain">
+    <span class="errorTip">tip</span>
+    <div class="section phone active">
+          <h2>新员工加入</h2>
+          <div class="form-group">
+            <label>手机号</label>
+            <input type="text" class="regphone phone" placeholder="请输入手机号" maxlength="11">
+          </div>
+          <div class="form-group">
+            <label>验证码 </label>
+            <input type="text" class="vailCode vail" name="phoneCode" placeholder="请输入验证码">
+
+            <input type="button" class="getvailCode" value="获取验证码">
+          </div>
+          <button type="button" class="btn tab-btn btn-disable" name=".reg" disabled>下一步</button>
+        </div>
+    <div class="section reg">
+      <h2>新用户注册</h2>
+      <div class="form-group">
+        <label>用户名</label>
+        <input type="text" class="regname username " placeholder="请输入1-20位字符的密码">
+      </div>
+      <div class="form-group">
+        <label>密码</label>
+        <input type="password" class="regpassword password" placeholder="请输入6-10位字符的密码">
+      </div>
+      <button type="button" class="btn tab-btn btn-disable" name=".staff" disabled>下一步</button>
+    </div>
+    <div class="section staff">
+      <h2>员工信息 </h2>
+      <div class="form-group">
+       	<label>性别 (选填)</label>
+       	<select class="input" name="sex" placeholder="请选择您的性别">
+       		<option value="1">男</option>
+           	<option value="2">女</option>
+       	</select>
+      </div>
+      <div class="form-group">
+        <label>邮箱 (选填)</label>
+        <input type="text" class="input" name="email" placeholder="请填写您的常用邮箱">
+      </div>
+      <div class="form-group">
+         <label>员工号 (选填)</label>
+         <input type="text" class="input" name="id"  placeholder="请填写您的员工号">
+      </div>
+      <div class="form-group">
+        <label>座机号 (选填)</label>
+        <input type="text" class="input" name="telePhone"   placeholder="请填写您的座机号码">
+      </div>
+      <div class="form-group">
+          <label>入职时间 (选填)</label>
+          <input type="text" class="input" name="entryDate"   placeholder="请填写您的入职时间">
+      </div>
+      <button type="button" class="btn tab-btn" name=".success">完成</button>
+    </div>
+    <div class="section success">
+      <div class="head">
+        <p>您已成功加入</p>
+        <h3>上海冠译网络科技公司</h3>
+        <img src="#springUrl('')/reg-mobile/img/company.png" alt="">
+      </div>
+      <div>
+        <span class="tip">提示：您离登录还差一小步，长按下方二维码，关注企业微信号，在微信通讯录中找到您的企业号进入。</span>
+        <div class="weixin">
+          <img src="#springUrl('')/reg-mobile/img/card.png" alt="">
+        </div>
+        <div class="footer">
+          <ul>
+            <li class="first-part">
+              <div>
+                <span>
+                  <img src="#springUrl('')/reg-mobile/img/01.png" alt="">
+                </span>
+                <img src="#springUrl('')/reg-mobile/img/two_card.png" alt="">
+              </div>
+              <p>扫描二维码</p>
+            </li>
+            <li class="second-part">
+              <div>
+                <span>
+                  <img src="#springUrl('')/reg-mobile/img/02.png" alt="">
+                </span>
+                <img src="#springUrl('')/reg-mobile/img/attention.png" alt="">
+              </div>
+              <p>关注企业微信</p>
+            </li>
+            <li class="thirth-part">
+              <div>
+                <span>
+                  <img src="#springUrl('')/reg-mobile/img/03.png" alt="">
+                </span>
+                <img src="#springUrl('')/reg-mobile/img/wechat.png" alt="">
+              </div>
+              <p>微信/通讯录</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function getRootPath_web(url) {
+	  //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+	  var curWwwPath = window.document.location.href;
+	  //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+	  var pathName = window.document.location.pathname;
+	  var pos = curWwwPath.indexOf(pathName);
+	  //获取主机地址，如： http://localhost:8083
+	  var localhostPaht = curWwwPath.substring(0, pos);
+	  //获取带"/"的项目名，如：/uimcardprj
+	  var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+	  // return 'http://192.168.2.107:8080/gainit_cloud' + url;
+	    return (localhostPaht + projectName + url);
+	}
+
+
+
+
+
+  </script>
+</body>
+</html>

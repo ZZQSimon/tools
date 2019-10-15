@@ -1,0 +1,154 @@
+#dxFormHead($form)
+<form id="$form.id" name="dashboard" class="form-inline dx-form" role="form"">
+    ##配置仪表盘开始
+    <div id="home-config-tab" class="tab-pane clearfix">
+         <div class="rowContentTop btn-toolbar tab-config-top">
+            <button type="button" class="save button-color1 dashboard-submit">$dx.msg("Save")</button>
+
+            <a href="#home-common-tab" class="dashboard-cancle" aria-controls="home-common-tab" role="tab" data-toggle="tab">$dx.msg("Cancel")</a>
+
+            <div class="dropdown dropdown-add">
+                <button type="button" class="dashboard-add " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">$dx.msg("Add")</button>
+                <div class="dropdown-menu clearfix" aria-labelledby="tab-config-new">
+                    <label class="label-1">$dx.msg("name"):</label>
+                        <input type="text" class="input-1 form-control dashboard-name" name='menuGroupName'/>
+                        <button data-toggle="dropdown" class="button-color4 cancel-dashboarde">$dx.msg("Cancle")</button>
+                        <button data-toggle="dropdown" class="tabConfigNew button-color3 add-dashboard">$dx.msg("Save")
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="dashboard-delete">$dx.msg("Delete")</button>
+        </div>
+        <div class="rowContent">
+            <div class="dx-field-2 tab-config-ul-div">
+                <ul class="tab-config-ul">
+                </ul>
+            </div>
+
+            ##配置项
+            <div class="dx-field-10 tab-config-form">
+                <form>
+                    ##配置项共通项开始
+                    <div class="form-group">
+                        <label for="table-type">$dx.msg("Dashboard type")</label>
+                        <select class="form-control dashboard-type">
+                            <option name="common-notice" value="1" selected>$dx.msg("Announcement")</option>
+                            <option name="tab-approve" value="2">$dx.msg("Approval center")</option>
+                            <option name="tab-approve" value="3">$dx.msg("Working calendar")</option>
+                            <option name="tab-progress" value="4">$dx.msg("percent")</option>
+                            <option name="tab-progress" value="5">$dx.msg("progress")</option>
+                            <option name="tab-chart" value="6">$dx.msg("chart")</option>
+                            <option name="tab-table" value="7">$dx.msg("list")</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">$dx.msg("dashboard title")</label>
+                        <input type="text" class="form-control dashboard-title" id="table-title" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">$dx.msg("Subscribe to the permissions")</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="subscribe-type" id="must-get" value="1"> $dx.msg("Mandatory subscriptions")
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="subscribe-type" id="default-get" value="2"> $dx.msg("Default subscription")
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="subscribe-type" id="default-hidden" value="3"> $dx.msg("Default hidden")
+                        </label>
+
+                    </div>
+                    <div class="form-group">
+                        <label>$dx.msg("Panel size")</label>
+                        <div class="table-size">
+                            <div class="table-size-4" id="table-size-1"></div>
+                            <div class="table-size-4" id="table-size-2"></div>
+                        </div>
+                    </div>
+                    ##配置项共通项结束
+
+                    <div class="tab-config-select">
+                        ##公告
+                        <div class="form-group clearfix common-notice">
+                            <label>$dx.msg("Announcement context")</label>
+                            <div class="tab-config-summer-box">
+                                <div id="tab-config-summer"></div>
+                            </div>
+                        </div>
+                        ##公告
+
+                        ##百分比
+                        <div class="form-group tab-percent">
+                            <label for="table-type">$dx.msg("Molecular computational SQL")</label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+                        <div class="form-group tab-percent">
+                            <label for="table-type">$dx.msg("Denominator computational SQL")</label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+                        ##百分比
+
+                        ##进度
+                        <div class="form-group tab-progress">
+                            <label for="table-type">$dx.msg("Actual value computational SQL")</label>
+                            <textarea class="form-control actual_sql"></textarea>
+                        </div>
+                        <div class="form-group tab-progress">
+                            <label for="">$dx.msg("Target value")</label>
+                            <textarea class="form-control target_sql"></textarea>
+                        </div>
+                        <div class="form-group tab-progress">
+                            <label for="table-type" >$dx.msg("Statistical methods")</label>
+                            <select class="form-control method">
+                                <option value="year">$dx.msg("year")</option>
+                                <option value="month">$dx.msg("monthly")</option>
+                            </select>
+                        </div>
+                        ##进度
+
+                        ##列表
+                        <div class="form-group tab-table">
+                            <label for="">$dx.msg("Main table")</label>
+                            <select class="form-control table-list-items" >
+                            </select>
+                            <!-- <button type="button" class="tab-config-view button-color2">$dx.msg("Create a view")</button> -->
+                        </div>
+                        <div class="form-group tab-table">
+                            <label for="">$dx.msg("Refer table")</label>
+                            <select class="form-control refer-table" >
+                            </select>
+                        </div>
+                        <div class="form-group tab-table">
+                            <label for="">$dx.msg("default_count")</label>
+                            <input type="number" min="0" max="50" class="form-control default-count" value="10"/>
+                        </div>
+                        <div class="form-group tab-table">
+                            <label for="">$dx.msg("order_by")</label>
+                            <select class="form-control order-by" >
+                            </select>
+                        </div>
+                        <div class="tab-table tab-table-condition">
+                        </div>
+                        ##列表
+
+                        ##图表
+                        <div class="form-group tab-chart">
+                            <label for="">$dx.msg("Statistical charts")</label>
+                            <select class="form-control chart-list">
+                            </select>
+                            <!-- <button type="button" class="tab-config-view button-color2">$dx.msg("Create a view")</button> -->
+                        </div>
+                        <div class="tab-chart tab-chart-condition">
+                            <div class="form-group tab-chart">
+                                <label for="table-type">$dx.msg("Statistical field")</label>
+                                <input  type="text" class="form-control"/>
+                            </div>
+                        ##图表
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</form>
+#dxFormTail($form)
+

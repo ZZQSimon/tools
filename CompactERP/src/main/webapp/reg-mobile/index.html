@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gainit手机注册</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1, minimum-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/jquery-1.11.0.js"></script>
+</head>
+<body>
+  <div class="secMain">
+    <div class="section phone active">
+      <h2>新用户注册 <span>1/2</span></h2>
+      <div class="form-group">
+        <label>用户名</label>
+        <input type="text" class="regname username" placeholder="请输入1-20字符的用户名">
+
+      </div>
+      <div class="form-group">
+        <label>密码</label>
+          <input type="text" class="regpassword" placeholder="请输入6-10位字符的密码">
+    </div>
+      <div class="form-group">
+        <label>确认密码</label>
+          <input type="text" class="regphoneconfirm" placeholder="请再次输入密码">
+      </div>
+      <div class="form-group">
+        <label>手机号</label>
+          <input type="text" class="regphone" placeholder="请输入手机号">
+      </div>
+      <div class="form-group">
+        <label>验证码 </label>
+          <input type="text" class="vailCode" name="phoneCode" placeholder="请输入验证码">
+
+        <span class="getvailCode" onclick="getTelephone();">获取验证码</span>
+      </div>
+      <button type="button" class="btn tab-btn btn-disable" name=".staff">下一步</button>
+    </div>
+    <div class="section staff">
+      <h2>员工信息 <span>2/2</span></h2>
+      <div class="form-group">
+       	<label>性别 (选填)</label>
+       	<select class="input" name="sex" placeholder="请选择您的性别">
+       		<option value="1">男</option>
+           	<option value="2">女</option>
+       	</select>
+      </div>
+      <div class="form-group">
+        <label>邮箱 (选填)</label>
+        <input type="text" class="input" name="email" placeholder="请填写您的常用邮箱">
+      </div>
+      <div class="form-group">
+         <label>员工号 (选填)</label>
+         <input type="text" class="input" name="id"  placeholder="请填写您的员工号">
+      </div>
+      <div class="form-group">
+        <label>座机号 (选填)</label>
+        <input type="text" class="input" name="telePhone"   placeholder="请填写您的座机号码">
+      </div>
+      <div class="form-group">
+          <label>入职时间 (选填)</label>
+          <input type="text" class="input" name="entryDate"   placeholder="请填写您的入职时间">
+      </div>
+      <button type="button" class="btn tab-btn btn-disable" name=".success">完成</button>
+    </div>
+    <div class="section success">
+      <div class="head">
+        <p>您已成功加入</p>
+        <h3>上海冠译网络科技公司</h3>
+        <img src="img/company.png" alt="">
+      </div>
+      <div>
+        <span class="tip">提示：您离登录还差一小步，长按下方二维码，关注企业微信号，在微信通讯录中找到您的企业号进入。</span>
+        <div class="weixin">
+          <img src="img/card.png" alt="">
+        </div>
+        <div class="footer">
+          <ul>
+            <li class="first-part">
+              <div>
+                <span>
+                  <img src="img/01.png" alt="">
+                </span>
+                <img src="img/two_card.png" alt="">
+              </div>
+              <p>扫描二维码</p>
+            </li>
+            <li class="second-part">
+              <div>
+                <span>
+                  <img src="img/02.png" alt="">
+                </span>
+                <img src="img/attention.png" alt="">
+              </div>
+              <p>关注企业微信</p>
+            </li>
+            <li class="thirth-part">
+              <div>
+                <span>
+                  <img src="img/03.png" alt="">
+                </span>
+                <img src="img/wechat.png" alt="">
+              </div>
+              <p>微信/通讯录</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function getRootPath_web(url) {
+	  //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+	  var curWwwPath = window.document.location.href;
+	  //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+	  var pathName = window.document.location.pathname;
+	  var pos = curWwwPath.indexOf(pathName);
+	  //获取主机地址，如： http://localhost:8083
+	  var localhostPaht = curWwwPath.substring(0, pos);
+	  //获取带"/"的项目名，如：/uimcardprj
+	  var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+	  // return 'http://192.168.2.107:8080/gainit_cloud' + url;
+	    return (localhostPaht + projectName + url);
+	}
+    function getTelephone() {
+		var telephone =$(".regphone").val();
+		$.ajax({
+			url:getRootPath_web("/auth/phoneCode.view?telephone="+telephone),
+			data:{},
+			success : function(data) {  //（action处理完后返回的结果，就是局部刷新，页面不跳转）
+			}
+		});
+	}
+
+  function vailform(data) {
+      $(data).find(".errorTip").remove();
+      var canDo=true;
+      var noempty=$(data).find("input.noempty").val();
+      var corpaccount=$(data).find("input.corpaccount").val();
+      var password=$(data).find("input.password").val();
+      var repassword=$(data).find("input.repassword").val();
+      var username=$(data).find("input.username").val();
+      var email=$(data).find("input.email").val();
+      var vail=$(data).find("input.vail").val();
+      var radio=$(data).find("input.radio");
+
+    /*if(/^[0-9a-zA-Z_]{3,10}$/.test($.trim(corpaccount))){
+     $(data).find("input.corpaccount").removeClass("errorItem");
+     canDo=true;
+     }else{
+     $(data).find("input.corpaccount").addClass("errorItem");
+     $(data).find("input.corpaccount").after('<i class="errorTip">格式有误!</i>');
+     canDo=false;
+     }*/
+
+
+      if(/.{1,20}/.test($.trim(username))){
+          $(data).find("input.username").removeClass("errorItem");
+          canDo=true;
+      }else{
+          $(data).find("input.username").addClass("errorItem");
+          $(data).find("input.username").after('<span class="errorTip">请输入1-20位字符!</span>');
+          canDo=false;
+      }
+
+      if(/.{6,10}/.test($.trim(password))){
+          $(data).find("input.password").removeClass("errorItem");
+          canDo=true;
+      }else{
+          $(data).find("input.password").addClass("errorItem");
+          $(data).find("input.password").after('<i class="errorTip">请输入6-10位字符！</i>');
+          canDo=false;
+      }
+
+      if($.trim(repassword)==$.trim(password)){
+          $(data).find("input.repassword").removeClass("errorItem");
+          canDo=true;
+      }else{
+          $(data).find("input.repassword").addClass("errorItem");
+          $(data).find("input.repassword").after('<i class="errorTip">两次密码不相符！</i>');
+          canDo=false;
+      }
+
+      if($.trim(vail)!=""){
+          $(data).find("input.vail").removeClass("errorItem");
+          canDo=true;
+      }else{
+          $(data).find("input.vail").addClass("errorItem");
+          $(data).find("input.vail").after('<i class="errorTip">验证码不能为空！</i>');
+          canDo=false;
+      }
+
+    /* if($.trim(noempty)!=""){
+     $(data).find("input.noempty").removeClass("errorItem");
+     canDo=true;
+     }else{
+     $(data).find("input.noempty").addClass("errorItem");
+     $(data).find("input.noempty").after('<i class="errorTip">必填项!</i>');
+     canDo=false;
+     }*/
+      console.log(canDo);
+      return canDo;
+  }
+
+  $(".phone .tab-btn").on("click",function () {
+        if(vailform(".phone")){
+            var regname =$(".regname").val();
+            var telephone =$(".regphone").val();
+            var phoneCode =$("input[name='phoneCode']").val();
+            var regpassword =$(".regpassword").val();
+            var that=$(this);
+            $.ajax({
+                url:getRootPath_web("/auth/phoneReg.do"),
+                data:{regphone:telephone,password:regpassword,phoneCode:phoneCode,regname:regname},
+                success : function(data) {  //（action处理完后返回的结果，就是局部刷新，页面不跳转）
+                    if(!data.success){
+                        alert(data.data);
+                    }else{
+                        var goTag=that.attr("name");
+                        $(".section").removeClass("active");
+                        $(goTag).addClass("active");
+                    }
+                }
+            });
+        }
+    })
+    $(".staff .tab-btn").on("click",function () {
+    	var email =$(".corp-staff-info input[name='email']").val();
+    	var id =$("input[name='id']").val();
+    	var telePhone =$("input[name='telePhone']").val();
+    	var entryDate =$("input[name='entryDate']").val();
+    	var sex =$("select").val();
+    	var that=$(this);
+    	$.ajax({
+    		url:getRootPath_web("/auth/joinCompany.do"),
+    		data:{email:email,id:id,telePhone:telePhone,entryDate:entryDate,sex:sex},
+    		success : function(data) {  //（action处理完后返回的结果，就是局部刷新，页面不跳转）
+    			if(!data.success){
+            		alert(data.data);
+            	}else{
+    	            var goTag=that.attr("name");
+            	    $(".section").removeClass("active");
+            	    $(goTag).addClass("active");
+            	}
+           	}
+    	});
+    })
+  </script>
+</body>
+</html>
+<!--���JB���b!�Q���<��N�d�\���;��s|]�5�U���=�����c���0�
+-R��$މ�"��Ɂi�A�w��(������ c�hg�g;���cjܗ���m�;�sT3��k�{�X�h83�=xv��R*��!��i�-�h�s���rq剙�E������~���$#��@S������ct�6��G�x(����fa��I�$Cs¡7�S���+O1\ó� � ��l����C*pQ�8ɘ�����=�~�Ȱ�aԔ	���4;2j�,��]c�
+6G��	�����v��ј��eN���& �R������OD�YXK� �-->

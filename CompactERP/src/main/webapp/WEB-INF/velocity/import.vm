@@ -1,0 +1,48 @@
+#dxFormHead($form)
+<form id="$form.id" name="$form.widgetName" class="form-inline dx-form" role="form">
+    <div id="$form.id">
+        #dxMenuBarHead($form)
+        <button type="button" class="btn btn-default btn-sm dx-grid-Import" disabled>$dx.msg("import")</button>
+        #dxMenuBarFoot()
+        <label style="line-height:20px;">$form.tip</label>
+        <div style="height:auto;padding:0;">
+            <div class="dx-grid-container" style="overflow:auto;height:300px">
+                <label id="${form.id}_notify" class="dx-import-notify-label hidden"></label>
+                <table class="dx-grid display dataTable no-footer dx-import-table" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th>$dx.msg('input_row_num')</th>
+                        #foreach($desc in $dx.table($form.tableName).columns)
+                            #if (!$desc.virtual && ($desc.data_type != 6)&&($desc.data_type != 13))
+                                <th>$dx.i18n($desc.i18n)</th>
+                            #end
+                        #end
+                    </tr>
+                    </thead>
+                    <tbody>
+                        #set($index = 1)
+                        #foreach($record in ${form.grid.records})
+                        <tr id="${record.id}">
+                            <td style="font-size:12px;">${record.index}</td>
+                            #foreach($field in ${record.fields})
+                                #set($desc = $dx.desc($field))
+                                #if (!$desc.virtual && ($desc.data_type != 13))
+                                    <td>#dxFieldInput($field,$desc,
+                                        "ui-widget dx-field dx-import-input dx-readonly")</td>
+                                #else
+                                    #dxHiddenField($field, $desc)
+                                #end
+                            #end
+                            #set($index = $math.add($index,1))
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
+#dxFormTail($form)
+<div class="hidden" id="${form.id}_msg">
+</div>
+

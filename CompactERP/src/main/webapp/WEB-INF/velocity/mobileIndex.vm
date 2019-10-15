@@ -1,0 +1,139 @@
+#macro(mobileMenu $name $subMenus)
+<div class="menu-model g-cell-item">
+  <h3>$dx.msg($name)</h3>
+  <div class="row">
+      #foreach($menu in $subMenus)  
+        #mobileSubMenu($menu)
+      #end    
+  </div>
+</div>
+#end
+
+#macro(mobileSubMenu $menu)
+<div id="$menu.page_id" class="col-xs-3 menu-item" onclick="openMobilePage('$menu.page_id')">
+    <img src="$contextRoot/img/mobile-img/($menu.international_id).png" alt="$dx.msg($menu.international_id)"/>
+    <p>$dx.msg($menu.international_id)</p>
+</div>
+#end
+
+#macro(mobileFooter)
+<div class="row moblie-footer-menu">
+    <div class="col-xs-3 footer-menu-item active" id="moblie-home" >
+        <img class="menu-active" src="$contextRoot/img/mobile-img/bar-home.png"/>
+        <img src="$contextRoot/img/mobile-img/bbar-home.png"/>
+        <p>首页</p>
+    </div>
+    <div  class="col-xs-3 footer-menu-item" id="moblie-work-date">
+        <img class="menu-active" src="$contextRoot/img/mobile-img/bar-cal.png"/>
+            <img src="$contextRoot/img/mobile-img/bbar-cal.png"/>
+        <p>日程</p>
+    </div >
+    <div  class="col-xs-3 footer-menu-item" id="moblie-approve-center">
+        <img class="menu-active" src="$contextRoot/img/mobile-img/bar-app.png"/>
+         <img src="$contextRoot/img/mobile-img/bbar-app.png" />
+        <p>审批</p>
+    </div >
+    <div  class="col-xs-3 footer-menu-item" id="moblie-personal-center">
+        <img class="menu-active" src="$contextRoot/img/mobile-img/bar-my.png"/>
+        <img src="$contextRoot/img/mobile-img/bbar-my.png" />
+        <p>我的</p>
+    </div >
+</div>
+#end
+
+
+<!doctype html>
+<html>
+<head>
+    <title>#springMessage("title")</title>
+    #mobileHead($form)
+</head>
+<body>
+<div id="$form.id" class="inner-page">
+    <div class="moblie-home">
+        <div class="row moblie-home-head">
+            <div class="today-tip"></div>
+        </div>
+        <div class="row moblie-approve-reminding" >
+            <div class="col-xs-6 wait-me" >
+                <div class="count">$form.waitMeApproveSize</div>
+                <p>$dx.msg("wait me approve")</p>
+            </div>
+            <div class="col-xs-6 i-start">
+                <div class="count">$form.myApproveSize</div>
+                <p>$dx.msg("I started")</p>
+            </div>
+        </div>
+        <div class="moblie-home-menu g-cell-wrap">
+            #foreach   ($menu in $form.mobileMenu.entrySet())
+                #mobileMenu($menu.key,$menu.value)
+            #end
+        </div>
+    </div>
+
+    <div class="moblie-work-date">
+        
+    </div>
+
+    <div class="moblie-container">
+        
+    </div>
+    <div class="moblie-approve-center" style="display: none;">
+        <div class="row approve-type">
+            <div class="col-xs-6 btn approve-type-item type-wait-me isActive">$dx.msg("wait me approve")</div>
+            <div class="col-xs-6 btn approve-type-item type-i-start">$dx.msg("I started")</div>
+        </div>
+        <div class="approve-list wait-me-list" >
+            <div class="no-record">
+                <img src="$contextRoot/img/mobile-img/nothing.png">
+                <p>暂无审批事件</p>
+            </div>
+        </div>
+        <div class="approve-list i-start-list" style="display: none;">
+            <div class="no-record">
+                <img src="$contextRoot/img/mobile-img/nothing.png">
+                <p>暂无审批事件</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="moblie-personal-center" style="display: none;">
+        <div class="personal-center-head">
+            <img class="userlogo"/>
+            <div class="personal-info">
+                <p class="personal-name">$dx.formatEmpty($dx.user.name)</p>
+                <p class="personal-corp"></p>
+            </div> 
+        </div>
+        <div class="personal-setting-wrap">
+            <div class="g-cell-wrap">
+                <div class="g-cell-item personal-data">
+                    <img class="person-set-icon" src="$contextRoot/img/mobile-img/myinfo-data.png"/>
+                    个人资料
+                </div>
+##                <div class="g-cell-item change-password">
+##                    <img class="person-set-icon" src="$contextRoot/img/mobile-img/myinfo-pass.png"/>
+##                    修改密码
+##                </div>
+            </div>
+##            <div class="g-cell-wrap">
+##                <div class="g-cell-item setting">
+##                    <img class="person-set-icon" src="$contextRoot/img/mobile-img/myinfo-setting.png"/>
+##                    设置
+##                </div>
+##                <div class="g-cell-item help">
+##                    <img class="person-set-icon" src="$contextRoot/img/mobile-img/myinfo-help.png"/>
+##                    帮助
+##                </div>
+##            </div>
+
+##            <div class="g-cell-wrap mobile-logout"><a href="#springUrl('/auth/logout.do')">注销账号</a></div>
+        </div>
+    </div>
+    #mobileFooter()
+</div>
+<script>
+   mobileIndex();
+</script>
+</body> 
+</html>

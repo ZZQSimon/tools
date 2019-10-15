@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.TreeDao">
+	<select id="selectTree" resultType="cn.com.easyerp.tree.TreeNodeModel">
+		select
+		fn.id id,
+		case datalength(${table.id}.${table.parent_id_column})
+		when 0
+		then '#'
+		else
+		${table.id}.${table.parent_id_column} end parent,
+		${table.id}.${table.name_column} text
+		from fn_tree_build('${table.id}', '${node}', '${status}') fn
+		join ${table.id} on fn.id = ${table.id}.${table.idColumns[0]}
+	</select>
+	<select id="selectParent" resultType="cn.com.easyerp.core.data.DatabaseDataMap">
+		select
+		<foreach collection="table.idColumns" item="column" separator=",">
+			${column}
+		</foreach>
+		from ${table.id} where
+		<foreach collection="keys.entrySet()" item="value" index="key"
+			separator="and">
+			${key} = #{value}
+		</foreach>
+		<if test="where!= null">
+			and ${where}
+		</if>
+	</select>
+</mapper>

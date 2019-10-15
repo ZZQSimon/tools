@@ -1,0 +1,37 @@
+#dxFormHead($form)
+<form id="$form.id" class="dx-form" name="$form.widgetName">
+	#dxMenuBarHead($form)
+	<button type="button" class="btn btn-default btn-sm dx-ag-save">$dx.msg("Save")</button>
+	<button type="button" class="btn btn-default btn-sm dx-btn-cancel">$dx.msg("Cancel")</button>
+	#dxMenuBarFoot()
+	<div class="dx-form-con">
+		#dxFilter($form.filter)
+		#set($table = $dx.table($form.grid.table))
+		<div class="dx-auto-expand">
+			<table id="$form.grid.id" class="dx-ag-grid display cell-border" cellspacing="0" width="100%">
+				<thead>
+				<tr>
+					<th><input type="checkbox" class="dx-grid-checkall"/></th>
+					#foreach($column in $form.columns)
+						<th>$dx.i18n($dx.desc($form.grid.table, $column).i18n)</th>
+					#end
+				</tr>
+				</thead>
+				<tbody>
+				</tbody>
+				#if ($form.hasSum)
+					<tfoot>
+					<tr>
+						<th>$dx.msg("Total")</th>
+						#foreach($column in $form.columns)
+							<th></th>
+						#end
+					</tr>
+					</tfoot>
+				#end
+
+			</table>
+		</div>
+	</div>
+</form>
+#dxFormTail($form)

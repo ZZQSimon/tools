@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.AuthDao">
+	<insert id="insertAuthMenuConfig">
+		insert into c_auth_config (target, target_id, type,
+		auth_id) values ('MENU', #{menuId}, 'R', #{controlId})
+	</insert>
+	<update id="updateAuthControl">
+		update c_auth_ctrl
+		set relationship = #{relationship}
+		where id = #{id}
+	</update>
+	<delete id="deleteAuthMenuConfig">
+		delete from c_auth_config
+		where target = 'MENU'
+	</delete>
+	<select id="selectUser" resultType="cn.com.easyerp.auth.AuthDetails">
+		select
+		id,
+		parent_id,
+		`name`,
+		CAST(AES_DECRYPT(_password, #{encryptStr}) AS CHAR) _password,
+		sex,
+		birthdate,
+		telephone,
+		mobile,
+		email,
+		imageUrl,
+		msn,
+		case language_id
+		when ''
+		then null
+		else language_id end language_id,
+		role_id,
+		department_id,
+		status,
+		memo
+		from m_user
+		where
+		mobile = #{id}
+		OR
+		id = #{id}
+	</select>
+	<select id="selectUserAdditional" resultType="cn.com.easyerp.auth.AuthDetailsAdditional">
+		SELECT user_id, dept department_id, role role_id FROM m_user_additional
+		WHERE user_id = #{user_id}
+	</select>
+	<select id="selectUserCompany" resultType="java.util.Map">
+		SELECT * FROM sys_user_company WHERE user_id = #{id}
+	</select>
+	<select id="selectUserDepts" resultType="java.lang.String">
+		SELECT department_id FROM sys_user_department WHERE depts = #{id}
+	</select>
+	<select id="selectUserRoles" resultType="java.lang.String">
+		SELECT role_id FROM sys_user_role WHERE roles = #{id}
+	</select>
+	<select id="selectUsers" resultType="cn.com.easyerp.auth.AuthDetails">
+		select id, parent_id, name, _password, sex, birthdate, telephone,
+		mobile, email, msn, case language_id when ''
+		then null else language_id end language_id, role_id, department_id, memo
+		from m_user
+		<if test="ids != null">
+			where id in
+			<foreach collection="ids" item="id" separator="," open="("
+				close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+	<select id="selectMenu" resultType="cn.com.easyerp.core.widget.menu.MenuModel">
+		select
+		id,
+		international_id,
+		type,
+		IFNULL(icon, '') icon,
+		IFNULL(icon_out, '') icon_out,
+		page_id,
+		parent_id,
+		seq,
+		is_mobile_menu,
+		is_system,
+		module
+		from c_menu
+		order by seq
+	</select>
+	<select id="selectPages" resultType="cn.com.easyerp.core.widget.menu.PageModel">
+		select
+		c_page.id,
+		c_page.table_id,
+		c_page.name,
+		c_url.url,
+		c_url.id url_id,
+		c_page.param
+		from c_page
+		left join
+		c_url on c_page.url_id = c_url.id
+	</select>
+	<select id="selectAuthCtrl" resultType="cn.com.easyerp.auth.AuthControlDescribe">
+		select
+		id,
+		relationship
+		from c_auth_ctrl
+	</select>
+	<select id="selectAuthConfig" resultType="cn.com.easyerp.auth.AuthConfigDescribe">
+		select
+		target,
+		target_id,
+		type,
+		auth_id
+		from c_auth_config
+	</select>
+	<select id="selectOptions" resultType="cn.com.easyerp.auth.AuthOption">
+		select
+		id,
+		name
+		from ${table}
+		order by name
+	</select>
+	<select id="selectAuthEditCtrl" resultType="cn.com.easyerp.auth.AuthControlDescribe">
+		select id, relationship from c_auth_ctrl where target
+		<if test="notMenu">!</if>
+		= 'MENU'
+	</select>
+	<select id="selectAuthMenuConfig" resultType="cn.com.easyerp.auth.AuthConfigDescribe">
+		select
+		target_id,
+		auth_id
+		from c_auth_config
+		where target = 'MENU'
+	</select>
+	<select id="selectSysUser" resultType="cn.com.easyerp.auth.AuthDetails">
+		select
+		id,
+		`name`,
+		CAST(AES_DECRYPT(_password, #{domain}) AS CHAR) _password,
+		sex,
+		birthdate,
+		telephone,
+		mobile,
+		`status`,
+		email
+		from sys_user
+		where
+		mobile = #{id} or id = #{id} or email= #{id}
+	</select>
+
+	<select id="selectSysUserCnt" resultType="java.lang.Integer">
+		select
+		count(1) cnt
+		from sys_user
+		where
+		mobile = #{id} or id = #{id} or email= #{id}
+	</select>
+
+	<select id="getCompanyWXData" resultType="cn.com.easyerp.auth.weixin.CompanyWXData">
+		SELECT
+		`corpId`,
+		`secret`,
+		`agentId`
+		FROM
+		sys_master
+		WHERE
+		name = #{master_id}
+	</select>
+	<insert id="saveUser">
+		INSERT INTO `sys_user` (
+		`id`,
+		`name`,
+		`_password`,
+		`sex`,
+		`birthdate`,
+		`telephone`,
+		`mobile`,
+		`email`,
+		`msn`,
+		`language_id`,
+		`role_id`,
+		`department_id`,
+		`memo`,
+		`status`,
+		`cre_user`,
+		`cre_date`,
+		`upd_user`,
+		`upd_date`,
+		`corpId`,
+		`secret`,
+		`agentId`,
+		`position`,
+		`imageUrl`,
+		`status_wx`
+		)
+		VALUES
+		(
+		#{authDetail.id},
+		#{authDetail.name},
+		#{authDetail._password},
+		#{authDetail.sex},
+		#{authDetail.birthdate},
+		#{authDetail.telephone},
+		#{authDetail.mobile},
+		#{authDetail.email},
+		#{authDetail.msn},
+		'cn',
+		#{authDetail.role_id},
+		#{authDetail.department_id},
+		#{authDetail.memo},
+		'1',
+		'',
+		#{date},
+		'',
+		#{date},
+		#{authDetail.corpId},
+		#{authDetail.secret},
+		#{authDetail.agentId},
+		#{authDetail.position},
+		#{authDetail.imageUrl},
+		#{authDetail.status_wx}
+		);
+	</insert>
+	<insert id="saveCompanyUser">
+		INSERT INTO `m_user` (
+		`id`,
+		`name`,
+		`_password`,
+		`sex`,
+		`birthdate`,
+		`telephone`,
+		`mobile`,
+		`email`,
+		`msn`,
+		`language_id`,
+		`role_id`,
+		`department_id`,
+		`memo`,
+		`status`,
+		`cre_user`,
+		`cre_date`,
+		`upd_user`,
+		`upd_date`,
+		`corpId`,
+		`secret`,
+		`agentId`,
+		`position`,
+		`imageUrl`,
+		`status_wx`
+		)
+		VALUES
+		(
+		#{authDetail.id},
+		#{authDetail.name},
+		#{authDetail._password},
+		#{authDetail.sex},
+		#{authDetail.birthdate},
+		#{authDetail.telephone},
+		#{authDetail.mobile},
+		#{authDetail.email},
+		#{authDetail.msn},
+		'cn',
+		#{authDetail.role_id},
+		#{authDetail.department_id},
+		#{authDetail.memo},
+		'1',
+		'',
+		#{date},
+		'',
+		#{date},
+		#{authDetail.corpId},
+		#{authDetail.secret},
+		#{authDetail.agentId},
+		#{authDetail.position},
+		#{authDetail.imageUrl},
+		#{authDetail.status_wx}
+		);
+	</insert>
+	<insert id="saveCompanyUser_admin">
+		INSERT INTO `${companyId}`.`m_user` (
+		`id`,
+		`name`,
+		`_password`,
+		`sex`,
+		`birthdate`,
+		`telephone`,
+		`mobile`,
+		`email`,
+		`msn`,
+		`language_id`,
+		`role_id`,
+		`department_id`,
+		`memo`,
+		`status`,
+		`cre_user`,
+		`cre_date`,
+		`upd_user`,
+		`upd_date`,
+		`corpId`,
+		`secret`,
+		`agentId`,
+		`position`,
+		`imageUrl`,
+		`status_wx`
+		)
+		VALUES
+		(
+		#{authDetail.id},
+		#{authDetail.name},
+		#{authDetail._password},
+		#{authDetail.sex},
+		#{authDetail.birthdate},
+		#{authDetail.telephone},
+		#{authDetail.mobile},
+		#{authDetail.email},
+		#{authDetail.msn},
+		'cn',
+		#{authDetail.role_id},
+		#{authDetail.department_id},
+		#{authDetail.memo},
+		'1',
+		'',
+		#{date},
+		'',
+		#{date},
+		#{authDetail.corpId},
+		#{authDetail.secret},
+		#{authDetail.agentId},
+		#{authDetail.position},
+		#{authDetail.imageUrl},
+		#{authDetail.status_wx}
+		);
+	</insert>
+	<select id="selectCorp" resultType="cn.com.easyerp.auth.SysMasterDetails">
+		SELECT * FROM `sys_master`;
+	</select>
+	<select id="selecctSysMaster" resultType="cn.com.easyerp.auth.SysMasterDetails">
+		SELECT * FROM `sys_master` where name=#{name};
+	</select>
+	<select id="getFilepath" resultType="java.lang.String">
+		SELECT upload_root FROM `sys_parameter`;
+	</select>
+	<select id="getDomainName" resultType="java.lang.String">
+		SELECT domain_name FROM `sys_parameter`;
+	</select>
+	<insert id="saveCompany">
+		INSERT INTO `sys_master` (
+		`name`,
+		`active`,
+		`seq`,
+		`driver`,
+		`url`,
+		`username`,
+		`password`,
+		`default_account`,
+		`companyName`,
+		`language_id`,
+		`companyName_abbreviation`,
+		`logo`
+		)
+		VALUES
+		(
+		#{corp.name},
+		'1',
+		'2',
+		NULL,
+		#{corp.url},
+		'root2',
+		'Nc-tiniag',
+		'0',
+		#{corp.companyName},
+		#{corp.language_id},
+		#{corp.companyName_abbreviation},
+		#{corp.logo}
+		);
+	</insert>
+	<insert id="saveUserCompany">
+		INSERT INTO `sys_user_company` (
+		`user_id`,
+		`master_id`,
+		`company_id`
+		)
+		VALUES
+		(
+		#{telephone},
+		#{companyId},
+		''
+		);
+	</insert>
+
+	<update id="updateSysPassword">
+		UPDATE `sys_user`
+		SET
+		`_password` =AES_ENCRYPT(#{password} ,#{domain}),
+		`upd_date` = now()
+		WHERE
+		id = #{user.id}
+	</update>
+
+	<update id="updatePassword">
+		UPDATE `m_user`
+		SET
+		`_password` =AES_ENCRYPT(#{password} ,#{domain}),
+		`upd_date` = now()
+		WHERE
+		id = #{user.id}
+	</update>
+
+	<update id="saveUserInfo">
+		update `sys_user` set
+		`id`=#{id},
+		`sex`=#{sex},
+		`telephone`=#{telePhone},
+		`email`=#{email},
+		`upd_date`=#{date},
+		`entry_time`=#{entryDate}
+		where `mobile`=#{mobile}
+	</update>
+	<update id="saveCompanyUserInfo">
+		update `m_user` set
+		`id`=#{id},
+		`sex`=#{sex},
+		`telephone`=#{telePhone},
+		`email`=#{email},
+		`upd_date`=#{date},
+		`entry_time`=#{entryDate}
+		where `mobile`=#{mobile}
+	</update>
+	<update id="updateSysMaster">
+		update `sys_user_company` set
+		`company_id`=#{companyId}
+		where user_id=#{userId} and master_id=#{masterId};
+	</update>
+	<select id="findUserCompany" resultType="java.lang.Integer">
+		SELECT count(*) FROM `sys_user_company` where user_id=#{userId} and
+		master_id=#{companyId};
+	</select>
+	<select id="loadDept" resultType="cn.com.easyerp.auth.DepartmentDescribe">
+		select
+		id,
+		parent_id,
+		`name`,
+		name_abbr,
+		`address`,
+		`leader`,
+		`telephone`,
+		`fax`,
+		`participate_in_sale`,
+		cre_user,
+		cre_date,
+		upd_user,
+		upd_date
+		from m_department
+		where
+		id = #{dept_id}
+	</select>
+	<select id="getUserCompanyName" resultType="java.lang.String">
+		select s2.companyName from sys_user_company s1 LEFT JOIN sys_master s2 ON
+		s1.master_id=s2.`name`
+		where s1.user_id=#{mobile}
+	</select>
+	<select id="getCompanyName" resultType="java.lang.String">
+		select companyName from sys_master where name=#{name}
+	</select>
+	<select id="selectCompanyLanguage" resultType="java.lang.String">
+		SELECT `language_id` from `sys_master` where `name`=#{company}
+	</select>
+	<select id="selectCompanyDefaultLanguage" resultType="java.lang.String">
+		SELECT default_language FROM `p_parameter`;
+	</select>
+	<select id="selectLoginInternational" resultType="java.lang.String">
+		<choose>
+			<when test="language == null or language == ''">
+				select replace(replace(`cn`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+				as cn from c_international where international_id=#{internationalId}
+			</when>
+			<otherwise>
+				select replace(replace(`${language}`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+				as `${language}` from c_international where
+				international_id=#{internationalId}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectLoginInternationals" resultType="java.lang.String">
+		<choose>
+			<when test="language == null or language == ''">
+				select replace(replace(`cn`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+				as cn, #{internationalId} id from c_international
+			</when>
+			<otherwise>
+				select replace(replace(`${language}`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>)
+				as `${language}`, #{internationalId} id from c_international
+			</otherwise>
+		</choose>
+		WHERE international_id IN
+		<foreach collection="internationalIds" item="internationalId"
+			separator="," open="(" close=")">
+			#{internationalId}
+		</foreach>
+	</select>
+	<select id="selectLoginCss" resultType="java.lang.String">
+		select `${param}` from c_company_subject
+	</select>
+
+
+	<select id="selectUserByOpenid" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT
+		id,
+		`name`,
+		CAST(AES_DECRYPT(_password,#{domain}) AS CHAR) _password,
+		sex,
+		birthdate,
+		telephone,
+		mobile,
+		status,
+		email,
+		su.openid
+		FROM
+		m_user su
+		WHERE
+		openid = #{openid}
+	</select>
+
+	<select id="selectUserBySapid" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT
+		id,
+		`name`,
+		CAST(AES_DECRYPT(_password,#{domain}) AS CHAR) _password,
+		sex,
+		birthdate,
+		telephone,
+		mobile,
+		status,
+		email,
+		su.openid
+		FROM
+		m_user su
+		WHERE
+		sap_id = #{sapid}
+	</select>
+
+	<select id="selectUserByid" resultType="cn.com.easyerp.auth.AuthDetails">
+		SELECT
+		u.id,
+		u.`name`,
+		u._password,
+		u.sex,
+		u.birthdate,
+		u.telephone,
+		u.mobile,
+		u.
+		STATUS,
+		u.email,
+		u.openid,
+		d. NAME department_id
+		FROM
+		m_user u
+		LEFT JOIN m_department d ON d.id = u.department_id
+		WHERE
+		u.id=#{id}
+	</select>
+
+	<select id="checkLoginByPassword" resultType="cn.com.easyerp.auth.AuthDetails">
+		select
+		id,
+		`name`,
+		CAST(AES_DECRYPT(_password ,#{domain}) AS CHAR) _password,
+		sex,
+		birthdate,
+		telephone,
+		mobile,
+		status,
+		email,
+		openid
+		from m_user
+		where
+		id=#{id}
+		and CAST(AES_DECRYPT(_password ,#{domain}) AS CHAR)=#{_password}
+	</select>
+
+	<update id="updateOpenid">
+		update m_user
+		set openid=#{openid}
+		<if test="photo != null">
+			,imageUrl=#{photo}
+		</if>
+		where
+		id=#{id}
+	</update>
+
+	<select id="getOpenids" resultType="java.lang.String">
+		SELECT
+		openid
+		FROM
+		m_user
+		WHERE
+		id in
+		(
+		<foreach collection="userids" item="userid" separator=",">
+			#{userid}
+		</foreach>
+		)
+	</select>
+
+	<select id="getDmainByOpenid" resultType="java.lang.String">
+		select
+		suc.master_id domain
+		from sys_user su
+		LEFT JOIN sys_user_company suc ON suc.user_id = su.id
+		where
+		suc.openid=#{openid}
+	</select>
+
+	<select id="userCompanys" resultType="java.lang.String">
+		SELECT
+		master_id
+		FROM
+		sys_user_company
+		WHERE
+		user_id = #{username}
+	</select>
+
+	<select id="updateSysOpenid">
+		update sys_user_company
+		set openid=#{openid}
+		where
+		user_id=#{id}
+		and master_id=#{domain}
+	</select>
+	<select id="ldapParam" resultType="java.util.Map">
+		SELECT `ldap_ip`, `ldap_port`, `ladp_domain` FROM p_parameter limit 1;
+	</select>
+	<select id="selectUserByLdap" resultType="cn.com.easyerp.auth.AuthDetails">
+		select
+		id,
+		parent_id,
+		`name`,
+		CAST(AES_DECRYPT(_password, #{encryptStr}) AS CHAR) _password,
+		`sex`,
+		`birthdate`,
+		`telephone`,
+		`mobile`,
+		`email`,
+		`imageUrl`,
+		`msn`,
+		case language_id
+		when ''
+		then null
+		else language_id end language_id,
+		`role_id`,
+		department_id,
+		`status`,
+		`memo`
+		from m_user
+		where
+		ldap_id = #{ldapUserName}
+	</select>
+	<select id="selectDataGroup" resultType="java.util.Map">
+		<foreach collection="authDataGroup" index="key" item="filter"
+			separator=" union all ">
+			SELECT #{key} group_id, COUNT(*) group_count FROM (${filter}) t
+			WHERE 1 = 1
+			<foreach collection="ids" index="column" item="value"
+				separator=" and " open=" and ">
+				<choose>
+					<when test="null == value">
+						t.`${column}` IS NULL
+					</when>
+					<otherwise>
+						t.`${column}` = #{value}
+					</otherwise>
+				</choose>
+			</foreach>
+		</foreach>
+	</select>
+	<select id="selectApproveData" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM c_approve_flow c1
+		INNER JOIN c_approve_flow_node c2
+		ON c1.approve_id = c2.approve_id
+		INNER JOIN c_approve_flow_user c3
+		ON c2.approve_id = c3.approve_id AND c2.block_id = c3.block_id
+		WHERE c1.state = 1 AND c2.state = 'wait' AND c3.`state` = 'wait'
+		AND c2.sequence =
+		(SELECT MAX(c4.sequence) FROM c_approve_flow_node c4
+		WHERE c2.approve_id = c4.approve_id AND c2.block_id = c4.block_id)
+		AND c2.node_seq =
+		(SELECT MIN(c5.node_seq) FROM c_approve_flow_node c5
+		WHERE c2.approve_id = c5.approve_id AND c5.state = 'wait')
+		AND c3.user = #{userId} AND c1.data_id = #{id} AND c1.table_id =
+		#{tableName}
+		UNION ALL
+		SELECT COUNT(*) FROM c_approve_flow c1
+		INNER JOIN c_approve_flow_node c2
+		ON c1.approve_id = c2.approve_id
+		INNER JOIN c_approve_flow_user c3
+		ON c2.approve_id = c3.approve_id AND c2.block_id = c3.block_id
+		WHERE c2.sequence =
+		(SELECT MAX(c4.sequence) FROM c_approve_flow_node c4
+		WHERE c2.approve_id = c4.approve_id AND c2.block_id = c4.block_id)
+		AND c3.user = #{userId}
+		AND c3.`state` &lt;&gt; 'wait'
+		AND c1.data_id = #{id}
+		AND c1.table_id = #{tableName}
+	</select>
+
+	<select id="selectLanguage" resultType="cn.com.easyerp.core.cache.DictionaryDescribe">
+		SELECT
+		c1.`dic_id`,c1.`dic_key`,c1.`id_international`,c1.`key_international`,c1.`seq`,c2.${language}
+		i18nName FROM `c_dictionary` c1
+		LEFT JOIN c_international c2 on
+		c1.key_international=c2.international_id
+		where
+		c1.dic_id="c_international"
+		ORDER BY c1.seq;
+	</select>
+</mapper>

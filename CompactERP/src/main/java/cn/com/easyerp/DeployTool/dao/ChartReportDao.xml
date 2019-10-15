@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.ChartReportDao">
+	<select id="getReportsByType" resultType="cn.com.easyerp.chart.ReportModel">
+		SELECT
+			`id`,
+			`international_id`,
+			`table_id`,
+			`report_type`,
+			`report_column`,
+			`report_column_name`,
+			`group_column`,
+			`date_column`,
+			`date_type`,
+			`count_column`,
+			`condition`,
+			`SQL`,
+			`SQL2`,
+			`file_name`,
+			`report_file_type`,
+			`report_disp_type`,
+			`pre_api_json`,
+			`api_json`,
+			`service_name`,
+			`service_param`,
+			`module`
+		FROM
+			`c_report`
+		WHERE
+		<choose>
+			<when test="report_type==4">
+				`report_type` = 4
+			</when>
+			<otherwise>
+				 `report_type` &lt;&gt; 4
+			</otherwise>
+		</choose>
+		ORDER BY `id`
+	</select>	
+	
+	<insert id="saveReport">
+		INSERT INTO `c_report` (
+			`id`,
+			`international_id`,
+			`table_id`,
+			`report_type`,
+			`report_column`,
+			`group_column`,
+			`date_column`,
+			`date_type`,
+			`count_column`,
+			`condition`,
+			`SQL`,
+			`file_name`,
+			`report_file_type`,
+			`report_disp_type`
+		)
+		VALUES
+			(
+				#{report.id},
+				#{report.international_id},
+				#{report.table_id},
+				${report.report_type},
+				#{report.report_column},
+				#{report.group_column},
+				#{report.date_column},
+				${report.date_type},
+				#{report.count_column},
+				#{report.condition},
+				#{report.sql},
+				#{report.file_name},
+				${report.report_file_type},
+				${report.report_disp_type}
+			);
+	</insert>
+	
+	<update id="updateReport">
+		UPDATE `c_report`
+		SET `international_id` = #{report.international_id},
+			`table_id` = #{report.table_id},
+			`report_type` = ${report.report_type}, 
+			`report_column` = #{report.report_column},
+			`group_column` = #{report.group_column},
+			`date_column` = #{report.date_column},
+			`date_type` = ${report.date_type}, 
+			`count_column` = #{report.count_column},
+			`condition` = #{report.condition},
+			`SQL` = #{report.sql},
+			`file_name` = #{report.file_name},
+			`report_file_type` = ${report.report_file_type},
+			`report_disp_type` = ${report.report_disp_type}
+		WHERE
+			`id` = #{report.id}
+	</update>
+	
+	<delete id="deleteReport">
+		DELETE
+		FROM
+			`c_report`
+		WHERE
+			`id` = #{report.id}
+	</delete>
+	
+	<delete id="deleteI18n">
+		DELETE
+		FROM
+			`c_international`
+		WHERE
+			`international_id` = #{report.international_id}
+	</delete>
+</mapper>

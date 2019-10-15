@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.ViewReportDao">
+	<select id="selectViewReport" resultType="cn.com.easyerp.DeployTool.service.ViewReportDetails">
+		SELECT
+			c1.`id`,
+			c1.`table_id`,
+			c1.`report_type`,
+			c1.`report_column`,
+			c1.`report_column_name`,
+			c1.`group_column`,
+			c1.`date_column`,
+			c1.`condition`,
+			c1.`SQL` `sql`,
+			c1.`SQL2` `sql2`,
+			c1.`file_name`,
+			c1.`report_file_type`,
+			c1.`report_disp_type`,
+			c1.`pre_api_json`,
+			c1.`api_json`,
+			c1.`service_name`,
+			c1.`service_param`,
+			c1.`module`,
+			c2.`international_id`,
+			c2.`type`, 
+			replace(replace(c2.cn,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as cn,
+			replace(replace(c2.en,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as en,
+			replace(replace(c2.jp,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as jp,
+			replace(replace(c2.other1,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other1,
+			replace(replace(c2.other2,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other2
+		FROM
+			`c_report` c1
+		LEFT JOIN c_international c2 ON c1.id = c2.international_id ORDER BY RIGHT(2, LENGTH(c1.`id`));
+		</select>
+	<insert id="addViewReport">
+		INSERT INTO `c_report` (
+			`id`,
+			`international_id`,
+			`table_id`,
+			`report_type`,
+			`report_column`,
+			`report_column_name`,
+			`group_column`,
+			`date_column`,
+			`condition`,
+			`SQL`,
+			`SQL2`,
+			`file_name`,
+			`report_file_type`,
+			`report_disp_type`,
+			`pre_api_json`,
+			`api_json`,
+			`service_name`,
+			`service_param`,
+			`module`
+		)
+		VALUES
+			(
+				#{viewReport.id},
+				#{viewReport.id},
+				#{viewReport.table_id},
+				#{viewReport.report_type},
+				#{viewReport.report_column},
+				#{viewReport.report_column_name},
+				#{viewReport.group_column},
+				#{viewReport.date_column},
+				#{viewReport.condition},
+				#{viewReport.sql},
+				#{viewReport.sql2},
+				#{viewReport.file_name},
+				#{viewReport.report_file_type},
+				#{viewReport.report_disp_type},
+				#{viewReport.pre_api_json},
+				#{viewReport.api_json},
+				#{viewReport.service_name},
+				#{viewReport.service_param},
+				#{viewReport.module}
+			);
+	</insert>
+	<insert id="addInternational">
+		INSERT INTO `c_international` (
+			`international_id`,
+			`type`,
+			`cn`,
+			`en`,
+			`jp`,
+			`other1`,
+			`other2`,
+			`module`
+		)
+		VALUES
+			(
+				#{international.id},
+				#{international.type},
+				#{international.cn},
+				#{international.en},
+				#{international.jp},
+				#{international.other1},
+				#{international.other2},
+				#{international.module}
+			);
+	</insert>
+	<delete id="deleteViewReport">
+		DELETE t1,t2
+		FROM
+			c_report t1
+			LEFT JOIN c_international t2 
+			ON t1.id = t2.international_id
+		WHERE
+		t1.id =#{id}
+	</delete>
+</mapper>

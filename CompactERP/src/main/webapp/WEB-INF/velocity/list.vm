@@ -1,0 +1,88 @@
+#dxFormHead($form)
+##<button type="button" class="testaddtest">test</button>
+<div id="$form.id" class="dx-form" name="$form.widgetName">
+    #set($table =$dx.table($form.grid.table))
+    #if($table.block_view_style)
+        <div id="menu-bar-$form.id" role="toolbar">
+            #if ($form.button('add'))
+                <button type="button" class="btn btn-default btn-sm dx-grid-add">[+]</button>
+            #end
+            #if ($form.button('delete'))
+                <button type="button" class="btn btn-default btn-sm dx-grid-delete">[-]</button>
+            #end
+        </div>
+    #end
+    ##表样式不存在，则添加左侧查询。
+    #if(!$table.block_view_style)
+        #dxMenuBarHead($form)
+        <div class="dx-form-top-bar-left lex-dx-form-top-bar-left">
+            #if($form.action == "view")
+                #dxHeardButton($table.listTriggers,$table)
+                #if ($table.is_approve == 1)
+                    <div class="dropdown dx-operate-menu">
+                        <button type="button" class="btn dropdown-toggle dx-grid-approve" data-toggle="dropdown">
+                            <span class="approve-state"></span>$dx.msg('WaitMeApprove')
+                            <b class="caret"></b>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-left batch-approve" role="menu" aria-labelledby="">
+
+                        </ul>
+                    </div>
+                    ## 我审批过的数据
+                    <button type="button" class="btn my-already-approve">$dx.msg('my already approve')</button>
+                    ## 批量提交
+                    <button type="button" class="btn batch-approve-submit">$dx.msg('batch approve submit')</button>
+                #end
+            #elseif($form.action == "select")
+                <button type="button" class="btn dx-grid-select">
+                ## get parent input select field name
+##	                    $dx.msg("select", $dx.i18n($dx.desc($dx.field($form.parent)).i18n))
+                $dx.msg("select.add")
+                </button>
+            #elseif($form.action == "map")
+                <button type="button" class="btn dx-grid-select">
+                ## get parent input select field name
+##	                    $dx.msg("select", $dx.i18n($dx.desc($dx.field($form.parent)).i18n))
+                $dx.msg("select.add")
+                </button>
+            #end
+            #if($dx.hasLeftGroup($table))
+                <button type="button" class="btn dx-grid-left-group-button" style="display: none">$dx.msg("left-group")</button>
+            #end
+        </div>
+        <div class="dx-form-top-bar-right lex-dx-form-top-bar-right">
+            #if($dx.hasFilter($table))
+                <button type="button" class="btn more-select"><span></span>$dx.msg("more-select")</button>
+            #end
+            <div class="grid_search_box">
+                <input type="text" class="grid_search" placeholder="$dx.msg("search_param")"/>
+##                <button type="button" class="btn search grid_search_button">$dx.msg("Search")</button>
+            </div>
+        </div>
+        #dxMenuBarFoot()
+    #end
+
+
+    <div class="dx-form-con">
+
+        <div class="dx-filter-select" style="display: none">
+            #dxFilter($form.filter)
+        </div>
+
+        <div class="dx-auto-expand row lex-dx-auto-expand" style="height:100%">
+            #if(!$table.block_view_style)
+                <div class="dx-grid-left-select col-xs-2" >
+                    ##<div class="dx-grid-left-select-inner">
+                        #dxGridLeftSelect($form)
+                    ##</div>
+                </div>
+            #end
+            <div class="dx-grid-right-grid">
+                #dxGrid($form.grid)
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="create-edit" style="height: 100%"></div>
+#dxFormTail($form)

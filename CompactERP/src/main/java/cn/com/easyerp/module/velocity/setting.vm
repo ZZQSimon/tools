@@ -1,0 +1,653 @@
+#dxFormHead($form)
+<form id="$form.id" name="ttt" class="form-inline dx-form" role="form" action="#springUrl('')/setting/update.do">
+<div id="$form.id">
+	#dxMenuBarHead($form)
+	<button type="button" class="btn btn-default dx-submit" onclick="update()">更新</button>
+	#dxMenuBarFoot()
+	<div class="container" style="height:auto;padding:0;">
+		<div class="dx-detail-container">
+			<div class="row dx-detail-row">
+				<div class="form-group dx-field-6 dx-field-container">
+					<label class="control-label label-1" for="w_P99EjMp">类型</label>
+					<div class="input-group input-1">
+						<select id="typeset" >
+							<option value="0" selected disabled style='background: #000; color: #FFF'>请选择类别</option>
+							#foreach($typeset in ${form.typeList})
+							<option value="$!{typeset.get('DXTYPECODE')}">$!{typeset.get('DXTYPENAME')}</option>
+							#end
+						</select>
+					</div>
+				</div>
+				<div class="form-group dx-field-6 dx-field-container">
+					<button type="button" class="btn btn-default dx-filter-reset" id="code_match" style="margin-right: 10px" disabled>CODE智能匹配</button>
+					<button type="button" class="btn btn-default dx-filter-reset" id="name_match" disabled>名称智能匹配</button>
+				</div>
+			</div>
+	
+		<div class="dx-grid-container dx-div-with-scroll" style="overflow:auto;height:400px">
+			<table table="" class="dx-grid display dataTable no-footer dx-import-table" cellspacing="0" width="100%" height = "10">
+				<thead>
+					<tr>
+						<th width = "30">No.</th>
+						<th>DX代码</th>
+						<th>DX名称</th>
+						<th>用友代码</th>
+						<th>用友名称</th>
+						<th>科目代码</th>
+						<th>科目</th>
+					</tr>
+				</thead>
+				<tbody id="displayset">
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</form>
+#dxFormTail($form)
+<div class="hidden" id="${form.id}_msg">
+</div>
+
+<style type="text/css">   
+  
+.autocomplete{   
+border: 1px solid #9ACCFB;   
+background-color: white;   
+text-align: left;   
+max-height:300px;
+overflow-y:auto;
+overflow-x:hidden;
+}   
+
+.autocomplete2{   
+border: 1px solid #9ACCFB;   
+background-color: white;   
+text-align: left;   
+max-height:300px;
+overflow-y:auto;
+overflow-x:hidden;
+}   
+.autocomplete li{   
+list-style-type: none;   
+}   
+.autocomplete2 li{   
+list-style-type: none;   
+}   
+.clickable {   
+cursor: default;   
+}   
+.highlight {   
+background-color: #9ACCFB;   
+}   
+
+.highlightselect {   
+background-color: #9ACCFB;   
+}   
+
+</style> 
+
+<script type="text/javascript">
+var uResult=null;
+var uCodeAndName = [];
+var uAccCode = [];
+
+$(document).ready(function(){
+	$("#typeset").change(typeSelected);
+	$(document).on("change", ".table_select" , null, tableSelectChanged);
+	$("#code_match").click(codeMatch);
+	$("#name_match").click(nameMatch);
+	
+});  
+
+function update(){
+		//获取Utypecode
+		var request1={};
+		var uTypecode= null;
+		request1.typeset=$("#typeset").val();
+		
+		postJson('/setting/getUtype.do', request1, function(result){
+			uTypecode = result[0]["UTYPECODE"];
+			
+				var request={};
+				request.dxtype = $("#typeset").val();
+				request.utype = uTypecode;
+				request.dx_code = new Array();
+				request.yy_code = new Array();
+				request.sb_code = new Array();
+				
+				var index = 0;
+				for(var i=1; i<$("#displayset>tr").length+1; i++){
+					
+					if("名称未匹配"==$("#txtuname"+i).val() ||""== $("#txtucode"+i).val()){
+					}else{
+						
+						if("代码未匹配"==$("#txtdxcode"+i).val() || null ==$("#txtdxcode"+i).val() || "" ==$("#txtdxcode"+i).val()){
+							request.dx_code[index] = "0";	
+						}else{
+							request.dx_code[index] = $("#txtdxcode"+i).val();
+						}
+						
+						request.yy_code[index] = $("#txtucode"+i).val();
+						
+						if("科目未匹配"==$("#txtuacccode"+i).val() || null ==$("#txtuacccode"+i).val() || "" ==$("#txtuacccode"+i).val()){
+							request.sb_code[index] = "0";	
+						}else{
+							request.sb_code[index] = $("#txtuacccode"+i).val();
+						}
+						index++;
+					}
+				}
+				postJson('/setting/update.do', request,
+					function (result) {
+						alert(result);
+					},
+					function(msg){
+					});
+			
+		}, function(msg){
+			alert(msg);
+		});
+}
+
+function typeSelected(e){
+	//获取用友代码数据 存到本地数组
+	dx.processing.open(); 
+	var requestucode = {};
+	requestucode.searchid="";
+	requestucode.typeset = $("#typeset>option:selected").val();
+	uCodeAndName = [];
+	postJson('/setting/searchCode.do',requestucode, function (result) {
+		if(result.length>0) {
+		   
+	            $.each(result, function(index,term) {
+	            	uCodeAndName.push(new Array(term["UCODE"],term["UNAME"]));
+	             });
+	    }
+		
+	},function(msg){
+		dx.processing.close(); 
+		messageBox(msg);	//失败Msg
+	});
+	
+	//获取科目数据，存到本地数组
+	var requestacccode = {};
+	requestacccode.searchid="";
+	requestacccode.typeset = $("#typeset>option:selected").val();
+	uAccCode =[];
+	postJson('/setting/searchSBinfo.do',requestacccode, function (result2) {
+		if(result2.length>0) {
+	            $.each(result2, function(index,term) {
+	            	uAccCode.push(new Array(term["UCODE"],term["UNAME"]));
+	             });
+	    }
+	},function(msg){
+		dx.processing.close(); 
+		messageBox(msg);	//失败Msg
+	});
+	
+
+	//获取画面用数据
+	var request={};
+	request.typeset=$("#typeset>option:selected").val();
+	//提交返回数据
+	postPage('/setting/displayContent.view',request, function (result3) {
+		$("#displayset").html(result3);
+		dx.processing.close(); 
+		//取消按钮禁用
+		$("#code_match, #name_match").attr("disabled", false);
+	} , function (msg) {
+		dx.processing.close(); 
+		messageBox(msg);	//失败Msg
+	} );
+}
+
+function tableSelectChanged(e){
+	$(this).parent("td").next("td").html($(this).children("option:selected").attr("data-name"));
+}
+
+function codeMatch(e){
+	
+	var request={};
+	var index = 0;
+	var count=0;
+	var dxcode;
+	var ucode;
+	var uname;
+	var startindex = 0;
+	var endindex =1;
+	
+	for(var i = 0; i<$("#displayset>tr").length; i++ ){
+		if("代码未匹配"==$("#txtucode"+index).val()){
+			startindex = i;
+			break;
+		}
+	}
+	request.searchid="";
+	request.typeset = $("#typeset>option:selected").val();
+	//提交返回数据
+	
+	if(uCodeAndName.length>0) {   
+        for(var j = 0; j<uCodeAndName.length; j++) {
+        	ucode = uCodeAndName[j][0];
+        	uname = uCodeAndName[j][1];
+        	endindex = $("#displayset>tr").length-startindex>500?500:$("#displayset>tr").length;
+        	for(var i = startindex; i<endindex; i++ ){
+        		index = i+1;
+        		if("代码未匹配"==$("#txtucode"+index).val()){
+        			dxcode = $("#txtdxcode"+index).val();
+        			//if(ucode.indexOf(dxcode) !=-1 || dxcode.indexOf(ucode) != -1){
+        			if(ucode==dxcode){
+						$("#txtuname"+index).val(uname);
+						$("#txtucode"+index).val(ucode);
+						count++;
+						break;
+					}
+        		}
+        	}
+        }
+	}
+	alert("CODE匹配完成！共发现"+count+"个匹配项");
+}
+
+
+function nameMatch(e){
+	var request={};
+	var index = 0;
+	var count=0;
+	var dxcode;
+	var ucode;
+	var uname;
+	var startindex = 0;
+	var endindex =1;
+	
+	for(var i = 0; i<$("#displayset>tr").length; i++ ){
+		if("代码未匹配"==$("#txtucode"+index).val()){
+			startindex = i;
+			break;
+		}
+	}
+	request.searchid="";
+	request.typeset = $("#typeset>option:selected").val();
+	//提交返回数据
+	
+	if(uCodeAndName.length>0) {   
+        for(var j = 0; j<uCodeAndName.length; j++) {
+        	ucode = uCodeAndName[j][0];
+        	uname = uCodeAndName[j][1];
+        	endindex = $("#displayset>tr").length-startindex>500?500:$("#displayset>tr").length;
+        	for(var i = startindex; i<endindex; i++ ){
+        		index = i+1;
+        		if("代码未匹配"==$("#txtucode"+index).val()){
+        			dxname = $("#txtdxname"+index).val();
+        			//if(ucode.indexOf(dxcode) !=-1 || dxcode.indexOf(ucode) != -1){
+        			if(uname==dxname){
+						$("#txtuname"+index).val(uname);
+						$("#txtucode"+index).val(ucode);
+						count++;
+						break;
+					}
+        		}
+        	}
+        }
+	}
+	alert("CODE匹配完成！共发现"+count+"个匹配项");
+
+}
+
+function autoComplete(e,datas){   
+ 	//取得输入框JQuery对象   
+    var searchInput = $('#'+e);   
+    //关闭浏览器提供给输入框的自动完成   
+    $(searchInput).attr('autocomplete','off');   
+    //如果未匹配 把代码默认等于DX代码
+    if($(searchInput).val()=="代码未匹配"){
+    	$(searchInput).val("");
+    }
+if(!(event.keyCode == 40 || event.keyCode == 38)&&event.keyCode == 13){
+   
+    //如果未匹配 把代码默认等于DX代码
+    if($(searchInput).val()=="代码未匹配"){
+    	$(searchInput).val("");
+    }
+    //将多余的模拟的div干掉。  
+    if($(".autocomplete").size()>0){  
+        $(".autocomplete").detach();  
+    }  
+
+    //创建自动完成的下拉列表，用于显示服务器返回的数据,插入在搜索按钮的后面，等显示的时候再调整位置   
+    var autocomplete = $('<div class="autocomplete"></div>').hide().insertAfter('#'+e);  
+    //清空下拉列表的内容并且隐藏下拉列表区   
+    var clear = function(){   
+        $(autocomplete).empty().hide();   
+    };   
+    //注册事件，当输入框失去焦点的时候清空下拉列表并隐藏   
+    $(searchInput).blur(function(){   
+        setTimeout(clear,200);   
+    }); 
+    
+    //下拉列表中高亮的项目的索引，当显示下拉列表项的时候，移动鼠标或者键盘的上下键就会移动高亮的项目，想百度搜索那样   
+    var selectedItem = null;   
+    //timeout的ID   
+    var timeoutid = null;   
+    //设置下拉项的高亮背景   
+    var setSelectedItem = function(item){   
+        //更新索引变量   
+        selectedItem = item ;   
+        //按上下键是循环显示的，小于0就置成最大的值，大于最大值就置成0   
+        if(selectedItem < 0){   
+            selectedItem = $(autocomplete).find('li').length - 1;   
+        }else if(selectedItem > $(autocomplete).find('li').length-1 ) {   
+            selectedItem = 0;   
+        }   
+        //首先移除其他列表项的高亮背景，然后再高亮当前索引的背景   
+        $(autocomplete).find('li').removeClass('highlight').eq(selectedItem).addClass('highlight');   
+    };   
+
+		if(uCodeAndName.length>0) {   
+                    //遍历data，添加到自动完成区   
+                    for(var i = 0;i<uCodeAndName.length; i++){
+                    	 if(uCodeAndName[i][0].include($(searchInput).val())||uCodeAndName[i][1].include($(searchInput).val())){
+                    	 	 //创建li标签,添加到下拉列表中   
+	                        $('<li></li>').text(uCodeAndName[i][0]+":"+uCodeAndName[i][1]).appendTo($(autocomplete)).addClass('clickable').hover(function(){   
+	                            //下拉列表每一项的事件，鼠标移进去的操作   
+	                            $(this).siblings().removeClass('highlight');   
+	                            $(this).addClass('highlight');   
+	                            selectedItem = i;   
+	                        },function(){   
+	                            //下拉列表每一项的事件，鼠标离开的操作   
+	                            $(this).removeClass('highlight');   
+	                            //当鼠标离开时索引置-1，当作标记   
+	                            selectedItem = -1;   
+	                        }).click(function(){   
+	                            //鼠标单击下拉列表的这一项的话，就将这一项的值添加到输入框中  
+	                            var strtmp = $(this).text().split(":");
+	                            $(searchInput).val(strtmp[0]);   
+	                            $("#"+$(searchInput).attr("id").replace("txtucode","txtuname")).val(strtmp[1]);
+	                            //清空并隐藏下拉列表   
+	                            $(autocomplete).empty().hide();   
+	                        });   
+                        }
+                    }
+                    
+                    //设置下拉列表的位置，然后显示下拉列表   
+                    var ypos = $(searchInput).position().top;   
+                    var xpos = $(searchInput).position().left;   
+                    //alert("下拉列表原点坐标：("+xpos+","+ypos+")");  
+                    $(autocomplete).width("auto");
+                    $(autocomplete).css({'position':'absolute','left':xpos + "px",'top':ypos+20+"px"});
+                    setSelectedItem(0);   
+                    //显示下拉列表   
+                    $(autocomplete).show();   
+          }   
+    }
+   
+    //对输入框进行事件注册   
+    $(searchInput).keyup(function(event) {   
+        //字母数字，退格，空格   
+        if(event.keyCode > 40 || event.keyCode == 8 || event.keyCode ==32) {   
+            //首先删除下拉列表中的信息   
+            $(autocomplete).empty().hide();   
+            clearTimeout(timeoutid);   
+            //timeoutid = setTimeout(ajax_request,100);   
+        }else if(event.keyCode == 38){ //上   
+            //selectedItem = -1 代表鼠标离开   
+            if(selectedItem == -1){   
+                setSelectedItem($(autocomplete).find('li').length-1);   
+            }else {   
+                //索引减1   
+                setSelectedItem(selectedItem - 1);   
+            }   
+            event.preventDefault();   
+        }else if(event.keyCode == 40) { //下   
+            //selectedItem = -1 代表鼠标离开   
+            if(selectedItem == -1){   
+                setSelectedItem(0);   
+            }else {   
+                setSelectedItem(selectedItem + 1); //索引加1   
+            }   
+            event.preventDefault();   
+        }   
+    }).keypress(function(event){   
+       
+    }).keydown(function(event){   
+        if(event.keyCode == 27 ) { //esc键   
+            $(autocomplete).empty().hide();   
+            
+            event.preventDefault();   
+        }   
+    });   
+    //注册窗口大小改变的事件，重新调整下拉列表的位置   
+    $(window).resize(function() {   
+        var ypos = $(searchInput).position().top;   
+        var xpos = $(searchInput).position().left;   
+        $(autocomplete).width("auto"); 
+        $(autocomplete).css({'position':'absolute','left':xpos + "px",'top':ypos+20+"px"}); //控件下拉div的位置  
+    });   
+}  
+
+
+
+function autoCompleteSB(e,datas){ 
+    //取得输入框JQuery对象   
+    var searchInput = $('#'+e);   
+    var searchname = $("#"+$(searchInput).attr("id").replace("txtuacccode","txtuaccname"));
+    //关闭浏览器提供给输入框的自动完成   
+    $(searchInput).attr('autocomplete','off');   
+    //首先原有输入清空，保证只查询一级科目代码
+    $(searchInput).val("") ;
+if(!(event.keyCode == 40 || event.keyCode == 38)&&event.keyCode == 13){
+    //将多余的模拟的div干掉。  
+    if($(".autocomplete").size()>0){  
+        $(".autocomplete").detach();  
+    }  
+        if($(".autocomplete2").size()>0){  
+        $(".autocomplete2").detach();  
+    }  
+    //创建自动完成的下拉列表，用于显示服务器返回的数据,插入在搜索按钮的后面，等显示的时候再调整位置   
+    var autocomplete = $('<div class="autocomplete"></div>').hide().insertAfter('#'+e);  
+    var autocomplete2 = $('<div class="autocomplete2"></div>').hide();
+    //清空下拉列表的内容并且隐藏下拉列表区   
+    var clear = function(){   
+        $(autocomplete).empty().hide();   
+    };   
+    //注册事件，当输入框失去焦点的时候清空下拉列表并隐藏   
+   // $(searchInput).blur(function(){   
+      //  setTimeout(clear,200);   
+   // }); 
+    
+    //下拉列表中高亮的项目的索引，当显示下拉列表项的时候，移动鼠标或者键盘的上下键就会移动高亮的项目，想百度搜索那样   
+    var selectedItem = null;   
+    //timeout的ID   
+    var timeoutid = null;   
+    //设置下拉项的高亮背景   
+    var setSelectedItem = function(item){   
+        //更新索引变量   
+        selectedItem = item ;   
+        //按上下键是循环显示的，小于0就置成最大的值，大于最大值就置成0   
+        if(selectedItem < 0){   
+            selectedItem = $(autocomplete).find('li').length - 1;   
+        }else if(selectedItem > $(autocomplete).find('li').length-1 ) {   
+            selectedItem = 0;   
+        }   
+        //首先移除其他列表项的高亮背景，然后再高亮当前索引的背景   
+        $(autocomplete).find('li').removeClass('highlight').eq(selectedItem).addClass('highlight');   
+    };   
+    
+    
+        //下拉列表中高亮的项目的索引，当显示下拉列表项的时候，移动鼠标或者键盘的上下键就会移动高亮的项目，想百度搜索那样   
+    var selectedItem2 = null;   
+    //timeout的ID   
+    var timeoutid2 = null;   
+    //设置下拉项的高亮背景   
+    var setSelectedItem2 = function(item){   
+        //更新索引变量   
+        selectedItem2 = item ;   
+        //按上下键是循环显示的，小于0就置成最大的值，大于最大值就置成0   
+        if(selectedItem2 < 0){   
+            selectedItem2 = $(autocomplete2).find('li').length - 1;   
+        }else if(selectedItem2 > $(autocomplete2).find('li').length-1 ) {   
+            selectedItem2 = 0;   
+        }   
+        //首先移除其他列表项的高亮背景，然后再高亮当前索引的背景   
+        $(autocomplete2).find('li').removeClass('highlight').eq(selectedItem2).addClass('highlight');   
+    };   
+    
+
+	var hidajax = uAccCode.length;
+	var findlv2flag  = 0;
+	//提交返回数据
+		if(uAccCode.length>0) {   
+                    //遍历data，添加到自动完成区   
+                     for(var i = 0;i<uAccCode.length; i++){ 
+                        //创建li标签,添加到下拉列表中   
+                        if(uAccCode[i][0].length == 4){
+	                           $('<li style=" width:auto;"></li>').text(uAccCode[i][0]+":"+uAccCode[i][1]).appendTo($(autocomplete)).addClass('clickable').hover(function(){	
+	                            //下拉列表每一项的事件，鼠标移进去的操作   
+	                            $(this).siblings().removeClass('highlight');   
+	                            $(this).addClass('highlight');   
+	                            selectedItem = i;   
+	                        },function(){   
+	                            //下拉列表每一项的事件，鼠标离开的操作   
+	                            $(this).removeClass('highlight');   
+	                            //当鼠标离开时索引置-1，当作标记   
+	                            selectedItem = -1;   
+	                        }).click(function(){   
+	                        	findlv2flag =0;
+	                        	$(this).siblings().removeClass('highlightselect');  
+	                        	$(this).addClass('highlightselect');   
+	                        	var strtmp = $(this).text().split(":");
+	                        	var searchid = strtmp[0];
+								$(autocomplete2).empty().hide(); 
+								autocomplete2.insertAfter($(autocomplete));
+							 	for(var i = 0;i<uAccCode.length; i++){ 
+							 			if(uAccCode[i][0].trim().startWith(searchid.trim())){
+							 				findlv2flag = 1;
+											$('<li style=" width:auto;"></li>').text(uAccCode[i][0]+":"+uAccCode[i][1]).appendTo($(autocomplete2)).addClass('clickable').hover(function(){	
+					                            //下拉列表每一项的事件，鼠标移进去的操作   
+					                            $(this).siblings().removeClass('highlight');   
+					                            $(this).addClass('highlight');   
+					                            selectedItem2 = i;   
+				                        	},function(){   
+					                            //下拉列表每一项的事件，鼠标离开的操作   
+					                            $(this).removeClass('highlight');   
+					                            //当鼠标离开时索引置-1，当作标记   
+					                            selectedItem2 = -1;   
+				                        	}).click(function(){   
+					                            //鼠标单击下拉列表的这一项的话，就将这一项的值添加到输入框中   
+					                            var strtmp2 = $(this).text().split(":");
+					                          	$(searchInput).val(strtmp2[0]);   
+					                          	$(searchname).val(strtmp2[1]);   
+					                            //清空并隐藏下拉列表   
+					                            $(autocomplete).empty().hide();   
+					                            $(autocomplete2).empty().hide();   
+				                        	});   
+			                        	}
+				                    }//事件注册完毕   
+					                    
+									//设置下拉列表的位置，然后显示下拉列表   
+				                    var ypos = $(autocomplete).position().top;   
+				                    var xpos = $(autocomplete).position().left;   
+				                    var width1 = $(autocomplete).width();
+				                    //alert("下拉列表原点坐标：("+xpos+","+ypos+")");  
+				                    $(autocomplete2).width("auto");
+				                    $(autocomplete2).css({'position':'absolute','left':xpos-$(autocomplete2).width() + "px",'top':ypos+20+"px"});
+				                    setSelectedItem2(0);   
+				                    //显示下拉列表   
+				                    $(autocomplete2).show();   
+					                    
+									if(findlv2flag == 0){//没有找到二级
+										var strtmp2 = $(this).text().split(":");
+			                          	$(searchInput).val(strtmp2[0]);   
+			                          	$(searchname).val(strtmp2[1]); 
+			                            //清空并隐藏下拉列表   
+			                            $(autocomplete).empty().hide();   
+			                            $(autocomplete2).empty().hide();   
+									}
+	                        }); 
+                        }  
+                    }//事件注册完毕   
+                    //设置下拉列表的位置，然后显示下拉列表   
+                    var ypos = $(searchInput).position().top;   
+                    var xpos = $(searchInput).position().left;   
+                    //alert("下拉列表原点坐标：("+xpos+","+ypos+")");  
+                    $(autocomplete).width("auto");
+                    $(autocomplete).css({'position':'absolute','left':xpos + "px",'top':ypos+20+"px"});
+                    setSelectedItem(0);   
+                    //显示下拉列表   
+                    $(autocomplete).show();   
+        }   
+    }
+   
+    //对输入框进行事件注册   
+    $(searchInput).keyup(function(event) {   
+        //字母数字，退格，空格   
+        if(event.keyCode > 40 || event.keyCode == 8 || event.keyCode ==32) {   
+            //首先删除下拉列表中的信息   
+            $(autocomplete).empty().hide();   
+            clearTimeout(timeoutid);   
+           // timeoutid = setTimeout(ajax_request,100);   
+        }else if(event.keyCode == 38){ //上   
+            //selectedItem = -1 代表鼠标离开   
+            if(selectedItem == -1){   
+                setSelectedItem($(autocomplete).find('li').length-1);   
+            }else {   
+                //索引减1   
+                setSelectedItem(selectedItem - 1);   
+            }   
+            event.preventDefault();   
+        }else if(event.keyCode == 40) { //下   
+            //selectedItem = -1 代表鼠标离开   
+            if(selectedItem == -1){   
+                setSelectedItem(0);   
+            }else {   
+                setSelectedItem(selectedItem + 1); //索引加1   
+            }   
+            event.preventDefault();   
+        }   
+    }).keydown(function(event){   
+        if(event.keyCode == 27 ) { //esc键   
+            $(autocomplete).empty().hide();  
+            $(autocomplete2).empty().hide();    
+            event.preventDefault();   
+        }   
+    });   
+     //注册窗口esc 消除下拉框
+    $(window).keydown(function(event) {   
+        if(event.keyCode == 27 ) { //esc键   
+            $(autocomplete).empty().hide();  
+            $(autocomplete2).empty().hide();    
+            event.preventDefault();   
+        }   
+    });   
+    //注册窗口大小改变的事件，重新调整下拉列表的位置   
+    $(window).resize(function() {   
+        var ypos = $(searchInput).position().top;   
+        var xpos = $(searchInput).position().left;   
+        $(autocomplete).width("auto"); 
+        $(autocomplete).css({'position':'absolute','left':xpos + "px",'top':ypos+20+"px"}); //控件下拉div的位置  
+    });   
+}  
+
+String.prototype.include=function(s){
+  if(s.length>this.length)
+   return false;
+  if(this.indexOf(s) != -1)
+     return true;
+  else
+     return false;
+  return true;
+ }
+
+ String.prototype.startWith=function(s){
+  if(s==null||s==""||this.length==0||s.length>=this.length)
+   return false;
+  if(this.substr(0,s.length)==s)
+     return true;
+  else
+     return false;
+  return true;
+ }
+
+
+</script> 
+

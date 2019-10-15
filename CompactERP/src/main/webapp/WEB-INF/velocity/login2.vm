@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>$dx.formatEmpty($companyName)</title>
+	#if($dx.empty($logo))
+		<link rel="icon" href="#springUrl('')/img/g1.ico" type="image/x-icon"/>
+	#else
+		<link rel="icon" href="#springUrl('')/auth/loginImgDownload.do?path=$logo" type="image/x-icon"/>
+	#end
+
+	<link href="#springUrl('')/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="#springUrl('')/js/jqueryui-slider/jquery-ui.css" rel="stylesheet">
+
+	<link href="#springUrl('')/css/login.css" rel="stylesheet">
+
+	<script src="#springUrl('')/js/jquery-1.11.0.min.js"></script>
+	<script src="#springUrl('')/js/bootstrap/js/bootstrap.min.js"></script>
+    <script src="#springUrl('')/js/dialog/js/bootstrap-dialog.min.js"></script>
+    <script src="#springUrl('')/js/jqueryui-slider/jquery-ui.min.js"></script>
+    ##<script src="#springUrl('')/js/login.js"></script>
+	<script>
+		function makeUserName() {
+			$('#username').val($('#susername').val() + '@' + $('#datasource').val())
+		}
+	</script>
+</head>
+<body onload='document.loginForm.username.focus();'">
+      ##background-image: URL(#springUrl('')/img/login_bk.jpg);background-position: center top;background-repeat: no-repeat;">
+      #set ($contextRoot = "#springUrl('')")
+      <script>
+          function makeLoginUrl(path) {
+              return '$contextRoot' + path
+          }
+          
+      </script>
+      #if($dx.empty($backgroud))
+		<div class="login-bg">
+		</div>
+	  #else
+		<div class="login-bg" style="background:url(#springUrl('')/auth/loginImgDownload.do?path=$backgroud) no-repeat center center;background-size: cover;">
+		</div>
+	  #end
+
+<div id="login-body">
+<div class="login-header">
+    <div class="login-header-left fl">
+     #if($dx.empty($logo))
+    	<img src="#springUrl('')/img/g1-logo.png"/>
+	  #else
+		<img src="#springUrl('')/auth/loginImgDownload.do?path=$logo"/>
+	  #end
+        <h2>$dx.formatEmpty($companyName)</h2>
+    </div>
+    <div class="login-header-right">
+    	#if(!$dx.empty($freeRegistration))
+    		<a href="#springUrl('')/auth/register.view">$dx.formatEmpty($freeRegistration)</a>
+		#end
+		## 默认语言下拉框
+		<div>
+			<select class="languageSelect">
+				#if($login_language == "")
+					<option value="" selected="selected">$defaultLanguage</option>
+					 #foreach($language in $languageSelect)
+					 	<option value="$language.dic_key">$language.i18nName</option>
+		            #end
+				#else
+					<option value="" >$defaultLanguage</option>
+					 #foreach($language in $languageSelect)
+					 	#if($language.dic_key == $login_language)
+					 		<option value="$language.dic_key" selected="selected">$language.i18nName</option>
+					 	#else
+					 		<option value="$language.dic_key">$language.i18nName</option>
+					 	#end
+		            #end
+				#end
+			</select>
+			<a href="#" onclick="changeLanguage();">更换语言</a>
+		</div>
+    </div>
+</div>
+<div id="login-box" class="container" >
+	<div class="form-signin">
+        <p class="msg" style="display: none;">
+            #if($loadCacheErrorMsg)
+                <a href="#" onclick="loadErrorMsg();"> 存在警告信息,点击查看</a>
+            #end
+        </p>
+        <div id="loadErrorMsgDialog" style="display: none">
+           ## #foreach($msg in $loadCacheErrorMsg) $msg #end
+        </div>
+        <p class="msg">
+##            #if ($error)
+##                <span class="glyphicon glyphicon-exclamation-sign">$error</span>
+##            #end
+        </p>
+##		DX_DEFAULT_DATASOURCE
+		<div class="row login-form-body">
+
+##		<!--<div class="row login-form-left fl">
+##			<div class="login-logo">
+##				##<img src="#springUrl('')/img/login-logo.png">
+##				<img src="#springUrl('')/img/login-bpm.png">
+##			</div>
+##		</div>--!>
+    #if($sapId)
+        <input class="sap_id" style="display: none" type="text" value="$dx.formatEmpty($sapId)"/>
+    #end
+
+    <div class="login-form-right">
+		<div class="login-select-con show-none">
+			<div class="login-select-main">
+				<p>$dx.formatEmpty($PleaseSelectTheNameOfTheCompany)</p>
+				<ul class="user_company"></ul>
+			</div>
+			<div class="login-no-select">
+			    <img src="#springUrl('')/img/login-noselect.png">
+			    <p>信息填写不全，请立即完善</p>
+			    <p class="login-complete-info" >
+			        <a href="#springUrl('')/auth/register.view?isleader=2">完善信息</a>
+			        <span>
+			            <img src="#springUrl('')/img/login-arr.png">
+			        </span>
+			    </p>
+			</div>
+			<div class="login-con-back">
+			    <a href=""#springUrl('')/auth/login.view" >$dx.formatEmpty($login_back)</a>
+			</div>
+		</div>
+		<form class="form-horizontal " role="form" name='loginForm' action="#springUrl('')/auth/login.do" method='POST'>
+			
+			<div class="form-group show-none">
+				<label class="col-sm-offset-1 col-sm-3 control-label" for="datasource"><font
+					color="white">DataSource</font></label>
+				<div class="col-sm-8">
+					<select style="background-color: #f0f0f0;" class="input-control" id="datasource" name='datasource'>
+						#foreach ($name in ${dx.ds()})
+							<option value="$dx.formatEmpty(${name})">$dx.formatEmpty(${name})</option>
+						#end
+					</select>
+				</div>
+			</div>
+
+			<span class="top-tip">$dx.formatEmpty($passwordLogin)</span>
+			<div class="form-group">
+				<label class="col-sm-offset-1 col-sm-3 control-label" for="username"><font
+					color="white">"sys_user","id"</font></label>
+				<div class="col-sm-8">
+					<input type="text" class="input-control" id="susername" name='susername' placeholder="$dx.formatEmpty($inputPhoneNum)"/>
+					<input type="hidden" id="username" name='username'/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-offset-1 col-sm-3 control-label" for="password"><font
+					color="white">Password"</font></label>
+				<div class="col-sm-8">
+					<input type="password" style="" class="input-control" id="password" name='password' placeholder="$dx.formatEmpty($inputPassword)" autocomplete="off"/>
+				</div>
+			</div>
+			
+			##验证码
+##			<div class="form-group">
+##				<div class="col-sm-8 " id="vail-box">
+##					<input type="text" style="" class="input-control" id="loginvail" placeholder="$inputSecurityCode" />
+##					<a href="#" onclick="verification();" class='img_a'><img id="verificationIMG"  src="#springUrl('')/auth/loginVerification.do"  alt="验证码" title="$Can_not_see"/></a>
+##				</div>
+##			</div>
+##			<div class="form-group">
+##				<div class="col-sm-offset-1 col-sm-11">
+##					<div class="checkbox">
+##						<label>
+##							<span></span>
+##				            <input type="checkbox" value="true" id="remember-me" name="remember-me"/>
+##							<p>$rememberPassword</p>
+##				        </label>
+##					</div>
+##				</div>
+##			</div>
+			
+			<div class="row">
+				<div class="pull-left col-sm-offset-1 col-sm-11">
+					<span class="btn btn-OK login-btn">$dx.formatEmpty($login)</span>
+					<button style="" class="show-none btn btn-Cancel" type="button" onclick="window.close();">Cancel</button>
+				</div>
+			</div>
+
+
+			<div class="forgetpass">
+			    #if(!$account)
+				    <a href="#springUrl('')/auth/findpassword.view">$dx.formatEmpty($forgetThePassword)</a>
+			    #end
+			</div>
+           ## <div class="row login-reg" >
+             ##    #if(!$account)
+          ##           <p><a href="#springUrl('')/auth/register.view">免费注册</a></p>
+			 ##    #end
+          ##   </div>
+            #if ($error)
+                <i class='errortip'>$dx.formatEmpty($error)</i>
+            #end
+		</form>
+		</div>
+		</div>
+	</div>
+	
+</div>
+
+<div class="login-footer">
+		<div>
+			<a href="#1" data-toggle="modal" data-target="#login-Modal"><span></span></a>
+		</div>
+</div>
+
+
+
+<!-- 选择主题   *****************8Modal -->
+<form enctype="multipart/form-data" method="post" action="#springUrl('')/auth/changSubject.do?subjectID"+subjectID>
+<div class="modal fade" id="login-Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header show-none">
+        
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body login-Modal-body">
+      	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      	<div class="select-title">
+      		<h4>更换主题</h4> <span>|  按照您的爱好选择主题</span>
+      		<div class="container-fluid">
+      			<div class="row">
+      				<a href="#1" id="yellow" onclick="obtainID(id);" class="title-yellow"><div class="col-xs-3"><span></span><img src="#springUrl('')/img/yellow.png"/></div></a>
+      				<a href="#1" id="blue" onclick="obtainID(id);" class="title-blue"><div class="col-xs-3"><span></span><img src="#springUrl('')/img/blue.png"/></div></a>
+      				<a href="#1" id="purple" onclick="obtainID(id);" class="title-purple"><div class="col-xs-3"><span></span><img src="#springUrl('')/img/purple.png"/></div></a>
+      				<a href="#1" id="green" onclick="obtainID(id);" class="title-green"><div class="col-xs-3"><span></span><img src="#springUrl('')/img/green.png"/></div></a>
+      			</div>
+      		</div>
+      	</div>
+      	<div class="select-bg">
+      		<h4>更换背景</h4> <span>|  背景图片您说了算</span>
+      		<div class="select-bg-body">
+      			<label>
+      			<img src="" id="file-pic"/>
+      			<input type="file" accept="image/png, image/jpeg" id="select-pic" name="select-pic"/>+ 选择图片</label>
+      			<p>只支持Png、Jpg格式，大小不超过3M</p>
+      		</div>
+      		<div class="picture-blur">
+      		    <p>图片模糊程度</p>
+      		    <div class="picture-blur-slider"></div>
+      		    <input type="number" readonly class="picture-blur-amount"/>
+
+      		</div>
+      	</div>
+      </div>
+      <div class="modal-footer">
+  		<input type='hidden' value='$dx.formatEmpty($subjectID)' id='subjectID' name='subjectID'>
+  		<input type='hidden' value='$dx.formatEmpty($backgroundID)' id='backgroundID' name='backgroundID'>
+      		##<input type="submit" value="确定" id="select-ok"></a>
+        <button class="modal-save" id="select-ok" type="button" data-dismiss="modal">确定</button>
+        <button class="modal-cancel" type="button" data-dismiss="modal">取消</button>
+      </div>
+      </from>
+    </div>
+  </div>
+</div>
+<!-- /container -->
+</div>##login-body  end
+#if($emailDetail)
+    <div style="display: none">
+        <input type="text" class="emailDetail_isEmailDetail" value="$dx.formatEmpty($isEmailDetail)">
+        <input type="text" class="emailDetail_user_name" value="$dx.formatEmpty($emailDetail.user_name)">
+        <input type="password" class="emailDetail_pwd" value="$dx.formatEmpty($emailDetail.pwd)" autocomplete="off">
+        <input type="text" class="emailDetail_domain" value="$dx.formatEmpty($emailDetail.domain)">
+    </div>
+#end
+<div class="login-loading"></div>
+<script src="#springUrl('')/js/busyLoad/app.min.js"></script>
+<link href="#springUrl('')/js/busyLoad/app.min.css" rel="stylesheet">
+<script src="#springUrl('')/js/login2.js"></script>
+
+</body>
+</html>

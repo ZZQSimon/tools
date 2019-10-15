@@ -1,0 +1,64 @@
+#dxFormHead($form)
+
+<form id="$form.id" name="$form.widgetName" class="form-inline dx-form" role="form">
+	#dxMenuBarHead($form)
+	<input type="button" id="${form.id}_submit" name="${form.action}" class="btn btn-default dx-submit"
+	       value="$dx.msg($form.buttonText)" onclick="saveRange('$form.id')"/>
+	#dxMenuBarFoot()
+	<div class="form-inline dx-range-filter-form">
+		<p class="outer-title">$dx.msg("Search condition")</p>
+
+		<div style="margin-bottom:5px">
+			#dxFieldforfilt($form.filter,"form-group col-xs-4 dx-field-container", "control-label col-xs-4",
+				"input-group col-xs-8 dx-range-filter-field")
+
+		</div>
+		<p class="outer-title">$dx.msg("Edit Partment")</p>
+
+		<div style="margin:5px">
+			<input type='hidden' id='${form.id}validDate'/>
+			#dxDetail($form)
+		</div>
+	</div>
+	<div class="">
+		<input type='hidden' id='${form.id}actionMode'/>
+		<input type='hidden' id='${form.id}recordId'/>
+		#dxGrid($form.children[0])
+	</div>
+</form>
+
+#dxFormTail($form)
+
+#macro(dxFieldforfilt $filters $divClasss $labelClass $inputDivClass)
+	#set($col = 0)
+	#foreach($filter in $filters)
+		#set($desc = $dx.desc($filter))
+		#set($enddiv = 0)
+		#if ($col == 0)
+		<div class="row dx-detail-row">
+		#end
+		#dxFieldWithClass($filter,"form-group col-xs-4 dx-field-container", "control-label label-$desc.cell_cnt",
+			"input-group input-$desc.cell_cnt dx-range-filter-field")
+		#set($col = $math.add($col, 1))
+		#if ($col > 2)
+			#set($col = 0)
+			#set($enddiv = 1)
+		</div>
+		#end
+	#end
+	#if ($enddiv == 1)
+	<div class="row dx-detail-row form-group col-xs-4 dx-field-container">
+		<input type="button" id=${form.id}_search name='Search' class="btn btn-default btn-sm dx-grid-play"
+		       value="$dx.msg("Search")" onclick="searchRange('$form.id', false)"/>
+		<input type="button" id=${form.id}_reset name='Reset' class="btn btn-default btn-sm dx-grid-reset"
+		       value="$dx.msg("Reset")" onclick="resetRange('$form.id')"/>
+	</div>
+	#end
+	#if ($enddiv == 0)
+	<input type="button" id=${form.id}_search name='Search' class="btn btn-default btn-sm dx-grid-play"
+	       value="$dx.msg("Search")" onclick="searchRange('$form.id', false)"/>
+	<input type="button" id=${form.id}_reset name='Reset' class="btn btn-default btn-sm dx-grid-reset"
+	       value="$dx.msg("Reset")" onclick="resetRange('$form.id')"/>
+	</div>
+	#end
+#end

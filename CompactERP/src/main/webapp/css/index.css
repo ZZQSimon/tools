@@ -1,0 +1,85 @@
+table.dx-operation-table td {
+	width: 50%;
+	height: 20px;
+	text-align: left;
+	padding: 5px;
+}
+
+table.dx-operation-table td a {
+	color: #FFF;
+}
+
+div.dx-todo-view {
+	position: absolute;
+	margin: 0;
+	width: 200px;
+	min-height: 145px;
+	background-color: #000000;
+	color: #FFF;
+	padding: 0;
+}
+
+td.dx-todo-head {
+	border-bottom: 2px solid white;
+	height: 20px;
+	padding: 5px;
+	text-align: center;
+}
+
+td.dx-todo-detail {
+	width: 50%;
+	height: 20px;
+	padding: 5px;
+	text-align: left;
+}
+
+td.dx-todo-detail-last {
+	border-bottom: 2px solid white;
+	width: 50%;
+	height: 20px;
+	padding: 5px;
+	text-align: left;
+}
+
+td.dx-todo-operation {
+	width: 100%;
+	height: 20px;
+	padding: 5px;
+	text-align: center;
+}
+
+button.dx-operation-click {
+	padding-left: 10PX !important;
+	padding-right: 10px !important;
+	background-color: black !important;
+	border: none;
+}
+
+.dx-import-input {
+	border-left:0px;
+	border-top:0px;
+	border-right:0px;
+	border-bottom:0px;
+	background-color:transparent !important;
+}
+
+.dx-import-table tr.has-error-row {
+	background-color: #ff0000 !important;
+}
+
+.dx-import-table tr.has-warning-row {
+	background-color: #ffd900 !important;
+}
+
+.dx-import-notify-error {
+	background-color: #ff0000 !important;
+}
+
+.dx-import-notify-warning {
+	background-color: #ffd900 !important;
+}
+
+.dx-import-table input.has-error {
+	background-color: #FDFFB1 !important;
+}
+

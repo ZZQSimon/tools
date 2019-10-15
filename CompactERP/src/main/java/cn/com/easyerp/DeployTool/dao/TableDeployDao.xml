@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.TableDeployDao">
+    <insert id="createDBTable">
+      ${tableSQL}
+    </insert>
+	<select id="selectBasicDeploy" resultType="java.util.Map">
+		select
+		international_id as id, ${lan} as lan from c_international where
+		international_id = 'deploy_sys_table' 
+		or
+		international_id = 'deploy_base_table'
+		or
+		international_id = 'deploy_professional_table'
+		or
+		international_id = 'deploy_view_table'
+		or
+		international_id = 'deploy_api_table'
+	</select>
+    <update id="updateColumn">
+        UPDATE c_column
+        SET `virtual` = #{column.virtual},
+        `tab_name` = #{column.tab_name},
+        `group_name` = #{column.group_name},
+        `data_type` = #{column.data_type},
+        `data_format` = #{column.data_format},
+        `min_len` = #{column.min_len},
+        `max_len` = #{column.max_len},
+        `is_condition` = #{column.is_condition},
+        `dic_id` = #{column.dic_id},
+        `ref_table_name` = #{column.ref_table_name},
+        `ref_table_cols` = #{column.ref_table_cols},
+        `ref_table_sql` = #{column.ref_table_sql},
+        `ref_table_display` = #{column.ref_table_display},
+        `ref_table_filter` = #{column.ref_table_filter},
+        `quick_filter` = #{column.quick_filter},
+        `is_multiple` = #{column.is_multiple},
+        `formula` = #{column.formula},
+        `default_value` = #{column.default_value},
+        `prefix` = #{column.prefix},
+        `suffix` = #{column.suffix},
+        `sum_flag` = #{column.sum_flag},
+        `ro_insert` = #{column.ro_insert},
+        `ro_update` = #{column.ro_update},
+        `read_only_condition` = #{column.read_only_condition},
+        `hidden` = #{column.hidden},
+        `wrap` = #{column.wrap},
+        `view_style` = #{column.view_style},
+        `cell_cnt` = #{column.cell_cnt},
+        `seq` = #{column.seq},
+        `level` = #{column.level},
+        `memo` = #{column.memo},
+        `read_only_clear` = #{column.read_only_clear},
+        `ref_table_new` = #{column.ref_table_new},
+        `ref_table_tree` = #{column.ref_table_tree},
+        `link_json` = #{column.link_json},
+        `international_id` = #{column.international_id},
+        `is_id_column` = #{column.is_id_column},
+        `module` = #{column.module},
+        `is_auth` = #{column.is_auth},
+        `is_encrypt` = #{column.is_encrypt},
+        `isCalendarEvent` = #{column.isCalendarEvent},
+        `calendarEventDefaultColor` = #{column.calendarEventDefaultColor}
+        WHERE table_id = #{tableName} AND `column_name` = #{column.column_name}
+    </update>
+    <insert id="addColumn">
+        INSERT INTO c_column
+        (`table_id`, `column_name`, `url_id`, `virtual`, `tab_name`, `group_name`,
+        `data_type`, `data_format`, `min_len`, `max_len`, `is_condition`,
+        `dic_id`, `ref_table_name`, `ref_table_cols`, `ref_table_sql`, `ref_table_display`,
+        `ref_table_filter`, `quick_filter`, `is_multiple`, `formula`, `default_value`,
+        `prefix`, `suffix`, `sum_flag`, `ro_insert`, `ro_update`,
+        `read_only_condition`, `hidden`, `wrap`, `view_style`, `cell_cnt`,
+        `seq`, `level`, `memo`, `read_only_clear`, `ref_table_new`,
+        `ref_table_tree`, `link_json`, `international_id`, `is_id_column`, `module`, `is_auth`,`isCalendarEvent`,
+        `calendarEventDefaultColor`,is_encrypt)
+        VALUES (
+        #{tableName}, #{column.column_name}, '', #{column.virtual}, #{column.tab_name}, #{column.group_name},
+        #{column.data_type}, #{column.data_format}, #{column.min_len}, #{column.max_len}, #{column.is_condition},
+        #{column.dic_id}, #{column.ref_table_name}, #{column.ref_table_cols}, #{column.ref_table_sql}, #{column.ref_table_display},
+        #{column.ref_table_filter}, #{column.quick_filter}, #{column.is_multiple}, #{column.formula}, #{column.default_value},
+        #{column.prefix}, #{column.suffix}, #{column.sum_flag}, #{column.ro_insert}, #{column.ro_update},
+        #{column.read_only_condition}, #{column.hidden}, #{column.wrap}, #{column.view_style}, #{column.cell_cnt},
+        #{column.seq}, #{column.level}, #{column.memo}, #{column.read_only_clear}, #{column.ref_table_new},
+        #{column.ref_table_tree}, #{column.link_json}, #{column.international_id}, #{column.is_id_column}, #{column.module},
+        #{column.is_auth},#{column.isCalendarEvent},#{column.calendarEventDefaultColor},#{column.is_encrypt})
+    </insert>
+    <delete id="deleteColumn">
+        DELETE FROM c_column
+        WHERE table_id = #{tableName} AND `column_name` = #{columnName}
+    </delete>
+    <delete id="deleteColumnByTableName">
+        DELETE FROM c_column
+        WHERE table_id = #{tableName}
+    </delete>
+    <delete id="deleteOrderRuleByTableName">
+        DELETE FROM c_table_order
+        WHERE table_id = #{tableName}
+    </delete>
+    <delete id="deleteCheckRuleByTableName">
+        DELETE FROM c_table_check
+        WHERE table_id = #{tableName}
+    </delete>
+    <delete id="deleteRendersByTableName">
+        DELETE FROM c_table_render
+        WHERE table_id = #{tableName}
+    </delete>
+    <delete id="deleteAutoGenByTableName">
+        DELETE FROM c_auto_gen
+        WHERE table_id = #{tableName}
+    </delete>
+    <delete id="deleteColumnI18NByTableName">
+        DELETE c1
+        FROM c_column c1
+        INNER JOIN c_international c2
+        ON c1.international_id = c2.international_id
+        WHERE c1.table_id = #{tableName}
+    </delete>
+    <delete id="deleteAutoGenI18NByTableName">
+        DELETE c1
+        FROM c_auto_gen c1
+        INNER JOIN c_international c2
+        ON c1.id = c2.international_id
+        WHERE c1.table_id = #{tableName}
+    </delete>
+    <delete id="dropDBTable">
+      DROP table IF EXISTS `${tableName}`
+    </delete>
+    <delete id="deleteOrderRules">
+            DELETE FROM c_table_order WHERE
+                table_id = #{tableName} ;
+    </delete>
+    <insert id="addOrderRule">
+        <if test="orderBys != null and orderBys.size() != 0">
+            <foreach collection="orderBys" item="orderBy" open=" " separator=";">
+                INSERT INTO c_table_order
+                (table_id, `column_name`, `seq`, order_rule, `module`)
+                VALUES (
+                #{tableName},
+                #{orderBy.column_name},
+                #{orderBy.seq},
+                #{orderBy.order_rule},
+                '')
+            </foreach>
+        </if>
+    </insert>
+    <delete id="deleteCheckRules">
+            DELETE FROM c_table_check WHERE
+                table_id = #{tableName};
+    </delete>
+    <insert id="addCheckRule">
+        <if test="checkRules != null and checkRules.size() != 0">
+            <foreach collection="checkRules" item="checkRule" open=" " separator=";">
+                INSERT INTO c_table_check
+                (table_id, `seq`, url_id, `column_name`, formula, error_msg_id, error_msg_param,
+                memo, check_level, `type`, create_submit, edit_submit, input_blur, `module`)
+                VALUES (
+                #{tableName}, #{checkRule.seq}, '', #{checkRule.column_name}, #{checkRule.formula},
+                #{checkRule.error_msg_id}, #{checkRule.error_msg_param}, #{checkRule.memo},
+                #{checkRule.check_level}, #{checkRule.type}, #{checkRule.create_submit},
+                #{checkRule.edit_submit}, #{checkRule.input_blur}, '')
+            </foreach>
+        </if>
+    </insert>
+    <delete id="deleteRenders">
+            DELETE FROM c_table_render WHERE
+                table_id = #{tableName};
+    </delete>
+    <insert id="addRenders">
+        <if test="renders != null and renders.size() != 0">
+            <foreach collection="renders" item="render" open=" " separator=";">
+                INSERT INTO c_table_render
+                (table_id, `column`, `level`, formula, `color`, seq, `module`)
+                VALUES (
+                #{tableName},
+                #{render.column},
+                #{render.level},
+                #{render.formula},
+                #{render.color},
+                #{render.seq},
+                '')
+            </foreach>
+        </if>
+    </insert>
+    <delete id="deleteAutoGen">
+        DELETE FROM c_auto_gen WHERE table_id = #{tableName}
+    </delete>
+    <insert id="addAutoGen">
+        <if test="autoGens != null and autoGens.size() != 0">
+            <foreach collection="autoGens" item="autoGen" open=" " separator=";">
+                INSERT INTO c_auto_gen
+                (id, `table_id`, `ref_view`, gen_sql, `exec_condition`, editable_cols, international_id,mode, `module`)
+                VALUES (
+                #{autoGen.id},
+                #{tableName},
+                #{autoGen.ref_view},
+                #{autoGen.gen_sql},
+                #{autoGen.exec_condition},
+                #{autoGen.editable_cols},
+                #{autoGen.international_id},
+                #{autoGen.mode},
+                '')
+            </foreach>
+        </if>
+    </insert>
+    <update id="updateTable">
+        UPDATE c_table
+        SET parent_id_column = #{table.parent_id_column},
+        children_id_column = #{table.children_id_column},
+        name_expression = #{table.name_column},
+        name_expression_publicity=#{table.name_expression_publicity},
+        readonly = #{table.readonly},
+        parent_id = #{table.parent_id},
+        group_name = #{table.group_name},
+        mb_block_view_style = #{table.mb_block_view_style},
+        pc_block_view_style = #{table.pc_block_view_style},
+        default_group_column = #{table.default_group_column},
+        check_condition = #{table.check_condition},
+        logable = #{table.logable},
+        view_style = #{table.view_style},
+        view_main_table = #{table.view_main_table},
+        table_type = #{table.table_type},
+        detail_disp_cols = #{table.detail_disp_cols},
+        valid_date_cols = #{table.valid_date_cols},
+        valid_date_cond_disp = #{table.valid_date_cond_disp},
+        valid_date_group_cols = #{table.valid_date_group_cols},
+        seq = #{table.seq},
+        `level` = #{table.level},
+        memo = #{table.memo},
+        key_formula = #{table.key_formula},
+        auto_gen_sql = #{table.auto_gen_sql},
+        `type` = #{table.type},
+        export_sql = #{table.export_sql},
+        import_sql = #{table.import_sql},
+        importable = #{table.importable},
+        international_id = #{table.international_id},
+        is_approve = #{table.is_approve},
+        is_approve_select = #{table.is_approve_select},
+        is_auth = #{table.is_auth},
+        is_approve_state = #{table.is_approve_state},
+        block_view_style = #{table.block_view_style},
+        `module` = #{table.module}
+        WHERE id = #{table.id}
+    </update>
+    <insert id="addTable">
+        INSERT INTO c_table
+        (id, parent_id_column, children_id_column, name_expression, readonly, parent_id,
+        group_name, mb_block_view_style, pc_block_view_style, default_group_column,
+        check_condition, logable, view_style, view_main_table, table_type,
+        detail_disp_cols, valid_date_cols, valid_date_cond_disp, valid_date_group_cols,
+        seq, `level`, memo, key_formula, auto_gen_sql, `type`, export_sql, import_sql,
+        importable, international_id, is_approve, is_auth, `module`, is_approve_state, block_view_style,is_approve_select)
+        VALUES
+        (#{table.id}, #{table.parent_id_column}, #{table.children_id_column}, #{table.name_column}, #{table.readonly}, #{table.parent_id},
+        #{table.group_name}, #{table.mb_block_view_style}, #{table.pc_block_view_style}, #{table.default_group_column},
+        #{table.check_condition}, #{table.logable}, #{table.view_style}, #{table.view_main_table}, #{table.table_type},
+        #{table.detail_disp_cols}, #{table.valid_date_cols}, #{table.valid_date_cond_disp}, #{table.valid_date_group_cols},
+        #{table.seq}, #{table.level}, #{table.memo}, #{table.key_formula}, #{table.auto_gen_sql}, #{table.type}, #{table.export_sql}, #{table.import_sql},
+        #{table.importable}, #{table.international_id}, #{table.is_approve}, #{table.is_auth}, #{table.module}, #{table.is_approve_state},
+        #{table.block_view_style},#{table.is_approve_select})
+    </insert>
+    <delete id="deleteTable">
+        DELETE FROM c_table
+        WHERE id = #{table.id}
+    </delete>
+    <select id="getId" resultType="string">
+        CALL c_get_next_id (#{tableName}, #{parent_id}, @new_id, @new_not_no);
+        SELECT @new_id  id;
+    </select>
+    <update id="updateTrigger">
+        UPDATE c_table_action
+        SET table_id = #{trigger.table_id},
+        system_type = #{trigger.system_type},
+        action_name_international = #{trigger.action_name_international},
+        is_using = #{trigger.is_using},
+        seq = #{trigger.seq},
+        memo = #{trigger.memo},
+        report_id = #{trigger.report_id},
+        is_one_data = #{trigger.is_one_data},
+        url = #{trigger.url},
+        `module` = ''
+        WHERE action_id = #{trigger.action_id}
+    </update>
+    <insert id="addTrigger">
+        INSERT INTO c_table_action
+        (action_id, `table_id`, system_type, action_name_international, is_using,
+          memo, report_id, is_one_data, url, `module`, seq)
+        VALUES (#{trigger.action_id}, #{trigger.table_id}, #{trigger.system_type}, #{trigger.action_name_international},
+                #{trigger.is_using}, #{trigger.memo}, #{trigger.report_id}, #{trigger.is_one_data},
+                #{trigger.url}, '', #{trigger.seq})
+    </insert>
+    <delete id="deleteTrigger">
+        DELETE FROM c_table_action
+        WHERE action_id = #{table_action_id}
+    </delete>
+    <update id="updateI18N">
+        UPDATE c_international
+        SET `type` = #{i18n.type},
+        cn = #{i18n.cn},
+        en = #{i18n.en},
+        jp = #{i18n.jp},
+        other1 = #{i18n.other1},
+        other2 = #{i18n.other2},
+        `module` = ''
+        WHERE international_id = #{i18n.international_id}
+    </update>
+    <insert id="addI18N">
+        INSERT INTO c_international
+        (international_id, `type`, cn, en, jp, other1, other2, `module`)
+        VALUES (#{i18n.international_id}, #{i18n.type}, #{i18n.cn}, #{i18n.en}, #{i18n.jp},
+                #{i18n.other1}, #{i18n.other2}, '')
+    </insert>
+    <delete id="deleteI18N">
+        DELETE FROM c_international
+        WHERE international_id = #{i18n.international_id}
+    </delete>
+    <delete id="deleteCondition">
+        DELETE FROM c_table_action_prerequistie
+        WHERE table_action_id = #{table_action_id}
+    </delete>
+    <insert id="addConditions">
+        <if test="conditions != null and conditions.size() != 0">
+            <foreach collection="conditions" item="condition" open=" " separator=";">
+                INSERT INTO c_table_action_prerequistie
+                (table_action_id, seq, check_condition, `level`, violate_msg_international_id,
+                violate_msg_param, is_using, `module`)
+                VALUES (
+                #{condition.table_action_id},
+                #{condition.seq},
+                #{condition.check_condition},
+                #{condition.level},
+                #{condition.violate_msg_international_id},
+                #{condition.violate_msg_param},
+                #{condition.is_using}, '')
+            </foreach>
+        </if>
+    </insert>
+    <insert id="addCondition">
+        INSERT INTO c_table_action_prerequistie
+        (table_action_id, seq, check_condition, `level`, violate_msg_international_id,
+        violate_msg_param, is_using, `module`)
+        VALUES (
+        #{condition.table_action_id},
+        #{condition.seq},
+        #{condition.check_condition},
+        #{condition.level},
+        #{condition.violate_msg_international_id},
+        #{condition.violate_msg_param},
+        #{condition.is_using}, '')
+    </insert>
+    <delete id="deleteApi">
+        DELETE FROM c_table_action_event
+        WHERE table_action_id = #{table_action_id}
+    </delete>
+    <insert id="addApi">
+        INSERT INTO c_table_action_event
+        (event_id, table_action_id, seq, event_type, `event_name`, event_param, is_using, `module`)
+        VALUES (
+        #{api.event_id},
+        #{api.table_action_id},
+        #{api.seq},
+        #{api.event_type},
+        #{api.event_name},
+        #{api.event_param},
+        #{api.is_using}, '')
+    </insert>
+    <insert id="execSQL">
+        ${sql}
+    </insert>
+     <delete id="deleteTableApproveEvent">
+        DELETE FROM c_table_approve_event
+        WHERE table_id = #{table_id}
+    </delete>
+    <insert id="saveTableApproveEvents">
+    	INSERT INTO `c_table_approve_event` (
+			`table_id`,
+			`approve_event_type`,
+			`event_type`,
+			`event_id`,
+			`event_param`,
+			`is_using`,
+			`seq`
+		)
+		VALUES
+			(
+				#{tableApproveEvent.table_id},
+				#{tableApproveEvent.approve_event_type},
+				#{tableApproveEvent.event_type},
+				#{tableApproveEvent.event_id},
+				#{tableApproveEvent.event_param},
+				#{tableApproveEvent.is_using},
+				#{tableApproveEvent.seq}
+			);
+    </insert>
+    <select id="selectCustomLayout" resultType="java.util.Map">
+    	select 
+		`id`,
+		`table_id`,
+		`column_name`,
+		`ref_table_id`,
+		`special_column_type`,
+		`special_column_value`,
+		`column_count`,
+		`begin_x`,
+		`begin_y`,
+		`end_x`,
+		`end_y`,
+		`font_size`,
+		`font_color`,
+		`font_style`,
+		`font_spacing`,
+		`alignment`,
+		`border_line`,
+		`border_color`,
+		`background_color`
+	from c_custom_layout
+	where table_id=#{table_id} or table_id=ref_table_id;
+    </select>
+    <select id="changePassword">
+    	call adidas_change_password(#{uuid},#{id},#{pwd},#{domain});
+    </select>
+    
+</mapper>

@@ -1,0 +1,362 @@
+@green: #30BE84;
+
+@soft-green: rgba(48, 190, 132, 0.2);
+@soft-60-green: rgba(48, 190, 132, 0.6);
+
+@gray: #F6F6F8;
+@deepgreen: #21A972;
+@red: #EF5D5D;
+
+.bg-green {
+  background: #30BE84;
+}
+
+.bg-gray {
+  background: #F6F6F8;
+}
+
+.font-green {
+  color: #30BE84;
+}
+
+.bg-soft-green {
+  background: rgba(48, 190, 132, 0.2);
+}
+
+
+.button-color1, .button-color3 {
+  .bg-green;
+  border-color: @green;
+}
+
+#wrap{
+  .bg-gray;
+}
+
+.dx-main-menu-top,#side-menu-bar > .userlogo, .dx-main-con > .header {
+  .bg-green;
+  .toptool {
+    background: @deepgreen;
+    border-color: @deepgreen;
+  }
+  .fa {
+    color: white;
+  }
+  .dropdown-toggle > a {
+    color: white;
+  }
+}
+
+.menubar-box {
+  background: @deepgreen;
+  border-color: @deepgreen;
+  #menubar {
+    color: white;
+  }
+}
+
+.dx-main-menu {
+  .bg-gray;
+  .nav {
+    > li > ul {
+      box-shadow: inset 0 -1px 0 0 #E6E6E6;
+    }
+    > li a {
+      border-left-color: #2BC2BD;
+      border-bottom-color: #E6E6E6;
+      &.current {
+        color: #3f3f3f;
+        border-left-color: @green;
+      }
+    }
+    li {
+      a {
+        color: #808080;
+      }
+      .subMenuUl {
+        .bg-gray;
+        box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
+        li a.nav-node-item.openthis {
+          .font-green;
+          background-color: #ECECED;
+        }
+        li a:hover{
+          background-color: #ECECED;
+        }
+      }
+    }
+  }
+  .dx-main-menu-ul {
+    border-right: 1px solid #E6E6E6;
+  }
+}
+
+.menuclosing{
+  .subMenuUl{
+    .nav-top-item.current{
+      background: #ECECED;
+    }
+    ul li{
+      .bg-gray;
+    }
+  }
+}
+
+.dx-main-menu-sidebar{
+  li ul .openthis {
+    .font-green;
+    background-color: #ECECED;
+  }
+  > li > .nav-top-item{
+    background: none;
+    border-bottom:1px solid #e6e6e6;
+    border-top:1px solid #e6e6e6;
+    &.current{
+      color: #3f3f3f;
+    }
+  }
+
+  li ul li a:focus{
+    .font-green;
+    background-color: #ECECED;
+  }
+  > li > ul{
+    background: none;
+    li a.current {
+      background-color: #ECECED;
+    }
+  }
+  li ul ul{
+    background: #F6F6F8;
+  }
+  .dxSideMenuFristSon  a{
+    color: #808080;
+    :hover{
+      background-color: #ECECED;
+    }
+  }
+}
+
+.dx-main-tabs {
+  > .nav-tabs > li.active > a, > .nav-tabs > li.active > a:hover, > .nav-tabs > li.active > a:focus, .home-tab-navs-rest > li.active > a, .home-tab-navs-rest > li.active > a:hover, .home-tab-navs-rest > li.active > a:focus {
+    background-color: @green !important;
+  }
+  > .index-tab-navs, .home-sub-title {
+    .bg-gray;
+  }
+  > .index-tab-navs li a {
+    color: #666666;
+    background: #ffffff;
+    i {
+      color: #BFBFBF;
+    }
+  }
+}
+
+.btn-toolbar {
+  .dx-grid-add, .save {
+    .bg-green;
+    &:hover {
+
+    }
+  }
+  .dx-filter-btn-group .dx-filter-exec:hover,
+  .dx-operate-menu .dropdown-menu li button:hover {
+    .bg-green;
+  }
+  .dx-grid-delete, .delete {
+    background: @red;
+  }
+  .grid_search_box .search {
+    .bg-green;
+    &:hover{
+      .bg-soft-green;
+    }
+  }
+}
+
+.btn-toolbar .btn.save:hover, .btn-toolbar .btn.dx-grid-add:hover, .dx-filter-btn-group .dx-filter-exec:hover {
+  background: rgba(48, 190, 132, 0.8) !important;
+}
+
+.btn-toolbar .btn.dx-grid-delete:hover, .btn-toolbar .btn.delete:hover {
+  background: rgba(239, 93, 93, 0.8) !important;
+}
+
+.dx-column-link, .group-column-name-box .left-group {
+  .font-green;
+}
+
+.dx_grid_left_group a:hover {
+  .bg-green;
+}
+
+.dx-filter-btn-group .dx-filter-exec {
+  .bg-green;
+}
+
+.dx-sub-tabs .nav-submenu > li.active a {
+  .font-green;
+  border-color: @green;
+}
+
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:focus {
+  .bg-green;
+}
+
+.g1-tree-icon-left {
+  .jstree-container-ul {
+    .jstree-clicked {
+      .bg-green;
+    }
+    .jstree-hovered {
+      .bg-soft-green;
+    }
+  }
+}
+
+.icheckbox_flat-blue, .iradio_flat-blue{
+  background: url(../../js/boots-icheck/flat/green.png) no-repeat;
+}
+
+.dxToastAlert {
+  background: @deepgreen;
+  .dxToasticon {
+    background: url(../../img/dx-tree-green.png) no-repeat -62px -67px;
+  }
+}
+
+.dx-user-column-down {
+  p span {
+    background-image: url(../../img/dx-tree-green.png);
+  }
+  .dx-is-user-column li > span {
+    .bg-green;
+  }
+}
+
+.index-tab-navs > li .closeTab:hover, .home-tab-navs-rest > li .closeTab:hover{
+  background: #989898;;
+}
+
+.index-tab-navs > li.active .closeTab,.home-tab-navs-rest > li.active .closeTab {
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+}
+
+//首页
+#home-common-tab .panel.home-common-require {
+  border-top-color: @green;
+}
+
+.jstree-grid-wrapper .jstree-clicked, .datagrid .datagrid-row-selected {
+  background: @soft-green !important;
+}
+
+.jstree {
+  .jstree-checkbox {
+    background-image: url(../../img/dx-tree-green.png);
+  }
+}
+
+.dx-whole-nav-tab {
+  li a {
+    color: #4d4d4d;
+  }
+  li.active {
+    border-right-color: @green;
+    .font-green;
+    .bg-soft-green;
+    a {
+      .font-green;
+      .bg-soft-green;
+    }
+  }
+}
+
+
+.button-blue-font{
+  .font-green;
+  &:hover{
+    color: @soft-60-green;
+  }
+}
+
+.input-bt-Switcher-wrap {
+  .input-bt-Switcher {
+    input:checked + label {
+      background: @green;
+    }
+  }
+}
+
+.auth-group-top-btn {
+  border-left-color: @green;
+}
+
+.addApproverUser,.authgroupadd{
+  .button-blue-font;
+}
+
+.columntree .jstree-leaf:hover{
+  .bg-soft-green;
+}
+
+.columntree .jstree-leaf[aria-selected="true"] {
+  border-right-color: @green;
+  .bg-soft-green;
+  a{
+    .font-green;
+  }
+}
+
+.nav-auth li.active a {
+  .bg-green;
+  border-color: @green;
+}
+
+.authgroupdiv .saveTemplate {
+  .bg-green;
+  border-color: @green;
+}
+
+.collapse,.collapsing{
+  border-color: @green;
+  background: rgba(48, 190, 132, 0.1);
+}
+
+.approve-config-btn li.active a{
+  .bg-green;
+}
+
+.approve-person-form .saveTemplate, .authgroupdiv .saveTemplate{
+  border: 1px solid @green;
+  .bg-green;
+}
+
+#approve-person .approve-person-top-btn{
+  border-color: @green;
+}
+
+.deploy-left-menu{
+  .item {
+    span.active {
+      .font-green;
+      .bg-soft-green;
+      border-color: @green;
+    }
+  }
+}
+
+.deploy-tab-ul {
+  li {
+    &.active {
+      a, a:hover {
+        .font-green;
+        border-bottom-color: @green;
+      }
+    }
+  }
+}
+
+

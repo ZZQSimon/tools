@@ -1,0 +1,57 @@
+#dxFormHead($form)
+
+
+<div id="$form.id" class="dx-form" name="$form.widgetName">
+	#dxMenuBarHead($form)
+	#if($form.button('save') && ${form.saveMode} != '1')
+		<input id='${form.id}save' type="button" name="Save"
+		       class="btn btn-default" value="$dx.msg("Save")" disabled=disabled/>
+	#end
+	#if ($form.button('export'))
+		<input id='${form.id}export' type="button" name="export"
+		       class="btn btn-default" value="$dx.msg("Export")" disabled=disabled/>
+	#end
+	#if(${form.hasAppend})
+		<input id='${form.id}cancel' type="button" name="cancel"
+		       class="btn btn-default" value="$dx.msg("Cancel")" disabled=disabled/>
+	#end
+	#dxMenuBarFoot()
+	<form id="${form.id}search" name="$form.widgetName" onsubmit="return false;">
+		<div>
+			#set($ids = "")
+			#foreach($field in $form.searchConditions)
+				#dxSelectorField($field, $field.table, '')
+				#if($ids != "")
+					#set($ids = "${ids},")
+				#end
+				#set($ids = "${ids}$field.id")
+			#end
+			<input type='hidden' id='${form.id}ids' value='$ids'/>
+		</div>
+	</form>
+	<div class="dx-filter-container input-group col-xs-8">
+		<span class="input-group-addon">$dx.dictText('DIC_PASSAGE_TYPE', $form.type) </span>
+		<input type='hidden' id='${form.id}hidStartDate'/>
+		<input type='hidden' id='${form.id}hidEndDate'/>
+		<input id='${form.id}startDate' type="text" name="start" dx-date="true" readonly=true
+		       class="dx-filter dx-filter-date dx-filter-start" value="$form.startDate"/>～
+		<input id='${form.id}endDate' type="text" name="end" dx-date="true" readonly=true
+		       class="dx-filter dx-filter-date dx-filter-end" value="$form.endDate"/>
+	</div>
+	<input type='hidden' id='${form.id}where'/>
+	#dxFilter($form.filter)
+	<div id='${form.id}grid' class="dx-auto-expand">
+		<table id='${form.id}detail' class='dx-pa-table-detail' border=1>
+			<thead>
+			<tr role="row">
+			</tr>
+			</thead>
+			<tbody>
+			<tr role="row">
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+#dxFormTail($form)

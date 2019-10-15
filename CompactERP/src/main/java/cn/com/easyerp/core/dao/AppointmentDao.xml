@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.AppointmentDao">
+	<select id="selectAppointmentData" resultType="java.util.Map">
+		SELECT * FROM ${table}
+		WHERE
+		<foreach collection="idColumn.keys" item="key" separator="and">
+			<choose>
+				<when test="null == idColumn[key]">
+					${key} IS NULL
+				</when>
+				<otherwise>
+					${key} = #{idColumn[${key}]}
+				</otherwise>
+			</choose>
+		</foreach>
+	</select>
+	<select id="selectAppointmentById"
+		resultType="cn.com.easyerp.core.companyCalendar.appointment.AppointmentDescribe">
+		SELECT id, user_id, `table`, data_id, memo,
+		begin_time,
+		end_time, cre_user, cre_date, upd_user,
+		upd_date, owner, status, color
+		FROM c_appointment
+		WHERE id = #{id}
+	</select>
+	<update id="updateAppointment">
+		UPDATE c_appointment
+		SET
+		<foreach collection="data.keys" item="key" separator=",">
+			`${key}`
+			= #{data[${key}]}
+		</foreach>
+		WHERE id = #{appointment.id}
+	</update>
+	<insert id="createAppointment">
+		insert into ${table}
+		<foreach collection="data.keySet()" item="column" separator=","
+			open="(" close=")">
+			`${column}`
+		</foreach>
+		values
+		<foreach collection="data.keySet()" item="column" separator=","
+			open="(" close=")">
+			#{data.${column}}
+		</foreach>
+	</insert>
+</mapper>

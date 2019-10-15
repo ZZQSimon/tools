@@ -1,0 +1,141 @@
+#dxFormHead($form)
+<form id="${form.id}" class="dx-form" name="$form.widgetName" action="${form.action}">
+	#dxMenuBarHead($form)
+	#if ($form.extend)
+		<input type="button" name='collapse' class="dx-tree-collapse btn btn-default" value="$dx.msg("collapse tree")"
+		       disabled/>
+		<input type="button" name='expand' class="dx-tree-expand btn btn-default" value="$dx.msg("expand tree")"
+		       disabled/>
+		<input type="button" name='export' class="dx-tree-export btn btn-default" value="$dx.msg("Export")" disabled/>
+	#else
+		<input type="button" id=${form.id}_save name='Save' class="dx-home-shortcut btn btn-default"
+		       value="$dx.msg("Save")" onclick="SaveTreeData('$form.id',$('#'+'$form.id'+'action').val())"/>
+		<input type="button" id=${form.id}_cancel name='Cancel' class="dx-home-shortcut btn btn-default"
+		       value="$dx.msg("Cancel")" onclick="CloseTree('$form.id')"/>
+		<input type="button" id=${form.id}_edit name='Edit' class="dx-home-shortcut btn btn-default"
+		       value="$dx.msg("Edit")" onclick="editTreeNode('$form.id','2')"/>
+		#if(${form.treeType} == 1)
+			<input type="button" id=${form.id}_higher name='Add_Higher' class="dx-home-shortcut btn btn-default"
+			       value="$dx.msg("Add_Higher",$dx.tableLabel($form.tableName))"
+			       onclick="addTreeRootNode('$form.id','1')"/>
+		#end
+		<input type="button" id=${form.id}_lower name='Add_Lower' class="dx-home-shortcut btn btn-default"
+		       value="$dx.msg("Add_Lower",$dx.tableLabel($form.tableName))"
+		       onclick="addTreeNode('$form.id','1')"/>
+		<input type="button" id=${form.id}_delete name='Delete' class="dx-home-shortcut btn btn-default"
+		       value="$dx.msg("Delete")" onclick="DeleteTreeNode('$form.id')"/>
+	#end
+	#dxMenuBarFoot()
+	<input type='hidden' id='${form.id}conditions'/>
+
+<div class="container dx-div-with-scroll" style="padding:0;">
+	#if(${form.searchMode} == 2)
+		<div class="row" style="/* left:0px; */margin:10px;padding-left: 12px;">
+			<input type="radio" id='${form.id}asc' name='${form.id}Mode' value='1' checked/>$dx.msg(
+			"Search_Down")
+			<input type="radio" id='${form.id}desc' name='${form.id}Mode' value='2'/>$dx.msg("Search_Up")
+		</div>
+	#end
+	<div class="row" style="left:5px;margin:5px">
+		#dxSelector(${form})
+	</div>
+	<input type='hidden' id='${form.id}control'/>
+	<input type='hidden' id='${form.id}parent'/>
+	<input type='hidden' id='${form.id}ids'/>
+	<input type='hidden' id='${form.id}idsValue'/>
+
+	<div class="g1-tree-icon-left
+	##dx-auto-expand
+	" id="${form.id}_div"
+	     style="overflow:auto;float:left;position: absolute;left:30px;width:300px;">
+	</div>
+	<input type='hidden' id='${form.id}action'/>
+	#if ($form.extend == false)
+	<div class="" id="${form.id}_show_div"
+	     style="overflow-y:auto;float:left;position: absolute;left:350px;width:710px;height:290px;">
+		#set($group = "")
+		#set($col = 0)
+		#set($class = "ui-widget dx-field form-control dx-input")
+		#foreach($field in ${form.fields})
+			#set($desc = $dx.desc($field))
+			#if($desc.column_name == '${form.parentidColumn}')
+				#if($group != $desc.group_name)
+					<div class="col-xs-12"><h4><strong>$dx.group($desc.table_id, $desc.group_name)</strong></h4></div>
+					#set($group = $desc.group_name)
+				#end
+				#if(${form.treeType} == 1)
+				<div class="row dx-detail-row" style="width:700px">
+				#end
+				<div class="form-group col-xs-6 dx-field-container">
+					<label class="control-label col-xs-5" for="${field.id}">$dx.msg(
+						"higher-level-name",$dx.tableLabel($form.tableName)):</label>
+
+					<div class="input-group col-xs-7">
+						#dxFieldInput($field, $desc $class)
+					</div>
+				</div>
+				#set($col = $math.add($col, 1))
+			#else
+				#if(${form.treeType} == 1)
+					#if($dx.visible($form, $desc))
+						#if($group != $desc.group_name)
+							#if ($col != 0)
+							</div>
+							#end
+							<div class="col-xs-12"><h4><strong>$dx.group($desc.table_id, $desc.group_name)</strong></h4>
+							</div>
+							#set($group = $desc.group_name)
+							#set($col = 0)
+						#end
+						#if ($col == 0)
+						<div class="row dx-detail-row" style="width:700px">
+						#end
+					#end
+					#if(!$dx.visible($form, $desc))
+						#dxHiddenField($field, $desc)
+					#else
+						#dxFieldWithClass($field,"form-group col-xs-6 dx-field-container","control-label col-xs-5",
+							"input-group col-xs-7")
+						#set($col = $math.add($col, 1))
+						#if($col == 2)
+						</div>
+							#set($col = 0)
+						#end
+					#end
+				#else
+					#if($group != $desc.group_name)
+						#if ($col != 0)
+						</div>
+						#end
+						<div class="col-xs-12"><h4><strong>$dx.group($desc.table_id, $desc.group_name)</strong></h4>
+						</div>
+						#set($group = $desc.group_name)
+						#set($col = 0)
+					#end
+					#if ($col == 0)
+					<div class="row dx-detail-row" style="width:700px">
+					#end
+
+					#if(!$dx.visible($form, $desc))
+						#dxHiddenField($field, $desc)
+					#else
+						#dxFieldWithClass($field,"form-group col-xs-6 dx-field-container","control-label col-xs-5",
+							"input-group col-xs-7")
+						#set($col = $math.add($col, 1))
+						#if($col == 2)
+						</div>
+							#set($col = 0)
+						#end
+					#end
+				#end
+			#end
+		#end
+	</div>
+		#if ($col != 0)
+			</div>
+		#end
+		</div>
+	#end
+	</div>
+</form>
+#dxFormTail($form)

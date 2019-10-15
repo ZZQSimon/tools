@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.CalendarDao">
+	<update id="updateRule">
+		update p_calendar_rule set
+		monday=#{monday},tuesday=#{tuesday},wednesday=#{wednesday},thursday=#{thursday},friday=#{friday},saturday=#{saturday},sunday=#{sunday}
+		where id = #{calendarId}
+	</update>
+
+	<delete id="deleteSet">
+		delete from p_calendar_set
+		<if test="currentDate !=null">
+			where date > #{currentDate}
+		</if>
+	</delete>
+
+	<insert id="saveWorkday">
+		<if test="dates != null and dates.size() != 0">
+			insert into p_calendar_set(calendar_id,date,is_holiday,memo) values
+			<foreach collection="dates" item="d" index="i" separator=",">
+				(#{calendarId},'${d}',1,'')
+			</foreach>
+			ON DUPLICATE KEY UPDATE memo='';
+		</if>
+	</insert>
+
+	<insert id="saveHoliday">
+		<if test="dates != null and dates.size() != 0">
+			insert into p_calendar_set(calendar_id,date,is_holiday,memo) values
+			<foreach collection="dates" item="d" index="i" separator=",">
+				(#{calendarId},'${d}',0,'')
+			</foreach>
+			ON DUPLICATE KEY UPDATE memo='';
+
+		</if>
+	</insert>
+
+	<update id="updateSync">
+		update p_calendar_rule set is_sync=#{sync} where id = #{calendarId}
+	</update>
+
+	<select id="selectSync" resultType="java.util.Map">
+		select is_sync from p_calendar_rule where id = #{calendarId}
+	</select>
+
+	<select id="selectDates" resultType="java.lang.String">
+		select date from p_calendar_set where calendar_id = #{calendarId} and
+		is_holiday = #{type}
+		<if test="currentDate !=null">
+			and date > #{currentDate};
+		</if>
+	</select>
+
+	<select id="selectCalendar" resultType="java.util.Map">
+		select
+		id,
+		calendar_rule_id
+		from p_calendar
+		where id = #{id}
+	</select>
+	<select id="selectRule" resultType="java.util.Map">
+		select
+		monday,
+		tuesday,
+		wednesday,
+		thursday,
+		friday,
+		saturday,
+		sunday
+		from p_calendar_rule
+		where id
+		= #{id}
+	</select>
+	<select id="selectSet" resultType="java.util.Map">
+		select
+		calendar_id,
+		DATE_FORMAT(`date`, '%Y-%m-%d') AS `date`,
+		is_holiday
+		from
+		p_calendar_set
+		where calendar_id = #{calendar_id}
+	</select>
+	<select id="selectSetcount" resultType="java.lang.Integer">
+		select
+		count(*)
+		from
+		p_calendar_set
+		where calendar_id = #{calendar_id} and
+		date = #{date}
+	</select>
+
+	<select id="getEventsByDate"
+		resultType="cn.com.easyerp.core.companyCalendar.WorkCalendarDescribe">
+		SELECT date_id,table_id,column_name,owner,memo
+		from m_work_calendar
+		WHERE eventDate = #{queryDate} and owner = #{users}
+	</select>
+	<select id="getEventDaysByMonth"
+		resultType="cn.com.easyerp.core.companyCalendar.WorkCalendarDescribe">
+		SELECT DISTINCT eventDate from m_work_calendar
+		where owner = #{users}
+	</select>
+	<select id="findEventsListByNum"
+		resultType="cn.com.easyerp.core.companyCalendar.WorkCalendarDescribe">
+		SELECT date_id,table_id,column_name,owner,memo
+		from m_work_calendar
+		WHERE eventDate = #{queryDate} and owner = #{users} limit
+		#{desctibe.pageStartCount},#{desctibe.PAGECOUNT}
+	</select>
+	<select id="selectWorkPlanByDate" resultType="cn.com.easyerp.core.companyCalendar.Week">
+		SELECT
+		p1.is_holiday,
+		p2.monday,
+		p2.tuesday,
+		p2.wednesday,
+		p2.thursday,
+		p2.friday,
+		p2.saturday,
+		p2.sunday
+		FROM
+		p_calendar_set p1,
+		p_calendar_rule p2
+		WHERE
+		p1.calendar_id = p2.id = "0000000001" AND p1.date between #{beginDate} AND
+		#{endDate}
+	</select>
+	<select id="findDateByCalendarId" resultType="java.util.Map">
+		SELECT date,is_holiday FROM p_calendar_set WHERE calendar_id = "0000000001"
+	</select>
+	<select id="findIsHolidayByDateFromCalendarSet" resultType="Integer">
+		SELECT is_holiday FROM p_calendar_set WHERE date = #{beginDate}
+	</select>
+	<select id="findDateById" resultType="cn.com.easyerp.core.companyCalendar.Week">
+		SELECT monday,tuesday,wednesday,thursday,friday,saturday,sunday FROM
+		p_calendar_rule
+	</select>
+	<select id="findWeekPlan" resultType="cn.com.easyerp.core.companyCalendar.Week">
+		SELECT monday,tuesday,wednesday,thursday,friday,saturday,sunday FROM
+		p_calendar_rule
+	</select>
+
+	<select id="selectHolidayDate" resultType="cn.com.easyerp.core.companyCalendar.HolidayItem">
+		SELECT
+		p1.date,
+		p1.is_holiday
+		FROM
+		p_calendar_set p1,
+		p_calendar_rule p2
+		WHERE
+		p1.calendar_id = p2.id = #{calendarId} AND p1.date between #{beginDate} AND
+		#{endDate}
+	</select>
+	<select id="selectCalendarEvent" resultType="cn.com.easyerp.core.companyCalendar.CalendarEvent">
+		SELECT
+		p1.calendar_id,
+		p1.p_calendar_event_id,
+		p1.event_name,
+		p1.begin_date,
+		p1.end_date,
+		p1.ref_table,
+		p1.ref_table_column,
+		p1.ref_table_data,
+		p1.color,
+		file,
+		p1.owner,
+		p2.power
+		FROM p_calendar_event p1
+		LEFT JOIN p_calendar_event_share p2
+		ON p1.p_calendar_event_id = p2.p_calendar_event_id
+		WHERE p1.calendar_id = #{calendarId}
+		AND p2.user_id = #{userId}
+		AND DATE_FORMAT(p1.begin_date, '%Y') = #{eventDate}
+		UNION ALL
+		SELECT
+		calendar_id,
+		p_calendar_event_id,
+		event_name,
+		begin_date,
+		end_date,
+		ref_table,
+		ref_table_column,
+		ref_table_data,
+		color,
+		file,
+		owner,
+		'RW' power
+		FROM p_calendar_event WHERE calendar_id = #{calendarId} AND (`owner` =
+		#{userId} OR isPublic = 1)
+		AND DATE_FORMAT(begin_date, '%Y') = #{eventDate}
+	</select>
+	<select id="selectAppointmentEvent" resultType="java.util.Map">
+		SELECT c_appointment.id, c_appointment.user_id, c_appointment.`table`,
+		c_appointment.data_id, c_appointment.memo,
+		c_appointment.begin_time, c_appointment.end_time, c_appointment.cre_user,
+		c_appointment.cre_date, c_appointment.upd_user,
+		c_appointment.upd_date, c_appointment.owner, c_appointment.status,
+		c_appointment.color,
+		m_user.id user$id, m_user.parent_id user$parent_id, m_user.name user$name,
+		m_user.sex user$sex, m_user.birthdate user$birthdate,
+		m_user.telephone user$telephone, m_user.mobile user$mobile, m_user.email user$email,
+		m_user.language_id user$language_id, m_user.role_id user$role_id,
+		m_user.department_id user$department_id, m_user.memo user$memo,
+		m_user.status user$status,
+		m_user.imageUrl user$imageUrl, m_user.corpId user$corpId, m_user.agentId
+		user$agentId,
+		m_user.position user$position, m_user.status_wx user$status_wx, m_user.msn user$msn,
+		m_user.secret user$secret
+		FROM c_appointment c_appointment
+		LEFT JOIN m_user m_user
+		ON c_appointment.user_id = m_user.id
+		WHERE `table` = #{appointment.table}
+		AND data_id = #{appointment.data_id}
+		AND DATE_FORMAT(begin_time, '%Y') = #{appointment.year}
+	</select>
+	<update id="updateCalendarEvents">
+		UPDATE p_calendar_event
+		SET event_name = #{calendarEvent.event_name},
+		begin_date = #{calendarEvent.begin_date},
+		end_date = #{calendarEvent.end_date},
+		color = #{calendarEvent.color},
+		file = #{calendarEvent.file},
+		content = #{calendarEvent.content},
+		isPublic = #{calendarEvent.isPublic}
+		WHERE calendar_id = #{calendarEvent.calendar_id} AND p_calendar_event_id =
+		#{calendarEvent.p_calendar_event_id}
+	</update>
+	<insert id="addCalendarEvents">
+		INSERT INTO p_calendar_event
+		(calendar_id, p_calendar_event_id, event_name, begin_date, end_date,
+		ref_table, ref_table_column, ref_table_data, color, file,
+		owner, content, isPublic)
+		VALUES
+		(#{calendarEvent.calendar_id}, #{calendarEvent.p_calendar_event_id}, #{calendarEvent.event_name},
+		#{calendarEvent.begin_date}, #{calendarEvent.end_date},
+		#{calendarEvent.ref_table}, #{calendarEvent.ref_table_column},
+		#{calendarEvent.ref_table_data}, #{calendarEvent.color},
+		#{calendarEvent.file},
+		#{calendarEvent.owner}, #{calendarEvent.content}, #{calendarEvent.isPublic})
+	</insert>
+	<update id="updateCalendarEventsByTable">
+		UPDATE p_calendar_event
+		SET color = #{calendarEvent.color}
+		WHERE ref_table = #{calendarEvent.ref_table}
+		AND ref_table_column = #{calendarEvent.ref_table_column}
+		AND ref_table_data = #{calendarEvent.ref_table_data}
+	</update>
+	<delete id="deleteCalendarEventsByTable">
+		DELETE FROM p_calendar_event
+		WHERE ref_table = #{calendarEvent.ref_table}
+		AND ref_table_data = #{calendarEvent.ref_table_data}
+	</delete>
+	<delete id="deleteBatchCalendarEventsByTable">
+		DELETE FROM p_calendar_event
+		WHERE
+		<foreach collection="calendarEvents" item="calendarEvent"
+			separator="OR" open=" " close=" ">
+			(ref_table = #{calendarEvent.ref_table}
+			AND ref_table_data = #{calendarEvent.ref_table_data})
+		</foreach>
+	</delete>
+	<select id="selectCalendarEventById" resultType="cn.com.easyerp.core.companyCalendar.CalendarEvent">
+		SELECT
+		calendar_id,
+		p_calendar_event_id,
+		event_name,
+		begin_date,
+		end_date,
+		ref_table,
+		ref_table_column,
+		ref_table_data,
+		color,
+		file,
+		owner,
+		content,
+		isPublic
+		FROM p_calendar_event
+		WHERE calendar_id = #{calendarId} AND p_calendar_event_id =
+		#{calendarEventId}
+	</select>
+	<select id="selectCalendarEventByTable" resultType="cn.com.easyerp.core.companyCalendar.CalendarEvent">
+		SELECT
+		calendar_id,
+		p_calendar_event_id,
+		event_name,
+		begin_date,
+		end_date,
+		ref_table,
+		ref_table_column,
+		ref_table_data,
+		color,
+		file,
+		owner,
+		content,
+		isPublic
+		FROM p_calendar_event
+		WHERE calendar_id = #{calendarId} AND ref_table = #{ref_table} AND
+		ref_table_data = #{ref_table_data}
+	</select>
+	<select id="selectCalendarEventShareById"
+		resultType="cn.com.easyerp.core.companyCalendar.CalendarEventShare">
+		SELECT
+		p1.p_calendar_event_id,
+		p1.p_calendar_event_share_id,
+		p1.user_id,
+		p1.power,
+		p1.memo,
+		m1.name user_name
+		FROM p_calendar_event_share p1
+		INNER JOIN m_user m1
+		ON p1.user_id = m1.id
+		WHERE p_calendar_event_id = #{calendarEventId}
+	</select>
+	<delete id="deleteCalendarEventShare">
+		<if test="users != null">
+			DELETE FROM p_calendar_event_share
+			WHERE p_calendar_event_id = #{calendarEvent.p_calendar_event_id}
+			AND user_id IN
+			<foreach collection="users.keySet()" item="user_id"
+				separator="," open="(" close=")">
+				#{user_id}
+			</foreach>
+		</if>
+	</delete>
+	<select id="getMaxId" resultType="java.lang.String">
+		SELECT MAX(p_calendar_event_share_id) FROM p_calendar_event_share WHERE
+		p_calendar_event_id = #{calendarEventId}
+	</select>
+	<select id="getCalendarEventMaxId" resultType="java.lang.String">
+		SELECT MAX(p_calendar_event_id) FROM p_calendar_event
+	</select>
+	<insert id="addCalendarEventShare">
+		INSERT INTO p_calendar_event_share
+		(p_calendar_event_id, p_calendar_event_share_id, user_id, power, memo)
+		VALUES
+		(#{calendarEventShare.p_calendar_event_id}, #{calendarEventShare.p_calendar_event_share_id},
+		#{calendarEventShare.user_id},
+		#{calendarEventShare.power}, #{calendarEventShare.memo})
+	</insert>
+
+
+	<select id="getEventTag" resultType="java.util.Map">
+		SELECT
+		event_name,
+		content,
+		begin_date,
+		end_date,
+		user_id owner
+		FROM
+		p_calendar_event_share pces
+		LEFT JOIN p_calendar_event pce ON pces.p_calendar_event_id =
+		pce.p_calendar_event_id
+		WHERE
+		user_id = #{user.id}
+		AND (DATE_FORMAT(begin_date, '%m') = #{request.month} OR
+		DATE_FORMAT(end_date, '%m') = #{request.month})
+		UNION ALL
+		SELECT
+		event_name,
+		content,
+		begin_date,
+		end_date,
+		owner
+		FROM
+		p_calendar_event
+		WHERE
+		owner = #{user.id}
+		AND (DATE_FORMAT(begin_date, '%m') = #{request.month} OR
+		DATE_FORMAT(end_date, '%m') = #{request.month})
+	</select>
+
+	<select id="getCommonRule" resultType="java.util.Map">
+		SELECT
+		`id`,
+		`name`,
+		`monday`,
+		`tuesday`,
+		`wednesday`,
+		`thursday`,
+		`friday`,
+		`saturday`,
+		`sunday`,
+		`is_sync`,
+		`owner`
+		FROM
+		p_calendar_rule
+		LIMIT 0,
+		1
+	</select>
+
+	<select id="getSpecialRule" resultType="java.util.Map">
+		SELECT
+		`calendar_id`,
+		`date`,
+		`is_holiday`,
+		`memo`
+		FROM
+		`p_calendar_set`
+	</select>
+</mapper>

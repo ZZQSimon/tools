@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.DeployTool.dao.TimingTaskDao">
+	<select id="selectAllTimingTask" resultType="cn.com.easyerp.core.timedTask.entity.TimeTaskDescribe">
+		SELECT task_id,international_id FROM `c_time_task`; 
+	</select>
+	<select id="selectTimingTaskI18N" resultType="cn.com.easyerp.core.cache.I18nDescribe">
+		SELECT
+			`international_id`,
+			`type`,
+			replace(replace(`cn`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as cn,
+			replace(replace(`en`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as en,
+			replace(replace(`jp`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as jp,
+			replace(replace(`other1`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other1,
+			replace(replace(`other2`,<![CDATA['<']]>,<![CDATA['&lt;']]>),<![CDATA['>']]>,<![CDATA['&gt;']]>) as other2,
+			`module`
+		FROM
+			`c_international`
+		WHERE
+			international_id = #{international_id};
+	</select>
+	<select id="selectTimeTaskEvent" resultType="cn.com.easyerp.core.timedTask.entity.TimeTaskEventDescribe">
+		SELECT
+			`task_id`,
+			`event_id`,
+			`event_type`,
+			`event_url_id`,
+			`event_param`,
+			`is_using`
+		FROM
+			`c_time_task_event`
+		WHERE
+			task_id = #{task_id};
+	</select>
+	<select id="selectTimeTaskSysTime" resultType="cn.com.easyerp.core.timedTask.entity.TimeTaskSysTimeDescribe">
+		SELECT
+			`task_id`,
+			`sys_time_id`,
+			`begin_date`,
+			`end_date`,
+			`lead`,
+			`lead_type`,
+			`is_loop`,
+			`space`,
+			`loop_type`,
+			`is_using`
+		FROM
+			`c_time_task_sys_time`
+		WHERE
+			task_id = #{task_id};
+	</select>
+	<select id="selectTimeTaskBusinessTime" resultType="cn.com.easyerp.core.timedTask.entity.TimeTaskBusinessTimeDescribe">
+		SELECT
+			`task_id`,
+			`business_time_id`,
+			`table`,
+			`column`,
+			`lead`,
+			`lead_type`,
+			`filter_sql`,
+			`is_using`
+		FROM
+			`c_time_task_business_time`
+		WHERE
+			task_id = #{task_id};
+	</select>
+	<delete id="deleteTimingTask">
+		DELETE `c_time_task`,
+		 `c_time_task_event`,
+		 `c_time_task_sys_time`,
+		 `c_time_task_business_time`
+		FROM
+			`c_time_task`
+		LEFT JOIN `c_time_task_event` ON c_time_task.task_id = c_time_task_event.task_id
+		LEFT JOIN `c_time_task_sys_time` ON c_time_task.task_id = c_time_task_sys_time.task_id
+		LEFT JOIN `c_time_task_business_time` ON c_time_task.task_id = c_time_task_business_time.task_id
+		WHERE
+			c_time_task.task_id =#{timeTask.task_id};
+	</delete>
+	<insert id="insertInternational">
+		INSERT INTO `c_international` (
+			`international_id`,
+			`cn`,
+			`en`,
+			`jp`,
+			`other1`,
+			`other2`
+		)
+		VALUES
+			(
+				#{i18n.international_id},
+				#{i18n.cn},
+				#{i18n.en},
+				#{i18n.jp},
+				#{i18n.other1},
+				#{i18n.other2}
+			);
+	</insert>
+	<insert id="insertTimingTask">
+		INSERT INTO `c_time_task` (`task_id`, `international_id`) VALUES (#{timeTask.task_id}, #{timeTask.international_id});
+	</insert>
+	<insert id="insertTimeTaskEvent">
+		INSERT INTO `c_time_task_event` (
+			`task_id`,
+			`event_id`,
+			`event_type`,
+			`event_url_id`,
+			`event_param`,
+			`is_using`
+		)
+		VALUES
+			(
+				#{timeTask.task_id},
+				#{timeTask.event_id},
+				#{timeTask.event_type},
+				#{timeTask.event_url_id},
+				#{timeTask.event_param},
+				#{timeTask.is_using}
+			);
+	</insert>
+	<insert id="insertTimeTaskSysTime">
+		INSERT INTO `c_time_task_sys_time` (
+			`task_id`,
+			`sys_time_id`,
+			`begin_date`,
+			`end_date`,
+			`lead`,
+			`lead_type`,
+			`is_loop`,
+			`space`,
+			`loop_type`,
+			`is_using`
+		)
+		VALUES
+			(
+				#{timeTask.task_id},
+				#{timeTask.sys_time_id},
+				#{timeTask.begin_date},
+				#{timeTask.end_date},
+				#{timeTask.lead},
+				#{timeTask.lead_type},
+				#{timeTask.is_loop},
+				#{timeTask.space},
+				#{timeTask.loop_type},
+				#{timeTask.is_using}
+			);
+	</insert>
+	<insert id="insertTimeTaskBusinessTime">
+		INSERT INTO `c_time_task_business_time` (
+			`task_id`,
+			`business_time_id`,
+			`table`,
+			`column`,
+			`lead`,
+			`lead_type`,
+			`filter_sql`,
+			`is_using`
+		)
+		VALUES
+			(
+				#{timeTask.task_id},
+				#{timeTask.business_time_id},
+				#{timeTask.table},
+				#{timeTask.column},
+				#{timeTask.lead},
+				#{timeTask.lead_type},
+				#{timeTask.filter_sql},
+				#{timeTask.is_using}
+			);
+	</insert>
+</mapper>

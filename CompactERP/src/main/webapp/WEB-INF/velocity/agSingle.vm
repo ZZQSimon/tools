@@ -1,0 +1,11 @@
+#dxFormHead($form)
+<form id="$form.id" class="dx-form" name="$form.widgetName">
+	#dxMenuBarHead($form)
+	<button type="button" class="btn btn-default btn-sm dx-ag-single-add">$dx.msg("Add")</button>
+	<button type="button" class="btn btn-default btn-sm dx-btn-cancel">$dx.msg("Back")</button>
+	#dxMenuBarFoot()
+	<div class="container dx-auto-expand dx-div-with-scroll" style="padding:0;">
+		#dxDetail($form)
+	</div>
+</form>
+#dxFormTail($form)

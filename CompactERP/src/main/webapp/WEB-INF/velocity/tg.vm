@@ -1,0 +1,25 @@
+#dxFormHead($form)
+<div id="${form.id}" class="dx-form" name="$form.widgetName">
+	#dxMenuBarHead($form)
+	#set($table =$dx.table($form.tableName))
+	#set($auth = $dx.auth($dx.user, $table))
+	#if ($auth)
+		<button type="button" class="btn btn-default btn-sm dx-tree-grid-add">$dx.msg("Add")</button>
+		<button type="button" class="btn btn-default btn-sm dx-tree-grid-edit">$dx.msg("Edit")</button>
+		<button type="button" class="btn btn-default btn-sm dx-tree-grid-delete">$dx.msg("Delete")</button>
+	#end
+	<button type="button" class="btn btn-default btn-sm dx-tree-grid-view">$dx.msg("View")</button>
+	#dxOpMenu(${form.id}, $table.operations, $dx.table($form.tableName).shortcuts)
+	#dxMenuBarFoot()
+	<div class="dx-form-con">
+        <div class="dx-filter-select">
+            #dxFilter($form.filter)
+        </div>
+
+        <div class="dx-auto-expand tile-tree">
+            <table class="dx-tree-grid g1-tree-icon-left" style="height: 100%; width: 100%">
+            </table>
+        </div>
+    </div>
+</div>
+#dxFormTail($form)

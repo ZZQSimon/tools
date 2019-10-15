@@ -68,8 +68,8 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends
             sb.setLength(0);
 //            sb.append(introspectedColumn.getJavaProperty());
 //            sb.append(" != null"); //$NON-NLS-1$
-//@com.zxzl.service.common.framework.util.Ognl@isNotEmpty(userId)
-            sb.append("@com.zxzl.service.common.framework.util.Ognl@isNotEmpty("); //$NON-NLS-1$
+//@com.zxzl.service.Common.framework.util.Ognl@isNotEmpty(userId)
+            sb.append("@com.zxzl.service.Common.framework.util.Ognl@isNotEmpty("); //$NON-NLS-1$
             sb.append(introspectedColumn.getJavaProperty());
             sb.append(")"); //$NON-NLS-1$
             isNotNullElement.addAttribute(new Attribute("test", sb.toString())); //$NON-NLS-1$

@@ -1,0 +1,11 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="message" class="form-inline dx-form clearfix" role="form"">       ##基本上照抄即可
+    <div class="modal-header">
+        <p class="message-modal-title">$form.message.title</p>
+        <p class="message-modal-date">$dx.formatDateHasMin($form.message.send_date)</p>
+    </div>
+    <div class="modal-body">
+        <div class="message-modal-content">$form.message.content</div>
+    </div>
+</form>
+#dxFormTail($form)

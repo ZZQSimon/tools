@@ -1,0 +1,738 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="approve" class="form-inline dx-form" role="form"">
+
+
+<div class="approve_home">
+    <div class="col-xs-2 approveModelMenu">
+        <ul>
+            #foreach($menu in $dx.user.menuNames)
+                <li>
+                    <a href="#" onclick="">$menu</a>
+                </li>
+            #end
+        </ul>
+    </div>
+
+    <div class="tab-content col-xs-10 approvetTab" style="background:white;">
+        <div role="tabpanel" class="tab-pane active" id="model-crm">
+            #foreach($table in $form.approveTable)
+                #if (true)
+                    <div class='#if($dx.empty($table.module)) #else $table.module #end'>
+                        <div class="col-xs-4 approve-detail" table-name="$table.id">
+                            <div class="col-xs-4-li">
+                                <div class="col-xs-9">
+                                    <p>$dx.formatEmpty($table.name)</p>
+                                    <div>
+                                        #if($table.is_approve_state==1)
+                                            <span class="pull-left fa fa-circle" style="color:#60b9e0"></span>
+                                            $dx.msg("configured")
+                                        #elseif($table.is_approve_state==2)
+                                            <span class="pull-left  fa fa-circle" style="color:#e79a07"></span>
+                                            $dx.msg("unverified")
+                                        #else
+                                            <span class="pull-left fa fa-circle"></span>
+                                            $dx.msg("not configured")
+                                        #end
+                                    </div>
+                                </div>
+                                <div class="col-xs-3 ">
+                                    <span class="fa fa-credit-card-alt fa-rotate-45-"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                #else
+                    <div class='#if($dx.empty($table.module)) #else $table.module #end' style='display:none'>
+                        <div class="col-xs-4 approve-detail" table-name="$table.id">
+                            <div class="col-xs-4-li">
+                                <div class="col-xs-9">
+                                    <p>$table.name</p>
+                                    <div><span class="pull-left fa fa-circle" style="color:#60b9e0"></span>
+                                        #if($table.is_approve_state==1)
+                                            $dx.msg("configured")
+                                        #elseif($table.is_approve_state==2)
+                                            $dx.msg("unverified")
+                                        #else($table.is_approve_state==0)
+                                            $dx.msg("not configured")
+                                        #end
+                                    </div>
+                                </div>
+                                <div class="col-xs-3 ">
+                                    <span class="fa fa-credit-card-alt fa-rotate-45-"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                #end
+            #end
+
+            <div role="tabpanel" class="tab-pane" id="model-hr"></div>
+        </div>
+    </div>
+</div>
+<div class="approve_detail_wrap">
+    <div class="btn-toolbar approve-toolbar">
+        <button class="btn save saveBtn" type="button" id="saveBtn">$dx.msg("save")</button>
+        <button type="button" class="btn comeback-approve-list">$dx.msg("back")</button>
+    </div>
+    <div class="row approve_detail" >
+        <div class="approve-ele-menu">
+            <div id="approveleft" class="approveleft approve-ele-style">
+                <div class="approve-ele">
+                    <div class="approveNode approveNode1 radius" id="approveNode1">$dx.msg("approve_begin_lump")</div>
+                    <p>$dx.msg("approve_begin_lump")</p>
+                </div>
+                <div class="approve-ele">
+                    <div class="approveNode approveNode2" id="approveNode2">$dx.msg("approve_flow_lump")</div>
+                    <p>$dx.msg("approve_flow_lump")</p>
+                </div>
+                <div class="approve-ele">
+                    <div class="approveNode approveNode3" id="approveNode3">$dx.msg("approve_judeg_lump")</div>
+                    <p>$dx.msg("approve_judeg_lump")</p>
+                </div>
+                <div class="approve-ele">
+                    <div class="approveNode approveNode4 radius" id="approveNode4">$dx.msg("approve_over_lump")</div>
+                    <p>$dx.msg("approve_over_lump")</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="approve-chart-view" id="approve-chart-view">
+            <div id="approveright" class="approveright"></div>
+
+        ## <div class="approveright-button">
+        ##  <button class="button-color1" type="button" id="saveBtn">$dx.msg("save")</button>
+        ##   <button class="button-color2" type="button">撤销</button>
+        ##   <span class="approve-chart-vali pull-right"><i class="fa fa-question-circle validateAll"></i> 验证</span>
+        ## </div>
+        </div>
+
+        <div class="approve-config-tab" id="approve_node_detail">
+            <div class="approve-event approve-start-event" id="approve-start-event">
+                <div class="approve-event-form">
+                    <h4>$dx.msg("event settings")</h4>
+                    <div class="form-group clearfix blockEvent_submitEvent" moreEventId="submitEvent" approve_event_id="">
+                        <label class="dx-field-3">$dx.msg("submit the incident")</label>
+                        <div class="dx-field-7 clearfix event-detail-wrap">
+                            <div>
+                                <span class="event-detail-tip">$dx.msg("method to informe")</span>
+                                <p class="informManner">$dx.msg("nothing")</p>
+                            </div>
+                            <div>
+                                <span class="event-detail-tip">$dx.msg("more events")</span>
+                                <div class="pull-left moreEvents">
+                                    <p>$dx.msg("nothing")</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dx-field-2 approve-event-btns" Event-Type="blockEvent_submitEvent">
+                            <button class="button-blue-font approve-update-event-btn" data-toggle="modal" data-target="#approve-event-modal" type="button">$dx.msg("edit")</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="confirm-approve-config-btn">
+                    <button class="button-color3 confirm-approve-config-user" type="button">$dx.msg("save")</button>
+                </div>
+            </div>
+            <div class="approve-person" id="approve-person">
+                <h4>$dx.msg("Set approval node")</h4>
+                <div id="approve-person-form" class="approve-person-form">
+                    <div class="clearfix form-group">
+                        <div class="approve_name_I18N"></div>
+                    </div>
+
+                    <div class="clearfix approve-person-top">
+                        <span>$dx.msg("approver"):</span>
+                        <div class="dropdown">
+                            <button id="approve-save-label" class="button-blue-font" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                $dx.msg("save the template")
+                            </button>
+                            <div class="dropdown-menu clearfix" aria-labelledby="approve-save-label">
+                                <label class="">$dx.msg("save as")</label>
+                                <input type="text" class="input-1" autocomplete="off">
+                                <button data-toggle="dropdown" class="button-color4">$dx.msg("cancel")</button>
+                                <button data-toggle="dropdown" class="approve-save-ok button-color3 saveTemplate_column">$dx.msg("save")</button>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button id="approve-select-label" class="btn lookAllTemplate_column" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">$dx.msg("choose a template")
+                                <b class="caret"></b></button>
+                            <ul class="dropdown-menu TemplateList" aria-labelledby="approve-select-label">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="">
+            <div class="ref_department_column_tree" style="position: absolute;background-color: #fff;z-index: 10;overflow: auto;height: 180px;display:none"></div>
+##                	<div class="ref_department_column_tree"></div>
+                	#*<div>
+	                	<button class="fixed_dept button-color2" type="button">固定部门</button>
+	                	<button class="dynamic_dept button-color2" type="button">动态部门</button>
+	                	<button class="" type="button">取消</button>
+                	</div>
+                	<div>
+	                	<button class="fixed_user button-color2" type="button">固定用户</button>
+	                	<button class="dynamic_user button-color2" type="button">动态用户</button>
+	                	<button class=" button-color2" type="button">取消</button>
+                	</div>
+                	<div class="select_ref_deptOrUser_column">
+	                	<input type="text" class="ref_column_name_deptOrUser" ref_column_dept=""></input>
+	                	<span class="well-label"> $dx.msg("and")</span>
+	                </div>*#
+                </div>
+                    <div class="checkbox">
+                        <div class="approve-person-top-btn"><span>$dx.msg("by department + post")</span></div>
+                        <div class="deptAndRole_column deptAndRole"></div>
+                        <div class="collapse" id="approve-section-add" style="padding:15px 11px;border: 0;background-color: #fff;">
+                            <div class="collapseWrap clearfix" style="padding: 0">
+                                <div class="showBotton">
+                                    <button class="fixed_dept button-color2" type="button">固定部门</button>
+                                    <button class="dynamic_dept button-color2" type="button">动态部门</button>
+                                    <span class="   cancelAddButton" style="margin-left:20px;"><a href="#">取消</a> </span>
+                                </div>
+                                <div class="collapse selectShow" style="margin-left: 0;border:0;">
+                                    <div class="clearfix ">
+                                        <div class="select_ref_deptOrUser_column" style="display: inline-block;float:left;width: 30%;position: relative">
+                                            <input type="text" class="ref_column_name_deptOrUser " readonly="readonly" style="width: 80%;"  ref_column_dept=""/>
+                                            <span #*class="well-label"*# class=""> $dx.msg("and")</span>
+##                                            <div class="ref_department_column_tree" style="position: absolute;background-color: #fff;z-index: 10;overflow: auto;height: 180px;display:none"></div>
+                                        </div>
+                                        <div class="select_department_column input-1 clearfix" style="width: 30%;"></div>
+                                        <span class="well-label"> $dx.msg("and")</span>
+                                        <div class="select_role_column input-1 clearfix" style="width: 30%;"></div>
+                                    </div>
+                                    <button class="pull-right button-color4 cancelAuthGroupMemberDeptAdd" type="button" data-toggle="collapse"
+                                            data-target="#approve-section-add" aria-expanded="false">$dx.msg("cancel")
+                                    </button>
+                                    <button class="pull-right button-color3 addAuthGroupMember_column_dept" type="button" data-toggle="collapse"
+                                            data-target="#approve-section-add" aria-expanded="false">$dx.msg("save")</button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="collapse" id="approve-section-edit">
+                            <div class="collapseWrap clearfix">
+                                <input type="hidden" class="dept_edit_id"/>
+                                <div class="clearfix">
+                                	<div class="select_ref_deptOrUser_column" style="display: inline-block;float:left;width: 30%;position: relative">
+                                		<input type="text" class="ref_column_name_deptOrUser " readonly="readonly" style="width: 80%;"  ref_column_dept=""/>
+                                        <span #*class="well-label"*# class=""> $dx.msg("and")</span>
+##                                      <div class="ref_department_column_tree" style="position: absolute;background-color: #fff;z-index: 10;overflow: auto;height: 180px;display:none"></div>
+                                    </div>
+                                    <div class="edit_department_column_ref input-1 clearfix" style="width: 30%;"></div>
+                                    <div class="edit_department_column input-1 clearfix" style="width: 30%;"></div>
+                                    <span class="well-label"> $dx.msg("and")</span>
+                                    <div class="edit_role_column input-1 clearfix" style="width: 30%;"></div>
+                                </div>
+                                <button class="pull-right button-color4 cancelAuthGroupMemberDeptEdit" type="button" data-toggle="collapse"
+                                        data-target="#approve-section-edit" aria-expanded="false">$dx.msg("cancel")
+                                </button>
+                                <button class="pull-right button-color3 editAuthGroupMember_column_dept" type="button" data-toggle="collapse"
+                                        data-target="#approve-section-edit" aria-expanded="false">$dx.msg("save")</button>
+                            </div>
+                        </div>
+
+                        <a class="addApproverUser addAuthGroupMemberDept" role="button" aria-expanded="false"
+                           aria-controls="approve-section-add">$dx.msg("add permissions")
+                        </a>
+                    </div>
+                    <div class="checkbox approve-person-user">
+                        <div class="approve-person-top-btn "><span>$dx.msg("by user")</span></div>
+
+                        <div class="userDiv_column userDiv"></div>
+                        <div class="collapse" id="approve-user-add" style="padding:15px 11px;border: 0;background-color: #fff;">
+                            <div class="collapseWrap clearfix" style="padding: 0">
+                                <div class="showBottonFoUser">
+                                    <button class="fixed_user button-color2" type="button">固定用户</button>
+                                    <button class="dynamic_user button-color2" type="button">动态用户</button>
+                                    <span class="cancelAddButtonFoUser" style="margin-left:20px;"><a href="#">取消</a></span>
+                                </div>
+                                <div class="collapse selectShowFoUser" style="margin-left: 0;border:0;">
+                                    <div class="select_ref_deptOrUser_column" style="display: inline-block;float:left;width: 30%;position: relative">
+                                        <input type="text" class="ref_column_name_deptOrUser  " readonly="readonly" style="width: 80%;"  ref_column_dept=""/>
+                                        <span #*class="well-label"*#> $dx.msg("and")</span>
+                                        <div class="ref_department_column_tree" style="position: absolute;background-color: #fff;z-index: 10;overflow: auto;height: 180px;display:none"></div>
+                                    </div>
+                                    <div class="clearfix">
+                                        <label class="pull-left" style="height: 30px; line-height: 30px;">$dx.msg("user")：</label>
+                                        <div class="select_user_column input-1 clearfix"></div>
+                                    </div>
+                                    <button class="pull-right button-color4 cancelAuthGroupMemberUserAdd" type="button" data-toggle="collapse"
+                                            data-target="#approve-user-add" aria-expanded="false">$dx.msg("cancel")
+                                    </button>
+                                    <button class="pull-right button-color3 addAuthGroupMember_column_user" type="button" data-toggle="collapse"
+                                            data-target="#approve-user-add" aria-expanded="false">$dx.msg("save")</button>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="collapse" id="approve-user-edit">
+                            <div class="collapseWrap clearfix">
+                                <input type="hidden" class="user_edit_id"/>
+                                <div class="clearfix">
+                                  ##  <label class="pull-left">$dx.msg("user")：</label>
+                                  	<div class="select_ref_deptOrUser_column" style="display: inline-block;float:left;width: 30%;position: relative">
+                                        <input type="text" class="ref_column_name_deptOrUser  " readonly="readonly" style="width: 80%;"  ref_column_dept=""/>
+                                        <span #*class="well-label"*#> $dx.msg("and")</span>
+                                        <div class="ref_department_column_tree" style="position: absolute;background-color: #fff;z-index: 10;overflow: auto;height: 180px;display:none"></div>
+                                    </div>
+                                    <div class="edit_user_column input-1 clearfix"></div>
+                                    <div class="edit_user_column_ref input-1 clearfix"></div>
+                                </div>
+                                <button class="pull-right button-color4 cancelAuthGroupMemberUserEdit" type="button" data-toggle="collapse"
+                                        data-target="#approve-user-edit" aria-expanded="false">$dx.msg("cancel")
+                                </button>
+                                <button class="pull-right button-color3 editAuthGroupMember_column_user" type="button" data-toggle="collapse"
+                                        data-target="#approve-user-edit" aria-expanded="false">$dx.msg("save")</button>
+                            </div>
+                        </div>
+                        <a class="addApproverUser addAuthGroupMemberUser" role="button"
+                           aria-expanded="false" aria-controls="approve-person-add"> $dx.msg("add permissions")</a>
+                    </div>
+                </div>
+                <div class="confirm-approve-config-btn">
+                    <button class="button-color3 confirm-approve-config-user" type="button">$dx.msg("save")</button>
+                    <button class="button-blue-font approve-more-setting" type="button">$dx.msg("advanced settings")</button>
+                </div>
+            </div>
+
+            <div class="approve-config-div" id="approve_node_detail_process">
+                <h4>$dx.msg("advanced settings")</h4>
+                <!-- Nav tabs -->
+                <ul class="approve-config-btn clearfix">
+                    <li class="approve-configLi active"><a href="#approve-config" data-toggle="tab" class="ac">$dx.msg("configuration")</a></li>
+                    <li class="approve-eventLi"><a href="#approve-event" data-toggle="tab" class="ap">$dx.msg("event")</a></li>
+                    <li class="approve-buttonLi"><a href="#approve-button" data-toggle="tab" class="ap">$dx.msg("button")</a></li>
+                </ul>
+                <input type="hidden" class="hidden_node_id"/>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane approve-config active" id="approve-config">
+                        <div id="approve-config-form" class="approve-config-form">
+                            <div class="form-group">
+                                <label class="label-check">
+                                    <input type="checkbox" class="icheckbox_flat-blue work_block" value=""/>$dx.msg("workflow node")
+                                </label>
+                                <span>$dx.msg("note: The work node will need to manually configure the approval button")</span>
+                            </div>
+                            <!--       <div class="checkbox-div form-group">
+                            <label class="label-1">$dx.msg("the way to dismiss")</label>
+                            <div class="input-1">
+                                <label>
+                                    <input type="radio" name="config-radio" class="icheckbox_flat-blue" value="turn_down_up" checked>$dx.msg("dismissed to the next level")
+                                </label>
+                                <label>
+                                    <input type="radio" name="config-radio" class="icheckbox_flat-blue" value="turn_down_source"> $dx.msg("rejected to the sponsor")
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label-1">处理期限</label>
+                            <input type="number" class="input-1 time_limit" placeholder=""> 天
+                            <p><span>注：0表示无期限</span></p>
+                        </div>
+                        <div class="form-group">
+                            <label class="label-1">超时规则</label>
+                            <select class="input-1 time_out_rule">
+                                <option value="不处理" selected>不处理</option>
+                                 <option value="处理">处理</option>
+                            </select>
+                        </div> 
+					--!>
+
+                        <div class="selected-work-wrap">
+                        <div class="form-group">
+                            <label class="label-1">$dx.msg("need to agree the number")</label>
+                            <input type="number" class="form-control  input-1 need_agree_count_people" value="1"> $dx.msg("people")
+                            <span>$dx.msg("note: 0 means all")</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="label-1">$dx.msg("need to comment on the number")</label>
+                            <input type="number" class="form-control  input-1 need_opinion_count_people" value="1"> $dx.msg("people")
+                            <span>$dx.msg("note: 0 means all")</span>
+                        </div>
+                        <div class="form-group switch">
+                            <label class="label-1">$dx.msg("allowed to sign")</label>
+                            <div class="input-bt-Switcher-wrap">
+                            	<div class="input-bt-Switcher">
+                            		<input type="checkbox" class="add_sign" name="add_sign" value="add_sign"/><label></label>
+                            	</div>
+                           	</div>
+                            ##<input type="checkbox" checked class="add_sign" name="add_sign" value="add_sign"/>
+
+                            <label class="add-person-num">
+                               	 $dx.msg("up to") <input type="number" class="form-control input-1" value="10"/> $dx.msg("people")
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="label-1">$dx.msg("until the node")</label>
+                            <div class="input-bt-Switcher-wrap">
+                            	<div class="input-bt-Switcher">
+                            		<input type="checkbox" class="is_until_block" name="is_until_block" value="is_until_block"/><label></label>
+                            	</div>
+                           	</div>
+                        </div>
+                        </div>
+       				<!--<div class="form-group">
+                            <label class="label-1">审批节点</label>
+                            <div class="input-bt-Switcher-wrap">
+                            	<div class="input-bt-Switcher">
+                            		<input type="checkbox" class="is_approve_block" name="is_approve_block" value="is_approve_block"/><label></label>
+                            	</div>
+                           	</div>
+                        </div>
+                    --!>
+                    </div>
+                </div>
+                
+                <div class="tab-pane approve-event" id="approve-event">
+                    <div class="approve-event-form">
+                            <div class="form-group clearfix blockEvent_agreeEvent" moreEventId="agreeEvent" approve_event_id="">
+                                <label class="dx-field-3">
+                                    ##<input type="checkbox" class="icheckbox_flat-blue Event_is_using Agree_Event" value=""/>
+                                    $dx.msg("through the incident")
+                                </label>
+                                <div class="dx-field-7 clearfix event-detail-wrap">
+                                    <div>
+                                        <span class="event-detail-tip">$dx.msg("method to informe")</span>
+                                        <p class="informManner">$dx.msg("nothing")</p>
+                                    </div>
+                                    <div>
+                                        <span class="event-detail-tip">$dx.msg("more events")</span>
+                                        <div class="pull-left moreEvents">
+                                        	<p>$dx.msg("nothing")</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dx-field-2 approve-event-btns" Event-Type="blockEvent_agreeEvent"><button class="button-blue-font approve-update-event-btn" data-toggle="modal" data-target="#approve-event-modal" type="button">$dx.msg("edit")</button></div>
+                            </div>
+
+                            <div class="form-group clearfix blockEvent_rejectEvent" moreEventId="rejectEvent" approve_event_id="">
+                                <label class="dx-field-3">
+                                    ##<input type="checkbox" class="icheckbox_flat-blue Event_is_using Reject_Event" value=""/>
+                                    $dx.msg("dismissed the incident")
+                                </label>
+                                <div class="dx-field-7 clearfix event-detail-wrap">
+                                    <div>
+                                        <span class="event-detail-tip">$dx.msg("method to informe")</span>
+                                        <p class="informManner">$dx.msg("nothing")</p>
+                                    </div>
+                                    <div>
+                                        <span class="event-detail-tip">$dx.msg("more events")</span>
+                                        <div class="pull-left moreEvents">
+                                        	<p>$dx.msg("nothing")</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dx-field-2 approve-event-btns" Event-Type="blockEvent_rejectEvent"><button class="button-blue-font approve-update-event-btn" data-toggle="modal" data-target="#approve-event-modal" type="button">$dx.msg("edit")</button></div>
+                            </div>
+                            <div class="form-group clearfix blockEvent_terminationEvent" moreEventId="terminationEvent" approve_event_id="">
+                                <label class="dx-field-3">
+                                    ##<input type="checkbox" class="icheckbox_flat-blue Event_is_using Termination_Event" value=""/>
+                                    $dx.msg("termination of the incident")
+                                </label>
+                                <div class="dx-field-7 clearfix event-detail-wrap">
+                                    <div>
+                                        <span class="event-detail-tip">$dx.msg("method to informe")</span>
+                                        <p class="informManner">$dx.msg("nothing")</p>
+                                    </div>
+                                    <div>
+                                        <span class="event-detail-tip">$dx.msg("more events")</span>
+                                        <div class="pull-left moreEvents">
+                                        	<p>$dx.msg("nothing")</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dx-field-2 approve-event-btns" Event-Type="blockEvent_terminationEvent">
+                                	<button class="button-blue-font approve-update-event-btn" data-toggle="modal" data-target="#approve-event-modal" type="button">$dx.msg("edit")</button>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="tab-pane approve-button" id="approve-button">
+                    <div class="approve-button-form">
+                        <div class="approve-button-nowork">
+                            <div class="eventlist table-head">
+                                <input type="checkbox" class="icheckbox_flat-blue allButtonIsUsing"/>
+                                <div class="dx-field-5 eventListText">
+                                    <span class="event-title">$dx.msg("button name")</span>
+                                </div>
+                                <div class="dx-field-6">
+                                    <span class="pull-left" style="padding:0 10px">$dx.msg("operating")</span>
+                                    <span class="pull-right">$dx.msg("approval Center shows")</span>
+                                </div>
+                            </div>
+                            <div class="eventlist agreeEvent">
+                                <input type="checkbox" class="icheckbox_flat-blue buttonEventIsUsing"/>
+                                <div class="dx-field-5 eventListText">
+                                    <span class="event-title">$dx.msg("agree")</span>
+                                </div>
+                                <div class="dx-field-6">
+                                    <button class="button-blue-font eventBtnEdit" internationalId="" interValue="" type="button">$dx.msg("edit")</button>
+                                    <button class="button-color3 eventBtnRename" type="button">$dx.msg("save")</button>
+                                    <button class="button-color4 eventBtnCancel" type="button">$dx.msg("cancel")</button>
+
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" class="is_index_button"/><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventlist disagreeEvent">
+                                <input type="checkbox" class="icheckbox_flat-blue buttonEventIsUsing"/>
+                                <div class="dx-field-5 eventListText">
+                                    <span class="event-title">$dx.msg("disagree")</span>
+                                </div>
+                                <div class="dx-field-6">
+                                    <button class="button-blue-font eventBtnEdit" internationalId="" interValue="" type="button">$dx.msg("edit")</button>
+                                    <button class="button-color3 eventBtnRename" type="button">$dx.msg("save")</button>
+                                    <button class="button-color4 eventBtnCancel" type="button">$dx.msg("cancel")</button>
+
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" class="is_index_button"/><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventlist rejectEvent">
+                                <input type="checkbox" class="icheckbox_flat-blue buttonEventIsUsing"/>
+                                <div class="dx-field-5 eventListText">
+                                    <span class="event-title">$dx.msg("reject")</span>
+                                </div>
+                                <div class="dx-field-6">
+                                    <button class="button-blue-font eventBtnEdit" internationalId="" interValue="" type="button">$dx.msg("edit")</button>
+                                    <button class="button-color3 eventBtnRename" type="button">$dx.msg("save")</button>
+                                    <button class="button-color4 eventBtnCancel" type="button">$dx.msg("cancel")</button>
+
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" class="is_index_button"/><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventlist retainEvent">
+                                <input type="checkbox" class="icheckbox_flat-blue buttonEventIsUsing"/>
+                                <div class="dx-field-5 eventListText">
+                                    <span class="event-title">$dx.msg("retain")</span>
+                                </div>
+                                <div class="dx-field-6">
+                                    <button class="button-blue-font eventBtnEdit" internationalId="" interValue="" type="button">$dx.msg("edit")</button>
+                                    <button class="button-color3 eventBtnRename" type="button">$dx.msg("save")</button>
+                                    <button class="button-color4 eventBtnCancel" type="button">$dx.msg("cancel")</button>
+
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" class="is_index_button"/><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eventlist terminationEvent">
+                                <input type="checkbox" class="icheckbox_flat-blue buttonEventIsUsing"/>
+                                <div class="dx-field-5 eventListText">
+                                    <span class="event-title">$dx.msg("termination")</span>
+                                </div>
+                                <div class="dx-field-6">
+                                    <button class="button-blue-font eventBtnEdit" internationalId="" interValue="" type="button">$dx.msg("edit")</button>
+                                    <button class="button-color3 eventBtnRename" type="button">$dx.msg("save")</button>
+                                    <button class="button-color4 eventBtnCancel" type="button">$dx.msg("cancel")</button>
+
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" class="is_index_button"/><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="approve-button-work">
+                            <div class="eventlist table-head">
+                                <div class="dx-field-5 eventListText">
+                                    <span class="event-title">$dx.msg("button name")</span>
+                                </div>
+                                <div class="dx-field-6">
+                                    <span class="pull-left" style="padding:0 10px">$dx.msg("operating")</span>
+                                    <span class="pull-right">$dx.msg("approval Center shows")</span>
+                                </div>
+                            </div>
+                            <div class="eventlist eventListAgree">
+                                <div class="dx-field-5 eventListText">
+                                    <span class="event-title">$dx.msg("agree")</span>
+                                </div>
+                                <div class="dx-field-6">
+                                    <button class="button-blue-font eventBtnEdit" internationalId="" interValue="" type="button">$dx.msg("edit")</button>
+                                    <button class="button-color3 eventBtnRename" type="button">$dx.msg("save")</button>
+                                    <button class="button-color4 eventBtnCancel" type="button">$dx.msg("cancel")</button>
+
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" class="is_index_button"/><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="approve-button-work-wrap">
+                               <!-- <div class="eventlist">
+                                    <div class="dx-field-5 eventListText">
+                                        <span class="event-subhead">终止</span>
+                                    </div>
+                                    <div class="dx-field-6">
+                                        <button class="button-color3 eventBtnRename" type="button">$dx.msg("save")</button>
+                                        <button class="button-color4 eventBtnCancel" type="button">$dx.msg("cancel")</button>
+
+                                        <div class="dropdown">
+                                          <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="fa fa-ellipsis-h"></span>
+                                          </button>
+                                          <ul class="dropdown-menu">
+                                            <li>
+                                                <button class="button-blue-font eventBtnEdit" internationalId="" interValue="" type="button">$dx.msg("edit")</button>
+                                            </li>
+                                            <li>
+                                                <button class="button-red-font eventBtnDelete" internationalId="" interValue="" type="button">$dx.msg("delete")</button>
+                                            </li>
+                                          </ul>
+                                        </div>
+
+                                        <div class="input-bt-Switcher-wrap">
+                                            <div class="input-bt-Switcher">
+                                                <input type="checkbox"/><label></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> --!>
+                            </div>
+                            <div class="eventlist">
+                                <button class="button-blue-font addNewButton" type="button">$dx.msg("add new button")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="confirm-approve-config-btn">
+					<button class="button-color3 confirm-approve-config-user" type="button">$dx.msg("save")</button>
+					<button class="button-color4 approve-config-back" type="button">$dx.msg("back")</button>
+					##<span><i class="fa fa-question-circle validateOne"></i>$dx.msg("verification")</span>
+				</div>
+            </div>
+        </div>
+
+
+        <div class="approve-condition-div" id="approve_node_detail_condition">
+            <div class="approve-condition-form">
+                <input type="hidden" class="hidden_line_id">
+                <div class="form-group clearfix">
+                    <label class="label-1">$dx.msg("conditions Remarks")</label>
+                    <input type="text" class="input-1 approve-condition-title">
+                </div>
+                <div class="form-group clearfix">
+                    <label class="label-1">$dx.msg("condition details")</label>
+                    <div class="condition_list">
+                    
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <button class="approve-condition-add" type="button">+ $dx.msg("add")</button>
+                </div>
+
+                <button class="approve-condition-save button-color1" type="button">$dx.msg("save")</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+                            <div class="modal approve-event-modal" id="approve-event-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">$dx.msg("edit event")</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!--<div class="form-group approve-add-event-title clearfix">
+                                                <label class="dx-field-2 label-check">事件名称</label>
+                                                <div class="dx-field-8 approve-event-name">
+
+                                                </div>
+                                            </div>-->
+                                            <div class="form-group clearfix">
+                                                <label class="dx-field-2">$dx.msg("method to informe")</label>
+                                                <div class="dx-field-8 clearfix informEvent">
+                                                    <label>
+                                                        <input type="checkbox" class="icheckbox_flat-blue event_email" value=""/>$dx.msg("e-mail notification")
+                                                    </label>
+                                                    <label>
+                                                        <input type="checkbox" class="icheckbox_flat-blue event_sms" value=""/>$dx.msg("weChat notice")
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="deploy-data-rule-item">
+                                                <!-- Nav tabs -->
+                                                <ul class="nav deploy-tab-ul" role="tablist">
+                                                ##<li role="presentation"><a href="#approve_action_prerequistie" aria-controls="approve_action_prerequistie" role="tab" data-toggle="tab">$dx.msg("dispose premise")</a></li>
+                                                    <li role="presentation" class="active"><a href="#approve_action_event" aria-controls="approve_action_event" role="tab" data-toggle="tab">$dx.msg("trigger event")</a></li>
+                                                </ul>
+                                                <!-- Tab panes -->
+                                                <div class="tab-content">
+                                                    <!--<div role="tabpanel" class="tab-pane prerequistie_is_using" id="approve_action_prerequistie">
+                                            <div class="deploy-data-rule-item-warp datagrid-content">
+                                                <table class="action_prerequistie deploy-grid"></table>
+                                                <div class="datagrid-foot">
+                                                    <button type="button" class="approve-event-add-row">$dx.msg("add")</button>
+                                                    <button type="button" class="approve-event-delete-row">$dx.msg("delete")</button>
+                                                </div>
+                                            </div>
+                                        </div>-->
+                                                    <div role="tabpanel" class="tab-pane active actionEvent_is_using" id="approve_action_event">
+                                                        <div class="deploy-data-rule-item-warp datagrid-content">
+                                                            <table class="action_event deploy-grid"></table>
+                                                            <div class="datagrid-foot">
+                                                                <button type="button" class="approve-event-add-row">$dx.msg("add")</button>
+                                                                <button type="button" class="approve-event-delete-row">$dx.msg("delete")</button>
+                                                                <button type="button" class="datagrid_row_up_approve_event">$dx.msg("datagrid_row_up")</button>
+                            									<button type="button" class="datagrid_row_down_approve_event">$dx.msg("datagrid_row_down")</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn button-color4 event-edit-add-Cancel" data-dismiss="modal">$dx.msg("cancel")</button>
+                                            <button type="button" class="btn button-color3 event-edit-add-Save" data-dismiss="modal">$dx.msg("save")</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal model-tag-modal" id="approve-tag-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">$dx.msg("template management")</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                        </div>
+                                        <!--<div class="modal-footer">
+                                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                          <button type="button" class="btn btn-primary">Save changes</button>
+                                        </div>--!>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  #dxFormTail($form)

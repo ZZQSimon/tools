@@ -1,0 +1,377 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="UrlInterface" class="form-inline dx-form" role="form"">
+
+
+    <div class="rowContentTop btn-toolbar">
+        <a href="javascript:void(0)" class="btn save deploy-table-submit">$dx.msg("Save")</a>
+
+            <div class="dropdown dropdown-add">
+                <button type="button" class="btn deploy-url-left-tree-add" id="deploy-url-tb-tree-add"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    $dx.msg("Add")
+                </button>
+                <div class="dropdown-menu clearfix" aria-labelledby="deploy-url-tb-tree-add">
+                    <label class="label-1">名称：</label>
+                    <input type="text" class="input-1 deploy-url-table-add-input" name='adddicValue' autocomplete="off">
+                    <button data-toggle="dropdown" class="button-color4">$dx.msg("Cancel")</button>
+                    <button data-toggle="dropdown" class="button-color3 dicListAdd deploy-url-table-add">
+                        $dx.msg("Save")
+                    </button>
+                </div>
+            </div>
+
+    </div>
+
+<div class="rowContent">
+<div class="deploy-url-left deploy-left-menu col-xs-2">
+    <div class="search">
+        <input type="text" class="deploy-url-left-tree-search"  placeholder="检索已配置的表单"/>
+    </div>
+    <div class="deploy-url-left-table">
+        <div class="deploy-url-left-tree g1-tree-icon-left"></div>
+        <div class="deploy-left-tree-delete">
+            <button type="button" class="btn deploy-url-left-tree-delete"> $dx.msg("Delete")</button>
+        </div>
+    </div>
+</div>
+<div class="col-xs-10 deploy-url-right">
+    <div class="deploy-right-table-data-warp">
+        ##<div class="deploy-top-url-data clearfix">
+           ## <div class="deploy-top-table-data-input clearfix">
+          ##  </div>
+        ##</div>
+
+        <div class="empty-form">
+            <p>请选择接口</p>
+        </div>
+
+        <div class="deploy-main-table-data">
+            <ul class="nav deploy-tab-ul tb_deploy_tab deploy-grid-title" role="tablist">
+                <li role="presentation" class="active">
+                    <a aria-controls="home" data-toggle="tab" aria-expanded="true" class="interface"
+                            onclick="tabChangeShow('interface', this)">
+                    $dx.msg("interface")</a>
+                </li>
+                <li role="presentation">
+                    <a href="#deploy-column" aria-controls="home" data-toggle="tab" aria-expanded="true" class="deploy-column"
+                            onclick="tabChangeShow('deploy-column', this)">
+                        $dx.msg("urlParam")</a>
+                </li>
+                <li role="presentation">
+                    <a href="#deploy-rule" aria-controls="messages" data-toggle="tab" aria-expanded="true"
+                       class="deploy-rule"
+                       onclick="tabChangeShow('deploy-rule', this)">
+                        $dx.msg("checking rule")</a>
+                </li>
+                <li role="presentation" style="display: none" class="deploy-prod-li">
+                    <a href="#deploy-prod" aria-controls="messages" data-toggle="tab" aria-expanded="true"
+                       class="deploy-prod"
+                       onclick="tabChangeShow('deploy-prod', this)">
+                        $dx.msg("prod")</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="deploy-url-table-grid tab-content datagrid-content">
+
+                <div role="tabpanel" class="tab-pane active interface " name="interface">
+                    <p>必填项</p>
+                    <div class="clearfix">
+                        <div class="form-group col-xs-4 deploy_url_name text">
+                            <label class="label-1">$dx.msg("name")</label>
+                            <div class="deployUrlNameI18N"></div>
+                           ## <input type="text" class="input-1 name">
+                        </div>
+                        <div class="form-group col-xs-4 deploy_url_url text" style="display: none">
+                            <label class="label-1">
+                                <span class="name">存储过程名</span>
+                            </label>
+                            <input type="text" class="input-1 url">
+                        </div>
+                    </div>
+                    <p>非必填项</p>
+                    <div class="clearfix">
+                        <div class="form-group col-xs-4 deploy_url_summary text">
+                            <label class="label-1">$dx.msg("summary")</label>
+                            <textarea class="input-1"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane deploy-column-wrap" name="deploy-column">
+                    <div class="col-xs-8 deploy-column-grid">
+                        <table class="deploy-column deploy-grid"></table>
+                        <div class="datagrid-foot">
+                            <button type="button" class="deploy-url-column-add">新增</button>
+                            <button type="button" class="deploy-url-column-delete">删除</button>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 column-detail-tab">
+                        <!-- Nav tabs -->
+                        <ul class="nav deploy-tab-ul" role="tablist">
+                            <li class="active">
+                                <a href="#deploy_tb_section1" aria-controls="deploy_tb_section1"
+                                          role="tab" data-toggle="tab"
+                                          onclick="tabChangeShow('deploy_tb_section1', this)">$dx.msg("basic information")</a></li>
+                            <li>
+                                <a href="#deploy_tb_section2" aria-controls="deploy_tb_section2"
+                                   role="tab" data-toggle="tab"
+                                   onclick="tabChangeShow('deploy_tb_section2', this)">$dx.msg("data origin")</a></li>
+                            <li>
+                                <a href="#deploy_tb_section3" aria-controls="deploy_tb_section3"
+                                   role="tab" data-toggle="tab"
+                                   onclick="tabChangeShow('deploy_tb_section3', this)">$dx.msg("data calculation")</a></li>
+                            <li>
+                                <a href="#deploy_tb_section4" aria-controls="deploy_tb_section4"
+                                   role="tab" data-toggle="tab"
+                                   onclick="tabChangeShow('deploy_tb_section4', this)">$dx.msg("display usage")</a></li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" name="deploy_tb_section1">
+                                <div class="form-group deploy_column_name text">
+                                    <label class="label-1">$dx.msg("field name")</label>
+                                    <input type="text" class="input-1">
+                                </div>
+                                <div class="form-group deploy_virtual ">
+                                    <label class="label-1">$dx.msg("virtual")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_is_condition">
+                                    <label class="label-1">$dx.msg("query condition")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_name_expression">
+                                    <label class="label-1">$dx.msg("column name")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_tab_name select">
+                                    <label class="label-1">$dx.msg("big group")</label>
+                                    <select class="input-1">
+                                        <option value=""></option>
+                                        <option>$dx.msg("big group")</option>
+                                    </select>
+                                </div>
+                                <div class="form-group deploy_group_name select">
+                                    <label class="label-1">$dx.msg("group")</label>
+                                    <select class="input-1">
+                                        <option value=""></option>
+                                        <option>$dx.msg("group")</option>
+                                    </select>
+                                </div>
+                                <div class="form-group deploy_data_type select">
+                                    <label class="label-1">$dx.msg("field type")</label>
+                                    #set($dicts = $dx.getDict('d_datatype'))
+                                    <select class="input-1">
+                                        <option value=""></option>
+                                        #foreach ($dict in $dicts)
+                                            <option value="$dict.dictKey">$dict.dictText</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <div class="form-group deploy_data_format text">
+                                    <label class="label-1">$dx.msg("field format")</label>
+                                    <input type="text" class="input-1">
+                                </div>
+                                <div class="form-group deploy_min_len text">
+                                    <label class="label-1">$dx.msg("min length")</label>
+                                    <input type="text" class="input-1 dx-filter-digits">
+                                </div>
+                                <div class="form-group deploy_max_len text">
+                                    <label class="label-1">$dx.msg("max length")</label>
+                                    <input type="text" class="input-1 dx-filter-digits">
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" name="deploy_tb_section2">
+
+                                <div class="form-group deploy_ref_table_display">
+                                    <label class="label-1">$dx.msg("corresponding data source")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_is_multiple">
+                                    <label class="label-1">$dx.msg("multiple choice")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_dic_id select">
+                                    <label class="label-1">$dx.msg("dictionary")</label>
+                                    #set($dicts = $dx.getDicts())
+                                    <select class="input-1">
+                                        <option value=""></option>
+                                        #foreach ($dict in $dicts)
+                                            <option value="$dict.dictKey">$dx.formatEmpty($dict.dictText)</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <div class="form-group deploy_ref_table_name select">
+                                    <label class="label-1">$dx.msg("corresponding tableName")</label>
+                                    #set($tables = $dx.getTables())
+                                    <select class="input-1">
+                                        <option value=""></option>
+                                        #foreach ($table in $tables)
+                                            <option value="$table.dictKey">$table.dictText</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <div class="form-group deploy_ref_table_cols text">
+                                    <label class="label-1">$dx.msg("Corresponding data fields")</label>
+                                    <input type="text" class="input-1">
+                                </div>
+                                <div class="form-group deploy_ref_table_sql textarea">
+                                    <label class="label-1">$dx.msg("corresponding data source")</label>
+                                    <textarea class="input-1"></textarea>
+                                </div>
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane" name="deploy_tb_section3">
+
+                                <div class="form-group deploy_sum_flag">
+                                    <label class="label-1">$dx.msg("is statistics")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_ro_insert">
+                                    <label class="label-1">$dx.msg("onlyRead(insert)")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_ro_update">
+                                    <label class="label-1">$dx.msg("onlyRead(update)")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_read_only_clear">
+                                    <label class="label-1">$dx.msg("onlyRead(clear)")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_default_value text">
+                                    <label class="label-1">$dx.msg("default value")</label>
+                                    <input type="text" class="input-1">
+                                </div>
+                                <div class="form-group deploy_prefix text">
+                                    <label class="label-1">$dx.msg("prefix")</label>
+                                    <input type="text" class="input-1">
+                                </div>
+                                <div class="form-group deploy_suffix text">
+                                    <label class="label-1">$dx.msg("suffix")</label>
+                                    <input type="text" class="input-1">
+                                </div>
+                                <div class="form-group deploy_read_only_condition text">
+                                    <label class="label-1">$dx.msg("onlyRead condition")</label>
+                                    <input type="text" class="input-1">
+                                </div>
+                                <div class="form-group deploy_formula textarea">
+                                    <label class="label-1">$dx.msg("formula")</label>
+                                    <textarea type="text" class="input-1"></textarea>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" name="deploy_tb_section4">
+
+                                <div class="form-group deploy_hidden">
+                                    <label class="label-1">$dx.msg("hidden")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_wrap ">
+                                    <label class="label-1">$dx.msg("is line feed")</label>
+                                    ##<input type="checkbox" class="input-1">
+                                    <div class="input-bt-Switcher-wrap">
+                                        <div class="input-bt-Switcher">
+                                            <input type="checkbox" /><label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group deploy_cell_cnt text">
+                                    <label class="label-1">$dx.msg("grid number")</label>
+                                    <input type="text" class="input-1 dx-filter-digits">
+                                </div>
+                                <div class="form-group deploy_ textarea">
+                                    <label class="label-1">$dx.msg("type")</label>
+                                    <textarea type="text" class="input-1"></textarea>
+                                </div>
+                                <div class="form-group deploy_ref_table_tree text">
+                                    <label class="label-1">$dx.msg("ComboTree")</label>
+                                    <input type="text" class="input-1">
+                                </div>
+                                <div class="form-group deploy_link_json text">
+                                    <label class="label-1">$dx.msg("Field links")</label>
+                                    <input type="text" class="input-1">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" name="deploy-rule">
+                    <table class="deploy-rule deploy-grid"></table>
+                    <div class="datagrid-foot">
+                        <button type="button" class="deploy-url-column-add">$dx.msg("Add")</button>
+                        <button type="button" class="deploy-url-column-delete">$dx.msg("Delete")</button>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" name="deploy-prod">
+                    <div class="url-prod-code">
+                        <div class="url-prod-title">
+                            <p>字段名</p>
+                            <p>显示名</p>
+                        </div>
+                        <div class="prod-param"></div>
+                        <div class="prod-sql">
+                            <textarea class="code" name="code" rows="5" >
+                                   ##(urlInterface.prodSql ? urlInterface.prodSql : '')
+                            </textarea>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+#dxFormTail($form)

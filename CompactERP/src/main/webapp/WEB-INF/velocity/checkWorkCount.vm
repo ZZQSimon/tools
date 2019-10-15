@@ -1,0 +1,41 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="checkWorkCount" class="form-inline dx-form clearfix pc-tab-form" role="form"">       ##基本上照抄即可
+
+    <div class="checkWCBd">
+        <div class="btn-toolbar dx-menu-bar">
+            <select name="" id="select-year">
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+            </select>
+            <select name="" id="select-month">
+                <option value="01">1月</option>
+                <option value="02">2月</option>
+                <option value="03">3月</option>
+                <option value="04">4月</option>
+                <option value="05">5月</option>
+                <option value="06">6月</option>
+                <option value="07">7月</option>
+                <option value="08">8月</option>
+                <option value="09">9月</option>
+                <option value="10">10月</option>
+                <option value="11">11月</option>
+                <option value="12">12月</option>
+            </select>
+            <div class="btn-toolbar-right ">
+                <div class="grid_search_box">
+                    <input type="text" class="grid_search" placeholder="请输入姓名检索">
+                    <span>搜索</span>
+                </div>
+            </div>
+        </div>
+        <div class="dx-auto-expand checkWorkCount dataTables_wrapper form-inline dt-bootstrap no-footer">
+        <div class="dx-grid-container">
+            <table id="checkWCTable" class="dataTable table-striped table-bordered">
+               <thead></thead>
+               <tbody></tbody>
+               <!-- tbody是必须的 -->
+            </table>
+        </div>
+        </div>
+    </div>
+#dxFormTail($form)

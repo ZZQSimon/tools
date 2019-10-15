@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.ChartDao">
+	<select id="selectChart" resultType="cn.com.easyerp.chart.ReportModel">
+		select
+		id,
+		table_id,
+		report_type,
+		report_column,
+		group_column,
+		date_column,
+		date_type,
+		count_column,
+		`condition`,
+		`sql`,
+		sql2,
+		report_column_name,
+		file_name,
+		report_file_type,
+		report_disp_type,
+		case LENGTH(api_json)
+		when 0
+		then null
+		else api_json end api_json,
+		case LENGTH(pre_api_json)
+		when 0
+		then null
+		else pre_api_json end pre_api_json,
+		case LENGTH(service_name)
+		when 0
+		then null
+		else service_name end service_name,
+		service_param,
+		hidden
+		from
+		c_report
+	</select>
+
+	<select id="getChartById" resultType="cn.com.easyerp.chart.ReportModel">
+		select
+		id,
+		table_id,
+		report_type,
+		report_column,
+		group_column,
+		date_column,
+		date_type,
+		count_column,
+		`condition`,
+		`sql`,
+		sql2,
+		report_column_name,
+		file_name,
+		report_file_type,
+		report_disp_type,
+		case LENGTH(api_json)
+		when 0
+		then null
+		else api_json end api_json,
+		case LENGTH(pre_api_json)
+		when 0
+		then null
+		else pre_api_json end pre_api_json,
+		case LENGTH(service_name)
+		when 0
+		then null
+		else service_name end service_name,
+		service_param
+		FROM c_report
+		WHERE id=#{report_id}
+	</select>
+
+	<select id="selectEffectedRecord" resultType="cn.com.easyerp.core.data.DatabaseDataMap">
+		select
+		<foreach collection="table.columns" item="column" separator=",">
+			<if test="!column.virtual">
+				${column.column_name}
+			</if>
+		</foreach>
+		from ${table.id}
+		<if test="where!=null">
+			where ${where}
+		</if>
+	</select>
+
+	<select id="getGroup" resultType="java.lang.String">
+		SELECT DISTINCT
+		${report.group_column}
+		FROM
+		${report.table_id}
+		<if test="where!=null and where!=''">
+			WHERE ${where}
+		</if>
+		GROUP BY
+		${report.group_column}
+		<if test="report.date_column!=null and report.date_column!=''">
+			,${report.date_column}
+		</if>
+	</select>
+
+	<select id="getDateScope" resultType="java.util.Map">
+		SELECT
+		date_format(MAX(${report.date_column}),#{format}) `end`,
+		date_format(MIN(${report.date_column}),#{format}) `start`
+		FROM
+		${report.table_id}
+		<if test="where!=null and where!=''">
+			WHERE ${where}
+		</if>
+	</select>
+
+	<select id="getDateAxis" resultType="java.lang.String">
+		CALL p_sys_get_chart_dates (
+		${report.date_type},
+		#{start},
+		#{end},
+		#{tmp_table}
+		);
+
+		SELECT
+		date
+		FROM
+		${tmp_table};
+	</select>
+
+	<select id="getGroupData" resultType="java.lang.Integer">
+		<choose>
+			<when test="report.date_column!=null and report.date_column!=''">
+				<!-- CALL p_sys_get_chart_dates ( ${report.date_type}, #{start}, #{end}, 
+					#{tmp_table} ); -->
+
+				SELECT
+				IFNULL(t3.${report.report_column}, 0) ${report.report_column}
+				FROM
+				<if test=" report.group_column!=null and report.group_column!=''">
+					(
+					SELECT
+					${report.group_column}
+					FROM
+					${report.table_id}
+					WHERE
+					${report.group_column}=#{group}
+					<if test="where!=null and where!=''">
+						AND ${where}
+					</if>
+					GROUP BY
+					${report.group_column}
+					) t1
+					CROSS JOIN
+				</if>
+				(
+				SELECT
+				date
+				FROM ${tmp_table}
+				<if test="!(report.group_column!=null and report.group_column!='')">
+					WHERE date=#{group}
+				</if>
+				) t2
+				LEFT JOIN (
+				SELECT
+				<if test="report.group_column!=null and report.group_column!=''">
+					${report.group_column},
+				</if>
+				DATE_FORMAT(${report.date_column}, #{format}) ${report.date_column},
+				<choose>
+					<when test="report.count_column!=null and report.count_column!=''">
+						count(1) ${report.report_column}
+					</when>
+					<otherwise>
+						sum(${report.report_column}) ${report.report_column}
+					</otherwise>
+				</choose>
+				FROM
+				${report.table_id}
+				<if test="where!=null and where!=''">
+					WHERE ${where}
+				</if>
+				GROUP BY
+				<if test=" report.group_column!=null and report.group_column!=''">
+					${report.group_column},
+				</if>
+				DATE_FORMAT(${report.date_column}, #{format})
+				) t3 ON
+				t3.${report.date_column} = t2.date
+				<if test=" report.group_column!=null and report.group_column!=''">
+					AND t3.${report.group_column} =
+					t1.${report.group_column}
+				</if>
+				ORDER BY
+				t2.date
+				<if test=" report.group_column!=null and report.group_column!=''">
+					,t1.${report.group_column}
+				</if>
+			</when>
+			<otherwise>
+				SELECT
+				<choose>
+					<when test="report.count_column!=null and report.count_column!=''">
+						IFNULL(count(1), 0) ${report.report_column}
+					</when>
+					<otherwise>
+						IFNULL(sum(${report.report_column}), 0)
+						${report.report_column}
+					</otherwise>
+				</choose>
+				FROM
+				${report.table_id}
+				WHERE
+				${report.group_column} = #{group}
+				GROUP BY
+				${report.group_column}
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getPieData" resultType="java.util.Map">
+		SELECT
+		${report.group_column} `name`,
+		<choose>
+			<when test="report.count_column!=null and report.count_column!=''">
+				count(1) `value`
+			</when>
+			<otherwise>
+				sum(${report.report_column}) `value`
+			</otherwise>
+		</choose>
+		FROM
+		${report.table_id}
+		<if test="where!=null and where!=''">
+			WHERE ${where}
+		</if>
+		GROUP BY
+		${report.group_column}
+	</select>
+
+	<select id="buildRadarIndicator" resultType="java.util.Map">
+		SELECT
+		${report.group_column} `name`,
+		CEIL(max(${report.report_column})/5*6) `max`
+		FROM
+		(
+		SELECT
+		${report.group_column},
+		<choose>
+			<when test="report.count_column!=null and report.count_column!=''">
+				count(1) ${report.report_column}
+			</when>
+			<otherwise>
+				sum(${report.report_column}) ${report.report_column}
+			</otherwise>
+		</choose>
+		FROM
+		${report.table_id}
+		<if test="where!=null and where!=''">
+			WHERE ${where}
+		</if>
+		GROUP BY
+		${report.group_column}
+		<if test="report.date_column!=null and report.date_column!=''">
+			,${report.date_column}
+		</if>
+		) result
+		GROUP BY
+		${report.group_column}
+	</select>
+
+	<update id="createTmpTable">
+		CREATE TABLE if not exists ${tmp_table} (
+		date
+		VARCHAR(10) NOT NULL
+		);
+	</update>
+
+	<update id="dropTempTable">
+		drop table if exists ${tmp_table}
+	</update>
+
+	<select id="getAxisDataByDate" resultType="java.util.Map">
+		CALL p_sys_get_chart_dates (
+		${report.date_type},
+		#{start},
+		#{end},
+		#{tmp_table}
+		);
+
+		SELECT
+		date_format(tb.${report.date_column},#{format})
+		`key`,
+		<choose>
+			<when test="report.count_column!=null and report.count_column!=''">
+				count(1) `value`
+			</when>
+			<otherwise>
+				IFNULL(sum(${report.report_column}),0) `value`
+			</otherwise>
+		</choose>
+		FROM
+		${tmp_table} tmp
+		LEFT JOIN
+		(
+		SELECT
+		*
+		FROM
+		${report.table_id}
+		<if test="where!=null and where!=''">
+			WHERE ${where}
+		</if>
+		) tb
+		ON tb.${report.date_column}=tmp.date
+		GROUP BY
+		tb.${report.date_column}
+		ORDER BY `value` DESC
+	</select>
+
+
+	<select id="getAxisDataByGroup" resultType="java.util.Map">
+		SELECT
+		${report.group_column} `key`,
+		<choose>
+			<when test="report.count_column!=null and report.count_column!=''">
+				count(1) `value`
+			</when>
+			<otherwise>
+				IFNULL(sum(${report.report_column}),0) `value`
+			</otherwise>
+		</choose>
+		FROM
+		${report.table_id}
+		<if test="where!=null and where!=''">
+			WHERE ${where}
+		</if>
+		GROUP BY ${report.group_column}
+		ORDER BY `value` DESC
+	</select>
+</mapper>

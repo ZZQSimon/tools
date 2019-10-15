@@ -1,0 +1,109 @@
+#dxFormHead($form)                  ##必须
+<div id="$form.id" class="index-approve-form">
+    <ul class="home-approve-ul clearfix" role="tablist">
+        <li class="active"><a href="#home-approve-deal" aria-controls="home-approve-deal"
+                              data-toggle="tab">$dx.msg("wait me approve") （<span>$form.waitMeApproveSize</span>）</a></li>
+        <li><a href="#home-approve-fromme" aria-controls="home-approve-fromme" data-toggle="tab">$dx.msg("I started")
+            （<span>$form.myApproveSize</span>）</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane active home-approve-deal" id="home-approve-deal">
+            <ul>
+                #foreach($waitMeApprove in $form.waitMeApprove)
+                    <li>
+                        <a class="index_approve-view wait_me_approve">
+                            <div class="approveTip">
+                                <span>$dx.formatEmpty($waitMeApprove.user_name)</span> $dx.formatEmpty($waitMeApprove.name_expression_publicity)
+                                #if($waitMeApprove.is_work_block == 1)
+                                    $dx.msg("")
+                                #end
+                            </div>
+                        </a>
+                        <input type="hidden" table_id="$dx.formatEmpty($waitMeApprove.table_id)"
+                               data_id="$dx.formatEmpty($waitMeApprove.data_id)" class="approve-data"
+                               block_id="$dx.formatEmpty($waitMeApprove.block_id)"
+                               belongBlock="$dx.formatEmpty($waitMeApprove.belong_block)"
+                               approve_id = "$dx.formatEmpty($waitMeApprove.approve_id)">
+                        <div class="index-approve-btn">
+                            #if($waitMeApprove.is_work_block != 1)
+                                #set($approveButton = $dx.approveButton($waitMeApprove.table_id, $waitMeApprove.block_id, $waitMeApprove.belong_block))
+                                #if($approveButton)
+                                    #foreach($event in $approveButton)
+                                        #if($event.is_index_button == 1)
+                                            <button class="index-approve-button
+                                                #if($event.event_type == 'agreeEvent')
+                                                    approve-agree
+                                                #elseif($event.event_type == 'disagreeEvent')
+                                                    approve-disagree
+                                                #elseif($event.event_type == 'terminationEvent')
+                                                    termination
+                                                #elseif($event.event_type == 'retainEvent')
+                                                    approve-pause
+                                                #elseif($event.event_type == 'rejectEvent')
+                                                    approve-reject
+                                                #end"
+                                                    type="button" data-toggle="modal" data-target=".index_approve_remark"
+                                                    event_id="$dx.formatEmpty($event.flow_event_id)">
+                                                $dx.i18n($event.i18n)
+                                            </button>
+                                        #end
+                                    #end
+                                #end
+                            #end
+    ##                      <button class="home-approve-deal-see index_approve-view wait_me_approve" type="button">$dx.msg("View")</button>
+                        </div>
+                    </li>
+                #end
+            </ul>
+        </div>
+        <div class="tab-pane home-approve-fromme" id="home-approve-fromme">
+            <ul>
+                #foreach($myApprove in $form.myApprove)
+                    <li>
+                        <a class="index_approve-view my_approve">
+                            <div class="approveTip">
+                                <span>$dx.formatEmpty($myApprove.user_name)</span>
+                                #if(!$dx.empty($myApprove.name_expression_publicity))
+                                    $dx.formatEmpty($myApprove.name_expression_publicity)
+                                #end
+                            </div>
+                        </a>
+                        <input type="hidden" table_id="$dx.formatEmpty($myApprove.table_id)" data_id="$dx.formatEmpty($myApprove.data_id)"
+                               class="approve-data" approve_id = "$dx.formatEmpty($myApprove.approve_id)">
+
+                        <div class="index-approve-btn">
+                    ##    <button class="pull-right home-approve-deal-see index_approve-view my_approve" type="button">$dx.msg("View")</button>
+                    ##    <button class="pull-right home-approve-deal-no" type="button">$dx.msg("reject")</button>
+                    ##    <button class="pull-right home-approve-deal-ok" type="button">$dx.msg("pass")</button>
+                        </div>
+                    </li>
+                #end
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal index_approve_remark" tabindex="-1" role="dialog">
+  <div class="modal-dialog  modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">$dx.msg('approveReason')</h4>
+      </div>
+      <div class="modal-body clearfix">
+        <div class="">
+            <label class="dx-field-3">$dx.msg('reason')</label>
+            <textarea name="" id="" class="form-control dx-field-9 index-approve-reason"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="button-color4" data-dismiss="modal">$dx.msg('Cancel')</button>
+        <button type="button" class="button-color3 index_approve-pass-submit" data-dismiss="modal">$dx.msg('Save')</button>
+      </div>
+    </div>
+  </div>
+</div>
+#dxFormTail($form)

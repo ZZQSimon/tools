@@ -1,0 +1,93 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="userColumn" class="form-inline dx-form" role="form"">       ##基本上照抄即可
+#dxMenuBarHead($form)
+$dx.msg("show all column")
+#dxMenuBarFoot()
+#set($table = $dx.table($form.table))
+#set($flage = false)
+<div class="dx-user-column-top">
+    <ul>
+    #if(!$form.userColumns)
+    	<div class="dx-user-column-empty">$dx.msg("show all title")</div>
+        #foreach($desc in $table.columns)
+            #if(!$desc.hidden)
+                <li name="$dx.formatEmpty($desc.column_name)" style="display: none;float: left">$dx.columnLabel($table.id, $desc.column_name)</li>
+            #end
+        #end
+    #else
+    	#set($imgflage = true)
+        #foreach($desc in $table.columns)
+            #foreach($userColumn in $form.userColumns)
+                #if(!$desc.hidden && $desc.column_name==$userColumn.column_name)
+                    <li name="$dx.formatEmpty($desc.column_name)" style="display: none; float: left">
+                        $dx.columnLabel($table.id, $desc.column_name)
+                    </li>
+                    #set($flage = true)
+                    #break;
+                #end
+            #end
+            #if(!$desc.hidden && !$flage)
+            	#set($imgflage = false)
+                <li name="$dx.formatEmpty($desc.column_name)" style="float: left">
+                    $dx.columnLabel($table.id, $desc.column_name)
+                </li>
+            #end
+            #set($flage = false)
+        #end
+        #if($imgflage)
+    	    <div class="dx-user-column-empty">已显示全部标题</div>
+        #end
+    #end
+    </ul>
+</div>
+
+
+<div class="dx-user-column-down" style="clear:both">
+	<p>$dx.msg("marked words")<span class="fa fa-tag"></span></p>
+    <ul class="dx-is-user-column">
+    #if(!$form.userColumns)
+        #foreach($desc in $table.columns)
+            #if(!$desc.hidden)
+                <li name="$dx.formatEmpty($desc.column_name)" style="float: left">
+                	<span>
+                    $dx.columnLabel($table.id, $desc.column_name)
+                	<span>×</span>
+                     </span>
+                </li>
+            #end
+        #end
+    #else
+        #foreach($userColumn in $form.userColumns)
+            <li name="$dx.formatEmpty($userColumn.column_name)" style="float: left">
+                <span>
+                $dx.columnLabel($table.id, $userColumn.column_name)
+                <span>×</span>
+                </span>
+            </li>
+        #end
+        #foreach($desc in $table.columns)
+            #foreach($userColumn in $form.userColumns)
+                #if(!$desc.hidden && $desc.column_name==$userColumn.column_name)
+                    #set($flage = true)
+                    #break;
+                #end
+            #end
+            #if(!$desc.hidden && !$flage)
+                <li name="$dx.formatEmpty($desc.column_name)" style="float: left;display: none">
+                    <span>
+                    $dx.columnLabel($table.id, $desc.column_name)
+                        <span>×</span>
+                    </span>
+                </li>
+            #end
+            #set($flage = false)
+        #end
+    #end
+    </ul>
+</div>
+<div class="dx-user-column-submit" style="clear:both">
+	<div>
+    <a href="#" class="button-color1">$dx.msg("dx.user.column.submit")</a>
+    </div>
+</div>
+#dxFormTail($form)

@@ -1,0 +1,58 @@
+#dxFormHead($form)                  ##必须
+<form id="$form.id" name="pc_calendar" class="form-inline dx-form clearfix pc-tab-form" role="form"">       ##基本上照抄即可
+    <div class="btn-toolbar dx-menu-bar">
+        <button type="button" class="btn saveCalendar" style="#if($form.type != '1') display: none #end">$dx.msg('save')</button>
+        #if($form.type == '2')
+            <button type="button" class="btn addCalendar">$dx.msg('add')</button>
+        #end
+        #if($form.type == '1')
+            <button type="button" class="btn pull-right syncInternationalHoliday">同步法定节假日</button>
+        #end
+        #if($form.type == '3')
+            <button type="button" class="btn appointment-add">$dx.msg('appointment')</button>
+        #end
+        <button type="button" class="btn appointment-hide" style="display: none">$dx.msg('hide')</button>
+    </div>
+    <div class="pc-setDayCal dx-form-con">
+        #if($form.type == '1')
+            <div class="select-box">
+                <div class="work-day-wrap">
+                    <span>工作日</span>
+                    <label><input type="checkbox" value="1">周一</label>
+                    <label><input type="checkbox" value="2">周二</label>
+                    <label><input type="checkbox" value="3">周三</label>
+                    <label><input type="checkbox" value="4">周四</label>
+                    <label><input type="checkbox" value="5">周五</label>
+                    <label><input type="checkbox" value="6">周六</label>
+                    <label><input type="checkbox" value="0">周日</label>
+                </div>
+            </div>
+        #end
+
+        <div class="pc-calendar #if($form.type == '1') pc-calendar-workday #elseif($form.type == '2') pc-calendar-event #else pc-calendar-appoint #end">
+            #if($form.type == '3')
+                <div class="appointment-detail-view appointment-calendar">
+                    <div class="dx-field-2 deploy-left-menu appointment-source">
+                        <div class="appointment-source-filter search" >
+                            <input type="text" placeholder="$dx.msg("search_params")">
+                        </div>
+                        <div class="g1-tree-icon-left appointment-source-tree" style=""></div>
+                    </div>
+
+                    <div class='dx-field-10 appoint-right-wrap'>
+                        <div class='appoint-right-body'>
+                            <div class='pcSetWorkDay'></div>
+                        </div>
+
+                    </div>
+
+                    <div class="dx-field-3 appointment-detail"></div>
+                </div>
+                <div class="appointment-detail-cu"></div>
+            #else
+                <div class='pcSetWorkDay'></div>
+            #end
+        </div>
+    </div>
+</form>
+#dxFormTail($form)

@@ -1,0 +1,7 @@
+#dxFormHead($form)                  ##必须
+<div id="$form.id" name="customReport" class="form-inline fc-event-detail dx-detail-form dx-form clearfix pc-tab-form" role="form">       ##基本上照抄即可
+    <div class="dx-filter-select">
+        #dxFilter($form.filter)
+    </div>
+</div>
+#dxFormTail($form)

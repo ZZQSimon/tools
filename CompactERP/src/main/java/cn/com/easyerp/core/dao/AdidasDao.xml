@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.easyerp.core.dao.AdidasDao">
+	<select id="findEntryManageByEntryId" resultType="cn.com.easyerp.core.mail.adidas.EntryManage">
+		SELECT
+		t1.remark,
+		t1.`cre_user`,
+		t1.`upd_user`,
+		t1.`upd_date`,
+		t1.`employee_id`,
+		t1.`name`,
+		t1. `entry_type`,
+		p1.`name` as 'city',
+		t1.`shop_id`,
+		t1.`shop_name`,
+		m1.company_name AS 'employee_company',
+		m2.`name` as
+		position,
+		t1.`basic_wage`,
+		t1.`mobile`,
+		t1.`email`,
+		in2.cn as
+		employee_type,
+		t1.`contract_begin_day`,
+		t1.`contract_term`,
+		t1.probation,
+		t1.`contract_end_day`,
+		t1.`nationality`,
+		t1.`document_type`,
+		t1.`document_num`,
+		t1.`birth_date`,
+		t1.`sex`,
+		t1.`age`,
+		t1.`card_no`,
+		t1.`bank_name`,
+		t1.`marital_status`,
+		t1.`account_category`,
+		t1.`residential_address`,
+		t1.`permanent_residence`,
+		t1.`highest_education`,
+		t1.`graduation_time`,
+		t1.`takejob_time`,
+		t1.`last_employer`,
+		t1.`historical_service_brand`,
+		t1.`emergency_contact`,
+		t1.`emergency_contact_phone`,
+		t1.`children_name`,
+		t1.`children_id_number`,
+		t1.`cre_date`,
+		t1.`id`,
+		t1.`owner`,
+		in3.cn as work_hour_type,
+		t1.`direct_supervisor`,
+		m3.rank_cn
+		as rank,
+		t1.`approve_status`,
+		t1.`city_entrustment`,
+		t1.`city_contacts`,
+		t1.`city_phone`,
+		t1.`city_email`,
+		t1.`city_address`,
+		t1.`graduation_school`,
+		t1.`bankName`,
+		t1.`children_name2`,
+		t1.`children_id_number2`
+		FROM
+		t_entry_manage t1
+		INNER JOIN p_city p1 ON
+		t1.city = p1.`code`
+		INNER JOIN m_company_message m1 ON
+		t1.employee_company = m1.`id`
+		INNER JOIN m_role m2 ON t1.position =
+		m2.id
+		INNER JOIN m_rank m3 ON t1.rank = m3.id
+		INNER JOIN c_dictionary c1
+		on c1.dic_id='FEB4367087C4' and
+		c1.dic_key=t1.entry_type
+		INNER JOIN
+		c_international in1 on in1.international_id=c1.key_international
+		INNER
+		JOIN c_dictionary c2 on c2.dic_id='D30DC7217EAC' and
+		c2.dic_key=t1.employee_type
+		INNER JOIN c_international in2 on
+		in2.international_id=c2.key_international
+		INNER JOIN c_dictionary c3 on
+		c3.dic_id='46C2B276B11A' and
+		c3.dic_key=t1.work_hour_type
+		INNER JOIN
+		c_international in3 on in3.international_id=c3.key_international
+		WHERE
+		t1.id = #{entry_id};
+	</select>
+	<select id="findEntryManageByEntryIds" resultType="cn.com.easyerp.core.mail.adidas.EntryManage">
+		SELECT
+		t1.remark,
+		t1.`cre_user`,
+		t1.`upd_user`,
+		t1.`upd_date`,
+		t1.`employee_id`,
+		t1.`name`,
+		t1. `entry_type`,
+		p1.`name` as 'city',
+		t1.`shop_id`,
+		t1.`shop_name`,
+		m1.company_name AS 'employee_company',
+		m2.`name` as position,
+		t1.`basic_wage`,
+		t1.`mobile`,
+		t1.`email`,
+		in2.cn as
+		employee_type,
+		t1.`contract_begin_day`,
+		t1.`contract_term`,
+		t1.probation,
+		t1.`contract_end_day`,
+		t1.`nationality`,
+		t1.`document_type`,
+		t1.`document_num`,
+		t1.`birth_date`,
+		t1.`sex`,
+		t1.`age`,
+		t1.`card_no`,
+		t1.`bank_name`,
+		t1.`marital_status`,
+		t1.`account_category`,
+		t1.`residential_address`,
+		t1.`permanent_residence`,
+		t1.`highest_education`,
+		t1.`graduation_time`,
+		t1.`takejob_time`,
+		t1.`last_employer`,
+		t1.`historical_service_brand`,
+		t1.`emergency_contact`,
+		t1.`emergency_contact_phone`,
+		t1.`children_name`,
+		t1.`children_id_number`,
+		t1.`cre_date`,
+		t1.`id`,
+		t1.`owner`,
+		in3.cn as work_hour_type,
+		t1.`direct_supervisor`,
+		m3.rank_cn
+		as rank,
+		t1.`approve_status`,
+		t1.`city_entrustment`,
+		t1.`city_contacts`,
+		t1.`city_phone`,
+		t1.`city_email`,
+		t1.`city_address`,
+		t1.`graduation_school`,
+		t1.`bankName`,
+		t1.`children_name2`,
+		t1.`children_id_number2`
+		FROM
+		t_entry_manage t1
+		INNER JOIN p_city p1 ON
+		t1.city = p1.`code`
+		INNER JOIN m_company_message m1 ON
+		t1.employee_company = m1.`id`
+		INNER JOIN m_role m2 ON t1.position =
+		m2.id
+		INNER JOIN m_rank m3 ON t1.rank = m3.id
+		INNER JOIN c_dictionary c1
+		on c1.dic_id='FEB4367087C4' and
+		c1.dic_key=t1.entry_type
+		INNER JOIN
+		c_international in1 on in1.international_id=c1.key_international
+		INNER
+		JOIN c_dictionary c2 on c2.dic_id='D30DC7217EAC' and
+		c2.dic_key=t1.employee_type
+		INNER JOIN c_international in2 on
+		in2.international_id=c2.key_international
+		INNER JOIN c_dictionary c3 on
+		c3.dic_id='46C2B276B11A' and
+		c3.dic_key=t1.work_hour_type
+		INNER JOIN
+		c_international in3 on in3.international_id=c3.key_international
+		WHERE
+		1 = 1 AND t1.id IN
+		<foreach collection="entry_ids" item="id" separator="," open="("
+			close=")">
+			#{id}
+		</foreach>
+	</select>
+	<select id="findCodeStrByNewestData" resultType="cn.com.easyerp.core.mail.adidas.CodeStr">
+		SELECT
+		vvv.`UUID`,
+		vvv.`str`,
+		vvv.`valid_time`,
+		vvv.`cre_date`,
+		vvv.`type`
+		FROM
+		c_code_str vvv
+		ORDER BY
+		vvv.cre_date DESC
+		LIMIT 1
+	</select>
+	<delete id="deleteEntryManageByEntryId">
+		DELETE FROM t_entry_manage WHERE t_entry_manage.id =
+		#{entry_id};
+	</delete>
+	<insert id="insertCodeStr" parameterType="cn.com.easyerp.core.mail.adidas.CodeStr">
+		INSERT INTO
+		`c_code_str` (`UUID`, `str`, `valid_time`, `cre_date`, `type`)
+		values
+		(#{cs.UUID},#{cs.str},#{cs.valid_time},#{cs.cre_date},#{cs.type});
+	</insert>
+	<insert id="insertEntryManage" parameterType="cn.com.easyerp.core.mail.adidas.EntryManage">
+		INSERT INTO
+		`t_entry_manage` (
+		`remark`,
+		`cre_user`,
+		`upd_user`,
+		`upd_date`,
+		`employee_id`,
+		`name`,
+		`entry_type`,
+		`city`,
+		`shop_id`,
+		`shop_name`,
+		`employee_company`,
+		`position`,
+		`basic_wage`,
+		`mobile`,
+		`email`,
+		`employee_type`,
+		`contract_begin_day`,
+		`contract_term`,
+		`probation`,
+		`contract_end_day`,
+		`nationality`,
+		`document_type`,
+		`document_num`,
+		`birth_date`,
+		`sex`,
+		`age`,
+		`card_no`,
+		`bank_name`,
+		`marital_status`,
+		`account_category`,
+		`residential_address`,
+		`permanent_residence`,
+		`highest_education`,
+		`graduation_time`,
+		`takejob_time`,
+		`last_employer`,
+		`historical_service_brand`,
+		`emergency_contact`,
+		`emergency_contact_phone`,
+		`children_name`,
+		`children_id_number`,
+		`cre_date`,
+		`id`,
+		`owner`,
+		`work_hour_type`,
+		`direct_supervisor`,
+		`rank`,
+		`approve_status`,
+		`city_entrustment`,
+		`city_contacts`,
+		`city_phone`,
+		`city_email`,
+		`city_address`,
+		`bankName`,
+		`graduation_school`,
+		`children_name2`,
+		`children_id_number2`,
+		flag
+		)VALUES
+		(#{manage.remark},
+		#{manage.cre_user},
+		#{manage.upd_user},
+		#{manage.upd_date},
+		#{manage.employee_id},
+		#{manage.name},
+		#{manage.entry_type},
+		#{manage.city},
+		#{manage.shop_id},
+		#{manage.shop_name},
+		#{manage.employee_company},
+		#{manage.position},
+		#{manage.basic_wage},
+		#{manage.mobile},
+		#{manage.email},
+		#{manage.employee_type},
+		#{manage.contract_begin_day},
+		#{manage.contract_term},
+		#{manage.probation},
+		#{manage.contract_end_day},
+		#{manage.nationality},
+		#{manage.document_type},
+		#{manage.document_num},
+		#{manage.birth_date},
+		#{manage.sex},
+		#{manage.age},
+		#{manage.card_no},
+		#{manage.bank_name},
+		#{manage.marital_status},
+		#{manage.account_category},
+		#{manage.residential_address},
+		#{manage.permanent_residence},
+		#{manage.highest_education},
+		#{manage.graduation_time},
+		#{manage.takejob_time},
+		#{manage.last_employer},
+		#{manage.historical_service_brand},
+		#{manage.emergency_contact},
+		#{manage.emergency_contact_phone},
+		#{manage.children_name},
+		#{manage.children_id_number},
+		#{manage.cre_date},
+		#{manage.id},
+		#{manage.owner},
+		#{manage.work_hour_type},
+		#{manage.direct_supervisor},
+		#{manage.rank},
+		#{manage.approve_status},
+		#{manage.city_entrustment},
+		#{manage.city_contacts},
+		#{manage.city_phone},
+		#{manage.city_email},
+		#{manage.city_address},
+		#{manage.bankName},
+		#{manage.graduation_school},
+		#{manage.children_name2},
+		#{manage.children_id_number2},
+		0
+		)
+	</insert>
+	<select id="getDataById" resultType="cn.com.easyerp.core.mail.adidas.EntryManage">
+		SELECT
+		`cre_user`,
+		`upd_user`,
+		`upd_date`,
+		`employee_id`,
+		`name`,
+		`entry_type`,
+		`city`,
+		`shop_id`,
+		`shop_name`,
+		`employee_company`,
+		`position`,
+		`basic_wage`,
+		`mobile`,
+		`email`,
+		`employee_type`,
+		`contract_begin_day`,
+		`contract_term`,
+		`probation`,
+		`contract_end_day`,
+		`nationality`,
+		`document_type`,
+		`document_num`,
+		`birth_date`,
+		`sex`,
+		`age`,
+		`card_no`,
+		`bank_name`,
+		`marital_status`,
+		`account_category`,
+		`residential_address`,
+		`permanent_residence`,
+		`highest_education`,
+		`graduation_time`,
+		`takejob_time`,
+		`last_employer`,
+		`historical_service_brand`,
+		`emergency_contact`,
+		`emergency_contact_phone`,
+		`children_name`,
+		`children_id_number`,
+		`cre_date`,
+		`id`,
+		`owner`,
+		`work_hour_type`,
+		`direct_supervisor`,
+		`rank`,
+		`approve_status`,
+		`city_entrustment`,
+		`city_contacts`,
+		`city_phone`,
+		`city_email`,
+		`city_address`,
+		`remark`,
+		`bankName`,
+		`graduation_school`,
+		`children_name2`,
+		`children_id_number2`,
+		flag
+		FROM
+		t_entry_manage
+		WHERE
+		flag = '1' or flag = '0'
+	</select>
+	<select id="getDataById_flag" resultType="cn.com.easyerp.core.mail.adidas.EntryManage">
+		SELECT
+		`cre_user`,
+		`upd_user`,
+		`upd_date`,
+		`employee_id`,
+		`name`,
+		`entry_type`,
+		`city`,
+		`shop_id`,
+		`shop_name`,
+		`employee_company`,
+		`position`,
+		`basic_wage`,
+		`mobile`,
+		`email`,
+		`employee_type`,
+		`contract_begin_day`,
+		`contract_term`,
+		`probation`,
+		`contract_end_day`,
+		`nationality`,
+		`document_type`,
+		`document_num`,
+		`birth_date`,
+		`sex`,
+		`age`,
+		`card_no`,
+		`bank_name`,
+		`marital_status`,
+		`account_category`,
+		`residential_address`,
+		`permanent_residence`,
+		`highest_education`,
+		`graduation_time`,
+		`takejob_time`,
+		`last_employer`,
+		`historical_service_brand`,
+		`emergency_contact`,
+		`emergency_contact_phone`,
+		`children_name`,
+		`children_id_number`,
+		`cre_date`,
+		`id`,
+		`owner`,
+		`work_hour_type`,
+		`direct_supervisor`,
+		`rank`,
+		`approve_status`,
+		`city_entrustment`,
+		`city_contacts`,
+		`city_phone`,
+		`city_email`,
+		`city_address`,
+		`remark`,
+		`bankName`,
+		`graduation_school`,
+		`children_name2`,
+		`children_id_number2`
+		FROM
+		t_entry_manage
+		WHERE
+		flag =
+		'0'
+	</select>
+	<delete id="delEntryManageById">
+		DELETE FROM t_entry_manage WHERE
+		id = #{id} and
+		shop_id = #{shop_id}
+	</delete>
+	<delete id="delEntryManageByIdAndFlag">
+		DELETE FROM t_entry_manage WHERE
+		id = #{id} and
+		shop_id = #{shop_id}
+	</delete>
+	<update id="updateEntryManageById" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			UPDATE t_entry_manage
+			<set>
+				<if test="item.email != null">
+					email = #{item.email,jdbcType=VARCHAR},
+				</if>
+				<if test="item.mobile != null">
+					mobile = #{item.mobile,jdbcType=VARCHAR},
+				</if>
+				<if test="item.entry_type != null">
+					entry_type = #{item.entry_type,jdbcType=VARCHAR},
+				</if>
+				<if test="item.nationality != null">
+					nationality = #{item.nationality,jdbcType=VARCHAR},
+				</if>
+				<if test="item.document_type != null">
+					document_type = #{item.document_type,jdbcType=VARCHAR},
+				</if>
+				<if test="item.document_num != null">
+					document_num = #{item.document_num,jdbcType=VARCHAR},
+				</if>
+				<if test="item.birth_date != null">
+					birth_date = #{item.birth_date,jdbcType=DATE},
+				</if>
+				<if test="item.sex != null">
+					sex = #{item.sex,jdbcType=VARCHAR},
+				</if>
+				<if test="item.age != null">
+					age = #{item.age,jdbcType=VARCHAR},
+				</if>
+				<if test="item.card_no != null">
+					card_no = #{item.card_no,jdbcType=VARCHAR},
+				</if>
+				<if test="item.bank_name != null">
+					bank_name = #{item.bank_name,jdbcType=VARCHAR},
+				</if>
+				<if test="item.marital_status != null">
+					marital_status =
+					#{item.marital_status,jdbcType=VARCHAR},
+				</if>
+				<if test="item.account_category != null">
+					account_category =
+					#{item.account_category,jdbcType=VARCHAR},
+				</if>
+				<if test="item.residential_address != null">
+					residential_address =
+					#{item.residential_address,jdbcType=VARCHAR},
+				</if>
+				<if test="item.permanent_residence != null">
+					permanent_residence =
+					#{item.permanent_residence,jdbcType=VARCHAR},
+				</if>
+				<if test="item.highest_education != null">
+					highest_education =
+					#{item.highest_education,jdbcType=VARCHAR},
+				</if>
+				<if test="item.graduation_time != null">
+					graduation_time = #{item.graduation_time,jdbcType=DATE},
+				</if>
+				<if test="item.takejob_time != null">
+					takejob_time = #{item.takejob_time,jdbcType=VARCHAR},
+				</if>
+				<if test="item.last_employer != null">
+					last_employer = #{item.last_employer,jdbcType=VARCHAR},
+				</if>
+				<if test="item.historical_service_brand != null">
+					historical_service_brand =
+					#{item.historical_service_brand,jdbcType=VARCHAR},
+				</if>
+				<if test="item.emergency_contact != null">
+					emergency_contact =
+					#{item.emergency_contact,jdbcType=VARCHAR},
+				</if>
+				<if test="item.emergency_contact_phone != null">
+					emergency_contact_phone =
+					#{item.emergency_contact_phone,jdbcType=VARCHAR},
+				</if>
+				<if test="item.children_name != null">
+					children_name = #{item.children_name,jdbcType=VARCHAR},
+				</if>
+				<if test="item.children_id_number != null">
+					children_id_number =
+					#{item.children_id_number,jdbcType=VARCHAR},
+				</if>
+				<if test="item.probation != null">
+					probation = #{item.probation,jdbcType=VARCHAR},
+				</if>
+				<if test="item.basic_wage != null">
+					basic_wage = #{item.basic_wage,jdbcType=VARCHAR},
+				</if>
+				<if test="item.contract_begin_day != null">
+					contract_begin_day =
+					#{item.contract_begin_day,jdbcType=DATE},
+				</if>
+				<if test="item.contract_end_day != null">
+					contract_end_day =
+					#{item.contract_end_day,jdbcType=DATE},
+				</if>
+				<if test="item.contract_term != null">
+					contract_term = #{item.contract_term,jdbcType=VARCHAR},
+				</if>
+				<if test="item.remark != null">
+					remark = #{item.remark,jdbcType=VARCHAR},
+				</if>
+				<if test="item.bankName != null">
+					bankName = #{item.bankName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.graduation_school != null">
+					graduation_school =
+					#{item.graduation_school,jdbcType=VARCHAR},
+				</if>
+				<if test="item.children_name2 != null">
+					children_name2 =
+					#{item.children_name2,jdbcType=VARCHAR},
+				</if>
+				<if test="item.children_id_number2 != null">
+					children_id_number2 =
+					#{item.children_id_number2,jdbcType=VARCHAR},
+				</if>
+				<if test="item.name != null">
+					name = #{item.name,jdbcType=VARCHAR},
+				</if>
+				<if test="item.flag != null">
+					flag = #{item.flag,jdbcType=INTEGER},
+				</if>
+				<if test="item.zhongzhi_flag != null">
+					zhongzhi_flag = #{item.zhongzhi_flag,jdbcType=VARCHAR},
+				</if>
+
+
+			</set>
+			WHERE
+			id = #{item.id} and shop_id = #{item.shop_id}
+		</foreach>
+	</update>
+	<select id="findInnerDataId" resultType="cn.com.easyerp.core.mail.adidas.ManageVO">
+		SELECT id,shop_id FROM
+		`t_entry_manage`;
+	</select>
+	<update id="updateManageFlag" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			UPDATE t_entry_manage
+			<set>
+				flag = '2'
+			</set>
+			WHERE flag = '1' and id = #{item.id} and shop_id = #{item.shop_id}
+		</foreach>
+	</update>
+	<select id="findEntryManageByFlagAndZhongZhiFlag" resultType="cn.com.easyerp.core.mail.adidas.EntryManage">
+		SELECT
+		`cre_user`,
+		`upd_user`,
+		`upd_date`,
+		`employee_id`,
+		`name`,
+		`entry_type`,
+		`city`,
+		`shop_id`,
+		`shop_name`,
+		`employee_company`,
+		`position`,
+		`basic_wage`,
+		`mobile`,
+		`email`,
+		`employee_type`,
+		`contract_begin_day`,
+		`contract_term`,
+		`probation`,
+		`contract_end_day`,
+		`nationality`,
+		`document_type`,
+		`document_num`,
+		`birth_date`,
+		`sex`,
+		`age`,
+		`card_no`,
+		`bank_name`,
+		`marital_status`,
+		`account_category`,
+		`residential_address`,
+		`permanent_residence`,
+		`highest_education`,
+		`graduation_time`,
+		`takejob_time`,
+		`last_employer`,
+		`historical_service_brand`,
+		`emergency_contact`,
+		`emergency_contact_phone`,
+		`children_name`,
+		`children_id_number`,
+		`cre_date`,
+		`id`,
+		`owner`,
+		`work_hour_type`,
+		`direct_supervisor`,
+		`rank`,
+		`approve_status`,
+		`city_entrustment`,
+		`city_contacts`,
+		`city_phone`,
+		`city_email`,
+		`city_address`,
+		`zhongzhi_flag`,
+		`remark`,
+		`bankName`,
+		`graduation_school`,
+		`children_name2`,
+		`children_id_number2`
+		FROM
+		t_entry_manage
+		WHERE
+		flag = '2'
+	</select>
+	<select id="findData" resultType="Integer">
+		SELECT COUNT(*) FROM
+		t_entry_manage WHERE id = #{id} AND shop_id =
+		#{shop_id}
+	</select>
+	<select id="selectOuterDataBase" resultType="String">
+		SELECT outerdatabase
+		FROM p_parameter;
+	</select>
+	<select id="selectLocalDataBase" resultType="String">
+		SELECT
+		server_address FROM p_parameter;
+	</select>
+
+	<select id="selectCity" resultType="cn.com.easyerp.core.cache.CityDescribe">
+		SELECT
+		`code`,
+		`name`,
+		`entrustment`,
+		`contacts`,
+		`phone`,
+		`email`,
+		`address`,
+		`employer_firms`,
+		`owner`
+		FROM
+		p_city;
+	</select>
+	<delete id="deleteCity">
+		DELETE from p_city;
+	</delete>
+	<insert id="insertCity">
+		INSERT INTO `p_city` (
+		`code`,
+		`name`,
+		`entrustment`,
+		`contacts`,
+		`phone`,
+		`email`,
+		`address`,
+		`employer_firms`,
+		`owner`
+		)
+		VALUES
+		<foreach collection="city" item="city" index="index"
+			separator=",">
+			(
+			#{city.code},
+			#{city.name},
+			#{city.entrustment},
+			#{city.contacts},
+			#{city.phone},
+			#{city.email},
+			#{city.address},
+			#{city.employer_firms},
+			#{city.owner}
+			)
+		</foreach>
+	</insert>
+	<delete id="deleteDayEmpManage">
+		delete FROM t_entry_manage where upd_date <![CDATA[ < ]]>
+		date_sub(NOW(), interval 60 day)
+	</delete>
+</mapper>
