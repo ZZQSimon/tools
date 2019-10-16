@@ -12,19 +12,6 @@ public class FormatDesc {
         date;
     }
 
-    static {
-        // Byte code:
-        // 0: new com/gainit/g1/core/cache/FormatDesc$1
-        // 3: dup
-        // 4: invokespecial <init> : ()V
-        // 7: putstatic com/gainit/g1/core/cache/FormatDesc.jsonRef :
-        // Lcom/fasterxml/jackson/core/type/TypeReference;
-        // 10: return
-        // Line number table:
-        // Java source line number -> byte code offset
-        // #13 -> 0
-    }
-
     public Type getType() {
         return this.type;
     }

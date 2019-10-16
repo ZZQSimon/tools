@@ -46,6 +46,6 @@
 	<tool>
 		<key>dx</key>
 		<scope>application</scope>
-		<class>com.gainit.g1.core.velocity.DxTool</class>
+		<class>cn.com.easyerp.core.velocity.DxTool</class>
 	</tool>
 </toolbox>

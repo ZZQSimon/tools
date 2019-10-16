@@ -15,19 +15,6 @@ public class LdapUserMapper implements UserDetailsContextMapper {
     private AuthService authService;
     private String mapKey;
 
-    static {
-        // Byte code:
-        // 0: new com/gainit/g1/auth/ldap/LdapUserMapper$1
-        // 3: dup
-        // 4: invokespecial <init> : ()V
-        // 7: putstatic com/gainit/g1/auth/ldap/LdapUserMapper.dxDomain :
-        // Ljava/lang/ThreadLocal;
-        // 10: return
-        // Line number table:
-        // Java source line number -> byte code offset
-        // #20 -> 0
-    }
-
     LdapUserMapper(AuthService authService, String mapKey) {
         this.authService = authService;
         this.mapKey = mapKey;

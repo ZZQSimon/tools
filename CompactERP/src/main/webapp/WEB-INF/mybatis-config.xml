@@ -9,6 +9,6 @@
 
 	</settings>
 	<mappers>
-		<mapper resource="com/gainit/g1/DaoMapper.xml" />
+		<mapper resource="cn/com/easyerp/DaoMapper.xml" />
 	</mappers>
 </configuration>

@@ -21,7 +21,7 @@
        http://cxf.apache.org/jaxrs
        http://cxf.apache.org/schemas/jaxrs.xsd">
 	<context:property-placeholder location="META-INF/timeTask.properties" />
-	<bean id="timeTaskProperties" class="com.gainit.g1.core.timedTask.TimeTaskProperties">
+	<bean id="timeTaskProperties" class="cn.com.easyerp.core.timedTask.TimeTaskProperties">
 		<property name="isExec" value="${isExec}"></property>
 		<property name="domain" value="${domain}"></property>
 	</bean>
@@ -30,9 +30,9 @@
 	<import resource="classpath*:META-INF/cxf/cxf.xml" />
 	<import resource="classpath*:META-INF/cxf/cxf-extension-soap.xml" />
 	<import resource="classpath*:META-INF/cxf/cxf-servlet.xml" />
-	<!-- <jaxws:endpoint id="DXServiceCXF" implementor="com.gainit.g1.module.japi.webServiceCXF.DXServiceCXF" 
+	<!-- <jaxws:endpoint id="DXServiceCXF" implementor="cn.com.easyerp.module.japi.webServiceCXF.DXServiceCXF" 
 		address="/DXServiceCXF" /> -->
-	<bean id="DXServiceCXF" class="com.gainit.g1.module.japi.webServiceCXF.DXServiceCXF" />
+	<bean id="DXServiceCXF" class="cn.com.easyerp.module.japi.webServiceCXF.DXServiceCXF" />
 
 	<jaxrs:server id="rs_server" address="/rs">
 		<jaxrs:serviceBeans>
@@ -40,18 +40,18 @@
 		</jaxrs:serviceBeans>
 	</jaxrs:server>
 
-	<bean id="messageSource" class="com.gainit.g1.core.TextResolver" />
+	<bean id="messageSource" class="cn.com.easyerp.core.TextResolver" />
 	<!--data source settings -->
 	<bean id="masterDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<property name="jndiName" value="java:comp/env/jdbc/dbpool" />
 		<property name="expectedType" value="javax.sql.DataSource" />
 	</bean>
-	<bean id="routingDataSource" class="com.gainit.g1.core.master.DxRoutingDataSource">
+	<bean id="routingDataSource" class="cn.com.easyerp.core.master.DxRoutingDataSource">
 		<property name="active_flag" value="1" />
 		<property name="defaultDataSourceDriver" value="com.mysql.jdbc.Driver" />
 	</bean>
 	<!-- bean scan setting -->
-	<context:component-scan base-package="com.gainit.g1">
+	<context:component-scan base-package="cn.com.easyerp">
 	</context:component-scan>
 	<!-- system dao settings -->
 	<bean id="transactionManager"
@@ -66,18 +66,18 @@
 		<property name="dataSource" ref="routingDataSource" />
 		<property name="configLocation" value="/WEB-INF/mybatis-config.xml" />
 		<!-- sql执行拦截器 -->
-		<!--<property name="mapperLocations" value="classpath:com/gainit/g1/DeployTool/dao/*.xml" 
+		<!--<property name="mapperLocations" value="classpath:cn/com/easyerp/DeployTool/dao/*.xml" 
 			/> -->
 		<property name="plugins">
 			<array>
 				<bean id="sqlStatementInterceptor"
-					class="com.gainit.g1.DeployTool.sqlInterceptor.SqlStatementInterceptor">
+					class="cn.com.easyerp.DeployTool.sqlInterceptor.SqlStatementInterceptor">
 				</bean>
 			</array>
 		</property>
 	</bean>
 	<bean id="persistenceExceptionTranslator"
-		class="com.gainit.g1.core.exception.PersistenceExceptionTranslator">
+		class="cn.com.easyerp.core.exception.PersistenceExceptionTranslator">
 		<constructor-arg index="0" ref="routingDataSource" />
 	</bean>
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
@@ -89,7 +89,7 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage"
-			value="com.gainit.g1.core.dao, com.gainit.g1.module.**.dao ,com.gainit.g1.DeployTool.dao" />
+			value="cn.com.easyerp.core.dao, cn.com.easyerp.module.**.dao ,cn.com.easyerp.DeployTool.dao" />
 		<property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate" />
 	</bean>
 
@@ -101,7 +101,7 @@
 		<constructor-arg index="0" ref="masterSqlSessionFactory" />
 	</bean>
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.gainit.g1.core.master" />
+		<property name="basePackage" value="cn.com.easyerp.core.master" />
 		<property name="sqlSessionTemplateBeanName" value="masterSqlSessionTemplate" />
 	</bean>
 
@@ -137,7 +137,7 @@
 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
 		<property name="formatters">
 			<set>
-				<!--<bean class="com.gainit.g1.core.formatter.DateFormatter"/> -->
+				<!--<bean class="cn.com.easyerp.core.formatter.DateFormatter"/> -->
 			</set>
 		</property>
 	</bean>
@@ -146,8 +146,8 @@
 		<!--<property name="serializationInclusion" value="NON_NULL"/> -->
 		<property name="serializers">
 			<array>
-				<bean class="com.gainit.g1.core.serializer.ClobSerializer" />
-				<bean class="com.gainit.g1.core.serializer.DateSerializer" />
+				<bean class="cn.com.easyerp.core.serializer.ClobSerializer" />
+				<bean class="cn.com.easyerp.core.serializer.DateSerializer" />
 			</array>
 		</property>
 		<!-- enable javascript style parse -->
@@ -170,17 +170,17 @@
 			</bean>
 		</mvc:message-converters>
 		<mvc:argument-resolvers>
-			<bean class="com.gainit.g1.auth.CurrentUserHandlerMethodArgumentResolver" />
+			<bean class="cn.com.easyerp.auth.CurrentUserHandlerMethodArgumentResolver" />
 		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
 	<mvc:interceptors>
-		<bean class="com.gainit.g1.core.HandlerInterceptor" />
+		<bean class="cn.com.easyerp.core.HandlerInterceptor" />
 	</mvc:interceptors>
 
-	<bean id="dxScheduler" class="com.gainit.g1.core.schedule.DxTaskScheduler"
+	<bean id="dxScheduler" class="cn.com.easyerp.core.schedule.DxTaskScheduler"
 		destroy-method="destroy" />
 	<task:annotation-driven scheduler="dxScheduler" />
-	<import resource="classpath*:com/gainit/g1/module/**/dx-spring-*.xml" />
+	<import resource="classpath*:cn/com/easyerp/module/**/dx-spring-*.xml" />
 
 	<!-- redis -->
 	<!--<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig"> -->
