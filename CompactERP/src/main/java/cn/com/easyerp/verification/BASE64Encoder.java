@@ -22,7 +22,7 @@ public class BASE64Encoder extends CharacterEncoder {
 
             byte a = data[offset];
             byte b = 0;
-            byte c = 0;
+            // byte c = 0;
             outStream.write(pem_array[a >>> 2 & 0x3F]);
             outStream.write(pem_array[(a << 4 & 0x30) + (b >>> 4 & 0xF)]);
             outStream.write(61);

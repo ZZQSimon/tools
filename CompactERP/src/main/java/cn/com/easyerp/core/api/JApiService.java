@@ -23,7 +23,7 @@ import cn.com.easyerp.core.cache.CacheService;
 import cn.com.easyerp.core.cache.ColumnDescribe;
 import cn.com.easyerp.core.cache.TableDescribe;
 import cn.com.easyerp.core.data.DataMap;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.core.logger.Loggable;
 
 @Service

@@ -106,9 +106,8 @@ public class ClearI18N extends JFrame implements ActionListener {
     }
 
     private String matchJsFile(File file) {
-        try {
+        try (Scanner scanner = new Scanner(file);) {
             String result = "";
-            Scanner scanner = new Scanner(file);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 result = result + line;
@@ -125,6 +124,7 @@ public class ClearI18N extends JFrame implements ActionListener {
                 this.jsI18ns.append(",'" + value + "'");
             }
         } catch (Exception e) {
+
         }
         return null;
     }
@@ -135,9 +135,8 @@ public class ClearI18N extends JFrame implements ActionListener {
     }
 
     private String matchVMFile(File file) {
-        try {
+        try (Scanner scanner = new Scanner(file);) {
             String result = "";
-            Scanner scanner = new Scanner(file);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 result = result + line;
@@ -164,9 +163,8 @@ public class ClearI18N extends JFrame implements ActionListener {
     }
 
     private void matchStr(File file) {
-        try {
+        try (Scanner scanner = new Scanner(file);) {
             String result = "";
-            Scanner scanner = new Scanner(file);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 result = result + line;
@@ -182,10 +180,10 @@ public class ClearI18N extends JFrame implements ActionListener {
         }
     }
 
+    @SuppressWarnings("unused")
     private void matchApplication(File file) {
-        try {
+        try (Scanner scanner = new Scanner(file);) {
             String result = "";
-            Scanner scanner = new Scanner(file);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 result = result + line;
@@ -205,10 +203,10 @@ public class ClearI18N extends JFrame implements ActionListener {
         }
     }
 
+    @SuppressWarnings("unused")
     private void matchActionResult(File file) {
-        try {
+        try (Scanner scanner = new Scanner(file);) {
             String result = "";
-            Scanner scanner = new Scanner(file);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 result = result + line;
@@ -224,10 +222,10 @@ public class ClearI18N extends JFrame implements ActionListener {
         }
     }
 
+    @SuppressWarnings("unused")
     private void matchError(File file) {
-        try {
+        try (Scanner scanner = new Scanner(file);) {
             String result = "";
-            Scanner scanner = new Scanner(file);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 result = result + line;
@@ -247,10 +245,10 @@ public class ClearI18N extends JFrame implements ActionListener {
         }
     }
 
+    @SuppressWarnings("unused")
     private void matchMessageText(File file) {
-        try {
+        try (Scanner scanner = new Scanner(file);) {
             String result = "";
-            Scanner scanner = new Scanner(file);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 result = result + line;
@@ -270,10 +268,10 @@ public class ClearI18N extends JFrame implements ActionListener {
         }
     }
 
+    @SuppressWarnings("unused")
     private void matchFormat(File file) {
-        try {
+        try (Scanner scanner = new Scanner(file);) {
             String result = "";
-            Scanner scanner = new Scanner(file);
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 result = result + line;
@@ -302,9 +300,9 @@ public class ClearI18N extends JFrame implements ActionListener {
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {
-            String aaa = matcher.group(0);
-            String bbb = matcher.group(1);
+            // String aaa = matcher.group(0);
+            // String bbb = matcher.group(1);
         }
-        String aaa = "1";
+        // String aaa = "1";
     }
 }

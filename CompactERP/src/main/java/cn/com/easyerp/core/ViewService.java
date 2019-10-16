@@ -28,7 +28,7 @@ import cn.com.easyerp.core.dao.CalendarDao;
 import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.data.DatabaseDataMap;
 import cn.com.easyerp.core.data.ViewDataMap;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.core.serializer.ClobSerializer;
 import cn.com.easyerp.core.view.FormModelBase;
 import cn.com.easyerp.core.view.TagIdGenerator;
@@ -55,6 +55,7 @@ public class ViewService {
     private CalendarDao calendarDao;
     @Autowired
     private PCCalendarService pcCalendarService;
+    @SuppressWarnings("unused")
     private static EncrypDES des;
 
     public ViewService() {
@@ -65,47 +66,52 @@ public class ViewService {
         }
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void cacheWidgetToRequest(WidgetModelBase widget) {
-        List<WidgetModelBase> list = (List) Common.getRequestObject("REQUEST_WIDGET_CACHE_KEY");
+        List<WidgetModelBase> list = (List) Common.getRequestObject(REQUEST_WIDGET_CACHE_KEY);
         if (list == null) {
             list = new ArrayList<WidgetModelBase>();
-            Common.setRequestObject("REQUEST_WIDGET_CACHE_KEY", list);
+            Common.setRequestObject(REQUEST_WIDGET_CACHE_KEY, list);
         }
         list.add(widget);
     }
 
     public static WidgetModelBase fetchWidgetModel(String id) {
-        return fetchCachedModel("SESSION_WIDGET_CACHE_KEY", id);
+        return fetchCachedModel(SESSION_WIDGET_CACHE_KEY, id);
     }
 
+    @SuppressWarnings({ "rawtypes" })
     public static WidgetModelBase fetchCachedModel(String key, String id) {
         return (WidgetModelBase) ((Map) Common.getSessionObject(key)).get(id);
     }
 
     public static FieldModelBase fetchFieldModel(String id) {
-        return (FieldModelBase) fetchCachedModel("SESSION_WIDGET_CACHE_KEY", id);
+        return (FieldModelBase) fetchCachedModel(SESSION_WIDGET_CACHE_KEY, id);
     }
 
     public static FormModelBase fetchFormModel(String id) {
-        WidgetModelBase widget = fetchCachedModel("SESSION_WIDGET_CACHE_KEY", id);
+        WidgetModelBase widget = fetchCachedModel(SESSION_WIDGET_CACHE_KEY, id);
         if (FormModelBase.class.isInstance(widget))
             return (FormModelBase) widget;
         throw new ApplicationException("no form found with id:" + id);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void cacheForm(FormModelBase form, HttpServletRequest request) {
-        cacheRequestWidgets(form, (List) request.getAttribute("REQUEST_WIDGET_CACHE_KEY"), true);
+        cacheRequestWidgets(form, (List) request.getAttribute(REQUEST_WIDGET_CACHE_KEY), true);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void cacheRequestWidgets(FormModelBase form) {
-        cacheRequestWidgets(form, (List) Common.getRequestObject("REQUEST_WIDGET_CACHE_KEY"), false);
+        cacheRequestWidgets(form, (List) Common.getRequestObject(REQUEST_WIDGET_CACHE_KEY), false);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private static void cacheRequestWidgets(FormModelBase form, List<WidgetModelBase> widgets, boolean cacheForm) {
-        Map<String, WidgetModelBase> widgetCache = (Map) Common.getSessionObject("SESSION_WIDGET_CACHE_KEY");
+        Map<String, WidgetModelBase> widgetCache = (Map) Common.getSessionObject(SESSION_WIDGET_CACHE_KEY);
         if (widgetCache == null) {
             widgetCache = new ConcurrentHashMap<String, WidgetModelBase>();
-            Common.putSessionObject("SESSION_WIDGET_CACHE_KEY", widgetCache);
+            Common.putSessionObject(SESSION_WIDGET_CACHE_KEY, widgetCache);
         }
         if (cacheForm) {
             widgetCache.put(form.getId(), form);
@@ -124,8 +130,9 @@ public class ViewService {
         }
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void removeWidgetsFromCache(List<WidgetModelBase> widgets) {
-        Map<String, WidgetModelBase> widgetCache = (Map) Common.getSessionObject("SESSION_WIDGET_CACHE_KEY");
+        Map<String, WidgetModelBase> widgetCache = (Map) Common.getSessionObject(SESSION_WIDGET_CACHE_KEY);
         if (widgetCache == null)
             return;
         for (WidgetModelBase widget : widgets)
@@ -259,9 +266,9 @@ public class ViewService {
                 ret.put(key, entry.getValue());
                 continue;
             }
-            if (key.startsWith("_parent.")) {
+            if (key.startsWith(COLUMN_PARENT_PREFIX)) {
                 TableDescribe parentTable = this.dataService.getTableDesc(table.getParent_id());
-                column = parentTable.getColumn(key.substring("_parent.".length()));
+                column = parentTable.getColumn(key.substring(COLUMN_PARENT_PREFIX.length()));
             } else if (key.contains(".")) {
                 String[] names = Common.split(key, ".");
                 column = table.getColumn(names[0]);
@@ -274,8 +281,9 @@ public class ViewService {
         return ret;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void destroyFormCache(String id) {
-        Map<String, WidgetModelBase> widgetCache = (Map) Common.getSessionObject("SESSION_WIDGET_CACHE_KEY");
+        Map<String, WidgetModelBase> widgetCache = (Map) Common.getSessionObject(SESSION_WIDGET_CACHE_KEY);
         FormModelBase form = (FormModelBase) widgetCache.get(id);
         if (form.getWidgets() != null)
             for (WidgetModelBase widget : form.getWidgets())

@@ -3,352 +3,389 @@
 <mapper namespace="cn.com.easyerp.module.dao.Tree2Dao">
 	<select id="itemNameSelect" resultType="String">
 		select
-			name
+		name
 		from
-			m_item
-		where 
-			id = #{item_id} 
+		m_item
+		where
+		id = #{item_id}
 	</select>
 	<select id="checkResultSelect" resultType="java.util.Map">
 		select
-			 ( [id]+'t_check_result') as id,
-			convert(nvarchar(12),check_date, 111) as check_date,
-			sum(ok_quantity) as ok_quantity,
-			sum(ng_quantity) as ng_quantity,
-			sum(keep_quantity) as keep_quantity
+		(
+		[id]+'t_check_result') as id,
+		convert(nvarchar(12),check_date, 111) as
+		check_date,
+		sum(ok_quantity) as ok_quantity,
+		sum(ng_quantity) as
+		ng_quantity,
+		sum(keep_quantity) as keep_quantity
 		from
-			t_check_result
-		where 
-			lot_no = #{lot_no} and 
-			item_id = #{item_id} and
-			process_no = #{process_no}
+		t_check_result
+		where
+		lot_no = #{lot_no} and
+		item_id = #{item_id} and
+		process_no =
+		#{process_no}
 		group by id,CONVERT(nvarchar(12), check_date, 111)
-		union all
+		union
+		all
 		select
-			( [id]+'t_check_result_work') as id,
-			convert(nvarchar(12),check_date, 111) as check_date,
-			sum(ok_quantity) as ok_quantity,
-			sum(ng_quantity) as ng_quantity,
-			sum(keep_quantity) as keep_quantity
+		( [id]+'t_check_result_work') as id,
+		convert(nvarchar(12),check_date, 111) as check_date,
+		sum(ok_quantity)
+		as ok_quantity,
+		sum(ng_quantity) as ng_quantity,
+		sum(keep_quantity) as
+		keep_quantity
 		from
-			t_check_result_work
-		where 
-			lot_no = #{lot_no} and 
-			item_id = #{item_id} and
-			process_no = #{process_no}
-		group by id,CONVERT(nvarchar(12), check_date, 111)
+		t_check_result_work
+		where
+		lot_no = #{lot_no} and
+		item_id = #{item_id} and
+		process_no = #{process_no}
+		group by
+		id,CONVERT(nvarchar(12), check_date, 111)
 	</select>
 	<select id="receiveAndProSelect" resultType="java.util.Map">
 		select
-			( [id]+'t_receive_in') as id,
-			convert(nvarchar(12),trans_date, 111) as transReceive_date,
-			ok_quantity as ok_quantity,
-			ng_quantity as ng_quantity,
-			keep_quantity as keep_quantity
+		(
+		[id]+'t_receive_in') as id,
+		convert(nvarchar(12),trans_date, 111) as
+		transReceive_date,
+		ok_quantity as ok_quantity,
+		ng_quantity as
+		ng_quantity,
+		keep_quantity as keep_quantity
 		from
-			t_receive_in
-		where 
-			lot_no = #{lot_no} and 
-			item_id = #{item_id} and
-			process_no = #{process_no}
+		t_receive_in
+		where
+		lot_no
+		= #{lot_no} and
+		item_id = #{item_id} and
+		process_no = #{process_no}
 		union all
 		select
-			( [product_id]+'t_production') as id,
-			convert(nvarchar(12),receive_date, 111) as transReceive_date,
-			qualified_quantity as ok_quantity,
-			unqualified_quantity as ng_quantity,
-			persist_quantity as keep_quantity
+		( [product_id]+'t_production') as id,
+		convert(nvarchar(12),receive_date, 111) as transReceive_date,
+		qualified_quantity as ok_quantity,
+		unqualified_quantity as ng_quantity,
+		persist_quantity as keep_quantity
 		from
-			t_production
-		where 
-			lot_no = #{lot_no} and 
-			item_id = #{item_id} and
-			process_no = #{process_no}
+		t_production
+		where
+		lot_no =
+		#{lot_no} and
+		item_id = #{item_id} and
+		process_no = #{process_no}
 	</select>
 	<select id="productionDetailDownSelect" resultType="java.util.Map">
 		select
-			tpd.item_id as item_id,
-			mi.name as item_nm,
-			tpd.process_no as process_no
+		tpd.item_id as item_id,
+		mi.name as item_nm,
+		tpd.process_no as process_no
 		from
-			t_production_detail tpd,m_item mi
+		t_production_detail tpd,m_item mi
 		where
-			tpd.item_id = mi.id and
-			tpd.product_id in (
-			select 
-				product_id
-			from
-				t_production
-			where
-				lot_no = #{lot_no} and 
-				item_id = #{item_id} and
-				process_no = #{process_no}	
-			)
+		tpd.item_id = mi.id and
+		tpd.product_id in (
+		select
+		product_id
+		from
+		t_production
+		where
+		lot_no =
+		#{lot_no} and
+		item_id = #{item_id} and
+		process_no = #{process_no}
+		)
 	</select>
 	<select id="productionDetailUpSelect" resultType="java.util.Map">
 		select
-			tp.item_id as item_id,
-			mi.name as item_nm,
-			tp.process_no as process_no
+		tp.item_id as item_id,
+		mi.name as item_nm,
+		tp.process_no as process_no
 		from
-			t_production tp,m_item mi
+		t_production tp,m_item mi
 		where
-			tp.item_id = mi.id and
-			tp.product_id IN (
-				SELECT
-					product_id
-				FROM
-					t_production_detail
-				WHERE
-					(
-						[product_id] + ',' + [detail_id]
-					) IN (
-						SELECT
-							parent_id
-						FROM
-							v_lotno_detail
-						WHERE
-							parent_name = 't_production_detail' and
-							lot_no = #{lot_no} and 
-							item_id = #{item_id} and
-							process_no = #{process_no}
-					)
-			) 
+		tp.item_id = mi.id and
+		tp.product_id
+		IN (
+		SELECT
+		product_id
+		FROM
+		t_production_detail
+		WHERE
+		(
+		[product_id] + ',' +
+		[detail_id]
+		) IN (
+		SELECT
+		parent_id
+		FROM
+		v_lotno_detail
+		WHERE
+		parent_name =
+		't_production_detail' and
+		lot_no = #{lot_no} and
+		item_id = #{item_id}
+		and
+		process_no = #{process_no}
+		)
+		)
 	</select>
 	<select id="productionDetailLotNoDownSelect" resultType="java.util.Map">
 		select
-			([product_id] + ',' + [detail_id]) as product_Detail_Id,
-			tpd.item_id as item_id,
-			mi.name as item_nm,
-			tpd.process_no as process_no,
-			v.lot_no as lot_no
+		([product_id] + ',' + [detail_id]) as product_Detail_Id,
+		tpd.item_id as
+		item_id,
+		mi.name as item_nm,
+		tpd.process_no as process_no,
+		v.lot_no as
+		lot_no
 		from
-			t_production_detail tpd,m_item mi,v_lotno_detail v
+		t_production_detail tpd,m_item mi,v_lotno_detail v
 		where
-			([product_id] + ',' + [detail_id])=v.parent_id and
-			v.parent_name='t_production_detail' and
-			tpd.item_id = mi.id and
-			tpd.product_id in (
-			select 
-				product_id
-			from
-				t_production
-			where
-				lot_no = #{lot_no} and 
-				item_id = #{item_id} and
-				process_no = #{process_no}	
-			)
+		([product_id] + ',' + [detail_id])=v.parent_id and
+		v.parent_name='t_production_detail' and
+		tpd.item_id = mi.id and
+		tpd.product_id in (
+		select
+		product_id
+		from
+		t_production
+		where
+		lot_no =
+		#{lot_no} and
+		item_id = #{item_id} and
+		process_no = #{process_no}
+		)
 	</select>
 	<select id="productionDetailLotNoUpSelect" resultType="java.util.Map">
 		select
-			tp.item_id as item_id,
-			mi.name as item_nm,
-			tp.process_no as process_no,
-			tp.lot_no as lot_no
+		tp.item_id as item_id,
+		mi.name as item_nm,
+		tp.process_no as process_no,
+		tp.lot_no as lot_no
 		from
-			t_production tp,m_item mi
+		t_production tp,m_item mi
 		where
-			tp.item_id = mi.id and
-			tp.product_id IN (
-				SELECT
-					product_id
-				FROM
-					t_production_detail
-				WHERE
-					(
-						[product_id] + ',' + [detail_id]
-					) IN (
-						SELECT
-							parent_id
-						FROM
-							v_lotno_detail
-						WHERE
-							parent_name = 't_production_detail' and
-							lot_no = #{lot_no} and 
-							item_id = #{item_id} and
-							process_no = #{process_no}
-					)
-			) 
+		tp.item_id =
+		mi.id and
+		tp.product_id IN (
+		SELECT
+		product_id
+		FROM
+		t_production_detail
+		WHERE
+		(
+		[product_id] + ',' + [detail_id]
+		) IN (
+		SELECT
+		parent_id
+		FROM
+		v_lotno_detail
+		WHERE
+		parent_name = 't_production_detail' and
+		lot_no =
+		#{lot_no} and
+		item_id = #{item_id} and
+		process_no = #{process_no}
+		)
+		)
 	</select>
 	<select id="fromKeepSelect" resultType="java.util.Map">
 		select
-			detail_id as id,
-			CONVERT(nvarchar(12), a.judge_date, 111) as judge_date,
-			sum(f.ok_quantity) as ok_quantity,
-			sum(f.ng_quantity) as ng_quantity,
-			sum(f.keep_quantity) as keep_quantity
-		from 
-			t_keep_judge a,
-			t_judge_from_keep f
-		where 
-			a.id=f.id and
-			a.lot_no = #{lot_no} and 
-			a.item_id = #{item_id} and
-			f.process_no = #{process_no}
-		group by detail_id,CONVERT(nvarchar(12), a.judge_date, 111)	
+		detail_id as id,
+		CONVERT(nvarchar(12), a.judge_date, 111) as judge_date,
+		sum(f.ok_quantity) as ok_quantity,
+		sum(f.ng_quantity) as ng_quantity,
+		sum(f.keep_quantity) as keep_quantity
+		from
+		t_keep_judge a,
+		t_judge_from_keep f
+		where
+		a.id=f.id and
+		a.lot_no = #{lot_no} and
+		a.item_id = #{item_id} and
+		f.process_no = #{process_no}
+		group by
+		detail_id,CONVERT(nvarchar(12), a.judge_date,
+		111)
 	</select>
 	<select id="toKeepSelect" resultType="java.util.Map">
 		select
-			detail_id as id,
-			CONVERT(nvarchar(12), a.judge_date, 111) as judge_date,
-			sum(f.ok_quantity) as ok_quantity,
-			sum(f.ng_quantity) as ng_quantity,
-			sum(f.keep_quantity) as keep_quantity
-		from 
-			t_keep_judge a,
-			t_judge_to_keep f
-		where 
-			a.id=f.id and
-			a.lot_no = #{lot_no} and 
-			a.item_id = #{item_id} and
-			f.process_no = #{process_no}
-		group by detail_id,CONVERT(nvarchar(12), a.judge_date, 111)	
+		detail_id as id,
+		CONVERT(nvarchar(12), a.judge_date, 111) as judge_date,
+		sum(f.ok_quantity) as ok_quantity,
+		sum(f.ng_quantity) as ng_quantity,
+		sum(f.keep_quantity) as keep_quantity
+		from
+		t_keep_judge a,
+		t_judge_to_keep f
+		where
+		a.id=f.id and
+		a.lot_no = #{lot_no} and
+		a.item_id =
+		#{item_id} and
+		f.process_no = #{process_no}
+		group by
+		detail_id,CONVERT(nvarchar(12), a.judge_date,
+		111)
 	</select>
 	<select id="stockAdjustSelect" resultType="java.util.Map">
 		select
-			id,
-			CONVERT(nvarchar(12), adjust_date, 111) as adjust_date,
-			adjust_type,
-			adjust_quantity
+		id,
+		CONVERT(nvarchar(12), adjust_date, 111) as adjust_date,
+		adjust_type,
+		adjust_quantity
 		from
-			t_stock_adjust
-		where 
-			lot_no = #{lot_no} and 
-			item_id = #{item_id} and
-			process_no = #{process_no}
+		t_stock_adjust
+		where
+		lot_no = #{lot_no} and
+		item_id =
+		#{item_id} and
+		process_no = #{process_no}
 	</select>
 	<select id="transferAccountSelect" resultType="java.util.Map">
 		select
-			id,
-			CONVERT(nvarchar(12), trans_date, 111) as trans_date,
-			export_quantity
+		id,
+		CONVERT(nvarchar(12), trans_date, 111) as trans_date,
+		export_quantity
 		from
-			t_transfer_account
-		where 
-			lot_no = #{lot_no} and 
-			item_id = #{item_id} and
-			process_no = #{process_no}
+		t_transfer_account
+		where
+		lot_no = #{lot_no} and
+		item_id = #{item_id}
+		and
+		process_no = #{process_no}
 	</select>
 	<select id="transferAccountAfterSelect" resultType="java.util.Map">
 		select
-			id,
-			CONVERT(nvarchar(12), trans_date, 111) as trans_date,
-			import_quantity_after
+		id,
+		CONVERT(nvarchar(12), trans_date, 111) as trans_date,
+		import_quantity_after
 		from
-			t_transfer_account
-		where 
-			lot_no_after = #{lot_no} and 
-			item_id_after = #{item_id} and
-			process_no_after = #{process_no}
+		t_transfer_account
+		where
+		lot_no_after =
+		#{lot_no} and
+		item_id_after = #{item_id} and
+		process_no_after =
+		#{process_no}
 	</select>
 	<select id="lotNoDownSelect" resultType="java.util.Map">
 		SELECT DISTINCT
-			lot_no
+		lot_no
 		FROM
-			v_lotno_detail
+		v_lotno_detail
 		WHERE
-			parent_name = 't_production_detail'
-		AND parent_id IN (
-			SELECT
-				(
-					[product_id] + ',' + [detail_id]
-				) AS parent_id
-			FROM
-				t_production_detail
-			WHERE
-				item_id = #{item_id} and
-				process_no = #{process_no}
-			AND product_id IN (
-				SELECT
-					product_id
-				FROM
-					t_production
-				WHERE
-				lot_no = #{parent_lot_no} and 
-				item_id = #{parent_item_id} and
-				process_no = #{parent_process_no}
-			)
+		parent_name = 't_production_detail'
+		AND
+		parent_id IN (
+		SELECT
+		(
+		[product_id] + ',' + [detail_id]
+		) AS parent_id
+		FROM
+		t_production_detail
+		WHERE
+		item_id = #{item_id} and
+		process_no =
+		#{process_no}
+		AND product_id IN (
+		SELECT
+		product_id
+		FROM
+		t_production
+		WHERE
+		lot_no = #{parent_lot_no} and
+		item_id = #{parent_item_id} and
+		process_no = #{parent_process_no}
+		)
 		)
 	</select>
 	<select id="lotNoUpSelect" resultType="java.util.Map">
 		SELECT
-			lot_no
+		lot_no
 		FROM
-			t_production
+		t_production
 		WHERE
-			product_id IN (
-				SELECT
-					product_id
-				FROM
-					t_production_detail
-				WHERE
-					(
-						[product_id] + ',' + [detail_id]
-					) IN (
-						SELECT
-							parent_id
-						FROM
-							v_lotno_detail
-						WHERE
-							item_id = #{parent_item_id}
-						AND process_no = #{parent_process_no}
-						AND lot_no = #{parent_lot_no}
-					)
-			)
-		AND item_id = #{item_id}
+		product_id IN (
+		SELECT
+		product_id
+		FROM
+		t_production_detail
+		WHERE
+		(
+		[product_id] + ',' + [detail_id]
+		) IN (
+		SELECT
+		parent_id
+		FROM
+		v_lotno_detail
+		WHERE
+		item_id = #{parent_item_id}
+		AND
+		process_no = #{parent_process_no}
+		AND lot_no = #{parent_lot_no}
+		)
+		)
+		AND
+		item_id = #{item_id}
 		AND process_no = #{process_no}
 	</select>
 	<select id="userQuantityDownSelect" resultType="String">
 		SELECT
-			use_quantity
+		use_quantity
 		FROM
-			t_production_detail
+		t_production_detail
 		WHERE
-			product_id IN (
-				SELECT
-					product_id
-				FROM
-					t_production
-				WHERE
-					item_id = #{parent_item_id} and
-					process_no = #{parent_process_no} and
-					lot_no = #{parent_lot_no}  		
-			)
-		AND item_id = #{item_id}
+		product_id IN (
+		SELECT
+		product_id
+		FROM
+		t_production
+		WHERE
+		item_id = #{parent_item_id} and
+		process_no = #{parent_process_no} and
+		lot_no = #{parent_lot_no}
+		)
+		AND
+		item_id = #{item_id}
 		AND process_no = #{process_no}
 	</select>
 	<select id="userQuantityUpSelect" resultType="String">
 		SELECT
-			ISNULL(sum(detail_number),'0.0') as detail_number
+		ISNULL(sum(detail_number),'0.0') as detail_number
 		FROM
-			v_lotno_detail
+		v_lotno_detail
 		WHERE
-			parent_name='t_production_detail' AND
-			item_id=#{item_id} AND
-			process_no=#{process_no} AND
-			lot_no IN ( #{lot_no_list} )
+		parent_name='t_production_detail' AND
+		item_id=#{item_id} AND
+		process_no=#{process_no} AND
+		lot_no IN ( #{lot_no_list} )
 	</select>
 	<select id="userQuantityLotUpSelect" resultType="java.lang.String">
 		SELECT
-			ISNULL(sum(detail_number),'0.0') as detail_number
+		ISNULL(sum(detail_number),'0.0') as detail_number
 		FROM
-			v_lotno_detail
+		v_lotno_detail
 		WHERE
-			parent_name='t_production_detail' AND
-			item_id=#{item_id} AND
-			process_no=#{process_no} AND
-			lot_no=#{lot_no}
+		parent_name='t_production_detail' AND
+		item_id=#{item_id} AND
+		process_no=#{process_no} AND
+		lot_no=#{lot_no}
 	</select>
 	<select id="userQuantityLotDownSelect" resultType="java.lang.String">
 		SELECT
-			ISNULL(sum(detail_number),'0.0') as detail_number
+		ISNULL(sum(detail_number),'0.0') as detail_number
 		FROM
-			v_lotno_detail
+		v_lotno_detail
 		WHERE
-			parent_id=#{product_Detail_Id} AND
-			parent_name='t_production_detail' AND
-			item_id=#{item_id} AND
-			process_no=#{process_no} AND
-			lot_no=#{lot_no}
+		parent_id=#{product_Detail_Id} AND
+		parent_name='t_production_detail' AND
+		item_id=#{item_id} AND
+		process_no=#{process_no} AND
+		lot_no=#{lot_no}
 	</select>
 </mapper>

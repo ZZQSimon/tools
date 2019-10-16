@@ -126,7 +126,7 @@
 	</bean>
 	<bean
 		class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
-		<property name="prefix" value="/com/gainit/g1/module/velocity/" />
+		<property name="prefix" value="/cn/com/easyerp/module/velocity/" />
 		<property name="suffix" value=".vm" />
 		<property name="exposeSpringMacroHelpers" value="true" />
 		<property name="toolboxConfigLocation" value="/WEB-INF/velocity/toolbox.xml" />
@@ -161,7 +161,7 @@
 		</property>
 	</bean>
 	<mvc:resources mapping="/**"
-		location="/, classpath:/com/gainit/g1/module/resource/" />
+		location="/, classpath:/cn/com/easyerp/module/resource/" />
 	<mvc:annotation-driven conversion-service="conversionService">
 		<mvc:message-converters register-defaults="false">
 			<bean

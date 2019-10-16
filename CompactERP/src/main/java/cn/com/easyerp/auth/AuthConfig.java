@@ -38,8 +38,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
     private SessionRegistry sessionRegistry = new SessionRegistryImpl();
     private AuthenticationSuccessHandler authenticationSuccessHandler = new SimpleLoginSuccessHandler();
     private SimpleLogOutSuccessHandler simpleLogOutSuccessHandler = new SimpleLogOutSuccessHandler();
-    private ConcurrentSessionFilter sessionFilter = new ConcurrentSessionFilter(this.sessionRegistry,
-            "/auth/login.view");
+    private ConcurrentSessionFilter sessionFilter = new ConcurrentSessionFilter(this.sessionRegistry, LOGIN_URL);
 
     @Bean
     public ConcurrentSessionFilter concurrentSessionFilter() {
@@ -63,6 +62,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void configure(HttpSecurity http) throws Exception {
         this.sessionFilter.setRedirectStrategy(new DxInvalidSessionStrategy());
         ConcurrentSessionControlAuthenticationStrategy cscas = new ConcurrentSessionControlAuthenticationStrategy(
@@ -166,14 +166,14 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
         registry = ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl) registry.anyRequest()).denyAll();
         ((HttpSecurity) ((HttpSecurity) ((HttpSecurity) ((HttpSecurity) ((FormLoginConfigurer) ((FormLoginConfigurer) ((FormLoginConfigurer) ((FormLoginConfigurer) ((FormLoginConfigurer) ((HttpSecurity) ((HttpSecurity) registry
                 .and()).exceptionHandling().accessDeniedHandler(this.authAccessDeniedHandler)
-                        .authenticationEntryPoint(this.authEntryPoint).and()).formLogin().loginPage("/auth/login.view")
-                                .defaultSuccessUrl("/index.view", true)).failureUrl("/auth/login.view?error"))
+                        .authenticationEntryPoint(this.authEntryPoint).and()).formLogin().loginPage(LOGIN_URL)
+                                .defaultSuccessUrl("/index.view", true)).failureUrl(LOGIN_WITH_ERROR_URL))
                                         .loginProcessingUrl("/auth/login.do"))
                                                 .successHandler(this.authenticationSuccessHandler)).permitAll()).and())
-                                                        .logout().logoutSuccessUrl("/auth/login.view")
+                                                        .logout().logoutSuccessUrl(LOGIN_URL)
                                                         .logoutUrl("/auth/logout.do")
                                                         .logoutSuccessHandler(this.simpleLogOutSuccessHandler)
-                                                        .permitAll().and()).rememberMe().key("dxRememberMe").and())
+                                                        .permitAll().and()).rememberMe().key(REMEMBER_ME_KEY).and())
                                                                 .csrf().disable()).addFilter(this.sessionFilter)
                                                                         .sessionManagement()
                                                                         .sessionAuthenticationStrategy(sas);

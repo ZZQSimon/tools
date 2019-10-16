@@ -27,7 +27,7 @@ public class ServiceNumberImpl implements WeChatService {
     private SystemDao systemDao;
     private String APPID = null;
     private String SECRET = null;
-    private String GRANT_TYPE = null;
+    // private String GRANT_TYPE = null;
     private String database = null;
     private String token = null;
     private Date token_modify = null;
@@ -36,7 +36,7 @@ public class ServiceNumberImpl implements WeChatService {
     private String server_address = null;
 
     public ServiceNumberImpl() {
-        this.GRANT_TYPE = "authorization_code";
+        // this.GRANT_TYPE = "authorization_code";
 
         InputStream inStream = ServiceNumberImpl.class.getClassLoader().getResourceAsStream("param.properties");
         Properties prop = new Properties();
@@ -60,7 +60,7 @@ public class ServiceNumberImpl implements WeChatService {
 
     public String getToken() {
         initConst();
-        if (this.token == null || (new Date()).getTime() - this.token_modify.getTime() > 7000000L) {
+        if (this.token == null || (new Date()).getTime() - this.token_modify.getTime() > EXPIRES_IN) {
             String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type={TYPE}&appid={APPID}&secret={APPSECRET}";
             url = url.replace("{TYPE}", "client_credential");
             url = url.replace("{APPID}", this.APPID);
@@ -115,7 +115,7 @@ public class ServiceNumberImpl implements WeChatService {
         try {
             String paramJson = Common.toJson(param);
             if (paramJson != null) {
-                String str = HttpClientUtil.doPost(url, paramJson);
+                HttpClientUtil.doPost(url, paramJson);
             }
             return true;
         } catch (Exception e) {

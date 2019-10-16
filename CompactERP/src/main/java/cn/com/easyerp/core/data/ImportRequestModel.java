@@ -1,8 +1,9 @@
 package cn.com.easyerp.core.data;
 
+import cn.com.easyerp.core.view.FormModelBase;
 import cn.com.easyerp.core.view.TableFormRequestModel;
 
-public class ImportRequestModel extends TableFormRequestModel {
+public class ImportRequestModel<T extends FormModelBase> extends TableFormRequestModel<T> {
     private String formId;
     private String fileId;
     private int import_type;

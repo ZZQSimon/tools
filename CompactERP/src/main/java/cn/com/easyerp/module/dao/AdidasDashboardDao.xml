@@ -5,9 +5,11 @@
 		SELECT
 		'hires' AS `change_type`,COUNT(*)AS'count'
 		FROM
-		t_employee_change t1
+		t_employee_change
+		t1
 		INNER JOIN t_emp t2 ON t1.emp_id = t2.employee_id
-		INNER JOIN m_department m1 ON t1.shop_id = m1.id
+		INNER JOIN
+		m_department m1 ON t1.shop_id = m1.id
 		WHERE
 		t1.type = '1'
 		<if test=" begin_dates != null and  begin_dates != ''">
@@ -55,8 +57,9 @@
 		INNER JOIN t_emp t2 ON t1.emp_id = t2.employee_id
 		INNER JOIN m_department m1 ON t1.shop_id = m1.id
 		WHERE
-        (t1.type = '2'
-		OR t1.type = '3')
+		(t1.type = '2'
+		OR
+		t1.type = '3')
 		<if test=" begin_dates != null and  begin_dates != ''">
 			AND t1.date between STR_TO_DATE(#{begin_dates},'%Y-%m-%d')
 		</if>
@@ -235,534 +238,635 @@
 		</if>
 
 	</select>
-    <select id="hcFteSelect" resultType="java.util.Map">
-        SELECT
-        t_personel_changea_record.employee_type,
-        COUNT(t_personel_changea_record.id) emp_count
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        GROUP BY t_personel_changea_record.employee_type
-    </select>
-    <select id="contractTypeSelect" resultType="java.util.Map">
-        SELECT t_personel_changea_record.contract_term, COUNT(t_personel_changea_record.id) contract_term_count
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.employee_type &lt;&gt; 'Intern'
-        AND t_personel_changea_record.contract_term &lt;&gt; ''
-        AND t_personel_changea_record.contract_term IS NOT NULL
-        AND t_personel_changea_record.contract_term &lt;&gt; '2'
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        GROUP BY t_personel_changea_record.contract_term
-    </select>
-    <select id="lengthServiceSelect" resultType="java.util.Map">
-        SELECT t_personel_changea_record.entry_date
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.entry_date IS NOT NULL
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-    </select>
-    <select id="distriButtonSelect" resultType="java.util.Map">
-        SELECT
-        'boy' `type`,
-        COUNT(t_personel_changea_record.id) emp_count
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.sex = '1'
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        UNION ALL
-        SELECT
-        'girl' `type`,
-        COUNT(t_personel_changea_record.id) emp_count
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.sex = '2'
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        UNION ALL
-        SELECT
-        'boyIntern' `type`,
-        COUNT(t_personel_changea_record.id) emp_count
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.sex = '1'
-        AND t_personel_changea_record.gsms in ('P2','P3','P4','PT')
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        UNION ALL
-        SELECT
-        'boyFTE' `type`,
-        COUNT(t_personel_changea_record.id) emp_count
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.sex = '1'
-        AND t_personel_changea_record.gsms in ('P1','M4','M3','M2')
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        UNION ALL
-        SELECT
-        'girlIntern' `type`,
-        COUNT(t_personel_changea_record.id) emp_count
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.sex = '2'
-        AND t_personel_changea_record.gsms in ('P2','P3','P4','PT')
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        UNION ALL
-        SELECT
-        'girlFTE' `type`,
-        COUNT(t_personel_changea_record.id) emp_count
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.sex = '2'
-        AND t_personel_changea_record.gsms  in ('P1','M4','M3','M2') 
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-    </select>
-    <select id="ageBoySelect" resultType="java.util.Map">
-        SELECT
-        'boy' `type`,
-        year(#{filterData.beginDate}) - year(t_emp.birth_date) how_old
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        LEFT JOIN t_emp t_emp
-        ON t_personel_changea_record.employee_id = t_emp.employee_id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.sex = '1'
-        AND t_emp.birth_date IS NOT NULL
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-    </select>
-    <select id="ageGirlSelect" resultType="java.util.Map">
-        SELECT
-        'girl' `type`,
-        year(#{filterData.beginDate}) - year(t_emp.birth_date) how_old
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        LEFT JOIN t_emp t_emp
-        ON t_personel_changea_record.employee_id = t_emp.employee_id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.sex = '2'
-        AND t_emp.birth_date IS NOT NULL
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-    </select>
-    <select id="workYearBoySelect" resultType="java.util.Map">
-        SELECT
-        t_personel_changea_record.entry_date
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.sex = '1'
-        AND t_personel_changea_record.entry_date IS NOT NULL
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-    </select>
-    <select id="workYearGirlSelect" resultType="java.util.Map">
-        SELECT
-        t_personel_changea_record.entry_date
-        FROM t_personel_changea_record t_personel_changea_record
-        LEFT JOIN m_department m_department
-        ON t_personel_changea_record.shop_id = m_department.id
-        WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
-        AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
-        AND t_personel_changea_record.sex = '2'
-        AND t_personel_changea_record.entry_date IS NOT NULL
-        <if test="filterData.region != null">
-            <foreach collection="filterData.region" item="item" open="AND m_department.shop_area IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store_type != null">
-            <foreach collection="filterData.store_type" item="item" open="AND m_department.type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.employee_type != null">
-            <foreach collection="filterData.employee_type" item="item" open="AND t_personel_changea_record.employee_type IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.store != null">
-            <foreach collection="filterData.store" item="item" open="AND t_personel_changea_record.shop_id IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="filterData.grade != null">
-            <foreach collection="filterData.grade" item="item" open="AND t_personel_changea_record.rank IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-    </select>
+	<select id="hcFteSelect" resultType="java.util.Map">
+		SELECT
+		t_personel_changea_record.employee_type,
+		COUNT(t_personel_changea_record.id) emp_count
+		FROM
+		t_personel_changea_record t_personel_changea_record
+		LEFT JOIN
+		m_department m_department
+		ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		GROUP BY t_personel_changea_record.employee_type
+	</select>
+	<select id="contractTypeSelect" resultType="java.util.Map">
+		SELECT t_personel_changea_record.contract_term,
+		COUNT(t_personel_changea_record.id) contract_term_count
+		FROM
+		t_personel_changea_record t_personel_changea_record
+		LEFT JOIN
+		m_department m_department ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		AND t_personel_changea_record.employee_type
+		&lt;&gt; 'Intern'
+		AND t_personel_changea_record.contract_term &lt;&gt;
+		''
+		AND t_personel_changea_record.contract_term IS NOT NULL
+		AND
+		t_personel_changea_record.contract_term &lt;&gt; '2'
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		GROUP BY t_personel_changea_record.contract_term
+	</select>
+	<select id="lengthServiceSelect" resultType="java.util.Map">
+		SELECT t_personel_changea_record.entry_date
+		FROM
+		t_personel_changea_record t_personel_changea_record
+		LEFT JOIN
+		m_department m_department ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		AND t_personel_changea_record.entry_date IS NOT
+		NULL
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="distriButtonSelect" resultType="java.util.Map">
+		SELECT
+		'boy' `type`,
+		COUNT(t_personel_changea_record.id) emp_count
+		FROM
+		t_personel_changea_record t_personel_changea_record
+		LEFT JOIN
+		m_department m_department
+		ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		AND t_personel_changea_record.sex = '1'
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		UNION ALL
+		SELECT
+		'girl' `type`,
+		COUNT(t_personel_changea_record.id)
+		emp_count
+		FROM t_personel_changea_record t_personel_changea_record
+		LEFT
+		JOIN m_department m_department
+		ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		AND t_personel_changea_record.sex = '2'
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		UNION ALL
+		SELECT
+		'boyIntern' `type`,
+		COUNT(t_personel_changea_record.id)
+		emp_count
+		FROM t_personel_changea_record t_personel_changea_record
+		LEFT
+		JOIN m_department m_department
+		ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		AND t_personel_changea_record.sex = '1'
+		AND
+		t_personel_changea_record.gsms in ('P2','P3','P4','PT')
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		UNION ALL
+		SELECT
+		'boyFTE' `type`,
+		COUNT(t_personel_changea_record.id)
+		emp_count
+		FROM t_personel_changea_record t_personel_changea_record
+		LEFT
+		JOIN m_department m_department
+		ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		AND t_personel_changea_record.sex = '1'
+		AND
+		t_personel_changea_record.gsms in ('P1','M4','M3','M2')
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		UNION ALL
+		SELECT
+		'girlIntern' `type`,
+		COUNT(t_personel_changea_record.id) emp_count
+		FROM
+		t_personel_changea_record t_personel_changea_record
+		LEFT JOIN
+		m_department m_department
+		ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		AND t_personel_changea_record.sex = '2'
+		AND
+		t_personel_changea_record.gsms in ('P2','P3','P4','PT')
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		UNION ALL
+		SELECT
+		'girlFTE' `type`,
+		COUNT(t_personel_changea_record.id)
+		emp_count
+		FROM t_personel_changea_record t_personel_changea_record
+		LEFT
+		JOIN m_department m_department
+		ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		AND t_personel_changea_record.sex = '2'
+		AND
+		t_personel_changea_record.gsms in ('P1','M4','M3','M2')
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="ageBoySelect" resultType="java.util.Map">
+		SELECT
+		'boy' `type`,
+		year(#{filterData.beginDate}) -
+		year(t_emp.birth_date) how_old
+		FROM t_personel_changea_record
+		t_personel_changea_record
+		LEFT JOIN m_department m_department
+		ON
+		t_personel_changea_record.shop_id = m_department.id
+		LEFT JOIN t_emp
+		t_emp
+		ON t_personel_changea_record.employee_id = t_emp.employee_id
+		WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
+		AND
+		t_personel_changea_record.sex = '1'
+		AND t_emp.birth_date IS NOT NULL
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="ageGirlSelect" resultType="java.util.Map">
+		SELECT
+		'girl' `type`,
+		year(#{filterData.beginDate}) -
+		year(t_emp.birth_date) how_old
+		FROM t_personel_changea_record
+		t_personel_changea_record
+		LEFT JOIN m_department m_department
+		ON
+		t_personel_changea_record.shop_id = m_department.id
+		LEFT JOIN t_emp
+		t_emp
+		ON t_personel_changea_record.employee_id = t_emp.employee_id
+		WHERE t_personel_changea_record.cre_date &lt;= #{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt; #{filterData.endDate}
+		AND
+		t_personel_changea_record.sex = '2'
+		AND t_emp.birth_date IS NOT NULL
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="workYearBoySelect" resultType="java.util.Map">
+		SELECT
+		t_personel_changea_record.entry_date
+		FROM
+		t_personel_changea_record t_personel_changea_record
+		LEFT JOIN
+		m_department m_department
+		ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		AND t_personel_changea_record.sex = '1'
+		AND
+		t_personel_changea_record.entry_date IS NOT NULL
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="workYearGirlSelect" resultType="java.util.Map">
+		SELECT
+		t_personel_changea_record.entry_date
+		FROM
+		t_personel_changea_record t_personel_changea_record
+		LEFT JOIN
+		m_department m_department
+		ON t_personel_changea_record.shop_id =
+		m_department.id
+		WHERE t_personel_changea_record.cre_date &lt;=
+		#{filterData.beginDate}
+		AND t_personel_changea_record.upd_date &gt;
+		#{filterData.endDate}
+		AND t_personel_changea_record.sex = '2'
+		AND
+		t_personel_changea_record.entry_date IS NOT NULL
+		<if test="filterData.region != null">
+			<foreach collection="filterData.region" item="item"
+				open="AND m_department.shop_area IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store_type != null">
+			<foreach collection="filterData.store_type" item="item"
+				open="AND m_department.type IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.employee_type != null">
+			<foreach collection="filterData.employee_type" item="item"
+				open="AND t_personel_changea_record.employee_type IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.store != null">
+			<foreach collection="filterData.store" item="item"
+				open="AND t_personel_changea_record.shop_id IN (" separator=","
+				close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="filterData.grade != null">
+			<foreach collection="filterData.grade" item="item"
+				open="AND t_personel_changea_record.rank IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
 </mapper>

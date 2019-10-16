@@ -36,7 +36,7 @@ import cn.com.easyerp.core.cache.CacheService;
 import cn.com.easyerp.core.cache.ColumnDescribe;
 import cn.com.easyerp.core.dao.ApproveDao;
 import cn.com.easyerp.core.data.DataService;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.core.logger.Loggable;
 import cn.com.easyerp.core.master.DxRoutingDataSource;
 import cn.com.easyerp.core.module.ModuleService;
@@ -46,8 +46,7 @@ import cn.com.easyerp.framework.common.Common;
 import cn.com.easyerp.generate.AutoGenerateFormModel;
 
 @Service
-public class DxToolService
-{
+public class DxToolService {
     public static final FilenameFilter jsFilter;
     public static final String TAG = "DxToolService";
     public static final String TOOLBOX_PATH = "/WEB-INF/velocity/toolbox.xml";
@@ -78,8 +77,8 @@ public class DxToolService
     @Autowired
     CacheService cacheService;
     private DxTool tool;
-    private static final String MODULE_RESOURCE_PREFIX = "/com/gainit/g1/module/resource";
-    
+    private static final String MODULE_RESOURCE_PREFIX = "/cn/com/easyerp/module/resource";
+
     @PostConstruct
     public void init() throws IOException {
         final String context = this.servletContext.getContextPath();
@@ -97,103 +96,120 @@ public class DxToolService
         }
         final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
-            final Resource[] resources2;
-            final Resource[] resources = resources2 = resolver.getResources("/com/gainit/g1/module/resource/js/*.js");
-            for (final Resource resource : resources2) {
+            final Resource[] resources = resolver.getResources("/cn/com/easyerp/module/resource/js/*.js");
+            for (final Resource resource : resources) {
                 String path = resource.getFile().getPath();
                 if (SystemUtils.IS_OS_WINDOWS) {
                     path = path.replace("\\", "/");
                 }
-                final int idx = path.lastIndexOf("/com/gainit/g1/module/resource") + "/com/gainit/g1/module/resource".length();
+                final int idx = path.lastIndexOf(MODULE_RESOURCE_PREFIX) + MODULE_RESOURCE_PREFIX.length();
                 this.jsList.add(context + path.substring(idx));
             }
+        } catch (IOException ex) {
         }
-        catch (IOException ex) {}
         try {
-            final Resource[] resources3;
-            final Resource[] resources = resources3 = resolver.getResources("/com/gainit/g1/module/resource/css/*.css");
-            for (final Resource resource : resources3) {
+            final Resource[] resources = resolver.getResources("/cn/com/easyerp/module/resource/css/*.css");
+            for (final Resource resource : resources) {
                 final String path = resource.getFile().getPath();
-                final int idx = path.indexOf("/com/gainit/g1/module/resource") + "/com/gainit/g1/module/resource".length();
+                final int idx = path.indexOf(MODULE_RESOURCE_PREFIX) + MODULE_RESOURCE_PREFIX.length();
                 this.cssList.add(context + path.substring(idx));
             }
+        } catch (IOException ex2) {
         }
-        catch (IOException ex2) {}
     }
-    
-    private Context createVelocityContext(final Map<String, Object> model, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-        final ChainedContext velocityContext = new ChainedContext((Context)new VelocityContext((Map)model), this.velocityEngine, request, response, this.servletContext);
-        final ToolboxManager toolboxManager = (ToolboxManager)ServletToolboxManager.getInstance(this.servletContext, "/WEB-INF/velocity/toolbox.xml");
-        final Map<?, ?> toolboxContext = (Map<?, ?>)toolboxManager.getToolbox((Object)velocityContext);
-        velocityContext.setToolbox((Map)toolboxContext);
-        return (Context)velocityContext;
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private Context createVelocityContext(final Map<String, Object> model, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
+        final ChainedContext velocityContext = new ChainedContext((Context) new VelocityContext((Map) model),
+                this.velocityEngine, request, response, this.servletContext);
+        final ToolboxManager toolboxManager = (ToolboxManager) ServletToolboxManager.getInstance(this.servletContext,
+                "/WEB-INF/velocity/toolbox.xml");
+        final Map<?, ?> toolboxContext = (Map<?, ?>) toolboxManager.getToolbox((Object) velocityContext);
+        velocityContext.setToolbox((Map) toolboxContext);
+        return (Context) velocityContext;
     }
-    
-    public String macro(final String name, final Map<String, Object> map, final HttpServletRequest req, final HttpServletResponse resp) {
+
+    public String macro(final String name, final Map<String, Object> map, final HttpServletRequest req,
+            final HttpServletResponse resp) {
         try {
             final Context context = this.createVelocityContext(map, req, resp);
             final StringWriter sw = new StringWriter();
             final String[] keys = new String[map.size()];
             final Object[] keySet = map.keySet().toArray();
             for (int i = 0; i < keySet.length; ++i) {
-                keys[i] = (String)keySet[i];
+                keys[i] = (String) keySet[i];
             }
-            this.velocityEngine.invokeVelocimacro(name, "DxToolService", keys, context, (Writer)sw);
+            this.velocityEngine.invokeVelocimacro(name, "DxToolService", keys, context, (Writer) sw);
             return sw.toString();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new ApplicationException((Throwable)e);
+            throw new ApplicationException((Throwable) e);
         }
     }
-    
+
     public String field(final FieldModelBase field, final AutoGenerateFormModel form) {
         final VelocityContext context = new VelocityContext();
         final ColumnDescribe column = this.dataService.getColumnDesc(field);
-        context.put("field", (Object)field);
-        context.put("desc", (Object)column);
-        context.put("form", (Object)form);
-        context.put("inputDivClass", (Object)"");
-        context.put("class", (Object)"ui-widget dx-field dx-field-12");
-        context.put("dx", (Object)this.tool);
+        context.put("field", (Object) field);
+        context.put("desc", (Object) column);
+        context.put("form", (Object) form);
+        context.put("inputDivClass", (Object) "");
+        context.put("class", (Object) "ui-widget dx-field dx-field-12");
+        context.put("dx", (Object) this.tool);
         final StringWriter sw = new StringWriter();
-        this.velocityEngine.invokeVelocimacro("dxFieldWithPrefixSuffix", "ril", DxToolService.vmFieldRenderArgs, (Context)context, (Writer)sw);
+        try {
+            velocityEngine.invokeVelocimacro("dxFieldWithPrefixSuffix", "ril", DxToolService.vmFieldRenderArgs,
+                    (Context) context, (Writer) sw);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return sw.toString();
     }
-    
+
     public String field(final FieldModelBase field) {
-        return this.field(field, null);
+        try {
+            return field(field, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-    
+
     public void setTool(final DxTool tool) {
         this.tool = tool;
     }
-    
-    void cacheFormModel(final FormModelBase form) {
-        Map<String, FormModelBase> formModelCache = (Map<String, FormModelBase>)Common.getSessionObject("DX_TOOL_FORM_MODEL_CACHE_KEY");
+
+    @SuppressWarnings("unchecked")
+    public void cacheFormModel(final FormModelBase form) {
+        Map<String, FormModelBase> formModelCache = (Map<String, FormModelBase>) Common
+                .getSessionObject(DX_TOOL_FORM_MODEL_CACHE_KEY);
         if (formModelCache == null) {
-            Common.putSessionObject("DX_TOOL_FORM_MODEL_CACHE_KEY", (Object)(formModelCache = new HashMap<String, FormModelBase>()));
+            Common.putSessionObject(DX_TOOL_FORM_MODEL_CACHE_KEY,
+                    (Object) (formModelCache = new HashMap<String, FormModelBase>()));
         }
         formModelCache.put(form.getId(), form);
     }
-    
-    FormModelBase getCachedFormModel(final String id) {
-        final Map<String, FormModelBase> formModelCache = (Map<String, FormModelBase>)Common.getSessionObject("DX_TOOL_FORM_MODEL_CACHE_KEY");
+
+    @SuppressWarnings("unchecked")
+    public FormModelBase getCachedFormModel(final String id) {
+        final Map<String, FormModelBase> formModelCache = (Map<String, FormModelBase>) Common
+                .getSessionObject(DX_TOOL_FORM_MODEL_CACHE_KEY);
         return formModelCache.remove(id);
     }
-    
+
     public int ifAllow(final String approveId) {
         return this.approveDao.ifAllow(approveId);
     }
-    
+
     public ImportDeployModel getImportDeploy(final String table) {
         return this.importDeployService.getImportDeploy(table);
     }
-    
+
     public CacheService getCacheService() {
         return this.cacheService;
     }
-    
+
     static {
         jsFilter = new FilenameFilter() {
             @Override

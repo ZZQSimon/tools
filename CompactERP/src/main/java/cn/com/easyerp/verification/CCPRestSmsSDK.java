@@ -13,7 +13,6 @@ import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.BasicHttpEntity;
@@ -94,7 +93,7 @@ public class CCPRestSmsSDK {
         }
         String result = "";
         try {
-            HttpPost httppost = (HttpPost) getHttpRequestBase(1, "SMS/TemplateSMS");
+            HttpPost httppost = (HttpPost) getHttpRequestBase(1, TemplateSMS);
             String requsetbody = "";
             if (this.BODY_TYPE == BodyType.Type_JSON) {
                 JsonObject json = new JsonObject();
@@ -237,6 +236,7 @@ public class CCPRestSmsSDK {
         return hashMap;
     }
 
+    @SuppressWarnings({ "rawtypes" })
     private HashMap<String, Object> xmlToMap(String xml) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         Document doc = null;
@@ -306,9 +306,9 @@ public class CCPRestSmsSDK {
                 .append(signature).toString();
         LoggerUtil.info(getmethodName(action) + " url = " + url);
         HttpPost httpPost = null;
-        if (get == 0) {
-            HttpGet httpGet = new HttpGet(url);
-        } else if (get == 1) {
+        if (get == Request_Get) {
+            // HttpGet httpGet = new HttpGet(url);
+        } else if (get == Request_Post) {
             httpPost = new HttpPost(url);
         }
         setHttpHeader(httpPost);
@@ -319,7 +319,7 @@ public class CCPRestSmsSDK {
     }
 
     private String getmethodName(String action) {
-        if (action.equals("SMS/TemplateSMS")) {
+        if (action.equals(TemplateSMS)) {
             return "sendTemplateSMS";
         }
         return "";

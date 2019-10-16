@@ -14,6 +14,7 @@ public class BatchFormModel extends DetailFormModel {
     private String batchId;
     private int import_type;
 
+    @SuppressWarnings({ "rawtypes" })
     protected BatchFormModel(String parent, List<FieldModelBase> fields, BatchDescribe batch, int cols) {
         super(ActionType.batch, parent, batch.getApi().getId(), fields, null, cols);
         this.batchId = batch.getBatch_id();

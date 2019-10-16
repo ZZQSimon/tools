@@ -13,8 +13,9 @@ import cn.com.easyerp.core.widget.inputSelect.RefTreeDescribe;
 import cn.com.easyerp.framework.common.Common;
 
 public class ColumnDescribe {
-    private static TypeReference<ColumnViewStyle> viewStyleJsonRef = new TypeReference<ColumnViewStyle>() {
-    };
+    // private static TypeReference<ColumnViewStyle> viewStyleJsonRef = new
+    // TypeReference<ColumnViewStyle>() {
+    // };
     private static TypeReference<Map<String, FilterDescribe>> refFilterJsonRef = new TypeReference<Map<String, FilterDescribe>>() {
 
     };
@@ -221,6 +222,7 @@ public class ColumnDescribe {
         return this.ref_table_filter;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void setRef_table_filter(String ref_table_filter) {
         this.ref_table_filter = ref_table_filter;
         if (ref_table_filter != null) {

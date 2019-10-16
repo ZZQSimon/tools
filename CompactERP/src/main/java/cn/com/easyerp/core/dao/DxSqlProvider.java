@@ -20,6 +20,7 @@ public class DxSqlProvider {
     public static final String TOPS_KEY = "tops";
     public static final Pattern DX_FUNC_PATTERN;
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private static String replaceVars(String sql, final Map<String, Object> param) {
         sql = Common.replaceVars(sql, (Map) param, true);
         return StringReplacer.replace(sql, DxSqlProvider.DX_FUNC_PATTERN,
@@ -97,6 +98,7 @@ public class DxSqlProvider {
             this.param = param;
         }
 
+        @SuppressWarnings({ "rawtypes" })
         public String replace(final Matcher matcher) {
             final String sqlName = matcher.group(2);
             final String paramName = matcher.group(3);

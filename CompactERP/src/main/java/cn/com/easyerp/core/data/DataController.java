@@ -38,7 +38,8 @@ import cn.com.easyerp.core.cache.TriggerDescribe;
 import cn.com.easyerp.core.evaluate.CacheModelService;
 import cn.com.easyerp.core.evaluate.FormulaService;
 import cn.com.easyerp.core.evaluate.DataModel.EvalResponseModel;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
+import cn.com.easyerp.framework.util.EmptyUtil;
 import cn.com.easyerp.core.master.DxRoutingDataSource;
 import cn.com.easyerp.core.view.FormModelBase;
 import cn.com.easyerp.core.view.FormViewControllerBase;
@@ -151,6 +152,7 @@ public class DataController extends FormViewControllerBase {
         return new ActionResult(true, (Object) evalValueAndReadonly);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @RequestMapping({ "/formula.do" })
     @ResponseBody
     public ActionResult formula(@RequestBody final FormulaRequestModel request) {
@@ -165,7 +167,7 @@ public class DataController extends FormViewControllerBase {
         final Map<String, Object> data = this.dataService.checkFormulaData(request.getTable());
         final Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
-            final Object evaluate = this.formulaService.evaluate(request.getFormula(), (Object) data);
+            this.formulaService.evaluate(request.getFormula(), (Object) data);
         } catch (Exception e) {
             resultMap.put("status", false);
             resultMap.put("msg", e.getMessage());
@@ -176,6 +178,7 @@ public class DataController extends FormViewControllerBase {
         return new ActionResult(true, (Object) resultMap);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @RequestMapping({ "/sql.do" })
     @ResponseBody
     public ActionResult sql(@RequestBody final SqlRequestModel request, final HttpSession session) {
@@ -249,6 +252,7 @@ public class DataController extends FormViewControllerBase {
         return new ActionResult(true, ret);
     }
 
+    @SuppressWarnings("rawtypes")
     @ResponseBody
     @RequestMapping({ "/getSql.do" })
     public ActionResult getSql(@RequestBody final SqlRequestModel request, final HttpSession session) {
@@ -274,6 +278,7 @@ public class DataController extends FormViewControllerBase {
         return Common.ActionOk;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @RequestMapping({ "/import.view" })
     public ModelAndView importExcel(@RequestBody final ImportRequestModel request, final AuthDetails user)
             throws IOException {
@@ -455,6 +460,7 @@ public class DataController extends FormViewControllerBase {
         }
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Transactional
     @ResponseBody
     @RequestMapping({ "/import.do" })
@@ -467,7 +473,8 @@ public class DataController extends FormViewControllerBase {
         final ImportDeployModel idm = this.importDeployService.getImportDeploy(table.getId());
         final List<String> msgs = new ArrayList<String>();
         if (form.isNoImportSql()) {
-            for (final Map.Entry<String, ViewDataMap> entry : request.getData().entrySet()) {
+            Map<String, ViewDataMap> data = request.getData();
+            for (final Map.Entry<String, ViewDataMap> entry : data.entrySet()) {
                 final ApiActionResult result;
                 if ((result = this.insertImportData(table, keyColumn, keyColumnId, msgs,
                         this.viewService.convertToDBValues(table, (ViewDataMap) entry.getValue()))) != null) {
@@ -489,7 +496,7 @@ public class DataController extends FormViewControllerBase {
             keyColumns = ((keyColumns.size() == 0) ? null : keyColumns);
             final Map<String, Object> mapper = (Map<String, Object>) Common.paseEventParam(idm.getColumn_mapper());
             final Set<String> updateColumns = ((Map<String, Object>) mapper.get("mapper")).keySet();
-            if (updateColumns.size() == 0 && updateColumns == null) {
+            if (EmptyUtil.isEmpty(updateColumns)) {
                 throw new ApplicationException(
                         this.dataService.getMessageText("import not allowed to be empty", new Object[0]));
             }
@@ -504,6 +511,7 @@ public class DataController extends FormViewControllerBase {
                 this.dataService.getMessageText("import_success_msg", new Object[0]), (List) msgs);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private ApiActionResult insertImportData(final TableDescribe table, final ColumnDescribe keyColumn,
             final String keyColumnId, final List<String> msgs, final DatabaseDataMap data) {
         if (keyColumn.getData_type() == 13) {
@@ -519,6 +527,7 @@ public class DataController extends FormViewControllerBase {
         return null;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private ApiActionResult updateImportData(final TableDescribe table, final List<String> msgs,
             final DatabaseDataMap data, final Set<String> updateColumns, final Set<String> keyColumns) {
         final ApiActionResult result = this.apiService.updateImportRecordWithTrigger(table, (Map) data,
@@ -547,11 +556,12 @@ public class DataController extends FormViewControllerBase {
         return this.exportService.exportAllToXls(table, list, xlsFileName, user, null);
     }
 
+    @SuppressWarnings("rawtypes")
     @ResponseBody
     @RequestMapping({ "/exportAll.do" })
     public ActionResult exportAllXls(@RequestBody final GridRequestModel param, final AuthDetails user)
             throws IOException {
-        final String formId = param.getId();
+        // final String formId = param.getId();
         final GridModel gm = (GridModel) ViewService.fetchWidgetModel(param.getId());
         final String tableName = param.getFilter().getTableName();
         final TableDescribe table = this.dataService.getTableDesc(tableName);

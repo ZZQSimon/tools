@@ -43,19 +43,19 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 public class HttpClientUtil {
+    private static final int MAX_TIMEOUT = 7000;
     private static PoolingHttpClientConnectionManager connMgr = new PoolingHttpClientConnectionManager();
+    private static RequestConfig requestConfig;
     static {
         (HttpClientUtil.connMgr = new PoolingHttpClientConnectionManager()).setMaxTotal(100);
         HttpClientUtil.connMgr.setDefaultMaxPerRoute(HttpClientUtil.connMgr.getMaxTotal());
         final RequestConfig.Builder configBuilder = RequestConfig.custom();
-        configBuilder.setConnectTimeout(7000);
-        configBuilder.setSocketTimeout(7000);
-        configBuilder.setConnectionRequestTimeout(7000);
+        configBuilder.setConnectTimeout(MAX_TIMEOUT);
+        configBuilder.setSocketTimeout(MAX_TIMEOUT);
+        configBuilder.setConnectionRequestTimeout(MAX_TIMEOUT);
         configBuilder.setStaleConnectionCheckEnabled(true);
         HttpClientUtil.requestConfig = configBuilder.build();
     }
-    private static RequestConfig requestConfig;
-    private static final int MAX_TIMEOUT = 7000;
 
     public static String doGet(final String url) {
         return doGet(url, new HashMap<String, Object>());
@@ -97,6 +97,7 @@ public class HttpClientUtil {
         return doPost(apiUrl, new HashMap<String, Object>());
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static String doPost(final String apiUrl, final Map<String, Object> params) {
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         String httpStr = null;
@@ -172,6 +173,7 @@ public class HttpClientUtil {
         return httpStr;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static String doPostSSL(final String apiUrl, final Map<String, Object> params) {
         final CloseableHttpClient httpClient = HttpClients.custom()
                 .setSSLSocketFactory((LayeredConnectionSocketFactory) createSSLConnSocketFactory())

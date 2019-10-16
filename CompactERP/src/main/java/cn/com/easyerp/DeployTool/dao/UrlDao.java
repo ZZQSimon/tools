@@ -9,13 +9,11 @@ import cn.com.easyerp.DeployTool.service.Url;
 
 @Repository
 public interface UrlDao {
-  List<Url> findAllUrl();
-  
-  void addUrl(@Param("list") List<Url> paramList);
-  
-  void updUrl(@Param("list") List<Url> paramList);
-  
-  void deleteUrl(@Param("list") List<Url> paramList);
+    List<Url> findAllUrl();
+
+    void addUrl(@Param("list") List<Url> paramList);
+
+    void updUrl(@Param("list") List<Url> paramList);
+
+    void deleteUrl(@Param("list") List<Url> paramList);
 }
-
-

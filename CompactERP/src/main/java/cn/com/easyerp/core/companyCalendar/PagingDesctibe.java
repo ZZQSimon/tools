@@ -7,7 +7,7 @@ public class PagingDesctibe {
         return this.start;
     }
 
-    private static final int PAGECOUNT = 5;
+    // private static final int PAGECOUNT = 5;
     private int pageStartCount;
 
     public void setStart(int start) {

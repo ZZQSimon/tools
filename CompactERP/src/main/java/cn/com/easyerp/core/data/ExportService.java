@@ -109,6 +109,7 @@ public class ExportService {
         return this.storageService.createDownload(csvFileName, fileName, fileSize);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<Map<String, Object>> selectExportData(TableDescribe table, List<String> ids,
             ExportRecordGetter getter) {
         List<DatabaseDataMap> keys = new ArrayList<DatabaseDataMap>();
@@ -175,6 +176,7 @@ public class ExportService {
         return data;
     }
 
+    @SuppressWarnings({ "unchecked" })
     public ActionResult exportAllToXls(final TableDescribe table, final List<Map<String, Object>> list,
             final String xlsFileName, final AuthDetails user, final ExportRecordGetter getter) throws IOException {
         final HSSFWorkbook wb = new HSSFWorkbook();
@@ -332,6 +334,7 @@ public class ExportService {
         return this.storageService.createDownload(xlsFileName, (InputStream) fileName, fileSize);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public ActionResult exportAllToExcel(final TableDescribe table, final List<Map<String, Object>> list,
             final String csvFileName, final AuthDetails user, final ExportRecordGetter getter) throws IOException {
         final List<Map<String, Object>> keys = list;
@@ -395,6 +398,7 @@ public class ExportService {
         return this.storageService.createDownload(csvFileName, (InputStream) fileName, fileSize);
     }
 
+    @SuppressWarnings({ "rawtypes" })
     public InputStream ftpEport(final TableDescribe table, final List<DatabaseDataMap> list, final String csvFileName)
             throws Exception {
         final List<DatabaseDataMap> keys = list;

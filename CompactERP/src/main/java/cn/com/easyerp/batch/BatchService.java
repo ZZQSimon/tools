@@ -39,6 +39,7 @@ public class BatchService<T> implements BatchInterceptor<T> {
     public void init(final BatchDescribe<T> batch) {
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public ApiActionResult intercept(final BatchDescribe<T> batch, final BatchFormRequestModel request) {
         ApiDescribe api = new ApiDescribe();
@@ -55,10 +56,10 @@ public class BatchService<T> implements BatchInterceptor<T> {
         result = this.apiService.exec(api, (DataMap) data);
         if (!result.isSuccess()) {
             return new ApiActionResult(result.getResult(),
-                    this.dataService.getMessageText("batch failed", new Object[0]), result.getMessages());
+                    this.dataService.getMessageText(BATCH_FAILED_MSG, new Object[0]), result.getMessages());
         }
-        return new ApiActionResult(result.getResult(), this.dataService.getMessageText("batch success", new Object[0]),
-                result.getMessages());
+        return new ApiActionResult(result.getResult(),
+                this.dataService.getMessageText(BATCH_SUCCESS_MSG, new Object[0]), result.getMessages());
     }
 
     @Override

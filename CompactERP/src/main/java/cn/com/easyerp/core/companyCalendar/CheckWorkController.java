@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.com.easyerp.auth.AuthDetails;
-import cn.com.easyerp.core.dao.CheckWorkDao;
 import cn.com.easyerp.core.view.FormViewControllerBase;
 import cn.com.easyerp.framework.common.ActionResult;
 
@@ -26,12 +25,12 @@ public class CheckWorkController extends FormViewControllerBase {
         return buildModelAndView(form);
     }
 
-    @Autowired
-    private CheckWorkDao checkWorkDao;
+    // @Autowired
+    // private CheckWorkDao checkWorkDao;
     @Autowired
     private AttendanceService attendanceService;
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    private static SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss");
+    // private static SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss");
 
     @ResponseBody
     @RequestMapping({ "/selectCheckWork.do" })

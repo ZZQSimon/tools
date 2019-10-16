@@ -29,7 +29,7 @@ public class ShortUUID {
         if (radix == 10) {
             return Long.toString(i);
         }
-        int size = 65;
+        // int size = 65;
         int charPos = 64;
 
         char[] buf = new char[65];

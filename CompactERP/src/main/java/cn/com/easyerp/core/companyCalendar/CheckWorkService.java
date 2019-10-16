@@ -10,20 +10,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.com.easyerp.core.dao.AttendanceDao;
 import cn.com.easyerp.core.dao.CalendarDao;
 import cn.com.easyerp.core.dao.CheckWorkDao;
 
 @Service
 public class CheckWorkService {
-    @Autowired
-    private AttendanceDao attendanceDao;
+    // @Autowired
+    // private AttendanceDao attendanceDao;
     @Autowired
     private CalendarDao calendarDao;
     @Autowired
     private CheckWorkDao checkWorkDao;
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    private static SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss");
+    // private static SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss");
 
     public List<Integer> selectWorkPlanByDate(String beginDate, String endDate) throws ParseException {
         List<Integer> list = new ArrayList<Integer>();

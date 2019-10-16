@@ -6,11 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
+@Target({ ElementType.METHOD })
 public @interface DxTaskDomain {
-  String value();
-  
-  boolean tx() default true;
+    String value();
+
+    boolean tx() default true;
 }
-
-

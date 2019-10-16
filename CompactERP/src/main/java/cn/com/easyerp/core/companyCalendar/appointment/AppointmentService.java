@@ -13,7 +13,7 @@ import cn.com.easyerp.core.cache.CacheService;
 import cn.com.easyerp.core.cache.TableDescribe;
 import cn.com.easyerp.core.dao.AppointmentDao;
 import cn.com.easyerp.core.dao.SystemDao;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.framework.common.ActionResult;
 
 @Service
@@ -57,7 +57,7 @@ public class AppointmentService {
 
     public ActionResult create(AppointmentDescribe appointment, AuthDetails user) {
         Map<String, Object> data = buildParam(appointment, user, true);
-        this.appointmentDao.createAppointment(data, "c_appointment");
+        this.appointmentDao.createAppointment(data, APPOINTMENT_TABLE_NAME);
         return new ActionResult(true, "success");
     }
 
@@ -65,7 +65,7 @@ public class AppointmentService {
         Map<String, Object> data = new HashMap<String, Object>();
         Date date = new Date();
         if (isCreate) {
-            String appointmentId = this.systemDao.getId("c_appointment", "");
+            String appointmentId = this.systemDao.getId(APPOINTMENT_TABLE_NAME, "");
             data.put("id", appointmentId);
             data.put("cre_user", user.getId());
             data.put("cre_date", date);

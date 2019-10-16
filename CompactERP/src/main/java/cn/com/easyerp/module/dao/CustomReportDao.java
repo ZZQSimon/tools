@@ -10,7 +10,8 @@ import cn.com.easyerp.module.customReport.SumDescribe;
 
 @Repository
 public interface CustomReportDao {
-  List<CustomData> selectData(@Param("changeCondition") String paramString1, @Param("countCondition") String paramString2, @Param("sumCondition") List<SumDescribe> paramList, @Param("group") String paramString3, @Param("leavingType") String paramString4, @Param("timeBetween") String paramString5, @Param("isEmpType") boolean paramBoolean);
+    List<CustomData> selectData(@Param("changeCondition") String paramString1,
+            @Param("countCondition") String paramString2, @Param("sumCondition") List<SumDescribe> paramList,
+            @Param("group") String paramString3, @Param("leavingType") String paramString4,
+            @Param("timeBetween") String paramString5, @Param("isEmpType") boolean paramBoolean);
 }
-
-

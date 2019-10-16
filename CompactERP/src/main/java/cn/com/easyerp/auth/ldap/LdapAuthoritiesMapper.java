@@ -19,4 +19,17 @@ public class LdapAuthoritiesMapper implements GrantedAuthoritiesMapper {
     public Collection<? extends GrantedAuthority> mapAuthorities(Collection<? extends GrantedAuthority> authorities) {
         return null;
     }
+
+    public String getMapTable() {
+        return mapTable;
+    }
+
+    public String getLdapId() {
+        return ldapId;
+    }
+
+    public String getDxId() {
+        return dxId;
+    }
+
 }

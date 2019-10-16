@@ -161,6 +161,7 @@ public class PCCalendarController extends FormViewControllerBase {
         return new ActionResult(true, (Object) appointmentsResult);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @ResponseBody
     @RequestMapping({ "/selectCalendar.do" })
     public ActionResult selectCalendar(@RequestBody final CalendarRequestModel request, final AuthDetails user) {
@@ -196,6 +197,7 @@ public class PCCalendarController extends FormViewControllerBase {
         return new ActionResult(true, (Object) calendar);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @ResponseBody
     @RequestMapping({ "/selectTimeCalendar.do" })
     public ActionResult selectTimeCalendar(@RequestBody final CalendarRequestModel request, final AuthDetails user) {
@@ -207,10 +209,11 @@ public class PCCalendarController extends FormViewControllerBase {
         return new ActionResult(true, (Object) calendar);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @ResponseBody
     @RequestMapping({ "/syncInternationalHoliday" })
     public ActionResult syncInternationalHoliday() {
-        final String result = "success";
+        // final String result = "success";
         CalendarJson calendar = null;
         final String old = this.dataSource.getDomainKey();
         this.dataSource.setDomainKey(DxRoutingDataSource.DX_DEFAULT_DATASOURCE);
@@ -250,7 +253,7 @@ public class PCCalendarController extends FormViewControllerBase {
 
     @ResponseBody
     @RequestMapping({ "/saveCalendar.do" })
-    public ActionResult saveCalendar(@RequestBody final cn.com.easyerp.calendar.CalendarModel request) {
+    public ActionResult saveCalendar(@RequestBody final cn.com.easyerp.calendar.CalendarModel<FormModelBase> request) {
         String result = "success";
         try {
             final List<Integer> weeks = (List<Integer>) request.getWeekdays();
@@ -275,6 +278,7 @@ public class PCCalendarController extends FormViewControllerBase {
         return new ActionResult(true, (Object) result);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @ResponseBody
     @Transactional
     @RequestMapping({ "/saveCalendarEvent.do" })
@@ -290,7 +294,6 @@ public class PCCalendarController extends FormViewControllerBase {
             try {
                 fileName = this.storageService.saveUploadField(eventColumn, calendarEvent.getUploadFile());
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             calendarEvent.setFile(fileName);
@@ -337,7 +340,6 @@ public class PCCalendarController extends FormViewControllerBase {
             try {
                 fileName = this.storageService.saveUploadField(eventColumn, calendarEvent.getUploadFile());
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             calendarEvent.setFile(fileName);

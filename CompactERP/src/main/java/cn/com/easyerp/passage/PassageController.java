@@ -23,6 +23,10 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,7 +43,6 @@ import cn.com.easyerp.core.api.ApiService;
 import cn.com.easyerp.core.cache.ColumnDescribe;
 import cn.com.easyerp.core.cache.TableDescribe;
 import cn.com.easyerp.core.dao.ColumnValue;
-import cn.com.easyerp.core.dao.SystemDao;
 import cn.com.easyerp.core.data.DataMap;
 import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.data.ViewDataMap;
@@ -54,8 +57,7 @@ import cn.com.easyerp.storage.StorageService;
 
 @Controller
 @RequestMapping({ "/passage" })
-public class PassageController extends FormViewControllerBase
-{
+public class PassageController extends FormViewControllerBase {
     public static final String ID = "id";
     public static final String TABLE_NAME = "sys_passage";
     public static final String TABLE_NAME_ID = "passage_id";
@@ -64,15 +66,16 @@ public class PassageController extends FormViewControllerBase
     public static final String TABLE_NAME_ROW_FORMULA = "sys_passage_row_formula";
     @Autowired
     private DataService dataService;
-    @Autowired
-    private ViewService viewService;
-    @Autowired
-    private SystemDao systemDao;
-    @Autowired
+    // @Autowired
+    // private ViewService viewService;
+    // @Autowired
+    // private SystemDao systemDao;
+    // @Autowired
     private ApiService apiService;
     @Autowired
     private StorageService storageService;
-    
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @RequestMapping({ "/passage.view" })
     public ModelAndView view(@RequestBody final PassageRequestModel data) {
         final ActionType action = ActionType.edit;
@@ -90,9 +93,8 @@ public class PassageController extends FormViewControllerBase
         final Map<String, String> searchConditionsKey = new HashMap<String, String>();
         if (!filterTables.isEmpty()) {
             List<FieldModelBase> tempSearchConditions = new ArrayList<FieldModelBase>();
-            final String[] split;
-            final String[] filters = split = filterTables.split(";");
-            for (final String filterTable : split) {
+            final String[] filters = filterTables.split(";");
+            for (final String filterTable : filters) {
                 final String[] filterItem = filterTable.split(":");
                 final String[] filterColumn = filterItem[1].split("\\.");
                 tempSearchConditions = this.dataService.buildEmptyDataRecord(filterColumn[0], null);
@@ -111,24 +113,30 @@ public class PassageController extends FormViewControllerBase
         for (final String columnId : table.getIdColumns()) {
             if (mainIds.isEmpty()) {
                 mainIds = mainIds.concat(columnId);
-            }
-            else {
+            } else {
                 mainIds = mainIds.concat("," + columnId);
             }
         }
-        final PassageFormModel form = new PassageFormModel(action, data.getPassage_id(), mainTableName, mainIds, type, "1".equals(hasAppend), "1".equals(data.getSearchType()), this.exchangeDate(data.getStart_date(), "yyyy-MM-dd"), this.exchangeDate(data.getEnd_date(), "yyyy-MM-dd"), groupCols, headColumns, searchConditions, searchConditionsKey, filterSql, new ArrayList<String>(), data.getMode());
+        final PassageFormModel form = new PassageFormModel(action, data.getPassage_id(), mainTableName, mainIds, type,
+                "1".equals(hasAppend), "1".equals(data.getSearchType()),
+                this.exchangeDate(data.getStart_date(), "yyyy-MM-dd"),
+                this.exchangeDate(data.getEnd_date(), "yyyy-MM-dd"), groupCols, headColumns, searchConditions,
+                searchConditionsKey, filterSql, new ArrayList<String>(), data.getMode());
         form.setHideButtons(data.getHideButtons());
-        return this.buildModelAndView((FormModelBase)form);
+        return this.buildModelAndView((FormModelBase) form);
     }
-    
+
+    @SuppressWarnings("rawtypes")
     @RequestMapping({ "/table.do" })
     @ResponseBody
     public ActionResult head(@RequestBody final PassageRequestModel data) {
-        final PassageFormModel form = (PassageFormModel)ViewService.fetchFormModel(data.getId());
-        final List<String> HeadPassColumns = this.editHeadPass(form, data.getStart_date(), data.getEnd_date(), form.getType());
-        return new ActionResult(true, (Object)HeadPassColumns);
+        final PassageFormModel form = (PassageFormModel) ViewService.fetchFormModel(data.getId());
+        final List<String> HeadPassColumns = this.editHeadPass(form, data.getStart_date(), data.getEnd_date(),
+                form.getType());
+        return new ActionResult(true, (Object) HeadPassColumns);
     }
-    
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @RequestMapping({ "/list.do" })
     @ResponseBody
     public ActionResult list(@RequestBody final PassageRequestModel data) {
@@ -136,10 +144,11 @@ public class PassageController extends FormViewControllerBase
         final String message = this.dateRangeCheck(data.getStart_date(), data.getEnd_date());
         if (!message.isEmpty()) {
             ret.put("msg", message);
-            return new ActionResult(true, (Object)ret);
+            return new ActionResult(true, (Object) ret);
         }
-        final PassageFormModel form = (PassageFormModel)ViewService.fetchFormModel(data.getId());
-        final List<String> HeadPassColumns = this.editHeadPass(form, data.getStart_date(), data.getEnd_date(), form.getType());
+        final PassageFormModel form = (PassageFormModel) ViewService.fetchFormModel(data.getId());
+        final List<String> HeadPassColumns = this.editHeadPass(form, data.getStart_date(), data.getEnd_date(),
+                form.getType());
         ret.put("headPassColumns", HeadPassColumns);
         final TableDescribe tableRow = this.dataService.getTableDesc("sys_passage_row");
         final Set<String> columnsNeededRow = new HashSet<String>(tableRow.getColumns().size());
@@ -153,7 +162,8 @@ public class PassageController extends FormViewControllerBase
         }
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("passage_id", form.getPassageId());
-        final List<Map<String, Object>> rows = this.dataService.selectRecordsByValues("sys_passage_row", columnsNeededRow, param);
+        final List<Map<String, Object>> rows = this.dataService.selectRecordsByValues("sys_passage_row",
+                columnsNeededRow, param);
         final List<String> passageObjs = new ArrayList<String>();
         for (final Map<String, Object> row : rows) {
             passageObjs.add(row.get("disp_name_key").toString());
@@ -182,10 +192,11 @@ public class PassageController extends FormViewControllerBase
                     valueMap.put(key, data.getParam().get(key));
                 }
             }
-            final List<Map<String, Object>> records = this.dataService.selectRecordsByValues(form.getTableName(), columnsNeeded, valueMap);
+            final List<Map<String, Object>> records = this.dataService.selectRecordsByValues(form.getTableName(),
+                    columnsNeeded, valueMap);
             if (records.size() > 0) {
                 ret.put("msg", this.dataService.getMessageText("repeat key", new Object[0]));
-                return new ActionResult(true, (Object)ret);
+                return new ActionResult(true, (Object) ret);
             }
         }
         String tempWhere = null;
@@ -199,17 +210,18 @@ public class PassageController extends FormViewControllerBase
             if (!data.getWhere().isEmpty()) {
                 tempWhere = tempWhere + " and " + data.getWhere();
             }
-        }
-        else if (!data.getWhere().isEmpty()) {
+        } else if (!data.getWhere().isEmpty()) {
             tempWhere = data.getWhere();
         }
-        List<Map<String, Object>> records = this.dataService.selectRecordsByValues(form.getTableName(), columnsNeeded, (List<ColumnValue>)null, tempWhere, orderby);
+        List<Map<String, Object>> records = this.dataService.selectRecordsByValues(form.getTableName(), columnsNeeded,
+                (List<ColumnValue>) null, tempWhere, orderby);
         if (form.isSearchAll() && !form.isHasAppend() && records.size() == 0) {
             tempWhere = null;
             if (!data.getWhere().isEmpty()) {
                 tempWhere = data.getWhere();
             }
-            records = this.dataService.selectRecordsByValues(form.getTableName(), columnsNeeded, (List<ColumnValue>)null, tempWhere, orderby);
+            records = this.dataService.selectRecordsByValues(form.getTableName(), columnsNeeded,
+                    (List<ColumnValue>) null, tempWhere, orderby);
         }
         index = 0;
         String excuteSql = "";
@@ -235,20 +247,17 @@ public class PassageController extends FormViewControllerBase
             mainIds = new HashMap<String, String>();
             if (recordNum < records.size()) {
                 record = records.get(recordNum);
-            }
-            else {
+            } else {
                 if (records.size() > 0) {
                     record = records.get(records.size() - 1);
                 }
                 tempRecord = pkeys.get(recordNum - records.size());
-                final String[] split2;
-                tempMainIds = (split2 = form.getMainIds().split(","));
-                for (final String tempMainId : split2) {
+                tempMainIds = form.getMainIds().split(",");
+                for (final String tempMainId : tempMainIds) {
                     if (!tempRecord.containsKey(tempMainId)) {
                         if (record.isEmpty()) {
                             tempRecord.put(tempMainId, "");
-                        }
-                        else {
+                        } else {
                             tempRecord.put(tempMainId, record.get(tempMainId));
                         }
                     }
@@ -286,11 +295,12 @@ public class PassageController extends FormViewControllerBase
                 param = new HashMap<String, Object>();
                 param.put("passage_row_id", row2.get("id"));
                 orderby = new String[] { "level" };
-                final List<Map<String, Object>> formulas = this.dataService.selectRecordsByValues("sys_passage_row_formula", columnsNeededFormula, param, null, orderby);
+                final List<Map<String, Object>> formulas = this.dataService
+                        .selectRecordsByValues("sys_passage_row_formula", columnsNeededFormula, param, null, orderby);
                 for (final Map<String, Object> formula : formulas) {
                     isSql = false;
                     resultList = new ArrayList<Map<String, Object>>();
-                    tempSql = ClobSerializer.convert((Clob)formula.get("sql"));
+                    tempSql = ClobSerializer.convert((Clob) formula.get("sql"));
                     if (!tempSql.isEmpty()) {
                         isSql = true;
                         for (final String key4 : form.getSearchConditionsKey().keySet()) {
@@ -303,22 +313,20 @@ public class PassageController extends FormViewControllerBase
                             tempKeyWhere = "";
                             if (tempSql.indexOf(" where ") > 0) {
                                 tempKeyWhere = "where";
-                            }
-                            else if (tempSql.indexOf(" WHERE ") > 0) {
+                            } else if (tempSql.indexOf(" WHERE ") > 0) {
                                 tempKeyWhere = "WHERE";
                             }
                             if (!tempKeyWhere.isEmpty()) {
                                 for (final Map.Entry<String, String> entry : mainIds.entrySet()) {
-                                    if (tempSql.substring(tempSql.lastIndexOf(tempKeyWhere)).indexOf(entry.getKey()) < 0) {
+                                    if (tempSql.substring(tempSql.lastIndexOf(tempKeyWhere))
+                                            .indexOf(entry.getKey()) < 0) {
                                         newMainIds.put(entry.getKey(), entry.getValue());
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 newMainIds = mainIds;
                             }
-                        }
-                        else {
+                        } else {
                             newMainIds = mainIds;
                         }
                         excuteSql = "select ";
@@ -354,10 +362,19 @@ public class PassageController extends FormViewControllerBase
                         }
                         resultList = this.dataService.dynamicQueryList(excuteSql, resultMap);
                     }
-                    final PassageFieldModel passageField = new PassageFieldModel(formula.get("id").toString(), Integer.parseInt(formula.get("level").toString()), formula.get("cond").toString(), Integer.parseInt(formula.get("type").toString()), ClobSerializer.convert((Clob)formula.get("formula")), isSql, resultList);
+                    final PassageFieldModel passageField = new PassageFieldModel(formula.get("id").toString(),
+                            Integer.parseInt(formula.get("level").toString()), formula.get("cond").toString(),
+                            Integer.parseInt(formula.get("type").toString()),
+                            ClobSerializer.convert((Clob) formula.get("formula")), isSql, resultList);
                     passageFields.add(passageField);
                 }
-                recordModel = new PassageRecordModel(mainId, mainIds, fields, passageFields, row2.get("id").toString(), row2.get("disp_name_key").toString(), row2.get("upd_statement").toString(), row2.get("edit_cond").toString(), Integer.valueOf(row2.get("total_row").toString()) != 0, Integer.valueOf(row2.get("total_col").toString()) != 0, row2.get("edit_part_bg_color").toString(), row2.get("edit_part_fg_color").toString(), row2.get("unedit_part_bg_color").toString(), row2.get("unedit_part_fg_color").toString(), Integer.valueOf(row2.get("decimal_digit").toString()), isDetailSql, detailResultList);
+                recordModel = new PassageRecordModel(mainId, mainIds, fields, passageFields, row2.get("id").toString(),
+                        row2.get("disp_name_key").toString(), row2.get("upd_statement").toString(),
+                        row2.get("edit_cond").toString(), Integer.valueOf(row2.get("total_row").toString()) != 0,
+                        Integer.valueOf(row2.get("total_col").toString()) != 0,
+                        row2.get("edit_part_bg_color").toString(), row2.get("edit_part_fg_color").toString(),
+                        row2.get("unedit_part_bg_color").toString(), row2.get("unedit_part_fg_color").toString(),
+                        Integer.valueOf(row2.get("decimal_digit").toString()), isDetailSql, detailResultList);
                 retRecord.add(recordModel);
                 passageFields = new ArrayList<PassageFieldModel>();
             }
@@ -365,9 +382,10 @@ public class PassageController extends FormViewControllerBase
         }
         ret.put("passRecords", retRecord);
         ret.put("msg", "");
-        return new ActionResult(true, (Object)ret);
+        return new ActionResult(true, (Object) ret);
     }
-    
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Transactional
     @RequestMapping({ "/save.do" })
     @ResponseBody
@@ -377,7 +395,7 @@ public class PassageController extends FormViewControllerBase
         final List<ApiDescribe> apis = new ArrayList<ApiDescribe>();
         ViewDataMap parm = new ViewDataMap();
         final List<DataMap> parms = new ArrayList<DataMap>();
-        final PassageFormModel form = (PassageFormModel)ViewService.fetchFormModel(data.getId());
+        final PassageFormModel form = (PassageFormModel) ViewService.fetchFormModel(data.getId());
         final ViewDataMap searchConditions = new ViewDataMap();
         if (form.getSearchConditionsKey().size() > 0) {
             for (final String key : form.getSearchConditionsKey().keySet()) {
@@ -387,7 +405,8 @@ public class PassageController extends FormViewControllerBase
                 data.getParam().remove(key);
             }
         }
-        for (final Map.Entry<String, Object> entry : data.getParam().entrySet()) {
+        Map<String, Object> map = data.getParam();
+        for (final Map.Entry<String, Object> entry : map.entrySet()) {
             updStatement = entry.getKey();
             for (final Map<String, Object> rowVals : (List<Map<String, Object>>) entry.getValue()) {
                 apiDescribe = new ApiDescribe();
@@ -396,29 +415,27 @@ public class PassageController extends FormViewControllerBase
                 parm = new ViewDataMap();
                 parm.putAll(searchConditions);
                 final Map<String, String> mainIds = (Map<String, String>) rowVals.get("mainIds");
-                final String[] split;
-                final String[] tempMainIds = split = form.getMainIds().split(",");
+                final String[] split = form.getMainIds().split(",");
                 for (final String tempMainId : split) {
                     if (!mainIds.containsKey(tempMainId)) {
                         parm.put("passage_" + tempMainId, "");
-                    }
-                    else {
+                    } else {
                         parm.put("passage_" + tempMainId, mainIds.get(tempMainId));
                     }
                 }
                 parm.put("detailId", rowVals.get("detailId"));
                 if ("1".equals(form.getType())) {
                     parm.put("passageDate", rowVals.get("date"));
-                }
-                else {
-                    parm.put("passageDate", form.getHeadPassColumns_date().get(Integer.valueOf(rowVals.get("dateIndex").toString())));
+                } else {
+                    parm.put("passageDate",
+                            form.getHeadPassColumns_date().get(Integer.valueOf(rowVals.get("dateIndex").toString())));
                 }
                 parm.put("passageNumber", rowVals.get("number"));
                 parm = this.convertToDBValues(this.dataService.getTableDesc(updStatement), parm);
                 parms.add(parm);
             }
         }
-        final ApiResult apiResult = this.apiService.exec((List)apis, (List)parms);
+        final ApiResult apiResult = this.apiService.exec((List) apis, (List) parms);
         final Map<String, Object> returnData = new HashMap<String, Object>();
         String resultMsg = this.dataService.getMessageText("DCS-002", new Object[0]);
         if (!apiResult.isSuccess()) {
@@ -426,9 +443,9 @@ public class PassageController extends FormViewControllerBase
         }
         returnData.put("msg", resultMsg);
         returnData.put("ret", "true");
-        return new ActionResult(true, (Object)returnData);
+        return new ActionResult(true, (Object) returnData);
     }
-    
+
     public ViewDataMap convertToDBValues(final TableDescribe table, final ViewDataMap values) {
         final ViewDataMap ret = new ViewDataMap(values.size());
         for (final Map.Entry<String, Object> entry : values.entrySet()) {
@@ -439,18 +456,19 @@ public class PassageController extends FormViewControllerBase
         }
         return ret;
     }
-    
-    private HSSFCellStyle createStyle(final HSSFWorkbook wb, final short align, final HSSFFont font) {
+
+    private HSSFCellStyle createStyle(final HSSFWorkbook wb, final HorizontalAlignment align, final HSSFFont font) {
         final HSSFCellStyle style = wb.createCellStyle();
-        style.setBorderBottom((short)1);
-        style.setBorderTop((short)1);
-        style.setBorderLeft((short)1);
-        style.setBorderRight((short)1);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
         style.setAlignment(align);
         style.setFont(font);
         return style;
     }
-    
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @RequestMapping({ "/export.do" })
     @ResponseBody
     public ActionResult export(@RequestBody final PassageRequestModel data) throws IOException {
@@ -459,21 +477,21 @@ public class PassageController extends FormViewControllerBase
         final HSSFSheet sheet = wb.createSheet("passage");
         final HSSFFont noDataFont = wb.createFont();
         final HSSFFont editingDataFont = wb.createFont();
-        editingDataFont.setColor((short)8);
+        editingDataFont.setColor((short) 8);
         final HSSFFont staticDataFont = wb.createFont();
-        staticDataFont.setColor((short)23);
-        final HSSFCellStyle editingDataStyle = this.createStyle(wb, (short)1, editingDataFont);
-        final HSSFCellStyle staticDataStyle = this.createStyle(wb, (short)1, staticDataFont);
-        final HSSFCellStyle titleStyle = this.createStyle(wb, (short)2, noDataFont);
-        titleStyle.setVerticalAlignment((short)0);
-        titleStyle.setFillPattern((short)16);
-        titleStyle.setFillForegroundColor((short)23);
-        titleStyle.setFillBackgroundColor((short)23);
-        final HSSFCellStyle headStyle = this.createStyle(wb, (short)2, noDataFont);
-        headStyle.setVerticalAlignment((short)0);
-        headStyle.setFillPattern((short)16);
-        headStyle.setFillForegroundColor((short)22);
-        headStyle.setFillBackgroundColor((short)22);
+        staticDataFont.setColor((short) 23);
+        final HSSFCellStyle editingDataStyle = this.createStyle(wb, HorizontalAlignment.LEFT, editingDataFont);
+        final HSSFCellStyle staticDataStyle = this.createStyle(wb, HorizontalAlignment.LEFT, staticDataFont);
+        final HSSFCellStyle titleStyle = this.createStyle(wb, HorizontalAlignment.CENTER, noDataFont);
+        titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        titleStyle.setFillPattern(FillPatternType.DIAMONDS);
+        titleStyle.setFillForegroundColor((short) 23);
+        titleStyle.setFillBackgroundColor((short) 23);
+        final HSSFCellStyle headStyle = this.createStyle(wb, HorizontalAlignment.CENTER, noDataFont);
+        headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        headStyle.setFillPattern(FillPatternType.DIAMONDS);
+        headStyle.setFillForegroundColor((short) 22);
+        headStyle.setFillBackgroundColor((short) 22);
         int columnCnt = 0;
         Map<String, Integer> subUniteInfo = new HashMap<String, Integer>();
         final Map<String, Map<String, Integer>> uniteInfo = new HashMap<String, Map<String, Integer>>();
@@ -484,8 +502,8 @@ public class PassageController extends FormViewControllerBase
         String[] keys = null;
         for (int rowNum = 0; rowNum < data.getExportData().size(); ++rowNum) {
             row = sheet.createRow(rowNum);
-            row.setHeight((short)290);
-            final List<Map<String, Object>> dataRow = data.getExportData().get(rowNum);
+            row.setHeight((short) 290);
+            final List<Map<String, Object>> dataRow = (List<Map<String, Object>>) data.getExportData().get(rowNum);
             columnCnt = dataRow.size();
             if (keys == null) {
                 keys = new String[columnCnt];
@@ -511,16 +529,14 @@ public class PassageController extends FormViewControllerBase
                             subUniteInfo = new HashMap<String, Integer>();
                             subUniteInfo.put("startRow", rowNum);
                             subUniteInfo.put("startCol", colNum);
-                        }
-                        else {
+                        } else {
                             subUniteInfo = firstUniteInfo.get(value);
                             subUniteInfo.put("endRow", rowNum);
                             subUniteInfo.put("endCol", colNum);
                         }
                         firstUniteInfo.put(value, subUniteInfo);
                     }
-                }
-                else if (rowNum == 1) {
+                } else if (rowNum == 1) {
                     if (type != CellType.data) {
                         final String preValue = sheet.getRow(0).getCell(colNum).getStringCellValue();
                         if (!value.equals(preValue)) {
@@ -536,22 +552,19 @@ public class PassageController extends FormViewControllerBase
                             subUniteInfo = new HashMap<String, Integer>();
                             subUniteInfo.put("startRow", rowNum);
                             subUniteInfo.put("startCol", colNum);
-                        }
-                        else {
+                        } else {
                             subUniteInfo = uniteInfo.get(value);
                             subUniteInfo.put("endRow", rowNum);
                             subUniteInfo.put("endCol", colNum);
                         }
                         uniteInfo.put(value, subUniteInfo);
                     }
-                }
-                else if (type != CellType.data) {
+                } else if (type != CellType.data) {
                     if (!uniteInfo.containsKey(value)) {
                         subUniteInfo = new HashMap<String, Integer>();
                         subUniteInfo.put("startRow", rowNum);
                         subUniteInfo.put("startCol", colNum);
-                    }
-                    else {
+                    } else {
                         subUniteInfo = uniteInfo.get(value);
                         if (colNum == 0) {
                             if (isKeyChange) {
@@ -562,13 +575,11 @@ public class PassageController extends FormViewControllerBase
                                 subUniteInfo = new HashMap<String, Integer>();
                                 subUniteInfo.put("startRow", rowNum);
                                 subUniteInfo.put("startCol", colNum);
-                            }
-                            else {
+                            } else {
                                 subUniteInfo.put("endRow", rowNum);
                                 subUniteInfo.put("endCol", colNum);
                             }
-                        }
-                        else if (colNum == subUniteInfo.get("startCol")) {
+                        } else if (colNum == subUniteInfo.get("startCol")) {
                             if (isKeyChange) {
                                 if (subUniteInfo.get("endRow") != null) {
                                     uniteInfoList.add(subUniteInfo);
@@ -577,15 +588,14 @@ public class PassageController extends FormViewControllerBase
                                 subUniteInfo = new HashMap<String, Integer>();
                                 subUniteInfo.put("startRow", rowNum);
                                 subUniteInfo.put("startCol", colNum);
-                            }
-                            else {
-                                final String preCellVal = data.getExportData().get(rowNum - 1).get(colNum - 1).get("val").toString();
-                                final String CellVal = data.getExportData().get(rowNum).get(colNum - 1).get("val").toString();
+                            } else {
+                                List<List<Map<String, Object>>> list = data.getExportData();
+                                final String preCellVal = list.get(rowNum - 1).get(colNum - 1).get("val").toString();
+                                final String CellVal = list.get(rowNum).get(colNum - 1).get("val").toString();
                                 if (preCellVal.equals(CellVal)) {
                                     subUniteInfo.put("endRow", rowNum);
                                     subUniteInfo.put("endCol", colNum);
-                                }
-                                else {
+                                } else {
                                     if (subUniteInfo.get("endRow") != null) {
                                         uniteInfoList.add(subUniteInfo);
                                     }
@@ -595,8 +605,7 @@ public class PassageController extends FormViewControllerBase
                                     subUniteInfo.put("startCol", colNum);
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             subUniteInfo.put("endRow", rowNum);
                             subUniteInfo.put("endCol", colNum);
                         }
@@ -617,22 +626,22 @@ public class PassageController extends FormViewControllerBase
                 }
                 cell.setCellValue(value);
                 switch (type) {
-                    case data: {
-                        if (isEdit) {
-                            cell.setCellStyle(editingDataStyle);
-                            break;
-                        }
-                        cell.setCellStyle(staticDataStyle);
+                case data: {
+                    if (isEdit) {
+                        cell.setCellStyle(editingDataStyle);
                         break;
                     }
-                    case head: {
-                        cell.setCellStyle(titleStyle);
-                        break;
-                    }
-                    case rowHead: {
-                        cell.setCellStyle(headStyle);
-                        break;
-                    }
+                    cell.setCellStyle(staticDataStyle);
+                    break;
+                }
+                case head: {
+                    cell.setCellStyle(titleStyle);
+                    break;
+                }
+                case rowHead: {
+                    cell.setCellStyle(headStyle);
+                    break;
+                }
                 }
             }
         }
@@ -646,19 +655,21 @@ public class PassageController extends FormViewControllerBase
             sheet.autoSizeColumn(colNum2);
         }
         for (final Map<String, Integer> subUnite : uniteInfoList) {
-            final CellRangeAddress cra = new CellRangeAddress((int)subUnite.get("startRow"), (int)subUnite.get("endRow"), (int)subUnite.get("startCol"), (int)subUnite.get("endCol"));
+            final CellRangeAddress cra = new CellRangeAddress((int) subUnite.get("startRow"),
+                    (int) subUnite.get("endRow"), (int) subUnite.get("startCol"), (int) subUnite.get("endCol"));
             sheet.addMergedRegion(cra);
         }
-        final File outputFile = this.storageService.tmp(fileName.substring(0, fileName.length() - 4), fileName.substring(fileName.length() - 4));
+        final File outputFile = this.storageService.tmp(fileName.substring(0, fileName.length() - 4),
+                fileName.substring(fileName.length() - 4));
         final FileOutputStream fos = new FileOutputStream(outputFile);
-        wb.write((OutputStream)fos);
+        wb.write((OutputStream) fos);
         fos.flush();
         fos.close();
         final FileInputStream stream = new FileInputStream(outputFile.getAbsolutePath());
         final String viewUrl = this.storageService.getTmpFilePath(fileName);
-        return this.storageService.createDownload(fileName, viewUrl, (InputStream)stream, stream.available());
+        return this.storageService.createDownload(fileName, viewUrl, (InputStream) stream, stream.available());
     }
-    
+
     private List<ColumnDescribe> editHead(final String mainTableName, final String groupCols, final String dispCols) {
         final List<ColumnDescribe> passageHead = new ArrayList<ColumnDescribe>();
         final TableDescribe table = this.dataService.getTableDesc(mainTableName);
@@ -672,27 +683,29 @@ public class PassageController extends FormViewControllerBase
         }
         return passageHead;
     }
-    
-    private List<String> editHeadPass(final PassageFormModel form, final Date startDate, final Date endDate, final String type) {
+
+    private List<String> editHeadPass(final PassageFormModel form, final Date startDate, final Date endDate,
+            final String type) {
         final List<String> passageHeadPass = new ArrayList<String>();
         final List<Long> passageHeadPass_date = new ArrayList<Long>();
         form.setHeadPassColumns_date(passageHeadPass_date);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if ("0".equals(type)) {
-            for (Date nextDate = startDate; nextDate.compareTo(endDate) < 0; nextDate = DateUtils.addDays(nextDate, 1)) {
+            for (Date nextDate = startDate; nextDate.compareTo(endDate) < 0; nextDate = DateUtils.addDays(nextDate,
+                    1)) {
                 passageHeadPass_date.add(nextDate.getTime());
                 passageHeadPass.add(sdf.format(nextDate));
             }
-        }
-        else if ("1".equals(type)) {
+        } else if ("1".equals(type)) {
             sdf = new SimpleDateFormat("yyyy-MM");
-            for (Date nextDate = startDate; nextDate.compareTo(endDate) < 0; nextDate = DateUtils.addMonths(nextDate, 1)) {
+            for (Date nextDate = startDate; nextDate.compareTo(endDate) < 0; nextDate = DateUtils.addMonths(nextDate,
+                    1)) {
                 passageHeadPass_date.add(nextDate.getTime());
                 passageHeadPass.add(sdf.format(nextDate));
             }
-        }
-        else if ("2".equals(type)) {
-            for (Date nextDate = startDate; nextDate.compareTo(endDate) < 0; nextDate = DateUtils.addWeeks(nextDate, 1)) {
+        } else if ("2".equals(type)) {
+            for (Date nextDate = startDate; nextDate.compareTo(endDate) < 0; nextDate = DateUtils.addWeeks(nextDate,
+                    1)) {
                 passageHeadPass_date.add(nextDate.getTime());
                 passageHeadPass.add(sdf.format(nextDate));
             }
@@ -702,7 +715,7 @@ public class PassageController extends FormViewControllerBase
         form.setHeadPassColumns_date(passageHeadPass_date);
         return passageHeadPass;
     }
-    
+
     private String exchangeDate(final Date date, final String format) {
         if (date == null) {
             return "";
@@ -710,29 +723,24 @@ public class PassageController extends FormViewControllerBase
         final SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
     }
-    
+
     private String dateRangeCheck(final Date startDate, final Date endDate) {
         String message = "";
         if (startDate == null) {
             message = this.dataService.getMessageText("Start_Date", new Object[0]);
             message = message + " " + this.dataService.getMessageText("incorrect value", new Object[0]);
-        }
-        else if (endDate == null) {
+        } else if (endDate == null) {
             message = this.dataService.getMessageText("End_Date", new Object[0]);
             message = message + " " + this.dataService.getMessageText("incorrect value", new Object[0]);
-        }
-        else if (startDate.compareTo(endDate) > 0) {
+        } else if (startDate.compareTo(endDate) > 0) {
             message = this.dataService.getMessageText("Start_Date", new Object[0]);
             message = message + "/" + this.dataService.getMessageText("End_Date", new Object[0]);
             message = message + " " + this.dataService.getMessageText("incorrect value", new Object[0]);
         }
         return message;
     }
-    
-    private enum CellType
-    {
-        data, 
-        head, 
-        rowHead;
+
+    private enum CellType {
+        data, head, rowHead;
     }
 }

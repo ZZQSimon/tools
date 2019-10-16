@@ -40,7 +40,7 @@ import cn.com.easyerp.core.dao.SystemDao;
 import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.data.SystemParameter;
 import cn.com.easyerp.core.evaluate.FormulaService;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.core.ftp.FtpService;
 import cn.com.easyerp.core.ftp.SftpService;
 import cn.com.easyerp.core.logger.Loggable;
@@ -50,6 +50,7 @@ import cn.com.easyerp.core.widget.menu.MenuModel;
 import cn.com.easyerp.core.widget.menu.PageModel;
 import cn.com.easyerp.framework.common.Common;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @Service
 public class CacheService {
     public static final int I18N_TYPE_TABLE = 1;
@@ -71,7 +72,7 @@ public class CacheService {
     public static final int MENU_TYPE_STANDARD = 1;
     public static final int MENU_TYPE_SHORTCUT = 2;
     public static final String TAG = "CacheService";
-    private static final String IS_SQL_PATTERN = "dxf.sql\\([']?(.*?)[']?\\)|dxf.sql\\([\"](.*?)[\"]\\)|dxf.sql\\([\\\\]['](.*?)[\\\\][']\\)|dxf.sql\\([\\\\][\"](.*?)[\\\\][\"]\\)";
+    public static final String IS_SQL_PATTERN = "dxf.sql\\([']?(.*?)[']?\\)|dxf.sql\\([\"](.*?)[\"]\\)|dxf.sql\\([\\\\]['](.*?)[\\\\][']\\)|dxf.sql\\([\\\\][\"](.*?)[\\\\][\"]\\)";
     @Autowired
     private SystemDao systemDao;
     @Autowired
@@ -274,11 +275,10 @@ public class CacheService {
                     continue;
                 String table_id = column.getTable_id();
                 TableDescribe table = (TableDescribe) cache.tableDescCache.get(table_id);
-                if (table == null)
-                    continue;
-                if (table == null)
+                if (table == null) {
                     error("table \"" + table_id + "\" using by column \"" + column.getColumn_name()
                             + "\" not defined in sys_table.");
+                }
                 if (DataService.sysGroupColumnName.contains(column.getColumn_name()))
                     column.setGroup_name("_SYS_COLUMN");
                 column.setI18n((I18nDescribe) cache.columnI18nCache.get(makeColumnCacheKey(column)));

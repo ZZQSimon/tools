@@ -151,8 +151,10 @@ public interface SystemDao {
 
     List<TableShortcutDescribe> selectTableShortcuts();
 
+    @SuppressWarnings({ "rawtypes" })
     List<BatchDescribe> selectBatchDesc();
 
+    @SuppressWarnings({ "rawtypes" })
     BatchDescribe selectBatchDescByTable(@Param("table") String paramString);
 
     int selectRecordCountByValues(@Param("table") String paramString, @Param("values") List<ColumnValue> paramList);

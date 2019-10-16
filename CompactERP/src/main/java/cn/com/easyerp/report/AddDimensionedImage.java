@@ -8,11 +8,18 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Locale;
 
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.*;
-import org.apache.poi.util.*;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.ClientAnchor.AnchorType;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.util.IOUtils;
 
+@SuppressWarnings({ "rawtypes" })
 public class AddDimensionedImage {
     public static final int EXPAND_ROW = 1;
     public static final int EXPAND_COLUMN = 2;
@@ -67,7 +74,7 @@ public class AddDimensionedImage {
         anchor.setRow1(rowClientAnchorDetail.getFromIndex());
         anchor.setCol2(colClientAnchorDetail.getToIndex());
         anchor.setRow2(rowClientAnchorDetail.getToIndex());
-        anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
+        anchor.setAnchorType(AnchorType.MOVE_AND_RESIZE);
         final int index = sheet.getWorkbook().addPicture(img, imageType);
         drawing.createPicture(anchor, index);
     }
@@ -87,7 +94,7 @@ public class AddDimensionedImage {
                     colCoordinatesPerMM = 1023.0 / colWidthMM;
                     pictureWidthCoordinates = (int) (reqImageWidthMM * colCoordinatesPerMM);
                 } else {
-                    pictureWidthCoordinates = (int) reqImageWidthMM * 36000;
+                    pictureWidthCoordinates = (int) reqImageWidthMM * EMU_PER_MM;
                 }
                 colClientAnchorDetail = new ClientAnchorDetail(colNumber, colNumber, pictureWidthCoordinates);
             } else if (resizeBehaviour == 7 || resizeBehaviour == 1) {
@@ -98,7 +105,7 @@ public class AddDimensionedImage {
                 colCoordinatesPerMM = 1023.0 / colWidthMM;
                 pictureWidthCoordinates = (int) (reqImageWidthMM * colCoordinatesPerMM);
             } else {
-                pictureWidthCoordinates = (int) reqImageWidthMM * 36000;
+                pictureWidthCoordinates = (int) reqImageWidthMM * EMU_PER_MM;
             }
             colClientAnchorDetail = new ClientAnchorDetail(colNumber, colNumber, pictureWidthCoordinates);
         }
@@ -125,7 +132,7 @@ public class AddDimensionedImage {
                     rowCoordinatesPerMM = 255.0 / rowHeightMM;
                     pictureHeightCoordinates = (int) (reqImageHeightMM * rowCoordinatesPerMM);
                 } else {
-                    pictureHeightCoordinates = (int) (reqImageHeightMM * 36000.0);
+                    pictureHeightCoordinates = (int) (reqImageHeightMM * EMU_PER_MM);
                 }
                 rowClientAnchorDetail = new ClientAnchorDetail(rowNumber, rowNumber, pictureHeightCoordinates);
             } else if (resizeBehaviour == 7 || resizeBehaviour == 2) {
@@ -136,7 +143,7 @@ public class AddDimensionedImage {
                 rowCoordinatesPerMM = 255.0 / rowHeightMM;
                 pictureHeightCoordinates = (int) (reqImageHeightMM * rowCoordinatesPerMM);
             } else {
-                pictureHeightCoordinates = (int) (reqImageHeightMM * 36000.0);
+                pictureHeightCoordinates = (int) (reqImageHeightMM * EMU_PER_MM);
             }
             rowClientAnchorDetail = new ClientAnchorDetail(rowNumber, rowNumber, pictureHeightCoordinates);
         }
@@ -162,7 +169,7 @@ public class AddDimensionedImage {
             if (sheet instanceof HSSFSheet) {
                 anchorDetail = new ClientAnchorDetail(startingColumn, toColumn, 1023);
             } else {
-                anchorDetail = new ClientAnchorDetail(startingColumn, toColumn, (int) reqImageWidthMM * 36000);
+                anchorDetail = new ClientAnchorDetail(startingColumn, toColumn, (int) reqImageWidthMM * EMU_PER_MM);
             }
         } else {
             overlapMM = reqImageWidthMM - (totalWidthMM - colWidthMM);
@@ -173,7 +180,7 @@ public class AddDimensionedImage {
                 coordinatePositionsPerMM = 1023.0 / colWidthMM;
                 inset = (int) (coordinatePositionsPerMM * overlapMM);
             } else {
-                inset = (int) overlapMM * 36000;
+                inset = (int) overlapMM * EMU_PER_MM;
             }
             anchorDetail = new ClientAnchorDetail(startingColumn, toColumn, inset);
         }
@@ -204,7 +211,7 @@ public class AddDimensionedImage {
             if (sheet instanceof HSSFSheet) {
                 clientAnchorDetail = new ClientAnchorDetail(startingRow, toRow, 255);
             } else {
-                clientAnchorDetail = new ClientAnchorDetail(startingRow, toRow, (int) reqImageHeightMM * 36000);
+                clientAnchorDetail = new ClientAnchorDetail(startingRow, toRow, (int) reqImageHeightMM * EMU_PER_MM);
             }
         } else {
             overlapMM = reqImageHeightMM - (totalRowHeightMM - rowHeightMM);
@@ -215,13 +222,14 @@ public class AddDimensionedImage {
                 rowCoordinatesPerMM = 255.0 / rowHeightMM;
                 inset = (int) (overlapMM * rowCoordinatesPerMM);
             } else {
-                inset = (int) overlapMM * 36000;
+                inset = (int) overlapMM * EMU_PER_MM;
             }
             clientAnchorDetail = new ClientAnchorDetail(startingRow, toRow, inset);
         }
         return clientAnchorDetail;
     }
 
+    @SuppressWarnings("resource")
     public static void main(final String[] args) {
         String imageFile = null;
         String outputFile = null;

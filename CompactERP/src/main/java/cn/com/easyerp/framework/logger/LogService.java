@@ -11,15 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.com.easyerp.core.cache.TableDescribe;
 import cn.com.easyerp.core.dao.LogDao;
 import cn.com.easyerp.core.dao.SystemDao;
-import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.framework.common.Common;
 import cn.com.easyerp.framework.enums.LogType;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public class LogService {
-    @Autowired
-    private DataService dataService;
     @Autowired
     private LogDao logDao;
     @Autowired

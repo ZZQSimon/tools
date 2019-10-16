@@ -21,16 +21,16 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.net.util.Base64;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -41,6 +41,7 @@ import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.widget.FileFieldModel;
 import cn.com.easyerp.framework.common.ActionResult;
 import cn.com.easyerp.framework.common.Common;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.framework.logger.Loggable;
 import cn.com.easyerp.report.Excel2Pdf;
 import net.coobird.thumbnailator.Thumbnails;
@@ -80,7 +81,7 @@ public class StorageService {
 
     public static final String DOWNLOAD_URL = "/storage/download.do?id=";
     public static final int DEFAULT_BUFFER_SIZE = 10240;
-    private ConcurrentHashMap<String, FileItem> uploadMap = new ConcurrentHashMap();
+    private ConcurrentHashMap<String, FileItem> uploadMap = new ConcurrentHashMap<>();
     private static final String SESSION_DOWNLOAD_KEY = "SESSION_DOWNLOAD_KEY";
     private static final String UPLOAD_ROLLBACK_KEY = "STORAGE_UPLOAD_ROLLBACK_KEY";
 
@@ -94,7 +95,7 @@ public class StorageService {
         String fname, agent = request.getHeader("USER-AGENT");
         if (agent != null) {
             if (agent.contains("Firefox")) {
-                fname = "=?UTF-8?B?" + new String(Base64.encode(name.getBytes("UTF-8"))) + "?=";
+                fname = "=?UTF-8?B?" + new String(Base64.encodeBase64(name.getBytes("UTF-8"))) + "?=";
             } else if (agent.contains("Chrome")) {
                 fname = new String(name.getBytes(), "ISO8859-1");
             } else {
@@ -117,13 +118,15 @@ public class StorageService {
         return uuid;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void rollback() {
-        Map<String, FileItem> map = (Map) Common.getRequestObject("STORAGE_UPLOAD_ROLLBACK_KEY");
+        Map<String, FileItem> map = (Map) Common.getRequestObject(UPLOAD_ROLLBACK_KEY);
         if (map == null)
             return;
         this.uploadMap.putAll(map);
     }
 
+    @SuppressWarnings({ "unchecked" })
     public String process(HttpServletRequest req) {
         if (!ServletFileUpload.isMultipartContent(req)) {
             throw new ApplicationException(this.dataService.getMessageText("request not supported", new Object[0]));
@@ -132,7 +135,7 @@ public class StorageService {
             DiskFileItemFactory factory = new DiskFileItemFactory();
             factory.setRepository(new File(path(this.dataService.getSystemParam().getUpload_root() + "/tmp")));
             ServletFileUpload sfu = new ServletFileUpload(factory);
-            List items = sfu.parseRequest(req);
+            List<FileItem> items = sfu.parseRequest(req);
             FileItem file = null;
             String id = null;
             for (Object item : items) {
@@ -158,6 +161,7 @@ public class StorageService {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     public String process(HttpServletRequest req, AuthDetails user) throws Exception {
         if (!ServletFileUpload.isMultipartContent(req)) {
             throw new ApplicationException(this.dataService.getMessageText("request not supported", new Object[0]));
@@ -180,7 +184,6 @@ public class StorageService {
                     file = fi;
                     String fname = fi.getName();
                     String str = fname.substring(fname.indexOf(".") + 1);
-                    Date dates = new Date();
                     name = (new SimpleDateFormat("yyyyMMddHHmmss")).format(new Date()) + user.getId() + "." + str;
                     File f = new File(this.dataService.getRootPath() + getTmpFilePath(name));
                     InputStream in = fi.getInputStream();
@@ -248,10 +251,11 @@ public class StorageService {
         return getUploadFile(uuid, true);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private Map<String, FileItem> getRollbackMap() {
-        Map<String, FileItem> map = (Map) Common.getRequestObject("STORAGE_UPLOAD_ROLLBACK_KEY");
+        Map<String, FileItem> map = (Map) Common.getRequestObject(UPLOAD_ROLLBACK_KEY);
         if (map == null)
-            Common.setRequestObject("STORAGE_UPLOAD_ROLLBACK_KEY", map = new HashMap<String, FileItem>());
+            Common.setRequestObject(UPLOAD_ROLLBACK_KEY, map = new HashMap<String, FileItem>());
         return map;
     }
 
@@ -343,11 +347,12 @@ public class StorageService {
         return path;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public ActionResult createDownload(String filename, InputStream stream, int size) {
-        ConcurrentHashMap<String, DownloadInfo> downloadCache = (ConcurrentHashMap) common
-                .getSessionObject("SESSION_DOWNLOAD_KEY");
+        ConcurrentHashMap<String, DownloadInfo> downloadCache = (ConcurrentHashMap) Common
+                .getSessionObject(SESSION_DOWNLOAD_KEY);
         if (downloadCache == null) {
-            Common.putSessionObject("SESSION_DOWNLOAD_KEY",
+            Common.putSessionObject(SESSION_DOWNLOAD_KEY,
                     downloadCache = new ConcurrentHashMap<String, DownloadInfo>());
         }
         DownloadInfo di = new DownloadInfo(filename, stream, size);
@@ -356,14 +361,15 @@ public class StorageService {
         return new ActionResult(true, "/storage/download.do?id=" + uuid);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public ActionResult createDownload(String filename, String viewPath, InputStream stream, int size) {
         if (viewPath.indexOf(".\\") != -1 || viewPath.indexOf("./") != -1) {
             throw new ApplicationException("url is illegal");
         }
-        ConcurrentHashMap<String, DownloadInfo> downloadCache = (ConcurrentHashMap) common
-                .getSessionObject("SESSION_DOWNLOAD_KEY");
+        ConcurrentHashMap<String, DownloadInfo> downloadCache = (ConcurrentHashMap) Common
+                .getSessionObject(SESSION_DOWNLOAD_KEY);
         if (downloadCache == null) {
-            Common.putSessionObject("SESSION_DOWNLOAD_KEY",
+            Common.putSessionObject(SESSION_DOWNLOAD_KEY,
                     downloadCache = new ConcurrentHashMap<String, DownloadInfo>());
         }
         DownloadInfo di = new DownloadInfo(filename, stream, size);
@@ -375,10 +381,11 @@ public class StorageService {
         return new ActionResult(true, urlParam);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void download(HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") String id)
             throws IOException {
-        ConcurrentHashMap<String, DownloadInfo> downloadCache = (ConcurrentHashMap) common
-                .getSessionObject("SESSION_DOWNLOAD_KEY");
+        ConcurrentHashMap<String, DownloadInfo> downloadCache = (ConcurrentHashMap) Common
+                .getSessionObject(SESSION_DOWNLOAD_KEY);
         DownloadInfo di = (DownloadInfo) downloadCache.remove(id);
         writeDownloadInfo(req, resp, di.getFilename(), di.getSize());
         ServletOutputStream servletOutputStream = resp.getOutputStream();

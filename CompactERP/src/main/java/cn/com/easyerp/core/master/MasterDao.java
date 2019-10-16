@@ -7,7 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MasterDao {
-  List<DataSourceDescModel> selectDataSourceDesc(@Param("active_flag") int paramInt);
+    List<DataSourceDescModel> selectDataSourceDesc(@Param("active_flag") int paramInt);
 }
-
-

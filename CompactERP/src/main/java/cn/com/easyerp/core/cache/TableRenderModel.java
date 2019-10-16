@@ -1,12 +1,8 @@
 package cn.com.easyerp.core.cache;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 public class TableRenderModel {
-    private static TypeReference<StyleModel> renderJsonRef = new TypeReference<StyleModel>() {
-
-    };
 
     private String table_id;
 
@@ -80,17 +76,16 @@ public class TableRenderModel {
         return this.style;
     }
 
-    private static class StyleModel {
+    static class StyleModel {
         String color;
-
         String bg;
 
         public String getColor() {
-            return this.color;
+            return color;
         }
 
         public String getBg() {
-            return this.bg;
+            return bg;
         }
     }
 }

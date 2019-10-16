@@ -1,12 +1,10 @@
 package cn.com.easyerp.core.companyCalendar.appointment;
 
-import java.util.Map;
-
 import cn.com.easyerp.core.view.FormRequestModelBase;
 
 public class AppointmentRequestModel extends FormRequestModelBase<AppointmentModel> {
     private AppointmentDescribe appointment;
-    private Map<String, Object> param;
+    // private Map<String, Object> param;
     private boolean readonly = true;
 
     public AppointmentDescribe getAppointment() {

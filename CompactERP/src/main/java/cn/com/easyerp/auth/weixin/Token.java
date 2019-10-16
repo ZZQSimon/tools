@@ -16,7 +16,7 @@ public class Token {
         if (this.date == null)
             return null;
         Date nowDate = new Date();
-        if (nowDate.getTime() - this.date.getTime() > 7000000L) {
+        if (nowDate.getTime() - this.date.getTime() > EXPIRES_IN) {
             return null;
         }
         return this.token;

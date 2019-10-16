@@ -25,7 +25,7 @@ import cn.com.easyerp.core.dao.ColumnValue;
 import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.data.DatabaseDataMap;
 import cn.com.easyerp.core.data.ExportService;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.core.view.FormViewControllerBase;
 import cn.com.easyerp.core.widget.FieldModelBase;
 import cn.com.easyerp.core.widget.grid.RecordModel;
@@ -92,6 +92,7 @@ public class TreeController extends FormViewControllerBase {
         return buildModelAndView(form);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @ResponseBody
     @RequestMapping({ "/selectAllTreeNode.do" })
     public ActionResult SelectTreeData(@RequestBody TreeFormRequestModel request) {
@@ -206,6 +207,7 @@ public class TreeController extends FormViewControllerBase {
         return new ActionResult(true, returnData);
     }
 
+    @SuppressWarnings({ "rawtypes" })
     private TreeNodeModel buildRecursiveNode(TableDescribe table, String refTableName, String nameColumn,
             String idColumn, String parentId, Map<String, Object> record) {
         if (table.getId().equals(refTableName)) {
@@ -383,6 +385,7 @@ public class TreeController extends FormViewControllerBase {
         return new ActionResult(true, (Object) msg);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @ResponseBody
     @RequestMapping({ "/selectnode.do" })
     public ActionResult Select(@RequestBody TreeFormRequestModel request) {
@@ -504,12 +507,13 @@ public class TreeController extends FormViewControllerBase {
     public ActionResult export(@RequestBody TreeFormRequestModel request, AuthDetails user) throws IOException {
         TreeFormModel form = (TreeFormModel) request.getWidget();
         TableDescribe table = this.dataService.getTableDesc(form.getTableName());
-        String fileName = String.format("bom(%s).csv",
+        String fileName = String.format(EXPORT_FILE_NAME_FORMAT,
                 new Object[] { ((TreeNodeModel) form.getNodes().get(0)).getText() });
         TreeRecordGetter getter = new TreeRecordGetter(form);
         return this.exportService.exportToCsv(table, request.getIds(), fileName, user, getter);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void deleteForSingleTable(TreeFormModel form, TableDescribe table, String id) {
         form.clearNodes();
         Set<String> columnsNeeded = new HashSet<String>();

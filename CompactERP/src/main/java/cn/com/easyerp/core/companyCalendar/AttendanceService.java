@@ -10,14 +10,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.com.easyerp.core.dao.AttendanceDao;
 import cn.com.easyerp.core.dao.CalendarDao;
 import cn.com.easyerp.core.dao.CheckWorkDao;
 
 @Service
 public class AttendanceService {
-    @Autowired
-    private AttendanceDao attendanceDao;
+    // @Autowired
+    // private AttendanceDao attendanceDao;
     @Autowired
     private CalendarDao calendarDao;
     @Autowired

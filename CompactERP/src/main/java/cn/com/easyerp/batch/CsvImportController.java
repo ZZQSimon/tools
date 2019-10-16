@@ -24,6 +24,7 @@ public class CsvImportController extends FormViewControllerBase {
     @Autowired
     private DataService dataService;
 
+    @SuppressWarnings("unchecked")
     @RequestMapping({ "/csv/import.view" })
     public ModelAndView view(@RequestBody FormRequestModelBase<CsvImportFormModel> request) {
         CsvImportFormModel form = (CsvImportFormModel) ViewService.fetchFormModel(request.getParent());

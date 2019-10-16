@@ -82,6 +82,7 @@ public class FilterModel extends WidgetModelBase {
         this(table, buttonLabel, needed, fixedData, defaultFilters, FilterMode.std);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public FilterModel(String table, String buttonLabel, Set<String> needed, Map<String, Object> fixedData,
             Map<String, FilterDescribe> defaultFilters, FilterMode mode) {
         this.table = table;

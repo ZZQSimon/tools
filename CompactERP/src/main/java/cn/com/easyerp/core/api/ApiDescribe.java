@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import cn.com.easyerp.core.cache.ActionEventDescribe;
 import cn.com.easyerp.core.cache.UrlInterfaceDescribe;
 import cn.com.easyerp.core.data.DatabaseDataMap;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.framework.common.Common;
 
 public class ApiDescribe {

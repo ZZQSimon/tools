@@ -5,9 +5,7 @@ import javax.jws.WebService;
 
 @WebService
 public interface DXServiceCXFInterface {
-  String getValue(@WebParam(name = "name") String paramString);
-  
-  String sendMailToGC(@WebParam(name = "msg") String paramString);
+    String getValue(@WebParam(name = "name") String paramString);
+
+    String sendMailToGC(@WebParam(name = "msg") String paramString);
 }
-
-

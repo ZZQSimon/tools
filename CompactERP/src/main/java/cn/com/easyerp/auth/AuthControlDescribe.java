@@ -44,6 +44,7 @@ public class AuthControlDescribe {
         parseEntries();
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void parseEntries() {
         if (!Common.isBlank(this.relationship)) {
             this.entries = (List) Common.fromJson(this.relationship, authTargetJsonRef);

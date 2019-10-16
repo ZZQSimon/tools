@@ -10,19 +10,19 @@ public class EncryptUtil {
 
     public String md5Digest(String src) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] b = md.digest(src.getBytes("utf-8"));
+        byte[] b = md.digest(src.getBytes(UTF8));
         return byte2HexStr(b);
     }
 
     public String base64Encoder(String src) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         BASE64Encoder encoder = new BASE64Encoder();
-        return encoder.encode(src.getBytes("utf-8"));
+        return encoder.encode(src.getBytes(UTF8));
     }
 
     public String base64Decoder(String dest)
             throws NoSuchAlgorithmException, IOException, UnsupportedEncodingException {
         BASE64Decoder decoder = new BASE64Decoder();
-        return new String(decoder.decodeBuffer(dest), "utf-8");
+        return new String(decoder.decodeBuffer(dest), UTF8);
     }
 
     private String byte2HexStr(byte[] b) {

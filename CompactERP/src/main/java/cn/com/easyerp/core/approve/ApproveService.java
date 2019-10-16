@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cn.com.easyerp.DeployTool.service.TableDeployService;
 import cn.com.easyerp.auth.AuthDetails;
 import cn.com.easyerp.auth.AuthService;
 import cn.com.easyerp.core.ViewService;
@@ -33,7 +32,6 @@ import cn.com.easyerp.core.dao.ApproveDao;
 import cn.com.easyerp.core.dao.AuthDao;
 import cn.com.easyerp.core.dao.SystemDao;
 import cn.com.easyerp.core.data.DataService;
-import cn.com.easyerp.core.exception.ApplicationException;
 import cn.com.easyerp.core.mail.MailDescribe;
 import cn.com.easyerp.core.mail.MailService;
 import cn.com.easyerp.core.master.DxRoutingDataSource;
@@ -43,17 +41,22 @@ import cn.com.easyerp.core.widget.grid.RecordModel;
 import cn.com.easyerp.core.widget.message.MessageService;
 import cn.com.easyerp.framework.common.ActionResult;
 import cn.com.easyerp.framework.common.Common;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.weixin.WeChatService;
 
 @Service
 public class ApproveService {
-    private static final String APPROVE_SEND_MESSAGE_PASS = "approve_send_message_pass";
-    private static final String APPROVE_SEND_MESSAGE_PASS_TITLE = "approve_send_message_pass_title";
-    private static final String APPROVE_SEND_MESSAGE_REJECT = "approve_send_message_reject";
-    private static final String APPROVE_SEND_MESSAGE_REJECT_TITLE = "approve_send_message_reject_title";
-    private static final String APPROVE_STATUS_KEY = "approve_status";
-    private static final String OWNER_KEY = "owner";
-    private static final String CRE_USER_KEY = "cre_user";
+    // private static final String APPROVE_SEND_MESSAGE_PASS =
+    // "approve_send_message_pass";
+    // private static final String APPROVE_SEND_MESSAGE_PASS_TITLE =
+    // "approve_send_message_pass_title";
+    // private static final String APPROVE_SEND_MESSAGE_REJECT =
+    // "approve_send_message_reject";
+    // private static final String APPROVE_SEND_MESSAGE_REJECT_TITLE =
+    // "approve_send_message_reject_title";
+    // private static final String APPROVE_STATUS_KEY = "approve_status";
+    // private static final String OWNER_KEY = "owner";
+    // private static final String CRE_USER_KEY = "cre_user";
     @Autowired
     private ApproveDao approveDao;
     @Autowired
@@ -66,8 +69,8 @@ public class ApproveService {
     private MessageService messageService;
     @Autowired
     private MailService mailService;
-    @Autowired
-    private TableDeployService tableDeployService;
+    // @Autowired
+    // private TableDeployService tableDeployService;
     @Autowired
     private DxRoutingDataSource dxRoutingDataSource;
     @Autowired
@@ -78,6 +81,7 @@ public class ApproveService {
     @Autowired
     private AuthDao authDao;
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void saveApproveUser(final String tableName, final Map<String, Object> filter,
             final DetailRequestModel request) {
         final TableDescribe tableDesc = this.cacheService.getTableDesc(tableName);
@@ -375,6 +379,7 @@ public class ApproveService {
         this.recursionUntilBlock(approveUsers, parentUser, users, count);
     }
 
+    @SuppressWarnings("unused")
     private Object paseValue(final ColumnDescribe column, final String value, final String conditionValue,
             final String symbol) {
         switch (column.getData_type()) {
@@ -947,6 +952,7 @@ public class ApproveService {
         this.approveResultRemind(data, user.getId(), approveBlockEvent.get("terminationEvent"));
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void updateApproveStatus(final String tableId, final Object dataId, final String type) {
         final TableDescribe table = this.cacheService.getTableDesc(tableId);
         if (table == null) {
@@ -1013,7 +1019,7 @@ public class ApproveService {
         approveFlowNode.setBlock_id(blockId);
         approveFlowNode.setState(ApproveFlowNode.State.FINISH);
         this.approveDao.updateApproveNodeState(approveFlowNode);
-        final ApproveBlockEvent flowEvent = approveBlockEvent.get("");
+        // final ApproveBlockEvent flowEvent = approveBlockEvent.get("");
         final Map<String, String> data = new HashMap<String, String>();
         data.put("approveId", approveId);
         data.put("blockId", blockId);
@@ -1238,6 +1244,7 @@ public class ApproveService {
         this.WeixinCuibanRemind(param, approvers, baseParam);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void approveWeixinRemind(final Map<String, String> param, final List<Map<String, String>> approvers,
             final String baseParam) {
         final Map<String, Map<String, Object>> datas = new HashMap<String, Map<String, Object>>();
@@ -1256,6 +1263,7 @@ public class ApproveService {
         }
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void approveWeixinRemind(final Map<String, String> param, final AuthDetails applicant,
             final String baseParam) {
         final Map<String, Map<String, Object>> datas = new HashMap<String, Map<String, Object>>();
@@ -1267,6 +1275,7 @@ public class ApproveService {
         this.weChatService.sendTextMessage("4", applicant.getId(), (Map) datas, "");
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void WeixinCuibanRemind(final Map<String, String> param, final List<Map<String, String>> approvers,
             final String baseParam) {
         final Map<String, Map<String, Object>> datas = new HashMap<String, Map<String, Object>>();
@@ -1281,6 +1290,7 @@ public class ApproveService {
         }
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void approveSysMsgRemid(final Map<String, String> param, final AuthDetails applicant, final String tableId,
             final String dataId) {
         final String url = "<a href='#' class='link-approve'  table-id='" + tableId + "' data-id='" + dataId + "')'>"
@@ -1295,6 +1305,7 @@ public class ApproveService {
         this.messageService.sendTextMessage("4", applicant.getId(), (Map) datas, "");
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void approveSysMsgRemid(final Map<String, String> param, final List<Map<String, String>> approvers,
             final String tableId, final String dataId) {
         final String url = "<a href='#' class='link-approve'  table-id='" + tableId + "' data-id='" + dataId + "')'>"
@@ -1318,11 +1329,11 @@ public class ApproveService {
     public void approveEmailRemind(final Map<String, String> param, final AuthDetails applicant,
             final Map<String, Object> emailDetail) {
         String FileContent = "";
-        try {
-            final FileInputStream fis = new FileInputStream(
-                    this.dataService.getRootPath() + "/WEB-INF/velocity/ApproveResultTemplate.html");
-            final InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-            final BufferedReader br = new BufferedReader(isr);
+        try (final FileInputStream fis = new FileInputStream(
+                this.dataService.getRootPath() + "/WEB-INF/velocity/ApproveResultTemplate.html");
+                final InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+                final BufferedReader br = new BufferedReader(isr);) {
+
             String line = null;
             while ((line = br.readLine()) != null) {
                 FileContent += line;
@@ -1347,12 +1358,11 @@ public class ApproveService {
     public void approveEmailRemind(final Map<String, String> param, final List<Map<String, String>> approvers,
             final Map<String, Object> emailDetail) {
         String FileContent = "";
-        final String recipients = "";
-        try {
-            final FileInputStream fis = new FileInputStream(
-                    this.dataService.getRootPath() + "/WEB-INF/velocity/ApproveRemindTemplate.html");
-            final InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-            final BufferedReader br = new BufferedReader(isr);
+        try (final FileInputStream fis = new FileInputStream(
+                this.dataService.getRootPath() + "/WEB-INF/velocity/ApproveRemindTemplate.html");
+                final InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+                final BufferedReader br = new BufferedReader(isr);) {
+
             String line = null;
             while ((line = br.readLine()) != null) {
                 FileContent += line;
@@ -1391,6 +1401,7 @@ public class ApproveService {
         return (Map<String, String>) this.approveDao.getStartNodeBlock(tableId);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private Map<String, AuthDetails> selectApproveUser(final String tableName, final String blockId,
             final Object dataId, final Map<String, Object> filter) {
         final TableDescribe table = this.cacheService.getTableDesc(tableName);
@@ -1541,6 +1552,7 @@ public class ApproveService {
         return users;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private String selectRef(final TableDescribe table, final String refStr, final Map<String, Object> filter) {
         final String[] refColumnStr = refStr.split("\\.");
         final ColumnDescribe refColumn = table.getColumn(refColumnStr[0]);
@@ -1569,6 +1581,7 @@ public class ApproveService {
         return refTableData.get(refColumnStr[1]).toString();
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public ActionResult checkBatchApproveSubmit(final String tableName, final List<String> recordIds) {
         final TableDescribe tableDesc = this.dataService.getTableDesc(tableName);
         if (1 != tableDesc.getIs_approve() || null == recordIds || null == tableDesc.getIdColumns()

@@ -25,14 +25,13 @@ import cn.com.easyerp.core.cache.TableDescribe;
 import cn.com.easyerp.core.dao.SystemDao;
 import cn.com.easyerp.core.data.SystemParameter;
 import cn.com.easyerp.core.evaluate.DataModel.Model;
-import cn.com.easyerp.core.exception.ApplicationException;
 import cn.com.easyerp.core.widget.FieldModelBase;
 import cn.com.easyerp.core.widget.FieldWithRefModel;
 import cn.com.easyerp.framework.common.Common;
+import cn.com.easyerp.framework.exception.ApplicationException;
 
 @Service
-public class FormulaService
-{
+public class FormulaService {
     public static final String IS_SQL = "dxf.sql\\(\\\\?['\"](.*?)\\\\?['\"]\\)";
     private static final String PARAM = "[\\$#]\\{(.*?)\\}";
     private static final String FUNCTION = "dxf.([a-zA-Z]*)\\(\\\\?['\"]?(.*?)\\\\?['\"]?\\)";
@@ -47,12 +46,12 @@ public class FormulaService
     private Function function;
     @Autowired
     private SystemDao systemDao;
-    
-    /*public FormulaService() {
-        this.manager = new ScriptEngineManager();
-        this.engine = this.manager.getEngineByName("javascript");
-    }*/
-    
+
+    /*
+     * public FormulaService() { this.manager = new ScriptEngineManager();
+     * this.engine = this.manager.getEngineByName("javascript"); }
+     */
+
     public Object evaluate(String formula, final Object param) {
         if (formula == null || "".equals(formula)) {
             return null;
@@ -62,7 +61,7 @@ public class FormulaService
         while (matcherSql.find()) {
             formula = this.replaceSql(formula);
         }
-        final String regex = "[\\$#]\\{(.*?)\\}";
+        final String regex = PARAM;
         final Pattern pattern = Pattern.compile(regex);
         final Matcher matcher = pattern.matcher(formula);
         Object value = null;
@@ -73,78 +72,74 @@ public class FormulaService
             if (value != null) {
                 if (matcherV.indexOf("#") != -1) {
                     formula = formula.replace(matcherV, "'" + value.toString() + "'");
-                }
-                else {
+                } else {
                     formula = formula.replace(matcherV, value.toString());
                 }
-            }
-            else if (matcherV.indexOf("#") != -1) {
+            } else if (matcherV.indexOf("#") != -1) {
                 formula = formula.replace(matcherV, "''");
-            }
-            else {
+            } else {
                 formula = formula.replace(matcherV, "");
             }
         }
         formula = this.matcherFunction(formula, param, true);
         try {
             value = this.engine.eval(formula);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ApplicationException("variable:" + formula + " not exists");
         }
         return value;
     }
-    
+
     public Object evaluate(final String id, final String formula) {
         final Model cacheModel = this.cacheModelService.getCacheModel(id);
         final String target = this.evaluateVar(formula, cacheModel);
         Object val;
         try {
             val = this.engine.eval(target);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return target;
         }
         return val;
     }
-    
-    public Object evaluate(final String id, final String dataId, final String column, final String formula, final Map<String, Object> data) {
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public Object evaluate(final String id, final String dataId, final String column, final String formula,
+            final Map<String, Object> data) {
         Model cacheModel = null;
         if (dataId == null || "".equals(dataId)) {
             cacheModel = this.cacheModelService.getCacheModel(id);
-        }
-        else {
+        } else {
             cacheModel = this.cacheModelService.getCacheModel(id, dataId);
         }
         String target = "";
         if (data != null) {
             target = this.evaluateVar(formula, data);
-        }
-        else {
+        } else {
             target = this.evaluateVar(formula, cacheModel);
         }
-        if (target.matches("^\\((.*)\\)$")) {
-            final Pattern p = Pattern.compile("^\\((.*)\\)$");
+        if (target.matches(IS_JSON)) {
+            final Pattern p = Pattern.compile(IS_JSON);
             final Matcher m = p.matcher(target);
             m.find();
-            return Common.fromJson(m.group(1), (TypeReference)new TypeReference<Object>() {});
+            return Common.fromJson(m.group(1), (TypeReference) new TypeReference<Object>() {
+            });
         }
         Object val;
         try {
             val = this.engine.eval(target);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return target;
         }
         if (cacheModel != null && cacheModel.getTableName() != null && column != null) {
-            final ColumnDescribe columnDesc = this.cacheService.getTableDesc(cacheModel.getTableName()).getColumn(column);
+            final ColumnDescribe columnDesc = this.cacheService.getTableDesc(cacheModel.getTableName())
+                    .getColumn(column);
             if (formula.equals(columnDesc.getFormula()) || formula.equals(columnDesc.getDefault_value())) {
                 this.cacheModelService.changeModify(cacheModel, column, val);
             }
         }
         return val;
     }
-    
+
     private String evaluateVar(String str, final Model cacheModel) {
         if (str == null || "".equals(str)) {
             return null;
@@ -160,7 +155,7 @@ public class FormulaService
         while (matcherSql.find()) {
             str = this.replaceSql(str);
         }
-        final Pattern pattern = Pattern.compile("[\\$#]\\{(.*?)\\}");
+        final Pattern pattern = Pattern.compile(PARAM);
         final Matcher matcher = pattern.matcher(str);
         Object value = null;
         while (matcher.find()) {
@@ -169,18 +164,15 @@ public class FormulaService
             if (value != null) {
                 if (matcherV.indexOf("$") != -1) {
                     str = str.replace(matcherV, value.toString());
-                }
-                else {
+                } else {
                     if (matcherV.indexOf("#") == -1) {
                         continue;
                     }
                     str = str.replace(matcherV, "'" + value.toString() + "'");
                 }
-            }
-            else if (matcherV.indexOf("$") != -1) {
+            } else if (matcherV.indexOf("$") != -1) {
                 str = str.replace(matcherV, "");
-            }
-            else {
+            } else {
                 if (matcherV.indexOf("#") == -1) {
                     continue;
                 }
@@ -190,7 +182,7 @@ public class FormulaService
         final String result = this.matcherFunction(str, cacheModel);
         return result;
     }
-    
+
     private String evaluateVar(String str, final Map<String, Object> data) {
         if ("".equals(str)) {
             return null;
@@ -206,7 +198,7 @@ public class FormulaService
         while (matcherSql.find()) {
             str = this.replaceSql(str);
         }
-        final Pattern pattern = Pattern.compile("[\\$#]\\{(.*?)\\}");
+        final Pattern pattern = Pattern.compile(PARAM);
         final Matcher matcher = pattern.matcher(str);
         Object value = null;
         while (matcher.find()) {
@@ -215,18 +207,15 @@ public class FormulaService
             if (value != null) {
                 if (matcherV.indexOf("$") != -1) {
                     str = str.replace(matcherV, value.toString());
-                }
-                else {
+                } else {
                     if (matcherV.indexOf("#") == -1) {
                         continue;
                     }
                     str = str.replace(matcherV, "'" + value.toString() + "'");
                 }
-            }
-            else if (matcherV.indexOf("$") != -1) {
+            } else if (matcherV.indexOf("$") != -1) {
                 str = str.replace(matcherV, "");
-            }
-            else {
+            } else {
                 if (matcherV.indexOf("#") == -1) {
                     continue;
                 }
@@ -236,7 +225,8 @@ public class FormulaService
         final String result = this.matcherFunction(str, null);
         return result;
     }
-    
+
+    @SuppressWarnings({ "rawtypes" })
     private Object evaluateVar(final String formulaV, final Object param) {
         final String reg = "__dx\\.(user|sys)\\.(.*)$";
         if (formulaV.matches(reg)) {
@@ -245,85 +235,80 @@ public class FormulaService
             m.find();
             final String group = m.group(1);
             switch (group) {
-                case "user": {
-                    final String columnNameUser = m.group(2);
-                    final AuthDetails currentUser = AuthService.getCurrentUser();
-                    if (currentUser == null) {
-                        return null;
-                    }
-                    final BeanWrapper wrapperUser = (BeanWrapper)new BeanWrapperImpl((Object)currentUser);
-                    if (wrapperUser.isReadableProperty(columnNameUser)) {
-                        return wrapperUser.getPropertyValue(columnNameUser);
-                    }
-                    break;
+            case "user": {
+                final String columnNameUser = m.group(2);
+                final AuthDetails currentUser = AuthService.getCurrentUser();
+                if (currentUser == null) {
+                    return null;
                 }
-                case "sys": {
-                    final String columnNameSys = m.group(2);
-                    final SystemParameter systemParam = this.cacheService.getSystemParam();
-                    if (systemParam == null) {
-                        return null;
-                    }
-                    final BeanWrapper wrapperSys = (BeanWrapper)new BeanWrapperImpl((Object)systemParam);
-                    if (wrapperSys.isReadableProperty(columnNameSys)) {
-                        return wrapperSys.getPropertyValue(columnNameSys);
-                    }
-                    break;
+                final BeanWrapper wrapperUser = (BeanWrapper) new BeanWrapperImpl((Object) currentUser);
+                if (wrapperUser.isReadableProperty(columnNameUser)) {
+                    return wrapperUser.getPropertyValue(columnNameUser);
                 }
+                break;
+            }
+            case "sys": {
+                final String columnNameSys = m.group(2);
+                final SystemParameter systemParam = this.cacheService.getSystemParam();
+                if (systemParam == null) {
+                    return null;
+                }
+                final BeanWrapper wrapperSys = (BeanWrapper) new BeanWrapperImpl((Object) systemParam);
+                if (wrapperSys.isReadableProperty(columnNameSys)) {
+                    return wrapperSys.getPropertyValue(columnNameSys);
+                }
+                break;
+            }
             }
         }
         if (param == null) {
             return null;
         }
-        final BeanWrapper wrapper = (BeanWrapper)new BeanWrapperImpl(param);
+        final BeanWrapper wrapper = (BeanWrapper) new BeanWrapperImpl(param);
         final String[] name = formulaV.split("\\.");
         Object value = new Object();
         if (name.length == 1) {
             if (param instanceof Map) {
-                if (!((Map)param).containsKey(name[0])) {
+                if (!((Map) param).containsKey(name[0])) {
                     throw new ApplicationException("has no column: " + name[0]);
                 }
-                return ((Map)param).get(name[0]);
-            }
-            else {
+                return ((Map) param).get(name[0]);
+            } else {
                 if (wrapper.isReadableProperty(name[0])) {
                     return wrapper.getPropertyValue(name[0]);
                 }
                 throw new ApplicationException("has no column: " + name[0]);
             }
-        }
-        else {
+        } else {
             if (name.length != 2) {
                 return null;
             }
             if (param instanceof Map) {
-                if (!((Map)param).containsKey(name[0] + ".ref")) {
+                if (!((Map) param).containsKey(name[0] + ".ref")) {
                     throw new ApplicationException("has no ref table: " + name[0]);
                 }
-                value = ((Map)param).get(name[0] + ".ref");
+                value = ((Map) param).get(name[0] + ".ref");
                 if (value instanceof Map) {
-                    if (!((Map)value).containsKey(name[1])) {
+                    if (!((Map) value).containsKey(name[1])) {
                         throw new ApplicationException("has no ref column: " + name[1]);
                     }
-                    return ((Map)value).get(name[1]);
-                }
-                else {
-                    final BeanWrapper wrapper2 = (BeanWrapper)new BeanWrapperImpl(value);
+                    return ((Map) value).get(name[1]);
+                } else {
+                    final BeanWrapper wrapper2 = (BeanWrapper) new BeanWrapperImpl(value);
                     if (wrapper2.isReadableProperty(name[1])) {
                         return wrapper2.getPropertyValue(name[1]);
                     }
                     throw new ApplicationException("has no ref column: " + name[1]);
                 }
-            }
-            else {
+            } else {
                 final Object propertyValue = wrapper.getPropertyValue(name[0]);
                 if (propertyValue instanceof Map) {
-                    if (!((Map)propertyValue).containsKey(name[1])) {
+                    if (!((Map) propertyValue).containsKey(name[1])) {
                         throw new ApplicationException("has no ref column: " + name[1]);
                     }
-                    return ((Map)propertyValue).get(name[1]);
-                }
-                else {
-                    final BeanWrapper wrapper3 = (BeanWrapper)new BeanWrapperImpl(propertyValue);
+                    return ((Map) propertyValue).get(name[1]);
+                } else {
+                    final BeanWrapper wrapper3 = (BeanWrapper) new BeanWrapperImpl(propertyValue);
                     if (wrapper3.isReadableProperty(name[1])) {
                         return wrapper.getPropertyValue(name[1]);
                     }
@@ -332,7 +317,7 @@ public class FormulaService
             }
         }
     }
-    
+
     private Object findVal(final String column, final Model cacheModel) {
         final String regUser = "__dx\\.user\\.(.*)$";
         final Pattern p = Pattern.compile(regUser);
@@ -343,7 +328,7 @@ public class FormulaService
             if (currentUser == null) {
                 return null;
             }
-            final BeanWrapper wrapperUser = (BeanWrapper)new BeanWrapperImpl((Object)currentUser);
+            final BeanWrapper wrapperUser = (BeanWrapper) new BeanWrapperImpl((Object) currentUser);
             if (wrapperUser.isReadableProperty(columnNameUser)) {
                 return wrapperUser.getPropertyValue(columnNameUser);
             }
@@ -357,7 +342,7 @@ public class FormulaService
             if (systemParam == null) {
                 return null;
             }
-            final BeanWrapper wrapperSys = (BeanWrapper)new BeanWrapperImpl((Object)systemParam);
+            final BeanWrapper wrapperSys = (BeanWrapper) new BeanWrapperImpl((Object) systemParam);
             if (wrapperSys.isReadableProperty(columnNameSys)) {
                 return wrapperSys.getPropertyValue(columnNameSys);
             }
@@ -380,7 +365,7 @@ public class FormulaService
             return null;
         }
         if (!"create".equals(cacheModel.getAction())) {
-            return ((FieldWithRefModel)fieldModelBase).getRef().get(name[1]);
+            return ((FieldWithRefModel) fieldModelBase).getRef().get(name[1]);
         }
         final TableDescribe table = this.cacheService.getTableDesc(fieldModelBase.getTable());
         final ColumnDescribe columnDesc = table.getColumn(fieldModelBase.getColumn());
@@ -390,7 +375,8 @@ public class FormulaService
         }
         return refData.get(name[1]);
     }
-    
+
+    @SuppressWarnings({ "rawtypes" })
     private Object findVal(final String column, final Map<String, Object> data, final boolean withNoCache) {
         final String regUser = "__dx\\.user\\.(.*)$";
         final Pattern p = Pattern.compile(regUser);
@@ -401,7 +387,7 @@ public class FormulaService
             if (currentUser == null) {
                 return null;
             }
-            final BeanWrapper wrapperUser = (BeanWrapper)new BeanWrapperImpl((Object)currentUser);
+            final BeanWrapper wrapperUser = (BeanWrapper) new BeanWrapperImpl((Object) currentUser);
             if (wrapperUser.isReadableProperty(columnNameUser)) {
                 return wrapperUser.getPropertyValue(columnNameUser);
             }
@@ -415,7 +401,7 @@ public class FormulaService
             if (systemParam == null) {
                 return null;
             }
-            final BeanWrapper wrapperSys = (BeanWrapper)new BeanWrapperImpl((Object)systemParam);
+            final BeanWrapper wrapperSys = (BeanWrapper) new BeanWrapperImpl((Object) systemParam);
             if (wrapperSys.isReadableProperty(columnNameSys)) {
                 return wrapperSys.getPropertyValue(columnNameSys);
             }
@@ -432,11 +418,11 @@ public class FormulaService
             return "";
         }
         if (columnData instanceof Map) {
-            return "\"" + ((Map)columnData).get("value").toString() + "\"";
+            return "\"" + ((Map) columnData).get("value").toString() + "\"";
         }
         return "" + columnData.toString() + "";
     }
-    
+
     public String replaceSql(String str) {
         final Pattern p = Pattern.compile("dxf.sql\\(\\\\?['\"](.*?)\\\\?['\"]\\)");
         final Matcher m = p.matcher(str);
@@ -447,15 +433,15 @@ public class FormulaService
         }
         return str;
     }
-    
+
     private String matcherFunction(String str, final Model cacheModel) {
-        final Pattern pattern = Pattern.compile("dxf.([a-zA-Z]*)\\(\\\\?['\"]?(.*?)\\\\?['\"]?\\)");
+        final Pattern pattern = Pattern.compile(FUNCTION);
         final Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {
             final String funName = matcher.group(1);
             final String funStr = this.getFunStr(str, funName);
             String funVal = this.getFunVal(funStr, funName);
-            final Pattern patternVal = Pattern.compile("dxf.([a-zA-Z]*)\\(\\\\?['\"]?(.*?)\\\\?['\"]?\\)");
+            final Pattern patternVal = Pattern.compile(FUNCTION);
             final Matcher matcherVal = patternVal.matcher(funVal);
             while (matcherVal.find()) {
                 funVal = this.matcherFunction(funVal, cacheModel);
@@ -465,15 +451,15 @@ public class FormulaService
         }
         return str;
     }
-    
+
     private String matcherFunction(String str, final Object param, final boolean isCheckFormula) {
-        final Pattern pattern = Pattern.compile("dxf.([a-zA-Z]*)\\(\\\\?['\"]?(.*?)\\\\?['\"]?\\)");
+        final Pattern pattern = Pattern.compile(FUNCTION);
         final Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {
             final String funName = matcher.group(1);
             final String funStr = this.getFunStr(str, funName);
             String funVal = this.getFunVal(funStr, funName);
-            final Pattern patternVal = Pattern.compile("dxf.([a-zA-Z]*)\\(\\\\?['\"]?(.*?)\\\\?['\"]?\\)");
+            final Pattern patternVal = Pattern.compile(FUNCTION);
             final Matcher matcherVal = patternVal.matcher(funVal);
             while (matcherVal.find()) {
                 funVal = this.matcherFunction(funVal, param, true);
@@ -483,119 +469,119 @@ public class FormulaService
         }
         return str;
     }
-    
+
     private String execFunction(final String funName, final String funVal, final Model cacheModel) {
         if (funName == null || "".equals(funName)) {
             return null;
         }
         switch (funName) {
-            case "sum": {
-                return this.function.sumFunction(funVal, cacheModel) + "";
-            }
-            case "max": {
-                return this.function.maxFunction(funVal, cacheModel);
-            }
-            case "min": {
-                return this.function.minFunction(funVal, cacheModel);
-            }
-            case "unique": {
-                return this.function.uniqueFunction(funVal, cacheModel);
-            }
-            case "uniqueCount": {
-                return this.function.uniqueCountFunction(funVal, cacheModel);
-            }
-            case "count": {
-                return this.function.countFunction(funVal, cacheModel) + "";
-            }
-            case "sql": {
-                return this.function.sqlFunction(funVal, cacheModel);
-            }
-            case "date": {
-                return this.function.dateFunction(funVal, cacheModel);
-            }
-            case "dateText": {
-                return this.function.dateTextFunction(funVal, cacheModel);
-            }
-            case "orig": {
-                return this.function.origFunction(funVal, cacheModel);
-            }
-            case "dict": {
-                return this.function.dictFunction(funVal, cacheModel);
-            }
-            case "domainKey": {
-                return this.function.domainKeyFunction(funVal, cacheModel);
-            }
-            case "childVal": {
-                return "";
-            }
-            default: {
-                throw new ApplicationException("no function name: " + funName);
-            }
+        case "sum": {
+            return this.function.sumFunction(funVal, cacheModel) + "";
+        }
+        case "max": {
+            return this.function.maxFunction(funVal, cacheModel);
+        }
+        case "min": {
+            return this.function.minFunction(funVal, cacheModel);
+        }
+        case "unique": {
+            return this.function.uniqueFunction(funVal, cacheModel);
+        }
+        case "uniqueCount": {
+            return this.function.uniqueCountFunction(funVal, cacheModel);
+        }
+        case "count": {
+            return this.function.countFunction(funVal, cacheModel) + "";
+        }
+        case "sql": {
+            return this.function.sqlFunction(funVal, cacheModel);
+        }
+        case "date": {
+            return this.function.dateFunction(funVal, cacheModel);
+        }
+        case "dateText": {
+            return this.function.dateTextFunction(funVal, cacheModel);
+        }
+        case "orig": {
+            return this.function.origFunction(funVal, cacheModel);
+        }
+        case "dict": {
+            return this.function.dictFunction(funVal, cacheModel);
+        }
+        case "domainKey": {
+            return this.function.domainKeyFunction(funVal, cacheModel);
+        }
+        case "childVal": {
+            return "";
+        }
+        default: {
+            throw new ApplicationException("no function name: " + funName);
+        }
         }
     }
-    
-    private String execFunction(final String funName, final String funVal, final Object param, final boolean isCheckFormula) {
+
+    private String execFunction(final String funName, final String funVal, final Object param,
+            final boolean isCheckFormula) {
         if (funName == null || "".equals(funName)) {
             return null;
         }
         switch (funName) {
-            case "sum": {
-                return this.function.sumFunction(funVal, null) + "";
-            }
-            case "max": {
-                return this.function.maxFunction(funVal, null);
-            }
-            case "min": {
-                return this.function.minFunction(funVal, null);
-            }
-            case "unique": {
-                return this.function.uniqueFunction(funVal, null);
-            }
-            case "uniqueCount": {
-                return this.function.uniqueCountFunction(funVal, null);
-            }
-            case "count": {
-                return this.function.countFunction(funVal, null) + "";
-            }
-            case "sql": {
-                return this.function.sqlFunction(funVal, null);
-            }
-            case "date": {
-                return this.function.dateFunction(funVal, null);
-            }
-            case "dateText": {
-                return this.function.dateTextFunction(funVal, null);
-            }
-            case "orig": {
-                return this.function.origFunction(funVal, null);
-            }
-            case "dict": {
-                return this.function.dictFunction(funVal, null);
-            }
-            case "domainKey": {
-                return this.function.domainKeyFunction(funVal, null);
-            }
-            case "childVal": {
-                return "";
-            }
-            default: {
-                throw new ApplicationException("no function name: " + funName);
-            }
+        case "sum": {
+            return this.function.sumFunction(funVal, null) + "";
+        }
+        case "max": {
+            return this.function.maxFunction(funVal, null);
+        }
+        case "min": {
+            return this.function.minFunction(funVal, null);
+        }
+        case "unique": {
+            return this.function.uniqueFunction(funVal, null);
+        }
+        case "uniqueCount": {
+            return this.function.uniqueCountFunction(funVal, null);
+        }
+        case "count": {
+            return this.function.countFunction(funVal, null) + "";
+        }
+        case "sql": {
+            return this.function.sqlFunction(funVal, null);
+        }
+        case "date": {
+            return this.function.dateFunction(funVal, null);
+        }
+        case "dateText": {
+            return this.function.dateTextFunction(funVal, null);
+        }
+        case "orig": {
+            return this.function.origFunction(funVal, null);
+        }
+        case "dict": {
+            return this.function.dictFunction(funVal, null);
+        }
+        case "domainKey": {
+            return this.function.domainKeyFunction(funVal, null);
+        }
+        case "childVal": {
+            return "";
+        }
+        default: {
+            throw new ApplicationException("no function name: " + funName);
+        }
         }
     }
-    
+
     public String getFunStr(final String str, final String funName) {
         final String replaceStr = str;
         final int funIndex = replaceStr.indexOf("dxf." + funName);
         int count = 0;
         boolean one = true;
         for (int i = funIndex; i < replaceStr.length(); ++i) {
-            final String substring = replaceStr.substring(i, i + 1);
+            // final String substring = replaceStr.substring(i, i + 1);
             if (one && "(".equals(replaceStr.substring(i, i + 1))) {
                 one = false;
                 ++count;
-            }
-            else {
+            } else {
                 if (!one && "(".equals(replaceStr.substring(i, i + 1))) {
                     ++count;
                 }
@@ -610,7 +596,7 @@ public class FormulaService
         }
         return replaceStr;
     }
-    
+
     public String getFunVal(final String funStr, final String funName) {
         final int funNameIndex = funStr.indexOf(funName);
         String funVal = funStr.substring(funNameIndex + funName.length(), funStr.length());
@@ -624,7 +610,7 @@ public class FormulaService
         }
         return funVal;
     }
-    
+
     private Map<String, Object> getRefData(final String tableName, final Object keyValue) {
         final TableDescribe refTable = this.cacheService.getTableDesc(tableName);
         if (refTable == null || refTable.getIdColumns() == null) {

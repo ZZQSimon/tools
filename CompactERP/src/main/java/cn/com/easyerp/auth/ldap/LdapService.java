@@ -20,7 +20,7 @@ public class LdapService implements DxAuthenticationProvider {
     private String domain;
     private String url;
     private ActiveDirectoryLdapAuthenticationProvider adProvider;
-    private String userMapKey = "dxUser";
+    private String userMapKey = DxUserNameMapperKey;
 
     @Autowired
     private AuthService authService;

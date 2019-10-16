@@ -289,22 +289,22 @@
 		WHERE
 		c1.table_id=#{Block.table_id}
 	</insert>
-	<insert id="deleteEvnet">
-		delete from c_flow_event where
-		table_id=#{Block.block_id}
-	</insert>
+	<!-- <insert id="deleteEvnet"> -->
+	<!-- delete from c_flow_event where -->
+	<!-- table_id=#{Block.block_id} -->
+	<!-- </insert> -->
 	<insert id="deleteApprover">
 		delete from `c_auth_group` where
 		`block` not in
 		(select block_id from c_flow_block) and `type`=4 and
 		`table`=#{Block.table_id}
 	</insert>
-	<insert id="deleteFlowEvent">
-		delete from `c_auth_group` where
-		`block` not in
-		(select block_id from c_flow_block) and `type`=4 and
-		`table`=#{Block.table_id}
-	</insert>
+	<!-- <insert id="deleteFlowEvent"> -->
+	<!-- delete from `c_auth_group` where -->
+	<!-- `block` not in -->
+	<!-- (select block_id from c_flow_block) and `type`=4 and -->
+	<!-- `table`=#{Block.table_id} -->
+	<!-- </insert> -->
 	<insert id="deleteLine">
 		delete from c_flow_line where page_source_id not
 		in(select block_id from

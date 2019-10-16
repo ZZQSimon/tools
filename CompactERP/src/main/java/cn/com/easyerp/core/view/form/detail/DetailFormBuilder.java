@@ -8,7 +8,6 @@ import cn.com.easyerp.core.widget.grid.GridModel;
 import cn.com.easyerp.framework.enums.ActionType;
 
 public interface DetailFormBuilder {
-  DetailFormModel build(ActionType paramActionType, String paramString1, String paramString2, List<FieldModelBase> paramList1, List<GridModel> paramList2, int paramInt, ViewDataMap paramViewDataMap);
+    DetailFormModel build(ActionType paramActionType, String paramString1, String paramString2,
+            List<FieldModelBase> paramList1, List<GridModel> paramList2, int paramInt, ViewDataMap paramViewDataMap);
 }
-
-

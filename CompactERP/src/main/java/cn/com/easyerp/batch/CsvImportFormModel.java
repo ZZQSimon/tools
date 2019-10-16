@@ -12,6 +12,7 @@ import cn.com.easyerp.core.widget.Widget;
 public class CsvImportFormModel extends BatchFormModel {
     private String tempTable;
 
+    @SuppressWarnings("rawtypes")
     protected CsvImportFormModel(String parent, List<FieldModelBase> fields, BatchDescribe batch, int cols) {
         super(parent, fields, batch, cols);
     }

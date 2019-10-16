@@ -10,6 +10,7 @@ import cn.com.easyerp.chart.ReportModel;
 import cn.com.easyerp.core.cache.TableDescribe;
 import cn.com.easyerp.core.data.DatabaseDataMap;
 
+@SuppressWarnings("rawtypes")
 @Repository
 public interface ChartDao {
     List<ReportModel> selectChart();

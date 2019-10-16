@@ -29,7 +29,7 @@ import cn.com.easyerp.core.data.DataMap;
 import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.data.DatabaseDataMap;
 import cn.com.easyerp.core.data.ViewDataMap;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.core.widget.FieldModelBase;
 import cn.com.easyerp.framework.common.ApiActionResult;
 import cn.com.easyerp.framework.common.Common;

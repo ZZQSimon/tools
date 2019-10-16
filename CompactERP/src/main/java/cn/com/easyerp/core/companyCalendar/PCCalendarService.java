@@ -23,7 +23,7 @@ import cn.com.easyerp.core.dao.CalendarDao;
 import cn.com.easyerp.core.dao.SystemDao;
 import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.data.ReferenceModel;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 
 @Service
 public class PCCalendarService {
@@ -48,6 +48,7 @@ public class PCCalendarService {
     @Autowired
     private DataService dataService;
 
+    @SuppressWarnings("unused")
     private List<Date> getDates(Date start, Date end) {
         ArrayList<Date> dates = new ArrayList<Date>();
         Calendar dd = Calendar.getInstance();
@@ -77,6 +78,7 @@ public class PCCalendarService {
         return this.systemDao.execSql(param.get("filter").toString());
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private List<TreeNode> buildTreeNode(List<Map<String, Object>> sourceData, TableDescribe table, String column) {
         if (null == sourceData)
             return null;

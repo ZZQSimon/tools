@@ -11,8 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,20 +29,19 @@ import cn.com.easyerp.core.cache.ColumnDescribe;
 import cn.com.easyerp.core.cache.TableDescribe;
 import cn.com.easyerp.core.data.AutoKeyService;
 import cn.com.easyerp.core.data.DataService;
-import cn.com.easyerp.core.exception.ApplicationException;
 import cn.com.easyerp.core.module.Module;
 import cn.com.easyerp.core.view.FormModelBase;
 import cn.com.easyerp.core.view.FormViewControllerBase;
 import cn.com.easyerp.framework.common.ActionResult;
 import cn.com.easyerp.framework.common.Common;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.module.dao.ImporterDao;
 import cn.com.easyerp.storage.StorageService;
 
 @Controller
 @Module("importer")
 @RequestMapping({ "/import" })
-public class ImporterController extends FormViewControllerBase
-{
+public class ImporterController extends FormViewControllerBase {
     public static final SimpleDateFormat dateOnlySDF;
     public static final SimpleDateFormat dateOnlySDF2;
     public static final SimpleDateFormat monthOnlySDF;
@@ -52,13 +54,13 @@ public class ImporterController extends FormViewControllerBase
     private static final String keyColHeader = "id";
     private static final String tableNameDetail = "t_sale_order_detail";
     private static final String keyColDetail = "sale_order_detail_id";
-    private static final int dateOnly = 1;
-    private static final int timeOnly = 2;
-    private static final int monthOnly = 3;
-    private static final int HondaType1 = 1;
-    private static final int HondaType2 = 2;
-    private static final int nissanType = 3;
-    private static final int toyotaType = 4;
+    // private static final int dateOnly = 1;
+    // private static final int timeOnly = 2;
+    // private static final int monthOnly = 3;
+    // private static final int HondaType1 = 1;
+    // private static final int HondaType2 = 2;
+    // private static final int nissanType = 3;
+    // private static final int toyotaType = 4;
     private static final Map<Integer, String> SHEET_NAME_MAP;
     @Autowired
     private DataService dataService;
@@ -68,29 +70,27 @@ public class ImporterController extends FormViewControllerBase
     private ImporterDao importerDao;
     @Autowired
     private AutoKeyService autoKeyService;
-    
+
     @RequestMapping({ "/import.view" })
-    public ModelAndView view(@RequestBody final ImporterRequestModel request) {
+    public ModelAndView view(@RequestBody final ImporterRequestModel<?> request) {
         final List<ColumnDescribe> columnList = new ArrayList<ColumnDescribe>();
         final Map<String, ColumnDescribe> keyColMap = new HashMap<String, ColumnDescribe>();
-        TableDescribe table = this.dataService.getTableDesc("t_sale_order");
+        TableDescribe table = this.dataService.getTableDesc(tableNameHeader);
         for (final ColumnDescribe column : table.getColumns()) {
             if (!ImporterController.skipHdrColNames.contains(column.getColumn_name())) {
-                if ("id".equals(column.getColumn_name())) {
-                    keyColMap.put("t_sale_order", column);
-                }
-                else {
+                if (keyColHeader.equals(column.getColumn_name())) {
+                    keyColMap.put(tableNameHeader, column);
+                } else {
                     columnList.add(column);
                 }
             }
         }
-        table = this.dataService.getTableDesc("t_sale_order_detail");
+        table = this.dataService.getTableDesc(tableNameDetail);
         for (final ColumnDescribe column : table.getColumns()) {
             if (!ImporterController.skipDtlColNames.contains(column.getColumn_name())) {
-                if ("sale_order_detail_id".equals(column.getColumn_name())) {
-                    keyColMap.put("t_sale_order_detail", column);
-                }
-                else {
+                if (keyColDetail.equals(column.getColumn_name())) {
+                    keyColMap.put(tableNameDetail, column);
+                } else {
                     columnList.add(column);
                 }
             }
@@ -98,23 +98,26 @@ public class ImporterController extends FormViewControllerBase
         final int typeId = request.getTypeId();
         final String customerId = this.importerDao.selectCustomerId(typeId);
         final ImporterFormModel form = new ImporterFormModel(columnList, keyColMap, customerId, typeId);
-        return this.buildModelAndView((FormModelBase)form);
+        return this.buildModelAndView((FormModelBase) form);
     }
-    
+
+    @SuppressWarnings("resource")
     @ResponseBody
     @RequestMapping({ "/import.do" })
-    public ActionResult importExcel(@RequestBody final ImporterRequestModel request) throws IOException {
+    public ActionResult importExcel(@RequestBody final ImporterRequestModel<?> request) throws IOException {
         final String id = request.getId();
-        final ImporterFormModel form = (ImporterFormModel)ViewService.fetchFormModel(id);
+        final ImporterFormModel form = (ImporterFormModel) ViewService.fetchFormModel(id);
         final int typeId = form.getTypeId();
-        final Workbook wb = (Workbook)new HSSFWorkbook(this.storageService.getUploadFile(request.getFileId()).getInputStream());
-        final Sheet sheet = wb.getSheet((String)ImporterController.SHEET_NAME_MAP.get(typeId));
-        if (sheet == null || sheet.getLastRowNum() < 1) {
-            return new ActionResult(false, (Object)this.dataService.getMessageText("data not exists", new Object[0]));
-        }
-        CustomImportDetail.reset();
-        CustomImportResult result = null;
-        switch (typeId) {
+        try (final Workbook wb = (Workbook) new HSSFWorkbook(
+                this.storageService.getUploadFile(request.getFileId()).getInputStream());) {
+            final Sheet sheet = wb.getSheet((String) ImporterController.SHEET_NAME_MAP.get(typeId));
+            if (sheet == null || sheet.getLastRowNum() < 1) {
+                return new ActionResult(false,
+                        (Object) this.dataService.getMessageText("data not exists", new Object[0]));
+            }
+            CustomImportDetail.reset();
+            CustomImportResult result = null;
+            switch (typeId) {
             case 1: {
                 result = this.parseHonda1(form.getCustomerId(), sheet);
                 break;
@@ -137,8 +140,7 @@ public class ImporterController extends FormViewControllerBase
                 if (!errFlg) {
                     try {
                         Integer.parseInt(objDate);
-                    }
-                    catch (NumberFormatException e) {
+                    } catch (NumberFormatException e) {
                         errFlg = true;
                     }
                 }
@@ -149,30 +151,32 @@ public class ImporterController extends FormViewControllerBase
                     }
                 }
                 if (errFlg) {
-                    return new ActionResult(true, (Object)this.dataService.getMessageText("receive_indicate_date error", 1));
+                    return new ActionResult(true,
+                            (Object) this.dataService.getMessageText("receive_indicate_date error", 1));
                 }
                 final String objDate_bf = objDate;
                 for (int rowSize = sheet.getLastRowNum(), i = 2; i <= rowSize; ++i) {
                     row = sheet.getRow(i);
                     objDate = this.getExcelCellValue(row.getCell(0));
                     if (!objDate_bf.equals(objDate)) {
-                        return new ActionResult(true, (Object)this.dataService.getMessageText("receive_indicate_date diff", i));
+                        return new ActionResult(true, dataService.getMessageText("receive_indicate_date diff", i));
                     }
                 }
                 result = this.getToyotaTypeDatas(form, sheet);
                 break;
             }
+            }
+            form.setResult(result);
+            return new ActionResult(true, (Object) result);
         }
-        form.setResult(result);
-        return new ActionResult(true, (Object)result);
     }
-    
+
     @Transactional
     @ResponseBody
     @RequestMapping({ "/save.do" })
-    public ActionResult saveExcel(@RequestBody final ImporterRequestModel request) {
+    public ActionResult saveExcel(@RequestBody final ImporterRequestModel<?> request) {
         final String id = request.getId();
-        final ImporterFormModel form = (ImporterFormModel)ViewService.fetchFormModel(id);
+        final ImporterFormModel form = (ImporterFormModel) ViewService.fetchFormModel(id);
         final CustomImportResult result = form.getResult();
         final int typeId = form.getTypeId();
         final List<ImportRowModel> dataList = result.getDataList();
@@ -184,60 +188,77 @@ public class ImporterController extends FormViewControllerBase
         }
         for (final ImportRowModel model : dataList) {
             switch (typeId) {
-                case 2: {
-                    String existId;
-                    try {
-                        existId = this.importerDao.voucherIdIsExist(model.getVoucher_id(), form.getCustomerId());
-                    }
-                    catch (Exception e) {
-                        existId = null;
-                    }
-                    if (existId != null) {
-                        this.importerDao.updateTSaleOrderDetail(model.getItem_id(), model.getCustomer_item_id(), model.getTrade_type(), Double.parseDouble(model.getQuantity()), Double.parseDouble(model.getUnit_price()), Double.parseDouble(model.getAmount_D()), model.getCurrency_D(), Double.parseDouble(model.getTax()), model.getUnit(), model.getTax_type(), model.getVoucher_id(), model.getCre_user(), existId);
-                        final double sumAmount = this.importerDao.selectSumAmount(existId);
-                        this.importerDao.updateHdrAmount(existId, sumAmount, form.getCustomerId());
-                        continue;
-                    }
-                    if (typeId == 1) {
-                        isSame = model.isSameOrderHonda1(bf_model.getDeliver_date(), bf_model.getReceive_time(), bf_model.getReceiver_id());
-                        break;
-                    }
-                    if (typeId == 2) {
-                        isSame = model.isSameOrderHonda2(bf_model.getReceive_indicate_date(), bf_model.getReceive_time(), bf_model.getReceive_warehouse());
-                        break;
-                    }
+            case 2: {
+                String existId;
+                try {
+                    existId = this.importerDao.voucherIdIsExist(model.getVoucher_id(), form.getCustomerId());
+                } catch (Exception e) {
+                    existId = null;
+                }
+                if (existId != null) {
+                    this.importerDao.updateTSaleOrderDetail(model.getItem_id(), model.getCustomer_item_id(),
+                            model.getTrade_type(), Double.parseDouble(model.getQuantity()),
+                            Double.parseDouble(model.getUnit_price()), Double.parseDouble(model.getAmount_D()),
+                            model.getCurrency_D(), Double.parseDouble(model.getTax()), model.getUnit(),
+                            model.getTax_type(), model.getVoucher_id(), model.getCre_user(), existId);
+                    final double sumAmount = this.importerDao.selectSumAmount(existId);
+                    this.importerDao.updateHdrAmount(existId, sumAmount, form.getCustomerId());
+                    continue;
+                }
+                if (typeId == 1) {
+                    isSame = model.isSameOrderHonda1(bf_model.getDeliver_date(), bf_model.getReceive_time(),
+                            bf_model.getReceiver_id());
                     break;
                 }
-                case 3: {
-                    isSame = model.isSameOrderNissan(bf_model.getOrder_date(), bf_model.getReceive_indicate_date(), bf_model.getReceive_time(), bf_model.getReceive_warehouse());
+                if (typeId == 2) {
+                    isSame = model.isSameOrderHonda2(bf_model.getReceive_indicate_date(), bf_model.getReceive_time(),
+                            bf_model.getReceive_warehouse());
                     break;
                 }
-                case 4: {
-                    isSame = model.isSameOrderToyota(bf_model.getReceive_indicate_date(), bf_model.getReceive_warehouse());
-                    break;
-                }
+                break;
+            }
+            case 3: {
+                isSame = model.isSameOrderNissan(bf_model.getOrder_date(), bf_model.getReceive_indicate_date(),
+                        bf_model.getReceive_time(), bf_model.getReceive_warehouse());
+                break;
+            }
+            case 4: {
+                isSame = model.isSameOrderToyota(bf_model.getReceive_indicate_date(), bf_model.getReceive_warehouse());
+                break;
+            }
             }
             if (!isSame && hd_OrderId != null) {
                 final double sumAmount2 = this.importerDao.selectSumAmount(hd_OrderId);
                 this.importerDao.updateHdrAmount(hd_OrderId, sumAmount2, form.getCustomerId());
             }
             if (!isSame) {
-                hd_OrderId = this.autoKeyService.update(this.dataService.getTableDesc("t_sale_order"), null);
-                this.importerDao.insertTSaleOrder(hd_OrderId, model.getImport_date(), model.getOrder_date(), model.getCustomer_id(), model.getReceiver_id(), model.getRequest_id(), model.getReceive_indicate_date(), model.getClasses(), model.getDeliver_date(), model.getReceive_time().replace(":", ""), model.getDelivery_no(), model.getReceive_warehouse(), model.getOut_warehouse(), model.getStatus(), model.getCurrency_H(), Double.parseDouble(model.getExchange_rate()), model.getExchange_type(), 0.0, 0.0, model.getCre_user());
+                hd_OrderId = this.autoKeyService.update(this.dataService.getTableDesc(tableNameHeader), null);
+                this.importerDao.insertTSaleOrder(hd_OrderId, model.getImport_date(), model.getOrder_date(),
+                        model.getCustomer_id(), model.getReceiver_id(), model.getRequest_id(),
+                        model.getReceive_indicate_date(), model.getClasses(), model.getDeliver_date(),
+                        model.getReceive_time().replace(":", ""), model.getDelivery_no(), model.getReceive_warehouse(),
+                        model.getOut_warehouse(), model.getStatus(), model.getCurrency_H(),
+                        Double.parseDouble(model.getExchange_rate()), model.getExchange_type(), 0.0, 0.0,
+                        model.getCre_user());
             }
             final Map<String, Object> data = new HashMap<String, Object>();
-            data.put("id", hd_OrderId);
-            model.setSale_order_detail_id(this.autoKeyService.update(this.dataService.getTableDesc("t_sale_order_detail"), data));
-            this.importerDao.insertTSaleOrderDetail(hd_OrderId, model.getSale_order_detail_id(), model.getItem_id(), model.getCustomer_item_id(), model.getTrade_type(), Double.parseDouble(model.getQuantity()), Double.parseDouble(model.getUnit_price()), Double.parseDouble(model.getAmount_D()), model.getCurrency_D(), Double.parseDouble(model.getTax()), model.getUnit(), model.getTax_type(), model.getVoucher_id(), model.getCre_user());
+            data.put(keyColHeader, hd_OrderId);
+            model.setSale_order_detail_id(
+                    this.autoKeyService.update(this.dataService.getTableDesc(tableNameDetail), data));
+            this.importerDao.insertTSaleOrderDetail(hd_OrderId, model.getSale_order_detail_id(), model.getItem_id(),
+                    model.getCustomer_item_id(), model.getTrade_type(), Double.parseDouble(model.getQuantity()),
+                    Double.parseDouble(model.getUnit_price()), Double.parseDouble(model.getAmount_D()),
+                    model.getCurrency_D(), Double.parseDouble(model.getTax()), model.getUnit(), model.getTax_type(),
+                    model.getVoucher_id(), model.getCre_user());
             bf_model = model;
         }
         if (hd_OrderId != null) {
             final double sumAmount3 = this.importerDao.selectSumAmount(hd_OrderId);
             this.importerDao.updateHdrAmount(hd_OrderId, sumAmount3, form.getCustomerId());
         }
-        return new ActionResult(true, (Object)this.dataService.getMessageText("import_success_msg", new Object[0]));
+        return new ActionResult(true, (Object) this.dataService.getMessageText("import_success_msg", new Object[0]));
     }
-    
+
     private ActionResult saveHonda1Data(final CustomImportResult data, final String customerId) {
         final Map<String, Object> param = new HashMap<String, Object>();
         final Set<String> voucherCache = new HashSet<String>();
@@ -245,30 +266,41 @@ public class ImporterController extends FormViewControllerBase
             final String key = Common.makeMapKey(detail.getVoucher_id(), customerId, new String[0]);
             if (!voucherCache.contains(key)) {
                 if (this.importerDao.voucherIdIsExist(detail.getVoucher_id(), customerId) != null) {
-                    throw new ApplicationException(this.dataService.getMessageText("voucher exists", detail.getVoucher_id()));
+                    throw new ApplicationException(
+                            this.dataService.getMessageText("voucher exists", detail.getVoucher_id()));
                 }
                 voucherCache.add(key);
             }
             final CustomImportHeader h = data.getHeaders().get(detail.getVoucher_id());
             String order_id;
             if (h.getId() == null) {
-                h.setId(order_id = this.autoKeyService.update(this.dataService.getTableDesc("t_sale_order")));
-            }
-            else {
+                h.setId(order_id = this.autoKeyService.update(this.dataService.getTableDesc(tableNameHeader)));
+            } else {
                 order_id = h.getId();
             }
-            param.put("id", order_id);
-            detail.setSale_order_detail_id(this.autoKeyService.update(this.dataService.getTableDesc("t_sale_order_detail"), param));
+            param.put(keyColHeader, order_id);
+            detail.setSale_order_detail_id(
+                    this.autoKeyService.update(this.dataService.getTableDesc(tableNameDetail), param));
             final double amount = Double.parseDouble(detail.getAmount_D());
-            this.importerDao.insertTSaleOrderDetail(order_id, detail.getSale_order_detail_id(), detail.getItem_id(), detail.getCustomer_item_id(), detail.getTrade_type(), Double.parseDouble(detail.getQuantity()), Double.parseDouble(detail.getUnit_price()), amount, detail.getCurrency_D(), Double.parseDouble(h.getTax()), detail.getUnit(), h.getTax_type(), detail.getVoucher_id(), h.getCre_user());
+            this.importerDao.insertTSaleOrderDetail(order_id, detail.getSale_order_detail_id(), detail.getItem_id(),
+                    detail.getCustomer_item_id(), detail.getTrade_type(), Double.parseDouble(detail.getQuantity()),
+                    Double.parseDouble(detail.getUnit_price()), amount, detail.getCurrency_D(),
+                    Double.parseDouble(h.getTax()), detail.getUnit(), h.getTax_type(), detail.getVoucher_id(),
+                    h.getCre_user());
             h.addAmount(amount);
         }
         for (final CustomImportHeader header : data.getHeaders().values()) {
-            this.importerDao.insertTSaleOrder(header.getId(), header.getImport_date(), header.getOrder_date(), header.getCustomer_id(), header.getReceiver_id(), header.getRequest_id(), header.getReceive_indicate_date(), header.getClasses(), header.getDeliver_date(), header.getReceive_time().replace(":", ""), header.getDelivery_no(), header.getReceive_warehouse(), header.getOut_warehouse(), header.getStatus(), header.getCurrency_H(), Double.parseDouble(header.getExchange_rate()), header.getExchange_type(), 0.0, header.getAmount(), header.getCre_user());
+            this.importerDao.insertTSaleOrder(header.getId(), header.getImport_date(), header.getOrder_date(),
+                    header.getCustomer_id(), header.getReceiver_id(), header.getRequest_id(),
+                    header.getReceive_indicate_date(), header.getClasses(), header.getDeliver_date(),
+                    header.getReceive_time().replace(":", ""), header.getDelivery_no(), header.getReceive_warehouse(),
+                    header.getOut_warehouse(), header.getStatus(), header.getCurrency_H(),
+                    Double.parseDouble(header.getExchange_rate()), header.getExchange_type(), 0.0, header.getAmount(),
+                    header.getCre_user());
         }
         return Common.ActionOk;
     }
-    
+
     private CustomImportResult parseHonda1(final String customerId, final Sheet sheet) throws IOException {
         final int rowSize = sheet.getLastRowNum();
         final CustomImportResult result = new CustomImportResult();
@@ -314,8 +346,9 @@ public class ImporterController extends FormViewControllerBase
         result.setHeaders(headers);
         return result;
     }
-    
-    private void setDetailData(final CustomImportHeader header, final CustomImportDetail detail, final Row row, final DataCache cache) {
+
+    private void setDetailData(final CustomImportHeader header, final CustomImportDetail detail, final Row row,
+            final DataCache cache) {
         String customer_item_id = this.getExcelCellValue(row.getCell(detail.customerItemIdExcelIndex()));
         if (detail.customerItemColorExcelIndex() >= 0) {
             String customer_item_color = this.getExcelCellValue(row.getCell(detail.customerItemColorExcelIndex()));
@@ -330,15 +363,13 @@ public class ImporterController extends FormViewControllerBase
         detail.setCustomer_item_id(customer_item_id);
         if (Common.isBlank(customer_item_id) || customer_item_id.length() > 50) {
             detail.addError(17).addError(18);
-        }
-        else {
+        } else {
             final String key = Common.makeMapKey(detail.getCustomer_item_id(), header.getCustomer_id(), new String[0]);
             String item_id;
             if (!cache.itemIdCache.containsKey(key)) {
                 item_id = this.importerDao.selectItemId(detail.getCustomer_item_id(), header.getCustomer_id());
                 cache.itemIdCache.put(key, item_id);
-            }
-            else {
+            } else {
                 item_id = cache.itemIdCache.get(key);
             }
             detail.setItem_id(item_id);
@@ -353,18 +384,18 @@ public class ImporterController extends FormViewControllerBase
             detail.addError(20);
         }
         try {
-            final String key = Common.makeMapKey(header.getCustomer_id(), detail.getItem_id(), new String[] { header.getImport_date() });
+            final String key = Common.makeMapKey(header.getCustomer_id(), detail.getItem_id(),
+                    new String[] { header.getImport_date() });
             double unit_price;
             if (!cache.unitPriceCache.containsKey(key)) {
-                unit_price = this.importerDao.selectUnitPrice(header.getCustomer_id(), detail.getItem_id(), header.getImport_date());
+                unit_price = this.importerDao.selectUnitPrice(header.getCustomer_id(), detail.getItem_id(),
+                        header.getImport_date());
                 cache.unitPriceCache.put(key, unit_price);
-            }
-            else {
+            } else {
                 unit_price = cache.unitPriceCache.get(key);
             }
             detail.setUnit_price(String.valueOf(unit_price));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             detail.addError(21);
         }
         try {
@@ -372,8 +403,7 @@ public class ImporterController extends FormViewControllerBase
             final double d_price = Double.parseDouble(detail.getUnit_price());
             final double d_amount = d_quantity * d_price;
             detail.setAmount_D(String.valueOf(d_amount));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             detail.addError(22);
         }
         detail.setCurrency_D(header.getCurrency_H());
@@ -381,14 +411,12 @@ public class ImporterController extends FormViewControllerBase
         if (!cache.unitCache.containsKey(detail.getItem_id())) {
             unit = this.importerDao.selectBaseUnit(detail.getItem_id());
             cache.unitCache.put(detail.getItem_id(), unit);
-        }
-        else {
+        } else {
             unit = cache.unitCache.get(detail.getItem_id());
         }
         if (unit != null) {
             detail.setUnit(unit);
-        }
-        else {
+        } else {
             detail.addError(25);
         }
         if (detail.voucherIdExcelIndex() >= 0) {
@@ -399,7 +427,7 @@ public class ImporterController extends FormViewControllerBase
             }
         }
     }
-    
+
     private void setHeaderData(final CustomImportHeader header, final String customerId, final DataCache cache) {
         header.setImport_date(ImporterController.dateOnlySDF.format(new Date()));
         header.setCustomer_id(customerId);
@@ -413,8 +441,7 @@ public class ImporterController extends FormViewControllerBase
             if (!cache.deliverDateCache.containsKey(key)) {
                 deliver_date = this.importerDao.selectDeliverDate(header.getReceive_indicate_date(), customerId);
                 cache.deliverDateCache.put(key, deliver_date);
-            }
-            else {
+            } else {
                 deliver_date = cache.deliverDateCache.get(key);
             }
             header.setDeliver_date(deliver_date);
@@ -427,8 +454,7 @@ public class ImporterController extends FormViewControllerBase
         if (!cache.customerCache.containsKey(customerId)) {
             customer = this.importerDao.selectCustomerDetail(customerId);
             cache.customerCache.put(customerId, customer);
-        }
-        else {
+        } else {
             customer = cache.customerCache.get(customerId);
         }
         if (customer != null) {
@@ -439,61 +465,57 @@ public class ImporterController extends FormViewControllerBase
             if (!cache.taxCache.containsKey(customer.getTaxrate_id())) {
                 tax = this.importerDao.selectTaxrate(customer.getTaxrate_id());
                 cache.taxCache.put(customer.getTaxrate_id(), tax);
-            }
-            else {
+            } else {
                 tax = cache.taxCache.get(customer.getTaxrate_id());
             }
             header.setTax(String.valueOf(tax));
-        }
-        else {
+        } else {
             header.addError(12).addError(14).addError(24).addError(26);
         }
         ImporterExcgDaoModel excgModel;
         if (!cache.excangeCache.containsKey(header.getCurrency_H())) {
             excgModel = this.importerDao.selectExchangeDetail(header.getCurrency_H());
             cache.excangeCache.put(header.getCurrency_H(), excgModel);
-        }
-        else {
+        } else {
             excgModel = cache.excangeCache.get(header.getCurrency_H());
         }
         if (excgModel != null) {
             header.setExchange_rate(String.valueOf(excgModel.getExchange_rate()));
             header.setExchange_type(excgModel.getExchange_type());
-        }
-        else {
+        } else {
             header.addError(15).addError(15);
         }
         header.setCre_user(customerId);
     }
-    
-    private String getStringDate(final Cell cell, final CustomImportData data, final SimpleDateFormat format, final int index) {
+
+    private String getStringDate(final Cell cell, final CustomImportData data, final SimpleDateFormat format,
+            final int index) {
         final String date = cell.getStringCellValue();
         try {
             format.parse(date);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             data.addError(index);
         }
         return date;
     }
-    
+
     private String getString(final Cell cell, final CustomImportData data, final int index, final int maxLength) {
         return this.getString(cell, data, index, maxLength, true);
     }
-    
-    private String getString(final Cell cell, final CustomImportData data, final int index, final int maxLength, final boolean noEmpty) {
+
+    private String getString(final Cell cell, final CustomImportData data, final int index, final int maxLength,
+            final boolean noEmpty) {
         final String str = cell.getStringCellValue().trim();
         if (Common.isBlank(str)) {
             if (noEmpty) {
                 data.addError(index);
             }
-        }
-        else if (str.length() > maxLength) {
+        } else if (str.length() > maxLength) {
             data.addError(index);
         }
         return str;
     }
-    
+
     private CustomImportResult getHonda2Datas(final ImporterFormModel form, final Sheet sheet) throws IOException {
         final CustomImportResult result = new CustomImportResult();
         final int rowSize = sheet.getLastRowNum();
@@ -514,11 +536,12 @@ public class ImporterController extends FormViewControllerBase
             this.getReceive_indicate_date_xls(row, record, sbExcelErrInx, 8);
             this.getReceive_time_xls(row, record, sbExcelErrInx, 9, 2);
             this.getReceive_warehouse_xls(row, record, sbExcelErrInx, 2);
-            if (bfModel != null && record.isSameOrderHonda2(bfModel.getReceive_indicate_date(), bfModel.getReceive_time(), bfModel.getReceive_warehouse())) {
+            if (bfModel != null && record.isSameOrderHonda2(bfModel.getReceive_indicate_date(),
+                    bfModel.getReceive_time(), bfModel.getReceive_warehouse())) {
                 this.setSameData(record, bfModel);
-            }
-            else {
-                sbHdrErrColInxs = this.selectHeaderData(record, hdrReqSet, sbExcelErrInx.toString(), form.getCustomerId());
+            } else {
+                sbHdrErrColInxs = this.selectHeaderData(record, hdrReqSet, sbExcelErrInx.toString(),
+                        form.getCustomerId());
             }
             final StringBuilder sbDtlErrColInxs = new StringBuilder(sbHdrErrColInxs.toString());
             final int[] xlsDtlIdx = { 4, 0, 14, 15 };
@@ -537,7 +560,7 @@ public class ImporterController extends FormViewControllerBase
         form.setResult(result);
         return result;
     }
-    
+
     private CustomImportResult getNissanDatas(final ImporterFormModel form, final Sheet sheet) throws IOException {
         final CustomImportResult result = new CustomImportResult();
         final int rowSize = sheet.getLastRowNum();
@@ -559,11 +582,12 @@ public class ImporterController extends FormViewControllerBase
             this.getReceive_indicate_date_xls(row, record, sbExcelErrInx, 7);
             this.getReceive_time_xls(row, record, sbExcelErrInx, 7, 1);
             this.getReceive_warehouse_xls(row, record, sbExcelErrInx, 8);
-            if (bfModel != null && record.isSameOrderNissan(bfModel.getOrder_date(), bfModel.getReceive_indicate_date(), bfModel.getReceive_time(), bfModel.getReceive_warehouse())) {
+            if (bfModel != null && record.isSameOrderNissan(bfModel.getOrder_date(), bfModel.getReceive_indicate_date(),
+                    bfModel.getReceive_time(), bfModel.getReceive_warehouse())) {
                 this.setSameData(record, bfModel);
-            }
-            else {
-                sbHdrErrColInxs = this.selectHeaderData(record, hdrReqSet, sbExcelErrInx.toString(), form.getCustomerId());
+            } else {
+                sbHdrErrColInxs = this.selectHeaderData(record, hdrReqSet, sbExcelErrInx.toString(),
+                        form.getCustomerId());
             }
             final StringBuilder sbDtlErrColInxs = new StringBuilder(sbHdrErrColInxs.toString());
             final int[] xlsDtlIdx = { 1, 0, 10, 0 };
@@ -581,7 +605,7 @@ public class ImporterController extends FormViewControllerBase
         form.setResult(result);
         return result;
     }
-    
+
     private CustomImportResult getToyotaTypeDatas(final ImporterFormModel form, final Sheet sheet) throws IOException {
         final CustomImportResult result = new CustomImportResult();
         final int rowSize = sheet.getLastRowNum();
@@ -615,11 +639,12 @@ public class ImporterController extends FormViewControllerBase
                     }
                     record.setReceive_indicate_date(receive_indicate_month + receive_indicate_day);
                     this.getReceive_warehouse2_xls(row, record, sbExcelErrInx, 145, 146);
-                    if (bfModel != null && record.isSameOrderToyota(bfModel.getReceive_indicate_date(), bfModel.getReceive_warehouse())) {
+                    if (bfModel != null && record.isSameOrderToyota(bfModel.getReceive_indicate_date(),
+                            bfModel.getReceive_warehouse())) {
                         this.setSameData(record, bfModel);
-                    }
-                    else {
-                        sbHdrErrColInxs = this.selectHeaderData(record, hdrReqSet, sbExcelErrInx.toString(), form.getCustomerId());
+                    } else {
+                        sbHdrErrColInxs = this.selectHeaderData(record, hdrReqSet, sbExcelErrInx.toString(),
+                                form.getCustomerId());
                     }
                     final StringBuilder sbDtlErrColInxs = new StringBuilder(sbHdrErrColInxs.toString());
                     final int[] xlsDtlIdx = { 7, 0, stColNum + col, 0 };
@@ -637,16 +662,14 @@ public class ImporterController extends FormViewControllerBase
         if (mon == 12) {
             ++year;
             mon = 1;
-        }
-        else {
+        } else {
             ++mon;
         }
         final int nextStColNum = 49;
         final int nextLastDay = this.getLastDay(year, mon);
         if (mon < 10) {
             receive_indicate_month = String.valueOf(year) + "0" + String.valueOf(mon);
-        }
-        else {
+        } else {
             receive_indicate_month = String.valueOf(year) + String.valueOf(mon);
         }
         for (int col2 = 1; col2 <= nextLastDay; ++col2) {
@@ -663,11 +686,12 @@ public class ImporterController extends FormViewControllerBase
                     }
                     record2.setReceive_indicate_date(receive_indicate_month + receive_indicate_day2);
                     this.getReceive_warehouse2_xls(row, record2, sbExcelErrInx, 145, 146);
-                    if (bfModel != null && record2.isSameOrderToyota(bfModel.getReceive_indicate_date(), bfModel.getReceive_warehouse())) {
+                    if (bfModel != null && record2.isSameOrderToyota(bfModel.getReceive_indicate_date(),
+                            bfModel.getReceive_warehouse())) {
                         this.setSameData(record2, bfModel);
-                    }
-                    else {
-                        sbHdrErrColInxs = this.selectHeaderData(record2, hdrReqSet, sbExcelErrInx.toString(), form.getCustomerId());
+                    } else {
+                        sbHdrErrColInxs = this.selectHeaderData(record2, hdrReqSet, sbExcelErrInx.toString(),
+                                form.getCustomerId());
                     }
                     final StringBuilder sbDtlErrColInxs = new StringBuilder(sbHdrErrColInxs.toString());
                     final int[] xlsDtlIdx2 = { 7, nextStColNum + col2, 0 };
@@ -687,7 +711,7 @@ public class ImporterController extends FormViewControllerBase
         form.setResult(result);
         return result;
     }
-    
+
     private void setSameData(final ImportRowModel record, final ImportRowModel bfModel) {
         record.setImport_date(bfModel.getImport_date());
         record.setOrder_date(bfModel.getOrder_date());
@@ -709,8 +733,9 @@ public class ImporterController extends FormViewControllerBase
         record.setTax_type(bfModel.getTax_type());
         record.setTax(bfModel.getTax());
     }
-    
-    private void selectDetailData(final ImportRowModel record, final StringBuilder sbDtlErrColInxs, final Row row, final int[] xlsDtlidx) {
+
+    private void selectDetailData(final ImportRowModel record, final StringBuilder sbDtlErrColInxs, final Row row,
+            final int[] xlsDtlidx) {
         String customer_item_id = this.getExcelCellValue(row.getCell(xlsDtlidx[0]));
         if (xlsDtlidx[1] != 0) {
             String customer_item_id_color = this.getExcelCellValue(row.getCell(xlsDtlidx[1]));
@@ -725,8 +750,7 @@ public class ImporterController extends FormViewControllerBase
         record.setCustomer_item_id(customer_item_id);
         if (customer_item_id == null || "".equals(customer_item_id.trim()) || customer_item_id.length() > 50) {
             sbDtlErrColInxs.append("17,18,");
-        }
-        else {
+        } else {
             final String item_id = this.importerDao.selectItemId(record.getCustomer_item_id(), record.getCustomer_id());
             record.setItem_id(item_id);
             if (item_id == null) {
@@ -738,15 +762,14 @@ public class ImporterController extends FormViewControllerBase
         record.setQuantity(quantity);
         try {
             Double.parseDouble(quantity);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             sbDtlErrColInxs.append("20,");
         }
         try {
-            final double unit_price = this.importerDao.selectUnitPrice(record.getCustomer_id(), record.getItem_id(), record.getImport_date());
+            final double unit_price = this.importerDao.selectUnitPrice(record.getCustomer_id(), record.getItem_id(),
+                    record.getImport_date());
             record.setUnit_price(String.valueOf(unit_price));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             sbDtlErrColInxs.append("21,");
         }
         try {
@@ -754,16 +777,14 @@ public class ImporterController extends FormViewControllerBase
             final double d_price = Double.parseDouble(record.getUnit_price());
             final double d_amount = d_quantity * d_price;
             record.setAmount_D(String.valueOf(d_amount));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             sbDtlErrColInxs.append("22,");
         }
         record.setCurrency_D(record.getCurrency_H());
         final String unit = this.importerDao.selectBaseUnit(record.getItem_id());
         if (unit != null) {
             record.setUnit(unit);
-        }
-        else {
+        } else {
             sbDtlErrColInxs.append("25,");
         }
         if (xlsDtlidx[3] != 0) {
@@ -774,8 +795,9 @@ public class ImporterController extends FormViewControllerBase
             }
         }
     }
-    
-    private StringBuilder selectHeaderData(final ImportRowModel record, final Set<String> hdrReqSet, final String excelErrInxs, final String customerId) {
+
+    private StringBuilder selectHeaderData(final ImportRowModel record, final Set<String> hdrReqSet,
+            final String excelErrInxs, final String customerId) {
         final StringBuilder sbHdrErrColInxs = new StringBuilder(excelErrInxs);
         record.setImport_date(ImporterController.dateOnlySDF.format(new Date()));
         record.setCustomer_id(customerId);
@@ -788,8 +810,7 @@ public class ImporterController extends FormViewControllerBase
             try {
                 deliver_date = this.importerDao.selectDeliverDate(record.getReceive_indicate_date(), customerId);
                 record.setDeliver_date(deliver_date);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 deliver_date = null;
             }
             if (deliver_date == null) {
@@ -803,15 +824,13 @@ public class ImporterController extends FormViewControllerBase
                 record.setOut_warehouse(custModel.getOut_warehouse());
                 record.setCurrency_H(custModel.getExchangecurrency());
                 record.setTax_type(custModel.getTax_type());
-            }
-            else {
+            } else {
                 sbHdrErrColInxs.append("12,14,26,");
             }
             try {
                 final double tax = this.importerDao.selectTaxrate(custModel.getTaxrate_id());
                 record.setTax(String.valueOf(tax));
-            }
-            catch (Exception e2) {
+            } catch (Exception e2) {
                 sbHdrErrColInxs.append("24,");
             }
         }
@@ -820,133 +839,135 @@ public class ImporterController extends FormViewControllerBase
             if (excgModel != null) {
                 record.setExchange_rate(String.valueOf(excgModel.getExchange_rate()));
                 record.setExchange_type(excgModel.getExchange_type());
-            }
-            else {
+            } else {
                 sbHdrErrColInxs.append("15,16,");
             }
         }
         record.setCre_user(customerId);
         return sbHdrErrColInxs;
     }
-    
+
     private String getExcelCellDate(final Cell cell, final int dateType) {
         String strValue = null;
         try {
             switch (dateType) {
-                case 1: {
-                    strValue = ImporterController.dateOnlySDF.format(cell.getDateCellValue());
-                    break;
-                }
-                case 2: {
-                    strValue = ImporterController.timeOnlyFormat.format(cell.getDateCellValue());
-                    break;
-                }
-                case 3: {
-                    strValue = ImporterController.monthOnlySDF.format(cell.getDateCellValue());
-                    break;
-                }
+            case 1: {
+                strValue = ImporterController.dateOnlySDF.format(cell.getDateCellValue());
+                break;
             }
-        }
-        catch (Exception e) {
+            case 2: {
+                strValue = ImporterController.timeOnlyFormat.format(cell.getDateCellValue());
+                break;
+            }
+            case 3: {
+                strValue = ImporterController.monthOnlySDF.format(cell.getDateCellValue());
+                break;
+            }
+            }
+        } catch (Exception e) {
             strValue = this.getExcelCellValue(cell);
         }
         return strValue;
     }
-    
+
     private String getExcelCellValue(final Cell cell) {
         String strValue = null;
         if (cell == null) {
             return null;
         }
         switch (cell.getCellType()) {
-            case 1: {
-                strValue = cell.getStringCellValue().trim();
-                break;
-            }
-            case 0: {
-                strValue = "" + cell.getNumericCellValue();
-                break;
-            }
-            case 2: {
-                strValue = cell.getCellFormula();
-                break;
-            }
-            case 5: {
-                strValue = "" + cell.getErrorCellValue();
-                break;
-            }
-            case 4: {
-                strValue = "" + cell.getBooleanCellValue();
-                break;
-            }
+        case STRING: {
+            strValue = cell.getStringCellValue().trim();
+            break;
+        }
+        case NUMERIC: {
+            strValue = "" + cell.getNumericCellValue();
+            break;
+        }
+        case FORMULA: {
+            strValue = cell.getCellFormula();
+            break;
+        }
+        case ERROR: {
+            strValue = "" + cell.getErrorCellValue();
+            break;
+        }
+        case BOOLEAN: {
+            strValue = "" + cell.getBooleanCellValue();
+            break;
+        }
+        default: {
+            strValue = "";
+            break;
+        }
         }
         return strValue;
     }
-    
-    private void getDeliver_date_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx, final int indx) {
+
+    @SuppressWarnings("unused")
+    private void getDeliver_date_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx,
+            final int indx) {
         final String deliver_date = row.getCell(indx).getStringCellValue();
         record.setDeliver_date(deliver_date);
         try {
             ImporterController.dateOnlySDF2.parse(deliver_date);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             sbExcelErrInx.append("8,");
         }
     }
-    
-    private void getReceive_time_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx, final int index, final int flg) {
+
+    private void getReceive_time_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx,
+            final int index, final int flg) {
         String receive_time = null;
         switch (flg) {
-            case 1: {
-                receive_time = this.getExcelCellDate(row.getCell(index), 2);
-                break;
-            }
-            case 2: {
-                receive_time = this.getExcelCellValue(row.getCell(index)).replace(":", "");
-                break;
-            }
-            case 3: {
-                receive_time = this.getExcelCellValue(row.getCell(index));
-                record.setReceive_time(receive_time);
-                try {
-                    if (flg == 2) {
-                        ImporterController.timeOnlySDF2.parse(receive_time);
-                    }
-                    else {
-                        ImporterController.timeOnlyFormat.parse(receive_time.substring(0, 4));
-                    }
+        case 1: {
+            receive_time = this.getExcelCellDate(row.getCell(index), 2);
+            break;
+        }
+        case 2: {
+            receive_time = this.getExcelCellValue(row.getCell(index)).replace(":", "");
+            break;
+        }
+        case 3: {
+            receive_time = this.getExcelCellValue(row.getCell(index));
+            record.setReceive_time(receive_time);
+            try {
+                if (flg == 2) {
+                    ImporterController.timeOnlySDF2.parse(receive_time);
+                } else {
+                    ImporterController.timeOnlyFormat.parse(receive_time.substring(0, 4));
                 }
-                catch (Exception e) {
-                    sbExcelErrInx.append("9,");
-                }
-                break;
+            } catch (Exception e) {
+                sbExcelErrInx.append("9,");
             }
+            break;
+        }
         }
         try {
             ImporterController.timeOnlyFormat.parse(receive_time);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             sbExcelErrInx.append("9,");
         }
         record.setReceive_time(receive_time);
     }
-    
-    private void getReceive_warehouse_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx, final int indx) {
+
+    private void getReceive_warehouse_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx,
+            final int indx) {
         final String receive_warehouse = this.getExcelCellValue(row.getCell(indx));
         if (receive_warehouse == null || "".equals(receive_warehouse.trim()) || receive_warehouse.length() > 20) {
             sbExcelErrInx.append("11,");
-        }
-        else {
+        } else {
             record.setReceive_warehouse(receive_warehouse);
         }
     }
-    
-    private void getReceiver_id_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx, final int indx) {
+
+    @SuppressWarnings("unused")
+    private void getReceiver_id_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx,
+            final int indx) {
         final String receiver_id = this.getExcelCellValue(row.getCell(indx));
         if (receiver_id == null || "".equals(receiver_id.trim()) || receiver_id.length() > 20) {
             sbExcelErrInx.append("4,");
-        }
-        else {
+        } else {
             final int num = this.importerDao.receiverIdIsExist(receiver_id);
             if (num != 1) {
                 sbExcelErrInx.append("4,");
@@ -954,47 +975,49 @@ public class ImporterController extends FormViewControllerBase
         }
         record.setReceiver_id(receiver_id);
     }
-    
-    private void getReceive_warehouse2_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx, final int indx1, final int indx2) {
+
+    private void getReceive_warehouse2_xls(final Row row, final ImportRowModel record,
+            final StringBuilder sbExcelErrInx, final int indx1, final int indx2) {
         final String receive_warehouse_bef = this.getExcelCellValue(row.getCell(indx1));
         final String receive_warehouse_aft = this.getExcelCellValue(row.getCell(indx2));
-        if (receive_warehouse_bef == null || "".equals(receive_warehouse_bef.trim()) || receive_warehouse_aft == null || "".equals(receive_warehouse_aft.trim()) || receive_warehouse_bef.length() + receive_warehouse_aft.length() > 19) {
+        if (receive_warehouse_bef == null || "".equals(receive_warehouse_bef.trim()) || receive_warehouse_aft == null
+                || "".equals(receive_warehouse_aft.trim())
+                || receive_warehouse_bef.length() + receive_warehouse_aft.length() > 19) {
             sbExcelErrInx.append("11,");
-        }
-        else {
+        } else {
             record.setReceive_warehouse(receive_warehouse_bef + "/" + receive_warehouse_aft);
         }
     }
-    
-    private void getReceive_indicate_date_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx, final int indx) {
+
+    private void getReceive_indicate_date_xls(final Row row, final ImportRowModel record,
+            final StringBuilder sbExcelErrInx, final int indx) {
         final String receive_indicate_date = this.getExcelCellDate(row.getCell(indx), 1);
         record.setReceive_indicate_date(receive_indicate_date);
         try {
             ImporterController.dateOnlySDF.parse(receive_indicate_date);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             sbExcelErrInx.append("6,");
         }
     }
-    
-    private void getOrder_date_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx, final int indx) {
+
+    private void getOrder_date_xls(final Row row, final ImportRowModel record, final StringBuilder sbExcelErrInx,
+            final int indx) {
         final String order_date = this.getExcelCellDate(row.getCell(indx), 1);
         record.setOrder_date(order_date);
         try {
             ImporterController.dateOnlySDF.parse(order_date);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             sbExcelErrInx.append("2,");
         }
     }
-    
+
     private int getLastDay(final int year, final int month) {
         final int day = 1;
         final Calendar cal = Calendar.getInstance();
         cal.set(year, month - 1, day);
         return cal.getActualMaximum(5);
     }
-    
+
     static {
         dateOnlySDF = new SimpleDateFormat("yyyy-MM-dd");
         dateOnlySDF2 = new SimpleDateFormat("yyyyMMdd");
@@ -1026,9 +1049,8 @@ public class ImporterController extends FormViewControllerBase
         ImporterController.SHEET_NAME_MAP.put(3, "\u5230\u8d27\u6307\u793a(\u65e5\u4ea7\uff09");
         ImporterController.SHEET_NAME_MAP.put(4, "sheet1");
     }
-    
-    private static class DataCache
-    {
+
+    private static class DataCache {
         private Map<String, String> deliverDateCache;
         private Map<String, ImporterCustDaoModel> customerCache;
         private Map<String, Double> taxCache;
@@ -1036,7 +1058,7 @@ public class ImporterController extends FormViewControllerBase
         private Map<String, String> itemIdCache;
         private Map<String, Double> unitPriceCache;
         private Map<String, String> unitCache;
-        
+
         private DataCache() {
             this.deliverDateCache = new HashMap<String, String>();
             this.customerCache = new HashMap<String, ImporterCustDaoModel>();

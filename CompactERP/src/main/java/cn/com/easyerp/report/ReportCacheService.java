@@ -11,6 +11,7 @@ import cn.com.easyerp.core.ApplicationContextProvider;
 import cn.com.easyerp.core.cache.CacheLoader;
 import cn.com.easyerp.core.dao.ChartDao;
 
+@SuppressWarnings("rawtypes")
 @Service
 public class ReportCacheService extends CacheLoader<ReportModel> {
     private static final int REPORT_TYPE_TABLE = 4;
@@ -19,9 +20,10 @@ public class ReportCacheService extends CacheLoader<ReportModel> {
     private ChartDao chartDao;
 
     public String getKey() {
-        return "report";
+        return CACHE_KEY;
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, ReportModel> reload() {
         Map<String, ReportModel> map = new HashMap<String, ReportModel>();
         for (ReportModel chart : this.chartDao.selectChart()) {
@@ -40,7 +42,7 @@ public class ReportCacheService extends CacheLoader<ReportModel> {
     public Object export(Map<String, ReportModel> cache) {
         Map<String, ReportModel> ret = new HashMap<String, ReportModel>(cache.size());
         for (Map.Entry<String, ReportModel> entry : cache.entrySet()) {
-            if (((ReportModel) entry.getValue()).getReport_type() == 4)
+            if (((ReportModel) entry.getValue()).getReport_type() == REPORT_TYPE_TABLE)
                 ret.put(entry.getKey(), entry.getValue());
         }
         return ret;

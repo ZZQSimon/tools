@@ -31,6 +31,7 @@ public class InputSelectController {
     @Autowired
     private FilterService filterService;
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @ResponseBody
     @RequestMapping({ "filter.do" })
     public ActionResult filterList(@RequestBody ReferenceRequestModel request) {
@@ -60,6 +61,7 @@ public class InputSelectController {
         return new ActionResult(true, records);
     }
 
+    @SuppressWarnings({ "rawtypes" })
     @RequestMapping({ "/custom_reference.do" })
     @ResponseBody
     public ActionResult customReference(@RequestBody ReferenceRequestModel rrm) {
@@ -74,6 +76,7 @@ public class InputSelectController {
         return new ActionResult(true, record);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @RequestMapping({ "/reference.do" })
     @ResponseBody
     public ActionResult reference(@RequestBody ReferenceRequestModel rrm) {
@@ -89,6 +92,7 @@ public class InputSelectController {
         return new ActionResult(true, record);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @ResponseBody
     @RequestMapping({ "/widgetFilter.do" })
     public ActionResult widgetFilter(@RequestBody ReferenceRequestModel request) {

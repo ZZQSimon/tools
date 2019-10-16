@@ -64,6 +64,7 @@ public class ReferenceInputListController extends FormViewControllerBase {
         return buildModelAndView(form);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @RequestMapping({ "/list.do" })
     @ResponseBody
     public ActionResult list(@RequestBody ReferenceInputListFormRequestModel request) {
@@ -103,6 +104,7 @@ public class ReferenceInputListController extends FormViewControllerBase {
         return new ActionResult(true, ret);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Transactional
     @RequestMapping({ "/save.do" })
     @ResponseBody

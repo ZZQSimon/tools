@@ -27,10 +27,12 @@ public class BatchController extends FormViewControllerBase {
     @Autowired
     private DataService dataService;
     @Autowired
+    @SuppressWarnings({ "rawtypes" })
     private BatchService batchService;
     @Autowired
     private ImportDeployService importService;
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @RequestMapping({ "/batch.view" })
     public ModelAndView view(@RequestBody final BatchFormRequestModel request) {
         final String batchId = this.importService.getImportDeploy(request.getTable()).getBatch_id();
@@ -48,6 +50,7 @@ public class BatchController extends FormViewControllerBase {
         return this.buildModelAndView((FormModelBase) form);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Transactional
     @ResponseBody
     @RequestMapping({ "/batch.do" })

@@ -4,194 +4,211 @@
 
 	<insert id="insertTSaleOrder">
 		insert into t_sale_order (
-			id,
-			import_date,
-			order_date,
-			customer_id,
-			receiver_id,
-			request_id,
-			receive_indicate_date,
-			classes,
-			deliver_date,
-			receive_time,
-			delivery_no,
-			receive_warehouse,
-			out_warehouse,
-			status,
-			currency,
-			exchange_rate,
-			exchange_type,
-			amount,
-			home_amount,
-			cre_user,
-			cre_date,
-			upd_user,
-			upd_date
+		id,
+		import_date,
+		order_date,
+		customer_id,
+		receiver_id,
+		request_id,
+		receive_indicate_date,
+		classes,
+		deliver_date,
+		receive_time,
+		delivery_no,
+		receive_warehouse,
+		out_warehouse,
+		status,
+		currency,
+		exchange_rate,
+		exchange_type,
+		amount,
+		home_amount,
+		cre_user,
+		cre_date,
+		upd_user,
+		upd_date
 		) values (
-			#{id},
-			CONVERT(datetime, #{import_date}),
-			CONVERT(datetime, #{order_date}),
-			#{customer_id},
-			#{receiver_id},
-			#{request_id},
-			CONVERT(datetime, #{receive_indicate_date}),
-			#{classes},
-			CONVERT(datetime, #{deliver_date}),
-			#{receive_time},
-			#{delivery_no},
-			#{receive_warehouse},
-			#{out_warehouse},
-			#{status},
-			#{currency_H},
-			#{exchange_rate},
-			#{exchange_type},
-			#{amount_H},
-			#{home_amount},
-			#{cre_user},
-			GETDATE(),
-			#{cre_user},
-			GETDATE()
+		#{id},
+		CONVERT(datetime, #{import_date}),
+		CONVERT(datetime, #{order_date}),
+		#{customer_id},
+		#{receiver_id},
+		#{request_id},
+		CONVERT(datetime,
+		#{receive_indicate_date}),
+		#{classes},
+		CONVERT(datetime,
+		#{deliver_date}),
+		#{receive_time},
+		#{delivery_no},
+		#{receive_warehouse},
+		#{out_warehouse},
+		#{status},
+		#{currency_H},
+		#{exchange_rate},
+		#{exchange_type},
+		#{amount_H},
+		#{home_amount},
+		#{cre_user},
+		GETDATE(),
+		#{cre_user},
+		GETDATE()
 		)
 	</insert>
 
 	<insert id="insertTSaleOrderDetail">
 		insert into t_sale_order_detail (
-			id,
-			sale_order_detail_id,
-			item_id,
-			customer_item_id,
-			trade_type,
-			quantity,
-			unit_price,
-			amount,
-			currency,
-			tax,
-			unit,
-			tax_type,
-			voucher_id,
-			cre_user,
-			cre_date,
-			upd_user,
-			upd_date
+		id,
+		sale_order_detail_id,
+		item_id,
+		customer_item_id,
+		trade_type,
+		quantity,
+		unit_price,
+		amount,
+		currency,
+		tax,
+		unit,
+		tax_type,
+		voucher_id,
+		cre_user,
+		cre_date,
+		upd_user,
+		upd_date
 		) values (
-			#{id},
-			#{sale_order_detail_id},
-			#{item_id},
-			#{customer_item_id},
-			#{trade_type},
-			#{quantity},
-			#{unit_price},
-			#{amount_D},
-			#{currency_D},
-			#{tax},
-			#{unit},
-			#{tax_type},
-			#{voucher_id},
-			#{cre_user},
-			GETDATE(),
-			#{cre_user},
-			GETDATE()
+		#{id},
+		#{sale_order_detail_id},
+		#{item_id},
+		#{customer_item_id},
+		#{trade_type},
+		#{quantity},
+		#{unit_price},
+		#{amount_D},
+		#{currency_D},
+		#{tax},
+		#{unit},
+		#{tax_type},
+		#{voucher_id},
+		#{cre_user},
+		GETDATE(),
+		#{cre_user},
+		GETDATE()
 		)
 	</insert>
 
 	<update id="updateTSaleOrderDetail">
 		update t_sale_order_detail
-		set item_id          = #{item_id},
-			customer_item_id = #{customer_item_id},
-			trade_type       = #{trade_type},
-			quantity         = #{quantity},
-			unit_price       = #{unit_price},
-			amount           = #{amount_D},
-			currency         = #{currency_D},
-			tax              = #{tax},
-			unit             = #{unit},
-			tax_type         = #{tax_type},
-			upd_user         = #{upd_user},
-			upd_date         = GETDATE()
+		set item_id = #{item_id},
+		customer_item_id = #{customer_item_id},
+		trade_type = #{trade_type},
+		quantity = #{quantity},
+		unit_price = #{unit_price},
+		amount =
+		#{amount_D},
+		currency = #{currency_D},
+		tax = #{tax},
+		unit = #{unit},
+		tax_type = #{tax_type},
+		upd_user = #{upd_user},
+		upd_date = GETDATE()
 		where voucher_id = #{voucher_id}
-		      and id = #{id}
+		and id = #{id}
 	</update>
 
 	<update id="updateHdrAmount">
 		update t_sale_order
-		set amount      = #{amount_H},
-			home_amount = case exchange_type
-			              when '1'
-				              then #{amount_H} * exchange_rate
-			              else #{amount_H} / exchange_rate
-			              end,
-			upd_user    = #{upd_user},
-			upd_date    = GETDATE()
+		set amount = #{amount_H},
+		home_amount = case exchange_type
+		when '1'
+		then #{amount_H} *
+		exchange_rate
+		else #{amount_H} / exchange_rate
+		end,
+		upd_user =
+		#{upd_user},
+		upd_date = GETDATE()
 		where id = #{id}
 	</update>
 
 	<select id="selectCustomerId" resultType="java.lang.String">
 		select id
-		from m_customer
+		from
+		m_customer
 		where typeid = #{typeid}
 	</select>
 
 	<select id="selectSumAmount" resultType="java.lang.Double">
 		select sum(amount)
-		from t_sale_order_detail
+		from
+		t_sale_order_detail
 		where id = #{id}
 	</select>
 
 	<select id="voucherIdIsExist" resultType="java.lang.String">
 		select id
-		from t_sale_order
+		from
+		t_sale_order
 		where customer_id = #{customer_id}
-		      and id in (select id
-		                 from t_sale_order_detail
-		                 where voucher_id = #{voucher_id})
+		and id in (select id
+		from t_sale_order_detail
+		where voucher_id = #{voucher_id})
 	</select>
 
 	<select id="selectDeliverDate" resultType="java.lang.String">
-		select convert(char(10),
-		               dbo.workdate_ago((select top 1 calendar
-		                                 from m_parameter),
-		                                CONVERT(datetime, #{receive_indicate_date}),
-		                                (select       transport_lt
-		                                 from m_customer
-		                                 where ID = #{customer_id})),
-		               120)
+		select
+		convert(char(10),
+		dbo.workdate_ago((select top 1 calendar
+		from
+		m_parameter),
+		CONVERT(datetime, #{receive_indicate_date}),
+		(select
+		transport_lt
+		from m_customer
+		where ID = #{customer_id})),
+		120)
 	</select>
 	<select id="selectCustomerDetail" resultType="cn.com.easyerp.module.importer.ImporterCustDaoModel">
 		select
-			out_warehouse,
-			exchangecurrency,
-			tax_type,
-			taxrate_id
+		out_warehouse,
+		exchangecurrency,
+		tax_type,
+		taxrate_id
 		from m_customer
 		where id = #{customer_id}
 	</select>
 
 	<select id="selectItemId" resultType="java.lang.String">
 		select item_id
-		from m_item_customer
+		from
+		m_item_customer
 		where customer_item_id = #{customer_item_id}
-		      and customer_id = #{customer_id}
+		and
+		customer_id = #{customer_id}
 	</select>
 
 	<select id="selectExchangeDetail" resultType="cn.com.easyerp.module.importer.ImporterExcgDaoModel">
 		select
-			exchange_rate,
-			exchange_type
+		exchange_rate,
+		exchange_type
 		from m_exchange_rate
-		where currency_id = #{exchangecurrency}
-		      and GETDATE() between start_date and end_date
+		where currency_id =
+		#{exchangecurrency}
+		and GETDATE() between start_date and end_date
 	</select>
 
 	<select id="selectCustomerItemId" resultType="java.lang.String">
-		select customer_item_id
+		select
+		customer_item_id
 		from m_item_customer
 		where item_id = #{item_id}
-		      and customer_id = #{customer_id}
+		and
+		customer_id = #{customer_id}
 	</select>
 
 	<select id="selectTaxrate" resultType="java.lang.Double">
 		select taxrate
-		from dbo.m_taxrate
+		from
+		dbo.m_taxrate
 		where id = #{taxrate_id}
 	</select>
 
@@ -199,19 +216,22 @@
 		select price
 		from m_price
 		where customer_id = #{customer_id}
-		      and item_id = #{item_id}
-		      and CONVERT(datetime, #{import_date}) between start_date and end_date
+		and item_id = #{item_id}
+		and
+		CONVERT(datetime, #{import_date}) between start_date and end_date
 	</select>
 
 	<select id="selectBaseUnit" resultType="java.lang.String">
 		select base_unit
-		from m_item
+		from
+		m_item
 		where id = #{item_id}
 	</select>
 
 	<select id="receiverIdIsExist" resultType="java.lang.Integer">
 		select count(*)
-		from m_customer
+		from
+		m_customer
 		where id = #{receiver_id}
 	</select>
 

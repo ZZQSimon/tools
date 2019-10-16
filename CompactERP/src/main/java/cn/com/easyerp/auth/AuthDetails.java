@@ -72,11 +72,11 @@ public class AuthDetails implements UserDetails {
         private String role;
 
         private AuthGrantedAuthority(String role) {
-            this.role = "ROLE_" + role;
+            this.role = AUTHORITY_PREFIX + role;
         }
 
         private AuthGrantedAuthority() {
-            this.role = "ROLE_" + role_id;
+            this.role = AUTHORITY_PREFIX + role_id;
         }
 
         public String getAuthority() {
@@ -368,7 +368,7 @@ public class AuthDetails implements UserDetails {
         this.role_id = role_id;
         this.authorities = new ArrayList<>();
         this.authorities.add(new AuthGrantedAuthority());
-        this.authorities.add(new AuthGrantedAuthority("authenticated_user"));
+        this.authorities.add(new AuthGrantedAuthority(AUTHENTICATED_ROLE));
     }
 
     public String getDepartment_id() {

@@ -24,14 +24,15 @@ import cn.com.easyerp.framework.common.Common;
 import cn.com.easyerp.storage.StorageService;
 
 @Service
-public class FileUtils
-{
+public class FileUtils {
     @Autowired
     private StorageService storageService;
     @Autowired
     private DataService dataService;
-    
-    public InputStream buildTxtFile(final TableDescribe table, final List<DatabaseDataMap> list, final String csvFileName) throws Exception {
+
+    @SuppressWarnings({ "rawtypes" })
+    public InputStream buildTxtFile(final TableDescribe table, final List<DatabaseDataMap> list,
+            final String csvFileName) throws Exception {
         final List<DatabaseDataMap> keys = list;
         final File csvFile = this.storageService.tmp("export", ".txt");
         final FileOutputStream fos = new FileOutputStream(csvFile);
@@ -41,7 +42,7 @@ public class FileUtils
         boolean columnNamesExported = false;
         final List<String> columnNames = new ArrayList<String>();
         final List<String> values = new ArrayList<String>();
-        final List<ColumnDescribe> columns = (List<ColumnDescribe>)table.getColumns();
+        final List<ColumnDescribe> columns = (List<ColumnDescribe>) table.getColumns();
         Collections.sort(columns, new Comparator<ColumnDescribe>() {
             @Override
             public int compare(final ColumnDescribe c1, final ColumnDescribe c2) {
@@ -67,10 +68,10 @@ public class FileUtils
             }
             if (!columnNamesExported) {
                 columnNamesExported = true;
-                buffer.write(Common.join((Collection)columnNames, "|", ""));
+                buffer.write(Common.join((Collection) columnNames, "|", ""));
                 buffer.newLine();
             }
-            buffer.write(Common.join((Collection)values, "|", ""));
+            buffer.write(Common.join((Collection) values, "|", ""));
             buffer.newLine();
             values.clear();
         }

@@ -15,19 +15,18 @@ import java.util.zip.ZipOutputStream;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.usermodel.CharacterRun;
 import org.apache.poi.hwpf.usermodel.Paragraph;
+import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.poi.hwpf.usermodel.Section;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.com.easyerp.core.exception.ApplicationException;
 import cn.com.easyerp.framework.common.Common;
-import cn.com.easyerp.storage.StorageService;
+import cn.com.easyerp.framework.exception.ApplicationException;
 
 @Service
 public class WordTemplateService {
     public static final String WORD_FILE_NAME_COLUMN = "filename";
-    @Autowired
-    private StorageService storageService;
+    // @Autowired
+    // private StorageService storageService;
 
     public static void main(String[] args) throws IOException {
         HWPFDocument doc = new HWPFDocument(new FileInputStream("/home/zl/tmp/a.doc"));
@@ -80,6 +79,7 @@ public class WordTemplateService {
         }
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void process(ReportGeneratorCache cache, List<Map<String, Object>> list, File template,
             ZipOutputStream zos) {
         try {

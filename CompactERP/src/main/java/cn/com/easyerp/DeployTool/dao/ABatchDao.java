@@ -9,13 +9,11 @@ import cn.com.easyerp.DeployTool.service.ABatch;
 
 @Repository
 public interface ABatchDao {
-  List<ABatch> selectBatch();
-  
-  void addBatch(@Param("list") List<ABatch> paramList);
-  
-  void updBatch(@Param("list") List<ABatch> paramList);
-  
-  void DeleteBatch(@Param("list") List<ABatch> paramList);
+    List<ABatch> selectBatch();
+
+    void addBatch(@Param("list") List<ABatch> paramList);
+
+    void updBatch(@Param("list") List<ABatch> paramList);
+
+    void DeleteBatch(@Param("list") List<ABatch> paramList);
 }
-
-

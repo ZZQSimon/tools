@@ -19,6 +19,7 @@ import cn.com.easyerp.core.mail.MailServer;
 import cn.com.easyerp.core.widget.menu.MenuModel;
 import cn.com.easyerp.core.widget.menu.PageModel;
 
+@SuppressWarnings({ "rawtypes" })
 public class DxCache {
     Map<String, TableDescribe> tableDescCache;
     Map<String, Map<String, I18nDescribe>> dictCache;

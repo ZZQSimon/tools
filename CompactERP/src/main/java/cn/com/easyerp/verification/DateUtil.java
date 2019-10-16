@@ -19,7 +19,7 @@ public class DateUtil {
     public static final int DATE_TIME_LINE = 12;
 
     public static String dateToStr(Date date, String pattern) {
-        if (date == null || date.equals(""))
+        if (date == null)
             return null;
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         return formatter.format(date);

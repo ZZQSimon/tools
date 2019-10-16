@@ -18,6 +18,7 @@ import cn.com.easyerp.framework.common.ActionResult;
 import cn.com.easyerp.framework.common.Common;
 import cn.com.easyerp.report.ReportCacheService;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Controller
 @RequestMapping({ "/chart" })
 public class ChartController extends FormViewControllerBase {
@@ -27,7 +28,7 @@ public class ChartController extends FormViewControllerBase {
     private ReportCacheService reportCacheService;
     @Autowired
     private ChartService chartService;
-    private ChartShowModel csm;
+    // private ChartShowModel csm;
 
     @RequestMapping({ "/chart.view" })
     public ModelAndView view(@RequestBody ChartFormRequestModel data) {

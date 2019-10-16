@@ -56,7 +56,6 @@ import cn.com.easyerp.core.dao.ApproveDao;
 import cn.com.easyerp.core.dao.ColumnValue;
 import cn.com.easyerp.core.dao.SystemDao;
 import cn.com.easyerp.core.dao.UserColumnDao;
-import cn.com.easyerp.core.exception.ApplicationException;
 import cn.com.easyerp.core.filter.FilterDescribe;
 import cn.com.easyerp.core.logger.LogService;
 import cn.com.easyerp.core.logger.Loggable;
@@ -76,8 +75,9 @@ import cn.com.easyerp.core.widget.grid.dt.DataTablePagingParameterModel;
 import cn.com.easyerp.framework.common.Common;
 import cn.com.easyerp.framework.enums.DateFormatType;
 import cn.com.easyerp.framework.enums.LogType;
-import cn.com.easyerp.storage.StorageService;
+import cn.com.easyerp.framework.exception.ApplicationException;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @Service
 public class DataService {
 
@@ -99,8 +99,8 @@ public class DataService {
     public static final int MAX_QUERY_BIND_PARAMETERS_COUNT = 2000;
     private static final Map<String, Integer> dataType = new HashMap<>();
     private static final Map<String, Map<DateFormatType, SimpleDateFormat>> dateFormats = new HashMap<>();
-    private static final String TAG = "DataService";
-    private static final String SYS_USER_ALIAS_FOR_AUTH = "sys_user_for_auth";
+    // private static final String TAG = "DataService";
+    // private static final String SYS_USER_ALIAS_FOR_AUTH = "sys_user_for_auth";
     private static final Pattern WITH_REF_PATTERN = Pattern.compile("#[a-zA-Z]");
     public String rootPath = "";
     public String projectUrl = "";
@@ -113,8 +113,8 @@ public class DataService {
     private CacheService cache;
     @Autowired
     private AutoKeyService autoKeyService;
-    @Autowired
-    private StorageService storageService;
+    // @Autowired
+    // private StorageService storageService;
 
     public DataService() {
         try {
@@ -262,7 +262,7 @@ public class DataService {
 
     public boolean isMapColumn(ColumnDescribe column) {
         boolean b = (column.getIs_multiple() == 1 && column.getRef_table_name() != null);
-        return (column.getIs_multiple() == 1 && column.getRef_table_name() != null);
+        return b;
     }
 
     private Map<String, String> getMapList(ColumnDescribe desc, String value) {
@@ -284,6 +284,7 @@ public class DataService {
         for (ColumnDescribe desc : table.getColumns()) {
             FileFieldModel fileFieldModel1 = null;
             FieldModelBase field;
+            @SuppressWarnings("unused")
             ComplexInputFieldModel complexInputFieldModel;
             FileFieldModel fileFieldModel2;
             CheckBoxField checkBoxField;
@@ -528,6 +529,7 @@ public class DataService {
         return makeRefModels(table, null);
     }
 
+    @SuppressWarnings("unused")
     private List<ReferenceModel> makeRefModels(TableDescribe table, Collection<String> columnsNeeded, String type) {
         if ("table".equals(type)) {
             List<ColumnDescribe> columns = table.getColumns();

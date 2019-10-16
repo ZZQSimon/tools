@@ -43,7 +43,7 @@ public class PwdService {
         boolean result = "phone".equals(type) ? sendSmsValidCode(user, code) : sendEmailValidCode(user, code);
         session.setAttribute("login_valid_code", code);
         session.setAttribute("login_valid_user", user);
-        return true;
+        return result;
     }
 
     private boolean sendEmailValidCode(AuthDetails user, String code) {

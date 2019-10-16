@@ -31,7 +31,8 @@ import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.data.DatabaseDataMap;
 import cn.com.easyerp.core.data.ViewDataMap;
 import cn.com.easyerp.core.evaluate.FormulaService;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
+import cn.com.easyerp.framework.util.EmptyUtil;
 import cn.com.easyerp.core.master.DxRoutingDataSource;
 import cn.com.easyerp.core.view.FormViewControllerBase;
 import cn.com.easyerp.framework.common.ActionResult;
@@ -39,10 +40,14 @@ import cn.com.easyerp.framework.common.ActionResult;
 @Controller
 @RequestMapping({ "/approve" })
 public class ApproveController extends FormViewControllerBase {
-    private static final String APPROVE_SEND_MESSAGE_PASS = "approve_send_message_pass";
-    private static final String APPROVE_SEND_MESSAGE_PASS_TITLE = "approve_send_message_pass_title";
-    private static final String APPROVE_SEND_MESSAGE_REJECT = "approve_send_message_reject";
-    private static final String APPROVE_SEND_MESSAGE_REJECT_TITLE = "approve_send_message_reject_title";
+    // private static final String APPROVE_SEND_MESSAGE_PASS =
+    // "approve_send_message_pass";
+    // private static final String APPROVE_SEND_MESSAGE_PASS_TITLE =
+    // "approve_send_message_pass_title";
+    // private static final String APPROVE_SEND_MESSAGE_REJECT =
+    // "approve_send_message_reject";
+    // private static final String APPROVE_SEND_MESSAGE_REJECT_TITLE =
+    // "approve_send_message_reject_title";
     @Autowired
     private ApproveDao approveDao;
     @Autowired
@@ -246,22 +251,21 @@ public class ApproveController extends FormViewControllerBase {
                 Map<String, FlowEvent> flowEventMap = (Map) request.getSaveApproveButtonEvent()
                         .get(flowBlock.getBlock_id());
                 for (Map.Entry<String, FlowEvent> flowEvent : flowEventMap.entrySet()) {
-                    if (((FlowEvent) flowEvent.getValue()).getInternational_id() == null
-                            || "".equals(((FlowEvent) flowEvent.getValue()).getInternational_id())) {
-                        I18nDescribe blockI18N = ((FlowEvent) flowEvent.getValue()).getI18n();
+                    FlowEvent flowEvent0 = flowEvent.getValue();
+
+                    if (flowEvent0.getInternational_id() == null || "".equals(flowEvent0.getInternational_id())) {
+                        I18nDescribe blockI18N = flowEvent0.getI18n();
                         String[] uuids = UUID.randomUUID().toString().split("-");
                         String uuid = uuids[0].toLowerCase() + uuids[1].toLowerCase();
                         blockI18N.setInternational_id(uuid);
-                        ((FlowEvent) flowEvent.getValue()).setInternational_id(uuid);
+                        flowEvent0.setInternational_id(uuid);
                         this.tableDeployDao.addI18N(blockI18N);
                     }
-                    this.approveDao.addFlowEvent((FlowEvent) flowEvent.getValue());
+                    this.approveDao.addFlowEvent(flowEvent0);
 
-                    if (((FlowEvent) flowEvent.getValue()).getEvent() != null
-                            || "".equals(((FlowEvent) flowEvent.getValue()).getEvent())) {
+                    if (EmptyUtil.isNotEmpty(flowEvent0)) {
                         int actionEventSeq = 1;
-                        for (Map.Entry<String, ActionEventDescribe> entryEvent : ((FlowEvent) flowEvent.getValue())
-                                .getEvent().entrySet()) {
+                        for (Map.Entry<String, ActionEventDescribe> entryEvent : flowEvent0.getEvent().entrySet()) {
                             ((ActionEventDescribe) entryEvent.getValue()).setSeq(actionEventSeq);
                             this.approveDao.addActionEvent((ActionEventDescribe) entryEvent.getValue());
                             actionEventSeq++;
@@ -314,15 +318,17 @@ public class ApproveController extends FormViewControllerBase {
     @RequestMapping({ "/saveTemplate.do" })
     public ActionResult saveTemplate(@RequestBody ApproveRequestModel request) {
         String result = "保存成功";
-        if (!"".equals(Integer.valueOf(((AuthGroup) request.getAuthGroup().get(0)).getEditOrdetele()))
-                && ((AuthGroup) request.getAuthGroup().get(0)).getEditOrdetele() != 0) {
-            if (((AuthGroup) request.getAuthGroup().get(0)).getEditOrdetele() == 1) {
-                this.approveDao.updateTemplate((AuthGroup) request.getAuthGroup().get(0));
-            } else if (((AuthGroup) request.getAuthGroup().get(0)).getEditOrdetele() == 2) {
-                this.approveDao.deleteTemplate((AuthGroup) request.getAuthGroup().get(0));
+        List<AuthGroup> authGroupList = request.getAuthGroup();
+        AuthGroup authGroup0 = authGroupList.get(0);
+
+        if (!"".equals(String.valueOf(authGroup0.getEditOrdetele())) && authGroup0.getEditOrdetele() != 0) {
+            if ((authGroup0).getEditOrdetele() == 1) {
+                this.approveDao.updateTemplate(authGroup0);
+            } else if ((authGroup0).getEditOrdetele() == 2) {
+                this.approveDao.deleteTemplate(authGroup0);
             }
         } else {
-            this.approveDao.deleteTemplate((AuthGroup) request.getAuthGroup().get(0));
+            this.approveDao.deleteTemplate(authGroup0);
             for (AuthGroup authGroup : request.getAuthGroup()) {
                 if (this.approveDao.addAuthGroup(authGroup) > 0) {
                     result = "保存成功";
@@ -380,6 +386,7 @@ public class ApproveController extends FormViewControllerBase {
         return new ActionResult(true, data);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Transactional
     @ResponseBody
     @RequestMapping({ "/batchApprove.do" })
@@ -457,7 +464,7 @@ public class ApproveController extends FormViewControllerBase {
 
     public void checkApproveButtonEvent(List<ActionPrerequistieDescribe> action_prerequistie, String formId,
             String tableId, String dataId) {
-        if (!"".equals(action_prerequistie) && action_prerequistie != null) {
+        if (EmptyUtil.isNotEmpty(action_prerequistie)) {
             for (int i = 0; i < action_prerequistie.size(); i++) {
                 if (((ActionPrerequistieDescribe) action_prerequistie.get(i)).getIs_using().intValue() == 1
                         && "1".equals(((ActionPrerequistieDescribe) action_prerequistie.get(i)).getLevel())) {
@@ -494,13 +501,13 @@ public class ApproveController extends FormViewControllerBase {
                                     msgParams = msgParam.toString().split(",");
                                 }
                             }
-                            String messageText = this.dataService.getMessageText(msgI18n.getInternational_id(),
-                                    msgParams);
+                            String messageText = dataService.getMessageText(msgI18n.getInternational_id(),
+                                    (Object[]) msgParams);
                             throw new ApplicationException(messageText);
                         }
                     } else {
-                        throw new ApplicationException("formula is error: "
-                                + ((ActionPrerequistieDescribe) action_prerequistie.get(i)).getCheck_condition());
+                        throw new ApplicationException(
+                                "formula is error: " + action_prerequistie.get(i).getCheck_condition());
                     }
                 }
             }
@@ -527,7 +534,7 @@ public class ApproveController extends FormViewControllerBase {
                     request.getApproveBlockEvent(), request.getApproveEvent(), user);
             msg = "approve success";
 
-            return new ActionResult(true, "approve success");
+            return new ActionResult(true, msg);
         case "rejectEvent":
             this.approveService.approveReject(request.getApproveId(), request.getBlockId(), request.getTableId(),
                     request.getApproveReason(), request.getDataId(), request.getFlowEvent(),
@@ -568,6 +575,7 @@ public class ApproveController extends FormViewControllerBase {
         throw new ApplicationException("has no approve type");
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Transactional
     @ResponseBody
     @RequestMapping({ "/approveSubmit.do" })
@@ -739,6 +747,7 @@ public class ApproveController extends FormViewControllerBase {
         return new ActionResult(true, ret);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @ResponseBody
     @RequestMapping({ "/outsideSubmitApprove.do" })
     public ActionResult outsideSubmitApprove(String domain, String tableId, String dataId) {
@@ -775,6 +784,7 @@ public class ApproveController extends FormViewControllerBase {
         return new ActionResult(true, result);
     }
 
+    @SuppressWarnings("rawtypes")
     @ResponseBody
     @RequestMapping({ "/outsideApprove.do" })
     public ActionResult outsideApprove(String domain, String tableId, Object dataId, String userId, String type,

@@ -42,7 +42,7 @@ public abstract class CharacterDecoder {
     }
 
     public void decodeBuffer(InputStream aStream, OutputStream bStream) throws IOException {
-        int totalBytes = 0;
+        // int totalBytes = 0;
 
         PushbackInputStream ps = new PushbackInputStream(aStream);
         decodeBufferPrefix(ps, bStream);
@@ -52,18 +52,15 @@ public abstract class CharacterDecoder {
                 int length = decodeLinePrefix(ps, bStream);
                 int i;
                 for (i = 0; i + bytesPerAtom() < length; i += bytesPerAtom()) {
-
                     decodeAtom(ps, bStream, bytesPerAtom());
-                    totalBytes += bytesPerAtom();
+                    // totalBytes += bytesPerAtom();
                 }
                 if (i + bytesPerAtom() == length) {
-
                     decodeAtom(ps, bStream, bytesPerAtom());
-                    totalBytes += bytesPerAtom();
+                    // totalBytes += bytesPerAtom();
                 } else {
-
                     decodeAtom(ps, bStream, length - i);
-                    totalBytes += length - i;
+                    // totalBytes += length - i;
                 }
                 decodeLineSuffix(ps, bStream);
             }
@@ -75,9 +72,10 @@ public abstract class CharacterDecoder {
     }
 
     public byte[] decodeBuffer(String inputString) throws IOException {
-        byte[] inputBuffer = new byte[inputString.length()];
+        // byte[] inputBuffer = new byte[inputString.length()];
+        // inputString.getBytes(0, inputString.length(), inputBuffer, 0);
+        byte[] inputBuffer = inputString.getBytes();
 
-        inputString.getBytes(0, inputString.length(), inputBuffer, 0);
         ByteArrayInputStream inStream = new ByteArrayInputStream(inputBuffer);
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         decodeBuffer(inStream, outStream);

@@ -23,7 +23,6 @@ import cn.com.easyerp.core.dao.SystemDao;
 import cn.com.easyerp.core.data.DataMap;
 import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.data.ReferenceModel;
-import cn.com.easyerp.core.evaluate.Formula;
 import cn.com.easyerp.core.evaluate.FormulaService;
 import cn.com.easyerp.core.master.DxRoutingDataSource;
 import cn.com.easyerp.core.timedTask.entity.TimeTaskBusinessTimeDescribe;
@@ -46,8 +45,8 @@ public class SysTimedTaskService {
     private DataService dataService;
     @Autowired
     private ApiService apiService;
-    @Autowired
-    private Formula formula;
+    // @Autowired
+    // private Formula formula;
     @Autowired
     private TimeTaskProperties timeTaskProperties;
     @Autowired
@@ -102,6 +101,7 @@ public class SysTimedTaskService {
         return timeTaskDescribeMap;
     }
 
+    @SuppressWarnings({ "rawtypes" })
     public Map<String, TableDescribe> getTable(String domain) {
         List<TableDescribe> tables = this.systemDao.selectTableDescribe(domain);
         Map<String, TableDescribe> tablesMap = new HashMap<String, TableDescribe>();
@@ -185,19 +185,19 @@ public class SysTimedTaskService {
             final List<TimeTaskSysTimeDescribe> timeTaskSysTimes = timeTask.getTimeTaskSysTimeDescribes();
             for (int i = 0; i < timeTaskSysTimes.size(); ++i) {
                 TimeTaskSysTimeDescribe timeTaskSysTimeDescribe = timeTaskSysTimes.get(i);
-                if (timeTaskSysTimes.get(i).getIs_using() == 1) {
-                    if (timeTaskSysTimes.get(i).getEnd_date() == null
-                            || timeTaskSysTimes.get(i).getEnd_date().getTime() >= nowDate.getTime()) {
-                        if (timeTaskSysTimes.get(i).getIs_loop() != 0
-                                || timeTaskSysTimes.get(i).getBegin_date().getTime() >= nowDate.getTime()) {
-                            if (timeTaskSysTimes.get(i).getSpace() != 0
-                                    || timeTaskSysTimes.get(i).getBegin_date().getTime() >= nowDate.getTime()) {
-                                final String loop_type = timeTaskSysTimes.get(i).getLoop_type();
+                if (timeTaskSysTimeDescribe.getIs_using() == 1) {
+                    if (timeTaskSysTimeDescribe.getEnd_date() == null
+                            || timeTaskSysTimeDescribe.getEnd_date().getTime() >= nowDate.getTime()) {
+                        if (timeTaskSysTimeDescribe.getIs_loop() != 0
+                                || timeTaskSysTimeDescribe.getBegin_date().getTime() >= nowDate.getTime()) {
+                            if (timeTaskSysTimeDescribe.getSpace() != 0
+                                    || timeTaskSysTimeDescribe.getBegin_date().getTime() >= nowDate.getTime()) {
+                                final String loop_type = timeTaskSysTimeDescribe.getLoop_type();
                                 switch (loop_type) {
                                 case "min":
                                 case "hour":
                                 case "day": {
-                                    if (this.isExec(timeTaskSysTimes.get(i), nowDate)) {
+                                    if (this.isExec(timeTaskSysTimeDescribe, nowDate)) {
                                         final List<TimeTaskEventDescribe> timeTaskEvents = timeTask
                                                 .getTimeTaskEventDescribes();
                                         if (timeTaskEvents != null) {
@@ -212,7 +212,7 @@ public class SysTimedTaskService {
                                 case "mouth":
                                 case "year":
                                 case "week": {
-                                    if (!this.isExec(timeTaskSysTimes.get(i), nowDate, true)) {
+                                    if (!this.isExec(timeTaskSysTimeDescribe, nowDate, true)) {
                                         break;
                                     }
                                     final List<TimeTaskEventDescribe> timeTaskEvents = timeTask
@@ -236,6 +236,7 @@ public class SysTimedTaskService {
         }
     }
 
+    @SuppressWarnings({ "rawtypes" })
     public void execBusinessTimeTask(String domain, TimeTaskDescribe timeTask) {
         try {
             Date nowDate = new Date();
@@ -270,6 +271,7 @@ public class SysTimedTaskService {
         }
     }
 
+    @SuppressWarnings({ "rawtypes" })
     private ApiResult exec(String domain, TimeTaskEventDescribe timeTaskEvent, Map<String, Object> businessData) {
         try {
             Map<String, Object> data = buildApiParam(timeTaskEvent, businessData);
@@ -311,8 +313,9 @@ public class SysTimedTaskService {
             long leadTime = buildLeadTime(timeTaskSysTime.getBegin_date(), timeTaskSysTime.getLead(),
                     timeTaskSysTime.getLead_type());
             if (timeTaskSysTime.getIs_loop() == 0) {
-                if (timeTaskSysTime.getBegin_date().getTime() > nowDate.getTime() - 60000L - leadTime
-                        && timeTaskSysTime.getBegin_date().getTime() < nowDate.getTime() + 60000L - leadTime) {
+                if (timeTaskSysTime.getBegin_date().getTime() > nowDate.getTime() - TIME_TASK_SPACR_TIME - leadTime
+                        && timeTaskSysTime.getBegin_date().getTime() < nowDate.getTime() + TIME_TASK_SPACR_TIME
+                                - leadTime) {
                     return true;
                 }
                 return false;
@@ -321,13 +324,15 @@ public class SysTimedTaskService {
             long spaceTime = buildSpaceTime(timeTaskSysTime);
             if (spaceTime == 0L && timeTaskSysTime.getBegin_date().getTime() < nowDate.getTime() - leadTime)
                 return false;
-            if (spaceTime == 0L && timeTaskSysTime.getBegin_date().getTime() > nowDate.getTime() - 60000L - leadTime
-                    && timeTaskSysTime.getBegin_date().getTime() < nowDate.getTime() + 60000L - leadTime) {
+            if (spaceTime == 0L
+                    && timeTaskSysTime.getBegin_date().getTime() > nowDate.getTime() - TIME_TASK_SPACR_TIME - leadTime
+                    && timeTaskSysTime.getBegin_date().getTime() < nowDate.getTime() + TIME_TASK_SPACR_TIME
+                            - leadTime) {
                 return true;
             }
 
             long result = (nowDate.getTime() + leadTime - timeTaskSysTime.getBegin_date().getTime()) % spaceTime;
-            if (result > -60000L && result < 60000L) {
+            if (result > -TIME_TASK_SPACR_TIME && result < TIME_TASK_SPACR_TIME) {
                 return true;
             }
             return false;
@@ -342,8 +347,9 @@ public class SysTimedTaskService {
             long timeSub, leadTime = buildLeadTime(timeTaskSysTime.getBegin_date(), timeTaskSysTime.getLead(),
                     timeTaskSysTime.getLead_type());
             if (timeTaskSysTime.getIs_loop() == 0) {
-                if (timeTaskSysTime.getBegin_date().getTime() > nowDate.getTime() - 60000L - leadTime
-                        && timeTaskSysTime.getBegin_date().getTime() < nowDate.getTime() + 60000L - leadTime) {
+                if (timeTaskSysTime.getBegin_date().getTime() > nowDate.getTime() - TIME_TASK_SPACR_TIME - leadTime
+                        && timeTaskSysTime.getBegin_date().getTime() < nowDate.getTime() + TIME_TASK_SPACR_TIME
+                                - leadTime) {
                     return true;
                 }
                 return false;
@@ -361,7 +367,7 @@ public class SysTimedTaskService {
                 sub = gcBeginDate.get(2) - gcNowDate.get(2);
                 gcBeginDate.add(2, 0 - sub);
                 timeSub = gcBeginDate.getTime().getTime() - gcNowDate.getTime().getTime() - leadTime;
-                if (timeSub > -60000L && timeSub < 60000L) {
+                if (timeSub > -TIME_TASK_SPACR_TIME && timeSub < TIME_TASK_SPACR_TIME) {
                     return true;
                 }
                 return false;
@@ -369,7 +375,7 @@ public class SysTimedTaskService {
                 sub = gcBeginDate.get(1) - gcNowDate.get(1);
                 gcBeginDate.add(1, 0 - sub);
                 timeSub = gcBeginDate.getTime().getTime() - gcNowDate.getTime().getTime() - leadTime;
-                if (timeSub > -60000L && timeSub < 60000L) {
+                if (timeSub > -TIME_TASK_SPACR_TIME && timeSub < TIME_TASK_SPACR_TIME) {
                     return true;
                 }
                 return false;
@@ -381,7 +387,7 @@ public class SysTimedTaskService {
                 sub = gcBeginDate.get(4) - gcNowDate.get(4);
                 gcBeginDate.add(4, 0 - sub);
                 timeSub = gcBeginDate.getTime().getTime() - gcNowDate.getTime().getTime() - leadTime;
-                if (timeSub > -60000L && timeSub < 60000L) {
+                if (timeSub > -TIME_TASK_SPACR_TIME && timeSub < TIME_TASK_SPACR_TIME) {
                     return true;
                 }
                 return false;
@@ -465,8 +471,8 @@ public class SysTimedTaskService {
         try {
             long leadTime = buildLeadTime(nowDate, timeTaskBusiness.getLead(), timeTaskBusiness.getLead_type());
             Map<String, Object> param = new HashMap<String, Object>();
-            param.put("beginDate", new Date(nowDate.getTime() - leadTime - 60000L));
-            param.put("endDate", new Date(nowDate.getTime() - leadTime + 60000L));
+            param.put("beginDate", new Date(nowDate.getTime() - leadTime - TIME_TASK_SPACR_TIME));
+            param.put("endDate", new Date(nowDate.getTime() - leadTime + TIME_TASK_SPACR_TIME));
             if (timeTaskBusiness.getFilter_sql() == null || "".equals(timeTaskBusiness.getFilter_sql())) {
                 param.put("filter", "select * from " + timeTaskBusiness.getTable());
             } else {
@@ -483,6 +489,7 @@ public class SysTimedTaskService {
         return recursionParam(timeTaskEven.getParam(), data);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private Map<String, Object> recursionParam(Map<String, Object> param, Object data) {
         try {
             Map<String, Object> resultParam = new HashMap<String, Object>();
@@ -502,6 +509,7 @@ public class SysTimedTaskService {
         }
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private List<Map<String, Object>> makeRefData(List<Map<String, Object>> records) {
         try {
             List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();

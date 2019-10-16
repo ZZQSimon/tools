@@ -13,6 +13,7 @@ public class BatchDescribe<T> extends Object {
     private String service_param;
     private String memo;
     private String create_trigger;
+    @SuppressWarnings("rawtypes")
     private BatchInterceptor interceptor;
     private ApiDescribe api;
     private ApiDescribe update_api;
@@ -60,10 +61,12 @@ public class BatchDescribe<T> extends Object {
     }
 
     @JsonIgnore
+    @SuppressWarnings({ "rawtypes" })
     public BatchInterceptor getInterceptor() {
         return this.interceptor;
     }
 
+    @SuppressWarnings({ "rawtypes" })
     public void setInterceptor(BatchInterceptor interceptor) {
         this.interceptor = interceptor;
     }

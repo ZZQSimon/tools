@@ -10,19 +10,17 @@ import cn.com.easyerp.DeployTool.service.Url;
 
 @Repository
 public interface FunctionPointDao {
-  List<FunctionPoint> selectFunctionPoint();
-  
-  List<FunctionPoint> selectDimFunctionPoint(@Param("params") String paramString);
-  
-  void addFunctionPoint(@Param("list") List<FunctionPoint> paramList);
-  
-  int countFunctionPoint();
-  
-  void updateFunctionPointById(@Param("list") List<FunctionPoint> paramList);
-  
-  void deleteFunctionPoint(@Param("list") List<FunctionPoint> paramList);
-  
-  List<Url> selectUrl();
+    List<FunctionPoint> selectFunctionPoint();
+
+    List<FunctionPoint> selectDimFunctionPoint(@Param("params") String paramString);
+
+    void addFunctionPoint(@Param("list") List<FunctionPoint> paramList);
+
+    int countFunctionPoint();
+
+    void updateFunctionPointById(@Param("list") List<FunctionPoint> paramList);
+
+    void deleteFunctionPoint(@Param("list") List<FunctionPoint> paramList);
+
+    List<Url> selectUrl();
 }
-
-

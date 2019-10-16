@@ -26,6 +26,7 @@ import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.view.FormViewControllerBase;
 import cn.com.easyerp.core.widget.menu.MenuModel;
 import cn.com.easyerp.framework.common.ActionResult;
+import cn.com.easyerp.framework.util.EmptyUtil;
 
 @Controller
 @RequestMapping({ "/authGroup" })
@@ -176,11 +177,9 @@ public class AuthGroupController extends FormViewControllerBase {
         for (MenuModel menuModel : menu) {
             MenuTree menuTree = new MenuTree();
             for (MenuGroup menuGroup2 : menuId) {
-                if (menuGroup2.getMenu_id().equals(menuModel.getId()) && !"".equals(leafMenuMap.get(menuModel.getId()))
-                        && leafMenuMap.get(menuModel.getId()) != null) {
-                    leafMenuMap.get(menuModel.getId());
+                MenuModel menuModel0 = leafMenuMap.get(menuModel.getId());
+                if (menuGroup2.getMenu_id().equals(menuModel.getId()) && EmptyUtil.isNotEmpty(menuModel0)) {
                     menuTree.setState(new State(true));
-
                     break;
                 }
             }
@@ -298,10 +297,10 @@ public class AuthGroupController extends FormViewControllerBase {
         menuId.add("0");
         for (AuthGroup authGroup : request.getAuthGroup()) {
             if (this.authGroupDao.addMenuGroup(authGroup.getMenu(), menuId) > 0) {
-                result = "����ɹ�";
+                result = "保存成功";
                 continue;
             }
-            result = "����ʧ��";
+            result = "保存失败";
         }
 
         return new ActionResult(true, result);
@@ -333,6 +332,7 @@ public class AuthGroupController extends FormViewControllerBase {
         return new ActionResult(true);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @ResponseBody
     @RequestMapping({ "/addAuthGroup.do" })
     public ActionResult addAuthGroup(@RequestBody AuthGroupRequestModel request) {
@@ -414,28 +414,29 @@ public class AuthGroupController extends FormViewControllerBase {
                 }
             }
         }
-        return new ActionResult(true, "����ɹ�");
+        return new ActionResult(true, "保存成功");
     }
 
     @ResponseBody
     @RequestMapping({ "/saveTemplate.do" })
     public ActionResult saveTemplate(@RequestBody ApproveRequestModel request) {
-        String result = "����ɹ�";
-        if (!"".equals(Integer.valueOf(((AuthGroup) request.getAuthGroup().get(0)).getEditOrdetele()))
-                && ((AuthGroup) request.getAuthGroup().get(0)).getEditOrdetele() != 0) {
-            if (((AuthGroup) request.getAuthGroup().get(0)).getEditOrdetele() == 1) {
-                this.approveDao.updateTemplate((AuthGroup) request.getAuthGroup().get(0));
-            } else if (((AuthGroup) request.getAuthGroup().get(0)).getEditOrdetele() == 2) {
-                this.approveDao.deleteTemplate((AuthGroup) request.getAuthGroup().get(0));
+        String result = "保存成功";
+        List<AuthGroup> authGroupList = request.getAuthGroup();
+        AuthGroup authGroup0 = authGroupList.get(0);
+        if (!"".equals(String.valueOf((authGroup0).getEditOrdetele())) && (authGroup0).getEditOrdetele() != 0) {
+            if ((authGroup0).getEditOrdetele() == 1) {
+                this.approveDao.updateTemplate(authGroup0);
+            } else if ((authGroup0).getEditOrdetele() == 2) {
+                this.approveDao.deleteTemplate(authGroup0);
             }
         } else {
-            this.approveDao.deleteTemplate((AuthGroup) request.getAuthGroup().get(0));
+            this.approveDao.deleteTemplate(authGroup0);
             for (AuthGroup authGroup : request.getAuthGroup()) {
                 if (this.approveDao.addAuthGroup(authGroup) > 0) {
-                    result = "����ɹ�";
+                    result = "保存成功";
                     continue;
                 }
-                result = "����ʧ��";
+                result = "保存失败";
             }
         }
 

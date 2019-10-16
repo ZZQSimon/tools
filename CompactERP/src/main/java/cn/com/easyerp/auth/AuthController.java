@@ -50,12 +50,10 @@ import cn.com.easyerp.core.cache.TriggerDescribe;
 import cn.com.easyerp.core.dao.AuthDao;
 import cn.com.easyerp.core.dao.SubjectDao;
 import cn.com.easyerp.core.data.DataService;
-import cn.com.easyerp.core.exception.ApplicationException;
 import cn.com.easyerp.core.logger.Loggable;
 import cn.com.easyerp.core.master.DxRoutingDataSource;
 import cn.com.easyerp.core.view.FormController;
 import cn.com.easyerp.core.view.form.detail.DetailFormModel;
-import cn.com.easyerp.core.view.form.index.Index;
 import cn.com.easyerp.core.widget.FieldModelBase;
 import cn.com.easyerp.core.widget.WidgetModelBase;
 import cn.com.easyerp.core.widget.grid.RecordModel;
@@ -63,9 +61,11 @@ import cn.com.easyerp.email.RegisterValidateService;
 import cn.com.easyerp.email.ServiceException;
 import cn.com.easyerp.framework.common.ActionResult;
 import cn.com.easyerp.framework.common.Common;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.verification.CCPRestSmsSDK;
 import cn.com.easyerp.weixin.WeChatService;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Controller
 @RequestMapping({ "/auth" })
 public class AuthController extends FormController {
@@ -92,25 +92,25 @@ public class AuthController extends FormController {
     private WeChatService weChatService;
     @Autowired
     private PwdService pwdService;
-    @Autowired
-    private Index index;
+    // @Autowired
+    // private Index index;
     @Loggable
     private Logger logger;
-    public static final Base64.Decoder decoder = Base64.getDecoder();
-    public static final String TMP_ROOT = "/tmp";
-    public static final String inputPassword = "inputPassword";
-    public static final String inputPhoneNum = "inputPhoneNum";
-    public static final String input_security_code = "input_security_code";
-    public static final String forget_the_password = "forget_the_password";
-    public static final String Remember_password = "Remember_password";
-    public static final String free_registration = "free_registration";
-    public static final String Login = "Login";
-    public static final String password_Login = "password_Login";
-    public static final String companyName = "BusinessProcessManagementPlatform";
-    public static final String PleaseSelectTheNameOfTheCompany = "PleaseSelectTheNameOfTheCompany";
-    public static final String login_back = "login_back";
-    public static final String Can_not_see = "Can_not_see";
-    public static final String p_parameter_default_language = "p_parameter_default_language";
+    private static final Base64.Decoder decoder = Base64.getDecoder();
+    private static final String TMP_ROOT = "/tmp";
+    private static final String inputPassword = "inputPassword";
+    private static final String inputPhoneNum = "inputPhoneNum";
+    private static final String input_security_code = "input_security_code";
+    private static final String forget_the_password = "forget_the_password";
+    private static final String Remember_password = "Remember_password";
+    private static final String free_registration = "free_registration";
+    private static final String Login = "Login";
+    private static final String password_Login = "password_Login";
+    private static final String companyName = "BusinessProcessManagementPlatform";
+    private static final String PleaseSelectTheNameOfTheCompany = "PleaseSelectTheNameOfTheCompany";
+    private static final String login_back = "login_back";
+    private static final String Can_not_see = "Can_not_see";
+    private static final String p_parameter_default_language = "p_parameter_default_language";
 
     @RequestMapping({ "/login.view" })
     public ModelAndView login(@RequestParam(value = "error", required = false) String error, String language,
@@ -128,7 +128,7 @@ public class AuthController extends FormController {
                 String userMsg = new String(decoder.decode(authorizationUser), "utf-8");
                 System.out.println("sapid----------------------------------" + userMsg);
                 this.logger.error(new Date() + "sapid----------------------------------" + userMsg);
-                String userAccont = userMsg.split(":")[0];
+                // String userAccont = userMsg.split(":")[0];
                 sapId = userMsg.split(":")[1];
                 if (sapId != null) {
                     session.setAttribute("sapId", sapId);
@@ -174,7 +174,8 @@ public class AuthController extends FormController {
     @ResponseBody
     @RequestMapping({ "/group.do" })
     public ActionResult group(@RequestBody AuthEditRequestModel request) {
-        for (AuthControlDescribe control : request.getControls())
+        List<AuthControlDescribe> controls = request.getControls();
+        for (AuthControlDescribe control : controls)
             this.authDao.updateAuthControl(control.getId(), Common.toJson(control.getEntries()));
         this.authService.reload();
         return Common.ActionOk;
@@ -193,8 +194,11 @@ public class AuthController extends FormController {
     @ResponseBody
     @RequestMapping({ "/menu.do" })
     public ActionResult menu(@RequestBody AuthEditRequestModel request) {
-        this.authDao.deleteAuthMenuConfig(request.getControls());
-        for (Map.Entry<String, List<String>> entry : request.getConfigMap().entrySet()) {
+        List<AuthControlDescribe> controls = request.getControls();
+        this.authDao.deleteAuthMenuConfig(controls);
+
+        Map<String, List<String>> configMap = request.getConfigMap();
+        for (Map.Entry<String, List<String>> entry : configMap.entrySet()) {
             String controlId = (String) entry.getKey();
             for (String menuId : entry.getValue()) {
                 this.authDao.insertAuthMenuConfig(controlId, menuId);
@@ -250,9 +254,9 @@ public class AuthController extends FormController {
         Map<String, Boolean> ret = new HashMap<String, Boolean>(request.getEntries().size());
         for (AuthRequestModel.AuthEntry entry : request.getEntries()) {
             boolean passed = true;
-            for (String owner : entry.getOwners()) {
-                ret.put(entry.getId(), Boolean.valueOf(passed));
-            }
+            ret.put(entry.getId(), Boolean.valueOf(passed));
+            // for (String owner : entry.getOwners()) {
+            // }
         }
         return new ActionResult(true, ret);
     }
@@ -326,36 +330,32 @@ public class AuthController extends FormController {
             if ("".equals(companyLanguage) || companyLanguage == null) {
                 companyLanguage = this.authDao.selectCompanyLanguage(DxRoutingDataSource.DX_DEFAULT_DATASOURCE);
             }
-            SysCompanyName = this.authDao.selectLoginInternational(companyLanguage,
-                    "BusinessProcessManagementPlatform");
+            SysCompanyName = this.authDao.selectLoginInternational(companyLanguage, companyName);
             mv.addObject("companyName", SysCompanyName);
             mv.addObject("backgroud", "");
             mv.addObject("logo", SysLogo);
-            mv.addObject("freeRegistration",
-                    this.authDao.selectLoginInternational(companyLanguage, "free_registration"));
+            mv.addObject("freeRegistration", this.authDao.selectLoginInternational(companyLanguage, free_registration));
         }
         session.setAttribute("SysCompanyName", SysCompanyName);
         session.setAttribute("SysLogo", SysLogo);
         session.setAttribute("interior_logo", interior_logo);
-        mv.addObject("inputPassword", this.authDao.selectLoginInternational(companyLanguage, "inputPassword"));
-        mv.addObject("inputPhoneNum", this.authDao.selectLoginInternational(companyLanguage, "inputPhoneNum"));
-        mv.addObject("inputSecurityCode",
-                this.authDao.selectLoginInternational(companyLanguage, "input_security_code"));
-        mv.addObject("forgetThePassword",
-                this.authDao.selectLoginInternational(companyLanguage, "forget_the_password"));
-        mv.addObject("rememberPassword", this.authDao.selectLoginInternational(companyLanguage, "Remember_password"));
-        mv.addObject("login", this.authDao.selectLoginInternational(companyLanguage, "Login"));
-        mv.addObject("passwordLogin", this.authDao.selectLoginInternational(companyLanguage, "password_Login"));
-        mv.addObject("PleaseSelectTheNameOfTheCompany",
-                this.authDao.selectLoginInternational(companyLanguage, "PleaseSelectTheNameOfTheCompany"));
-        mv.addObject("login_back", this.authDao.selectLoginInternational(companyLanguage, "login_back"));
-        mv.addObject("Can_not_see", this.authDao.selectLoginInternational(companyLanguage, "Can_not_see"));
+        mv.addObject(inputPassword, this.authDao.selectLoginInternational(companyLanguage, inputPassword));
+        mv.addObject(inputPhoneNum, this.authDao.selectLoginInternational(companyLanguage, inputPhoneNum));
+        mv.addObject("inputSecurityCode", this.authDao.selectLoginInternational(companyLanguage, input_security_code));
+        mv.addObject("forgetThePassword", this.authDao.selectLoginInternational(companyLanguage, forget_the_password));
+        mv.addObject("rememberPassword", this.authDao.selectLoginInternational(companyLanguage, Remember_password));
+        mv.addObject("login", this.authDao.selectLoginInternational(companyLanguage, Login));
+        mv.addObject("passwordLogin", this.authDao.selectLoginInternational(companyLanguage, password_Login));
+        mv.addObject(PleaseSelectTheNameOfTheCompany,
+                this.authDao.selectLoginInternational(companyLanguage, PleaseSelectTheNameOfTheCompany));
+        mv.addObject(login_back, this.authDao.selectLoginInternational(companyLanguage, login_back));
+        mv.addObject(Can_not_see, this.authDao.selectLoginInternational(companyLanguage, Can_not_see));
 
         List<DictionaryDescribe> languageSelect = this.authDao.selectLanguage(companyLanguage);
         mv.addObject("languageSelect", languageSelect);
-        String aa = this.authDao.selectLoginInternational(companyLanguage, "p_parameter_default_language");
+        this.authDao.selectLoginInternational(companyLanguage, p_parameter_default_language);
         mv.addObject("defaultLanguage",
-                this.authDao.selectLoginInternational(companyLanguage, "p_parameter_default_language"));
+                this.authDao.selectLoginInternational(companyLanguage, p_parameter_default_language));
         String login_language = (String) session.getAttribute("login_language");
         if ("".equals(login_language) || login_language == null) {
             mv.addObject("login_language", "");
@@ -371,9 +371,11 @@ public class AuthController extends FormController {
         if (subjectID.equals("undefined") || subjectID.equals("")) {
             subjectID = "yellow";
             List<Map<String, Object>> list = this.subjectDao.selectSubject(subjectID);
+            mv.addObject("list", list);
             mv.addObject("subjectID", subjectID);
         } else {
             List<Map<String, Object>> list = this.subjectDao.selectSubject(subjectID);
+            mv.addObject("list", list);
             mv.addObject("subjectID", subjectID);
         }
         mv.addObject("backgroundID", backgroundID);
@@ -409,7 +411,7 @@ public class AuthController extends FormController {
             }
             File file = new File(filePath);
             String filename = file.getName();
-            String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
+            // String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
             InputStream fis = new BufferedInputStream(new FileInputStream(filePath));
             byte[] buffer = new byte[fis.available()];
             fis.read(buffer);
@@ -453,7 +455,7 @@ public class AuthController extends FormController {
     @RequestMapping({ "/changSubject.do" })
     public ModelAndView changSubject(@RequestParam("select-pic") MultipartFile file, String subjectID) {
         ModelAndView mv = new ModelAndView("login2");
-        String tmppath = this.dataService.getSystemParam().getUpload_root() + "/tmp" + "/";
+        String tmppath = this.dataService.getSystemParam().getUpload_root() + TMP_ROOT + "/";
         tmppath = tmppath.replace("/", "\\");
         String imgpath = tmppath + (new Date()).getTime() + file.getOriginalFilename();
         File newFile = new File(imgpath);
@@ -467,9 +469,11 @@ public class AuthController extends FormController {
         if (subjectID.equals("undefined") || subjectID.equals("")) {
             subjectID = "yellow";
             List<Map<String, Object>> list = this.subjectDao.selectSubject(subjectID);
+            mv.addObject("list", list);
             mv.addObject("subjectID", subjectID);
         } else {
             List<Map<String, Object>> list = this.subjectDao.selectSubject(subjectID);
+            mv.addObject("list", list);
             mv.addObject("subjectID", subjectID);
         }
         mv.addObject("subjectID", subjectID);
@@ -563,6 +567,7 @@ public class AuthController extends FormController {
         return null;
     }
 
+    @SuppressWarnings("unused")
     private boolean AdLogin(String userName, String password) {
         Map<String, Object> ldapParam = this.authDao.ldapParam();
         String host = (ldapParam.get("ldap_ip") == null) ? "" : ldapParam.get("ldap_ip").toString();
@@ -888,7 +893,7 @@ public class AuthController extends FormController {
         }
         if (domain != null) {
             companyLanguage = this.authDao.selectCompanyDefaultLanguage();
-            String backgroud = this.authDao.selectLoginCss("backgroud");
+            // String backgroud = this.authDao.selectLoginCss("backgroud");
             String name = this.authDao.selectLoginCss("companyName");
             String companyName = this.authDao.selectLoginInternational(companyLanguage, name);
             if (companyName == null) {
@@ -898,19 +903,17 @@ public class AuthController extends FormController {
             }
             mv.addObject("freeRegistration", "");
         }
-        mv.addObject("inputPassword", this.authDao.selectLoginInternational(companyLanguage, "inputPassword"));
-        mv.addObject("inputPhoneNum", this.authDao.selectLoginInternational(companyLanguage, "inputPhoneNum"));
-        mv.addObject("inputSecurityCode",
-                this.authDao.selectLoginInternational(companyLanguage, "input_security_code"));
-        mv.addObject("forgetThePassword",
-                this.authDao.selectLoginInternational(companyLanguage, "forget_the_password"));
-        mv.addObject("rememberPassword", this.authDao.selectLoginInternational(companyLanguage, "Remember_password"));
-        mv.addObject("login", this.authDao.selectLoginInternational(companyLanguage, "Login"));
-        mv.addObject("passwordLogin", this.authDao.selectLoginInternational(companyLanguage, "password_Login"));
-        mv.addObject("PleaseSelectTheNameOfTheCompany",
-                this.authDao.selectLoginInternational(companyLanguage, "PleaseSelectTheNameOfTheCompany"));
-        mv.addObject("login_back", this.authDao.selectLoginInternational(companyLanguage, "login_back"));
-        mv.addObject("Can_not_see", this.authDao.selectLoginInternational(companyLanguage, "Can_not_see"));
+        mv.addObject(inputPassword, this.authDao.selectLoginInternational(companyLanguage, inputPassword));
+        mv.addObject(inputPhoneNum, this.authDao.selectLoginInternational(companyLanguage, inputPhoneNum));
+        mv.addObject("inputSecurityCode", this.authDao.selectLoginInternational(companyLanguage, input_security_code));
+        mv.addObject("forgetThePassword", this.authDao.selectLoginInternational(companyLanguage, forget_the_password));
+        mv.addObject("rememberPassword", this.authDao.selectLoginInternational(companyLanguage, Remember_password));
+        mv.addObject("login", this.authDao.selectLoginInternational(companyLanguage, Login));
+        mv.addObject("passwordLogin", this.authDao.selectLoginInternational(companyLanguage, password_Login));
+        mv.addObject(PleaseSelectTheNameOfTheCompany,
+                this.authDao.selectLoginInternational(companyLanguage, PleaseSelectTheNameOfTheCompany));
+        mv.addObject(login_back, this.authDao.selectLoginInternational(companyLanguage, login_back));
+        mv.addObject(Can_not_see, this.authDao.selectLoginInternational(companyLanguage, Can_not_see));
 
         String username = "";
         String password = "";
@@ -958,7 +961,7 @@ public class AuthController extends FormController {
 
         if (domain != null) {
             companyLanguage = this.authDao.selectCompanyDefaultLanguage();
-            String backgroud = this.authDao.selectLoginCss("backgroud");
+            // String backgroud = this.authDao.selectLoginCss("backgroud");
             String name = this.authDao.selectLoginCss("companyName");
             String companyName = this.authDao.selectLoginInternational(companyLanguage, name);
             if (companyName == null) {
@@ -968,19 +971,17 @@ public class AuthController extends FormController {
             }
             mv.addObject("freeRegistration", "");
         }
-        mv.addObject("inputPassword", this.authDao.selectLoginInternational(companyLanguage, "inputPassword"));
-        mv.addObject("inputPhoneNum", this.authDao.selectLoginInternational(companyLanguage, "inputPhoneNum"));
-        mv.addObject("inputSecurityCode",
-                this.authDao.selectLoginInternational(companyLanguage, "input_security_code"));
-        mv.addObject("forgetThePassword",
-                this.authDao.selectLoginInternational(companyLanguage, "forget_the_password"));
-        mv.addObject("rememberPassword", this.authDao.selectLoginInternational(companyLanguage, "Remember_password"));
-        mv.addObject("login", this.authDao.selectLoginInternational(companyLanguage, "Login"));
-        mv.addObject("passwordLogin", this.authDao.selectLoginInternational(companyLanguage, "password_Login"));
-        mv.addObject("PleaseSelectTheNameOfTheCompany",
-                this.authDao.selectLoginInternational(companyLanguage, "PleaseSelectTheNameOfTheCompany"));
-        mv.addObject("login_back", this.authDao.selectLoginInternational(companyLanguage, "login_back"));
-        mv.addObject("Can_not_see", this.authDao.selectLoginInternational(companyLanguage, "Can_not_see"));
+        mv.addObject(inputPassword, this.authDao.selectLoginInternational(companyLanguage, inputPassword));
+        mv.addObject(inputPhoneNum, this.authDao.selectLoginInternational(companyLanguage, inputPhoneNum));
+        mv.addObject("inputSecurityCode", this.authDao.selectLoginInternational(companyLanguage, input_security_code));
+        mv.addObject("forgetThePassword", this.authDao.selectLoginInternational(companyLanguage, forget_the_password));
+        mv.addObject("rememberPassword", this.authDao.selectLoginInternational(companyLanguage, Remember_password));
+        mv.addObject("login", this.authDao.selectLoginInternational(companyLanguage, Login));
+        mv.addObject("passwordLogin", this.authDao.selectLoginInternational(companyLanguage, password_Login));
+        mv.addObject(PleaseSelectTheNameOfTheCompany,
+                this.authDao.selectLoginInternational(companyLanguage, PleaseSelectTheNameOfTheCompany));
+        mv.addObject(login_back, this.authDao.selectLoginInternational(companyLanguage, login_back));
+        mv.addObject(Can_not_see, this.authDao.selectLoginInternational(companyLanguage, Can_not_see));
 
         String username = "";
         String password = "";

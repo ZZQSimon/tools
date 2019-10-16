@@ -3,9 +3,10 @@ package cn.com.easyerp.core.data;
 import java.util.Map;
 
 import cn.com.easyerp.core.filter.FilterDescribe;
+import cn.com.easyerp.core.widget.WidgetModelBase;
 import cn.com.easyerp.core.widget.WidgetRequestModelBase;
 
-public class ReferenceRequestModel extends WidgetRequestModelBase {
+public class ReferenceRequestModel<T extends WidgetModelBase> extends WidgetRequestModelBase<T> {
     private String text;
     private ViewDataMap param;
     private Map<String, FilterDescribe> filters;

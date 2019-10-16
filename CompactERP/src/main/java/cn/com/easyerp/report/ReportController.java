@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import cn.com.easyerp.auth.AuthDetails;
 import cn.com.easyerp.chart.ReportModel;
 import cn.com.easyerp.core.data.DataService;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.core.filter.FilterService;
 import cn.com.easyerp.core.view.FormViewControllerBase;
 import cn.com.easyerp.framework.common.ActionResult;
@@ -28,6 +28,7 @@ import cn.com.easyerp.framework.common.ActionResult;
 public class ReportController extends FormViewControllerBase {
     @Autowired
     private DataService dataService;
+    @SuppressWarnings("rawtypes")
     @Autowired
     @Qualifier("defaultReportService")
     private ReportService service;
@@ -36,6 +37,7 @@ public class ReportController extends FormViewControllerBase {
     @Autowired
     private FilterService filterService;
 
+    @SuppressWarnings("rawtypes")
     @RequestMapping({ "/report.view" })
     public ModelAndView view(@RequestBody ReportFormRequestModel data) {
         String report_id = data.getReport_id();
@@ -50,6 +52,7 @@ public class ReportController extends FormViewControllerBase {
         return buildModelAndView(form);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Transactional
     @ResponseBody
     @RequestMapping({ "/pre_print.do" })
@@ -63,6 +66,7 @@ public class ReportController extends FormViewControllerBase {
         return interceptor.print(report, this.filterService.toWhere(request.getFilter()), user, request);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Transactional
     @ResponseBody
     @RequestMapping({ "/print.do" })

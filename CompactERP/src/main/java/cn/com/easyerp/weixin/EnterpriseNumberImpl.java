@@ -2,6 +2,7 @@ package cn.com.easyerp.weixin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ public class EnterpriseNumberImpl implements WeChatService {
     private String token = null;
     private Date token_modify = null;
     private static final long EXPIRES_IN = 7000000L;
+    private static final String UTF8 = "utf-8";
     private SystemParameter sysParam = null;
     private String server_address = null;
     private String address_book = null;
@@ -63,10 +65,14 @@ public class EnterpriseNumberImpl implements WeChatService {
 
     public String getToken() {
         initConst();
-        if (this.token == null || (new Date()).getTime() - this.token_modify.getTime() > 7000000L) {
-
-            String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + URLEncoder.encode(this.CORPID)
-                    + "&corpsecret=" + URLEncoder.encode(this.CORPSERCRET);
+        if (this.token == null || (new Date()).getTime() - this.token_modify.getTime() > EXPIRES_IN) {
+            String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=";
+            try {
+                url = url + URLEncoder.encode(this.CORPID, UTF8) + "&corpsecret="
+                        + URLEncoder.encode(this.CORPSERCRET, UTF8);
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
 
             try {
                 JSONObject result = HttpClientUtil.doGetJson(url);
@@ -81,8 +87,12 @@ public class EnterpriseNumberImpl implements WeChatService {
     public String getAddressBookToken() {
         String token = "";
         String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CORPID}&corpsecret={CORPSERCRET}";
-        url = url.replace("{CORPID}", URLEncoder.encode(this.CORPID));
-        url = url.replace("{CORPSERCRET}", URLEncoder.encode(this.address_book));
+        try {
+            url = url.replace("{CORPID}", URLEncoder.encode(this.CORPID, UTF8));
+            url = url.replace("{CORPSERCRET}", URLEncoder.encode(this.address_book, UTF8));
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
 
         try {
             JSONObject result = HttpClientUtil.doGetJson(url);
@@ -130,7 +140,7 @@ public class EnterpriseNumberImpl implements WeChatService {
         try {
             String paramJson = Common.toJson(param);
             if (paramJson != null) {
-                String str = HttpClientUtil.doPost(url, paramJson);
+                HttpClientUtil.doPost(url, paramJson);
             }
             return true;
         } catch (Exception e) {
@@ -141,7 +151,7 @@ public class EnterpriseNumberImpl implements WeChatService {
 
     public boolean deleteUser(List<String> users) {
         initConst();
-        String openid = "";
+        // String openid = "";
         StringBuilder url = new StringBuilder("https://qyapi.weixin.qq.com/cgi-bin/user/batchdelete?access_token=");
         url.append(getAddressBookToken());
 
@@ -150,7 +160,7 @@ public class EnterpriseNumberImpl implements WeChatService {
         try {
             String useridlist = Common.toJson(list);
             if (useridlist != null) {
-                String str = HttpClientUtil.doPost(url.toString(), useridlist);
+                HttpClientUtil.doPost(url.toString(), useridlist);
             }
             return true;
         } catch (Exception e) {
@@ -159,6 +169,7 @@ public class EnterpriseNumberImpl implements WeChatService {
         }
     }
 
+    @SuppressWarnings({ "rawtypes" })
     private Map<String, String> buildMessage(String templateId, Map<String, Map<String, Object>> datas,
             String urlParam) {
         initConst();

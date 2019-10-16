@@ -28,7 +28,7 @@ import cn.com.easyerp.core.cache.ColumnDescribe;
 import cn.com.easyerp.core.cache.TableDescribe;
 import cn.com.easyerp.core.dao.AuthDao;
 import cn.com.easyerp.core.data.DataService;
-import cn.com.easyerp.core.exception.ApplicationException;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.core.master.DxRoutingDataSource;
 import cn.com.easyerp.core.widget.menu.MenuModel;
 import cn.com.easyerp.framework.common.Common;
@@ -344,7 +344,8 @@ public class AuthService implements UserDetailsService {
         return ret;
     }
 
-    private void menuModule(AuthDetails user, List<AuthDetails.UserMenu> userMenus) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected void menuModule(AuthDetails user, List<AuthDetails.UserMenu> userMenus) {
         List<String> menuNames = new ArrayList<String>();
         Map<String, List<AuthDetails.UserMenu>> moduleMenus = new HashMap<String, List<AuthDetails.UserMenu>>();
         for (int i = 0; i < userMenus.size(); i++) {
@@ -448,7 +449,7 @@ public class AuthService implements UserDetailsService {
     }
 
     public boolean menuAuth(AuthDetails user, List<AuthGroup> authGroups, MenuModel menu) {
-        int count = 0;
+        // int count = 0;
         if ("super".equals(user.getId().toLowerCase()))
             return true;
         for (AuthGroup authGroup : authGroups) {
@@ -459,7 +460,7 @@ public class AuthService implements UserDetailsService {
                 if (menuGroup.getMenu_id().equals(menu.getId())) {
                     if (operatorAuth(user, authGroup, null))
                         return true;
-                    count++;
+                    // count++;
                 }
             }
         }
@@ -780,6 +781,7 @@ public class AuthService implements UserDetailsService {
         return false;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private List<AuthGroup> getAuthGroup(String tableName, Map<String, Object> ids) {
         List<AuthGroup> optionAuthGroup = this.cacheService.getOptionAuth(tableName);
         List<AuthGroup> resultAuthGroup = new ArrayList<AuthGroup>();

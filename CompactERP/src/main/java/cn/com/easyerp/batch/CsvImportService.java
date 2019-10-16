@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
@@ -29,7 +30,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -39,12 +39,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import cn.com.easyerp.auth.AuthService;
 import cn.com.easyerp.core.cache.BatchDescribe;
-import cn.com.easyerp.core.exception.ApplicationException;
 import cn.com.easyerp.core.logger.LogService;
 import cn.com.easyerp.core.widget.FieldModelBase;
 import cn.com.easyerp.core.widget.FileFieldModel;
 import cn.com.easyerp.framework.common.ApiActionResult;
 import cn.com.easyerp.framework.common.Common;
+import cn.com.easyerp.framework.enums.LogType;
+import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.storage.StorageService;
 
 @Service("csv-import")
@@ -92,10 +93,11 @@ public class CsvImportService extends BatchService<CsvImportParamModel> {
         }
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private String importCSV(BatchDescribe<CsvImportParamModel> batch, InputStream is, String uid,
             HttpServletRequest httpRequest) throws IOException {
         String logId = this.logService.getMaxId();
-        this.logService.logTemp(logId, LogService.LogType.Import, AuthService.getCurrentUserId());
+        this.logService.logTemp(logId, LogType.Import, AuthService.getCurrentUserId());
         httpRequest.setAttribute("logId", logId);
 
         CsvImportParamModel param = (CsvImportParamModel) batch.getData();
@@ -108,7 +110,6 @@ public class CsvImportService extends BatchService<CsvImportParamModel> {
         List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
         int id = 0;
         int space = 0;
-        String value = "";
         String tmpId = param.getTmpId();
         for (CSVRecord record : parse) {
             Map rec = record.toMap();
@@ -128,10 +129,11 @@ public class CsvImportService extends BatchService<CsvImportParamModel> {
         return this.dataService.insertImportData(param.getTable(), data, uid, httpRequest);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private String importExcel(BatchDescribe<CsvImportParamModel> batch, InputStream is, String uid, String suffix,
             HttpServletRequest httpRequest) throws IOException {
         final String logId = this.logService.getMaxId();
-        this.logService.logTemp(logId, LogService.LogType.Import, AuthService.getCurrentUserId());
+        this.logService.logTemp(logId, LogType.Import, AuthService.getCurrentUserId());
         httpRequest.setAttribute("logId", (Object) logId);
         final CsvImportParamModel param = (CsvImportParamModel) batch.getData();
         final String tableId = param.getTable();
@@ -185,46 +187,50 @@ public class CsvImportService extends BatchService<CsvImportParamModel> {
         if (null != cell) {
             CellValue value;
             switch (cell.getCellType()) {
-            case 0:
-                if (0 == cell.getCellType()) {
-                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                        Date date = cell.getDateCellValue();
-                        cellValue = Common.defaultDateTimeFormat.format(date);
-                    } else {
-                        cell.setCellType(1);
-                        cellValue = cell.getStringCellValue() + "";
-                    }
+            case NUMERIC:
+                if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                    Date date = cell.getDateCellValue();
+                    cellValue = Common.defaultDateTimeFormat.format(date);
+                } else {
+                    // cell.setCellType(CellType.STRING);
+                    cellValue = cell.getStringCellValue() + "";
                 }
                 return cellValue;
-            case 1:
+            case STRING:
                 return cell.getStringCellValue();
-            case 4:
+            case BOOLEAN:
                 return cell.getBooleanCellValue() + "";
-            case 2:
+            case FORMULA: {
                 value = formulaEvaluator.evaluate(cell);
                 if (value != null)
                     switch (value.getCellType()) {
-                    case 4:
+                    case BOOLEAN:
                         cellValue = String.valueOf(value.getBooleanValue());
                         break;
-                    case 0:
+                    case NUMERIC:
                         cellValue = String.valueOf(cell.getNumericCellValue());
                         break;
-                    case 1:
+                    case STRING:
                         cellValue = value.getStringValue();
                         break;
-                    case 3:
+                    case BLANK:
                         cellValue = null;
                         break;
-                    case 5:
+                    case ERROR:
+                        cellValue = null;
+                        break;
+                    default:
                         cellValue = null;
                         break;
                     }
                 return cellValue;
-            case 3:
+            }
+            case BLANK:
                 return null;
-            case 5:
+            case ERROR:
                 return null;
+            default:
+                break;
             }
             cellValue = null;
         }
