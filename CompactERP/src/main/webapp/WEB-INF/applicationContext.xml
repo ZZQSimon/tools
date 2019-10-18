@@ -77,7 +77,7 @@
 		</property>
 	</bean>
 	<bean id="persistenceExceptionTranslator"
-		class="cn.com.easyerp.core.exception.PersistenceExceptionTranslator">
+		class="cn.com.easyerp.framework.exception.PersistenceExceptionTranslator">
 		<constructor-arg index="0" ref="routingDataSource" />
 	</bean>
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">

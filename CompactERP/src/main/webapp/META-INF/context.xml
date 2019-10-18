@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource name="jdbc/dbpool" auth="Container" type="javax.sql.DataSource"
+      driverClassName="com.mysql.jdbc.Driver"
+      url="jdbc:mysql://172.16.253.203:3306/prdhridb?zeroDateTimeBehavior=convertToNull"
+      username="root" password="root" maxActive="400" maxIdle="400" maxWait="10000"
+      validationQuery="SELECT 1" testOnBorrow="true"/>
+</Context>
