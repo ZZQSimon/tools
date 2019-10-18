@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cn.com.easyerp.framework.httpclient.HttpClientUtil;
+
 @Repository
 public class WeiXinAPI {
     public String createWeiXinUser(CompanyWXData companyWXData, String mobile, String userName, String sex,

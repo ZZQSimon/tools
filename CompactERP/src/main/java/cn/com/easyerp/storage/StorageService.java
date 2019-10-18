@@ -38,11 +38,11 @@ import cn.com.easyerp.auth.AuthDetails;
 import cn.com.easyerp.core.ViewService;
 import cn.com.easyerp.core.cache.ColumnDescribe;
 import cn.com.easyerp.core.data.DataService;
+import cn.com.easyerp.core.logger.Loggable;
 import cn.com.easyerp.core.widget.FileFieldModel;
 import cn.com.easyerp.framework.common.ActionResult;
 import cn.com.easyerp.framework.common.Common;
 import cn.com.easyerp.framework.exception.ApplicationException;
-import cn.com.easyerp.framework.logger.Loggable;
 import cn.com.easyerp.report.Excel2Pdf;
 import net.coobird.thumbnailator.Thumbnails;
 

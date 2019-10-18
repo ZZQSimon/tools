@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 
-import cn.com.easyerp.auth.weixin.HttpClientUtil;
 import cn.com.easyerp.core.ViewService;
 import cn.com.easyerp.core.cache.BatchDescribe;
 import cn.com.easyerp.core.cache.CacheService;
@@ -29,10 +28,11 @@ import cn.com.easyerp.core.data.DataMap;
 import cn.com.easyerp.core.data.DataService;
 import cn.com.easyerp.core.data.DatabaseDataMap;
 import cn.com.easyerp.core.data.ViewDataMap;
-import cn.com.easyerp.framework.exception.ApplicationException;
 import cn.com.easyerp.core.widget.FieldModelBase;
 import cn.com.easyerp.framework.common.ApiActionResult;
 import cn.com.easyerp.framework.common.Common;
+import cn.com.easyerp.framework.exception.ApplicationException;
+import cn.com.easyerp.framework.httpclient.HttpClientUtil;
 
 @Service
 public class ApiService {

@@ -20,6 +20,7 @@ import cn.com.easyerp.core.dao.SystemDao;
 import cn.com.easyerp.core.data.SystemParameter;
 import cn.com.easyerp.core.widget.message.MessageTemplateModel;
 import cn.com.easyerp.framework.common.Common;
+import cn.com.easyerp.framework.httpclient.HttpClientUtil;
 
 @Service("serviceNumber")
 public class EnterpriseNumberImpl implements WeChatService {
