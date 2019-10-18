@@ -108,11 +108,8 @@ public class ReportServiceDefault<T> implements ReportService<T> {
         }
     }
 
-    @Override
-    public ActionResult print(final ReportModel<T> report, String where, final AuthDetails user,
-            final ReportFormRequestModel request) throws IOException {
+    private String getSQL(final ReportModel<T> report, String where, Map<String, String> sqlMap) {
         final String filter = "${filter}";
-        Map<String, String> sqlMap = new HashMap<String, String>();
         String SQL = null;
         switch (report.getReport_disp_type()) {
         case 0: {
@@ -144,6 +141,15 @@ public class ReportServiceDefault<T> implements ReportService<T> {
             throw new ApplicationException("not supported");
         }
         }
+        return SQL;
+    }
+
+    @Override
+    public ActionResult print(final ReportModel<T> report, String where, final AuthDetails user,
+            final ReportFormRequestModel request) throws IOException {
+        Map<String, String> sqlMap = new HashMap<String, String>();
+        String SQL = getSQL(report, where, sqlMap);
+
         final TableDescribe table = this.dataService.getTableDesc(report.getTable_id());
         ApiDescribe api = report.getPre_api();
         String uuid = null;
@@ -161,477 +167,486 @@ public class ReportServiceDefault<T> implements ReportService<T> {
         if (!template.exists()) {
             throw new ApplicationException("UploadFile_NotFound: \"" + template.getAbsolutePath() + "\"");
         }
-        final FileInputStream templateStream = new FileInputStream(template);
         String filename = report.getFile_name().substring(0, report.getFile_name().length() - 4);
-        String tempName = "";
-        File file = null;
-        OutputStream os = null;
-        Label_0874: {
-            switch (report.getReport_disp_type()) {
-            case 0:
-            case 1: {
-                file = this.storageService.tmp(filename, ".xls");
-                tempName = file.getName();
-                os = new FileOutputStream(file);
-                this.execlWrite(sqlMap, resultList, where, templateStream, os, request.getFilterParam());
-                break;
-            }
-            case 2: {
-                final ReportGeneratorCache cache = new ReportGeneratorCache();
-                cache.sqlMap = sqlMap;
-                cache.where = where;
-                cache.config = (ReportPageConfigModel) Common.fromJson(report.getSql2(),
-                        (TypeReference) ReportServiceDefault.reportConfigJsonRef);
-                switch (report.getReport_file_type()) {
+
+        try (final FileInputStream templateStream = new FileInputStream(template);) {
+            String tempName = "";
+            File file = null;
+            OutputStream os = null;
+            Label_0874: {
+                switch (report.getReport_disp_type()) {
                 case 0:
                 case 1: {
                     file = this.storageService.tmp(filename, ".xls");
+                    tempName = file.getName();
                     os = new FileOutputStream(file);
-                    this.generateExcel(cache, resultList, templateStream, os, request.getFilterParam());
-                    break Label_0874;
+                    this.execlWrite(sqlMap, resultList, where, templateStream, os, request.getFilterParam());
+                    break;
                 }
                 case 2: {
-                    if (resultList.size() == 1) {
-                        file = this.storageService.tmp(filename, ".doc");
+                    final ReportGeneratorCache cache = new ReportGeneratorCache();
+                    cache.sqlMap = sqlMap;
+                    cache.where = where;
+                    cache.config = (ReportPageConfigModel) Common.fromJson(report.getSql2(),
+                            (TypeReference) ReportServiceDefault.reportConfigJsonRef);
+                    switch (report.getReport_file_type()) {
+                    case 0:
+                    case 1: {
+                        file = this.storageService.tmp(filename, ".xls");
                         os = new FileOutputStream(file);
-                        this.wordTemplateService.process(cache, resultList.get(0), templateStream, os);
+                        this.generateExcel(cache, resultList, templateStream, os, request.getFilterParam());
                         break Label_0874;
                     }
-                    file = this.storageService.tmp(filename, ".zip");
-                    os = new ZipOutputStream(new FileOutputStream(file));
-                    this.wordTemplateService.process(cache, resultList, template, (ZipOutputStream) os);
-                    break Label_0874;
+                    case 2: {
+                        if (resultList.size() == 1) {
+                            file = this.storageService.tmp(filename, ".doc");
+                            os = new FileOutputStream(file);
+                            this.wordTemplateService.process(cache, resultList.get(0), templateStream, os);
+                            break Label_0874;
+                        }
+                        file = this.storageService.tmp(filename, ".zip");
+                        os = new ZipOutputStream(new FileOutputStream(file));
+                        this.wordTemplateService.process(cache, resultList, template, (ZipOutputStream) os);
+                        break Label_0874;
+                    }
+                    default: {
+                        throw new ApplicationException("unsupported report file type: " + report.getReport_file_type());
+                    }
+                    }
                 }
                 default: {
-                    throw new ApplicationException("unsupported report file type: " + report.getReport_file_type());
+                    throw new ApplicationException("unkonwn report display type");
                 }
                 }
+            }
+            os.flush();
+            os.close();
+            FileInputStream fileInputStream = null;
+            int fileSize = 0;
+            switch (report.getReport_file_type()) {
+            case 0: {
+                fileInputStream = new FileInputStream(file.getAbsolutePath());
+                fileSize = fileInputStream.available();
+                filename = this.makeReportFileName(report.getFile_name(), "xls");
+                break;
+            }
+            case 1: {
+                final File pdf = this.storageService.convertXlsToPdf(file);
+                fileInputStream = new FileInputStream(pdf);
+                fileSize = fileInputStream.available();
+                filename = this.makeReportFileName(report.getFile_name(), "pdf");
+                break;
+            }
+            case 2: {
+                fileInputStream = new FileInputStream(file.getAbsolutePath());
+                fileSize = fileInputStream.available();
+                filename = this.makeReportFileName(report.getFile_name(), (resultList.size() == 1) ? "doc" : "zip");
+                break;
             }
             default: {
-                throw new ApplicationException("unkonwn report display type");
+                throw new ApplicationException("not supported");
             }
             }
-        }
-        os.flush();
-        os.close();
-        FileInputStream fileInputStream = null;
-        int fileSize = 0;
-        switch (report.getReport_file_type()) {
-        case 0: {
-            fileInputStream = new FileInputStream(file.getAbsolutePath());
-            fileSize = fileInputStream.available();
-            filename = this.makeReportFileName(report.getFile_name(), "xls");
-            break;
-        }
-        case 1: {
-            final File pdf = this.storageService.convertXlsToPdf(file);
-            fileInputStream = new FileInputStream(pdf);
-            fileSize = fileInputStream.available();
-            filename = this.makeReportFileName(report.getFile_name(), "pdf");
-            break;
-        }
-        case 2: {
-            fileInputStream = new FileInputStream(file.getAbsolutePath());
-            fileSize = fileInputStream.available();
-            filename = this.makeReportFileName(report.getFile_name(), (resultList.size() == 1) ? "doc" : "zip");
-            break;
-        }
-        default: {
-            throw new ApplicationException("not supported");
-        }
-        }
-        final ActionResult result = this.storageService.createDownload(filename,
-                this.storageService.getTmpFilePath(tempName), (InputStream) fileInputStream, fileSize);
-        api = report.getApi();
-        if (api != null) {
-            if (uuid == null) {
-                uuid = this.apiService.genUuid();
-                data = this.chartDao.selectEffectedRecord(table, where);
+
+            final ActionResult result = this.storageService.createDownload(filename,
+                    this.storageService.getTmpFilePath(tempName), (InputStream) fileInputStream, fileSize);
+            api = report.getApi();
+            if (api != null) {
+                if (uuid == null) {
+                    uuid = this.apiService.genUuid();
+                    data = this.chartDao.selectEffectedRecord(table, where);
+                }
+                this.callApi(api, data, uuid);
             }
-            this.callApi(api, data, uuid);
+            return result;
         }
-        return result;
     }
 
     private void execlWrite(final Map<String, String> sqlMap, final List<Map<String, Object>> resultList,
             final String where, final FileInputStream fileInput, final OutputStream os,
             final Map<String, Object> filterParam) throws IOException {
-        final HSSFWorkbook wb = new HSSFWorkbook((InputStream) fileInput);
-        final FormulaEvaluator evaluator = (FormulaEvaluator) wb.getCreationHelper().createFormulaEvaluator();
-        final HSSFSheet sheet = wb.getSheetAt(0);
-        final int numMergedRegions = sheet.getNumMergedRegions();
-        final CreationHelper createHelper = (CreationHelper) wb.getCreationHelper();
-        final short cellDateFormat = createHelper.createDataFormat().getFormat("yyyy-MM-dd");
-        int flg = 0;
-        final List<Integer> pageStartRow = new ArrayList<Integer>();
-        final List<Integer> pageEndRow = new ArrayList<Integer>();
-        final String pageArea = wb.getPrintArea(0);
-        if (pageArea == null) {
-            throw new ApplicationException("no print area defined in excel.");
-        }
-        final String pageRows = pageArea.substring(pageArea.lastIndexOf("$") + 1);
-        final List<Integer> pageSize = new ArrayList<Integer>();
-        final List<Integer> pageSizeBreak = new ArrayList<Integer>();
-        final int rownum = Integer.parseInt(pageRows);
-        int insertRow = 0;
-        int rowst = 0;
-        int rowen = 0;
-        if (!"".equals(pageArea) && null != pageArea) {
-            for (int k = 0; k < resultList.size() - 1; ++k) {
-                final int rownumstar = rownum * (k + 1);
-                sheet.shiftRows(rownumstar, sheet.getLastRowNum() + rownum, rownum, true, false);
-                for (int i = 0; i < rownum; ++i) {
-                    final HSSFRow row = sheet.getRow(i);
-                    if (null != row) {
-                        final int cols = row.getLastCellNum();
-                        final HSSFRow newRow = sheet.createRow(rownumstar + i);
-                        newRow.setHeight(row.getHeight());
-                        for (int j = 0; j < cols; ++j) {
-                            final HSSFCell cell = row.getCell(j);
-                            final HSSFCell newCell = newRow.createCell(j);
-                            if (null != cell) {
-                                newCell.setCellType(cell.getCellType());
-                                newCell.setCellStyle(cell.getCellStyle());
-                                if (CellType.STRING.equals(cell.getCellType())) {
-                                    newCell.setCellValue(cell.getStringCellValue());
-                                } else if (CellType.FORMULA.equals(cell.getCellType())) {
-                                    final String cellF = cell.getCellFormula();
-                                    if (cellF.startsWith("SUM")) {
-                                        final Matcher matcher = RegexCfg.CELL_RANGE_PATTERN.matcher(cellF);
-                                        final StringBuffer sb = new StringBuffer();
-                                        while (matcher.find()) {
-                                            final int idx = Integer.valueOf(matcher.group(1));
-                                            matcher.appendReplacement(sb, String.valueOf(idx + rownumstar));
+
+        try (final HSSFWorkbook wb = new HSSFWorkbook((InputStream) fileInput);) {
+            final FormulaEvaluator evaluator = (FormulaEvaluator) wb.getCreationHelper().createFormulaEvaluator();
+            final HSSFSheet sheet = wb.getSheetAt(0);
+            final int numMergedRegions = sheet.getNumMergedRegions();
+            final CreationHelper createHelper = (CreationHelper) wb.getCreationHelper();
+            final short cellDateFormat = createHelper.createDataFormat().getFormat("yyyy-MM-dd");
+            int flg = 0;
+            final List<Integer> pageStartRow = new ArrayList<Integer>();
+            final List<Integer> pageEndRow = new ArrayList<Integer>();
+            final String pageArea = wb.getPrintArea(0);
+            if (pageArea == null) {
+                throw new ApplicationException("no print area defined in excel.");
+            }
+            final String pageRows = pageArea.substring(pageArea.lastIndexOf("$") + 1);
+            final List<Integer> pageSize = new ArrayList<Integer>();
+            final List<Integer> pageSizeBreak = new ArrayList<Integer>();
+            final int rownum = Integer.parseInt(pageRows);
+            int insertRow = 0;
+            int rowst = 0;
+            int rowen = 0;
+            if (!"".equals(pageArea) && null != pageArea) {
+                for (int k = 0; k < resultList.size() - 1; ++k) {
+                    final int rownumstar = rownum * (k + 1);
+                    sheet.shiftRows(rownumstar, sheet.getLastRowNum() + rownum, rownum, true, false);
+                    for (int i = 0; i < rownum; ++i) {
+                        final HSSFRow row = sheet.getRow(i);
+                        if (null != row) {
+                            final int cols = row.getLastCellNum();
+                            final HSSFRow newRow = sheet.createRow(rownumstar + i);
+                            newRow.setHeight(row.getHeight());
+                            for (int j = 0; j < cols; ++j) {
+                                final HSSFCell cell = row.getCell(j);
+                                final HSSFCell newCell = newRow.createCell(j);
+                                if (null != cell) {
+                                    newCell.setCellType(cell.getCellType());
+                                    newCell.setCellStyle(cell.getCellStyle());
+                                    if (CellType.STRING.equals(cell.getCellType())) {
+                                        newCell.setCellValue(cell.getStringCellValue());
+                                    } else if (CellType.FORMULA.equals(cell.getCellType())) {
+                                        final String cellF = cell.getCellFormula();
+                                        if (cellF.startsWith("SUM")) {
+                                            final Matcher matcher = RegexCfg.CELL_RANGE_PATTERN.matcher(cellF);
+                                            final StringBuffer sb = new StringBuffer();
+                                            while (matcher.find()) {
+                                                final int idx = Integer.valueOf(matcher.group(1));
+                                                matcher.appendReplacement(sb, String.valueOf(idx + rownumstar));
+                                            }
+                                            matcher.appendTail(sb);
+                                            newCell.setCellFormula(sb.toString());
+                                        } else {
+                                            newCell.setCellFormula(cell.getCellFormula());
                                         }
-                                        matcher.appendTail(sb);
-                                        newCell.setCellFormula(sb.toString());
-                                    } else {
-                                        newCell.setCellFormula(cell.getCellFormula());
                                     }
                                 }
                             }
                         }
                     }
+                    for (int l = 0; l < numMergedRegions; ++l) {
+                        final CellRangeAddress cra = sheet.getMergedRegion(l);
+                        final CellRangeAddress newCellRangeAddress = new CellRangeAddress(
+                                cra.getFirstRow() + rownumstar, cra.getLastRow() + rownumstar, cra.getFirstColumn(),
+                                cra.getLastColumn());
+                        sheet.addMergedRegion(newCellRangeAddress);
+                    }
                 }
-                for (int l = 0; l < numMergedRegions; ++l) {
-                    final CellRangeAddress cra = sheet.getMergedRegion(l);
-                    final CellRangeAddress newCellRangeAddress = new CellRangeAddress(cra.getFirstRow() + rownumstar,
-                            cra.getLastRow() + rownumstar, cra.getFirstColumn(), cra.getLastColumn());
-                    sheet.addMergedRegion(newCellRangeAddress);
+            }
+            for (final Map<String, Object> map : resultList) {
+                if (Common.isBlank(where)) {
+                    map.put("filter", "1 = 1");
+                } else {
+                    map.put("filter", where);
                 }
-            }
-        }
-        for (final Map<String, Object> map : resultList) {
-            if (Common.isBlank(where)) {
-                map.put("filter", "1 = 1");
-            } else {
-                map.put("filter", where);
-            }
-            if (filterParam != null) {
-                map.putAll(filterParam);
-            }
-            rowst = 0;
-            rowen = 0;
-            final int start = flg;
-            pageStartRow.add(start);
-            final int end = rownum + start;
-            int rowPage = 0;
-            for (int n = start; n <= end; ++n) {
-                final HSSFRow row = sheet.getRow(n);
-                if (null != row) {
-                    for (int cols = row.getLastCellNum(), m = 0; m < cols; ++m) {
-                        final HSSFCell cell = row.getCell(m);
-                        if (null != cell && CellType.STRING.equals(cell.getCellType())) {
-                            if ("rowstart".equals(cell.getRichStringCellValue().toString())) {
-                                rowst = n;
-                                break;
+                if (filterParam != null) {
+                    map.putAll(filterParam);
+                }
+                rowst = 0;
+                rowen = 0;
+                final int start = flg;
+                pageStartRow.add(start);
+                final int end = rownum + start;
+                int rowPage = 0;
+                for (int n = start; n <= end; ++n) {
+                    final HSSFRow row = sheet.getRow(n);
+                    if (null != row) {
+                        for (int cols = row.getLastCellNum(), m = 0; m < cols; ++m) {
+                            final HSSFCell cell = row.getCell(m);
+                            if (null != cell && CellType.STRING.equals(cell.getCellType())) {
+                                if ("rowstart".equals(cell.getRichStringCellValue().toString())) {
+                                    rowst = n;
+                                    break;
+                                }
+                                if ("rowend".equals(cell.getRichStringCellValue().toString())) {
+                                    rowen = n;
+                                    break;
+                                }
                             }
-                            if ("rowend".equals(cell.getRichStringCellValue().toString())) {
-                                rowen = n;
+                        }
+                    }
+                    if (rowst != 0 && rowen != 0) {
+                        break;
+                    }
+                }
+                int detailRowNum = 1;
+                if (rowen != 0) {
+                    detailRowNum = rowen - rowst + 1;
+                }
+                for (int i2 = start; i2 <= end; ++i2) {
+                    HSSFRow row = sheet.getRow(i2);
+                    if (null != row) {
+                        for (int cols = row.getLastCellNum(), j2 = 0; j2 < cols; ++j2) {
+                            HSSFCell cell = row.getCell(j2);
+                            if (null != cell && CellType.STRING.equals(cell.getCellType())) {
+                                final String cellValue = cell.getStringCellValue();
+                                if (cellValue.contains("${") && cellValue.endsWith("}") && cellValue.contains(".")) {
+                                    String subTable = cellValue.substring(cellValue.lastIndexOf("{") + 1,
+                                            cellValue.lastIndexOf("."));
+                                    if (subTable.indexOf("<qr") == 0) {
+                                        subTable = subTable.substring(subTable.indexOf(62) + 1);
+                                    }
+                                    String subSql = sqlMap.get(subTable);
+                                    subSql = subSql.replaceAll("\\$\\{filter}", (String) map.get("filter"));
+                                    final List<Map<String, Object>> subresultList = this.dataService
+                                            .dynamicQueryList(subSql, map);
+                                    pageSize.add(subresultList.size());
+                                    if (null != subresultList && 0 != subresultList.size()) {
+                                        if (rowst + detailRowNum <= sheet.getLastRowNum()) {
+                                            sheet.shiftRows(rowst + detailRowNum, sheet.getLastRowNum(),
+                                                    (subresultList.size() - 1) * detailRowNum, true, false);
+                                        }
+                                        insertRow = (subresultList.size() - 1) * detailRowNum;
+                                        for (int k2 = 1; k2 < subresultList.size(); ++k2) {
+                                            for (int detailrow = 0; detailrow < detailRowNum; ++detailrow) {
+                                                row = sheet.getRow(rowst + detailrow);
+                                                cols = row.getLastCellNum();
+                                                final HSSFRow newRow2 = sheet
+                                                        .createRow(rowst + k2 * detailRowNum + detailrow);
+                                                for (int m2 = 0; m2 < cols; ++m2) {
+                                                    cell = row.getCell(m2);
+                                                    if (cell != null) {
+                                                        final HSSFCell newCell2 = newRow2.createCell(m2);
+                                                        newCell2.setCellType(cell.getCellType());
+                                                        newCell2.setCellStyle(cell.getCellStyle());
+                                                        if (CellType.STRING.equals(cell.getCellType())) {
+                                                            newCell2.setCellValue(cell.getStringCellValue());
+                                                        } else if (CellType.FORMULA.equals(cell.getCellType())) {
+                                                            newCell2.setCellFormula(cell.getCellFormula());
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            final int detailst = rowst - start;
+                                            final int detailen = detailst + detailRowNum;
+                                            for (int idx2 = 0; idx2 < numMergedRegions; ++idx2) {
+                                                final CellRangeAddress cra2 = sheet.getMergedRegion(idx2);
+                                                if (cra2.getFirstRow() >= detailst && cra2.getFirstRow() <= detailen) {
+                                                    final CellRangeAddress newCellRangeAddress2 = new CellRangeAddress(
+                                                            cra2.getFirstRow() + start + k2 * detailRowNum,
+                                                            cra2.getLastRow() + start + k2 * detailRowNum,
+                                                            cra2.getFirstColumn(), cra2.getLastColumn());
+                                                    sheet.addMergedRegion(newCellRangeAddress2);
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        insertRow = 0;
+                                        for (int nucols = row.getLastCellNum(), z = 0; z < nucols; ++z) {
+                                            cell = row.getCell(z);
+                                            cell.setCellValue("");
+                                        }
+                                    }
+                                    rowPage = 1;
+                                }
+                            }
+                            if (rowPage == 1) {
                                 break;
                             }
                         }
                     }
+                    if (rowPage == 1) {
+                        break;
+                    }
                 }
-                if (rowst != 0 && rowen != 0) {
-                    break;
+                if (rowPage == 0) {
+                    pageSize.add(0);
+                }
+                flg = end + insertRow;
+                pageEndRow.add(flg - 1);
+            }
+            int subindex = 0;
+            int first = 0;
+            final Set<Short> hiddenColumn = new HashSet<Short>();
+            for (int y = 0; y < resultList.size(); ++y) {
+                final Map<String, ReportGroupModel> groupMap = new HashMap<String, ReportGroupModel>();
+                final Map<String, Object> map2 = resultList.get(y);
+                if (filterParam != null) {
+                    map2.putAll(filterParam);
+                }
+                final int start = pageStartRow.get(y);
+                for (int end = pageEndRow.get(y), i3 = start; i3 <= end; ++i3) {
+                    final HSSFRow row = sheet.getRow(i3);
+                    if (null != row) {
+                        for (int cols = row.getLastCellNum(), j3 = 0; j3 < cols; ++j3) {
+                            final HSSFCell cell = row.getCell(j3);
+                            if (null != cell) {
+                                if (CellType.STRING.equals(cell.getCellType())) {
+                                    if ("rowstart".equals(cell.getRichStringCellValue().toString())) {
+                                        if (first < 1) {
+                                            subindex = 0;
+                                            ++first;
+                                        } else {
+                                            ++subindex;
+                                        }
+                                    }
+                                    final String cellValue2 = cell.getStringCellValue();
+                                    if (cellValue2.startsWith("${") && cellValue2.endsWith("}")
+                                            && !cellValue2.contains(".")) {
+                                        String hostValue = cellValue2.substring(cellValue2.lastIndexOf("{") + 1,
+                                                cellValue2.lastIndexOf("}"));
+                                        if (hostValue.contains("<image>")) {
+                                            hostValue = hostValue.substring(hostValue.lastIndexOf("<image>") + 7);
+                                            final Object valObject = map2.get(hostValue);
+                                            final String file = this.storageService
+                                                    .absolutePath(Common.string(valObject));
+                                            final File fileName = new File(file);
+                                            if (fileName.exists() && fileName.isFile()) {
+                                                String picturetype = "";
+                                                if (file.contains(".")) {
+                                                    picturetype = file.substring(file.lastIndexOf(".") + 1);
+                                                }
+                                                int picture_type = 0;
+                                                if (picturetype.toLowerCase().equals("jpg")) {
+                                                    picture_type = 5;
+                                                } else if (picturetype.toLowerCase().equals("emf")) {
+                                                    picture_type = 2;
+                                                } else if (picturetype.toLowerCase().equals("dib")) {
+                                                    picture_type = 7;
+                                                } else if (picturetype.toLowerCase().equals("pict")) {
+                                                    picture_type = 4;
+                                                } else if (picturetype.toLowerCase().equals("png")) {
+                                                    picture_type = 6;
+                                                } else if (picturetype.toLowerCase().equals("wmf")) {
+                                                    picture_type = 3;
+                                                }
+                                                final InputStream in = new FileInputStream(fileName);
+                                                final byte[] bytes = IOUtils.toByteArray(in);
+                                                final int pictureIdx = wb.addPicture(bytes, picture_type);
+                                                final CreationHelper helper = (CreationHelper) wb.getCreationHelper();
+                                                final Drawing drawing = (Drawing) sheet.createDrawingPatriarch();
+                                                final ClientAnchor anchor = helper.createClientAnchor();
+                                                anchor.setRow1(i3);
+                                                anchor.setCol1(j3);
+                                                final Picture pict = drawing.createPicture(anchor, pictureIdx);
+                                                pict.resize();
+                                            }
+                                            cell.setCellValue("");
+                                        } else if (hostValue.indexOf("<qr") == 0) {
+                                            final int pos = hostValue.indexOf(46);
+                                            String fieldName;
+                                            if (pos > 0) {
+                                                fieldName = hostValue.substring(pos + 1);
+                                            } else {
+                                                fieldName = hostValue.substring(hostValue.indexOf(">") + 1);
+                                            }
+                                            this.setQrImg(sheet, i3, j3, cell, hostValue,
+                                                    map2.get(fieldName).toString());
+                                        } else {
+                                            this.setCellData((Cell) cell, map2.get(hostValue), cellDateFormat);
+                                        }
+                                    } else if (cellValue2.contains("${") && cellValue2.endsWith("}")
+                                            && cellValue2.contains(".")) {
+                                        final Pattern pattern = Pattern
+                                                .compile("\\$\\{biz\\.([^\\.]*)\\.([^\\}.]*)\\}");
+                                        final Matcher matcher2 = pattern.matcher(cellValue2);
+                                        if (matcher2.find()) {
+                                            final String tableName = matcher2.group(1);
+                                            final String columnName = matcher2.group(2);
+                                            cell.setCellValue(
+                                                    this.dataService.getBizParam(tableName, columnName).toString());
+                                        } else {
+                                            final ReportGroupModel cellModel = new ReportGroupModel();
+                                            final String subValue = cellValue2.substring(
+                                                    cellValue2.lastIndexOf(".") + 1, cellValue2.lastIndexOf("}"));
+                                            String subTable2 = cellValue2.substring(cellValue2.lastIndexOf("{") + 1,
+                                                    cellValue2.lastIndexOf("."));
+                                            String qrText = null;
+                                            if (subTable2.indexOf("<qr") == 0) {
+                                                qrText = subTable2;
+                                                subTable2 = subTable2.substring(subTable2.indexOf(62) + 1);
+                                            }
+                                            String subSql2 = sqlMap.get(subTable2);
+                                            subSql2 = subSql2.replaceAll("\\$\\{filter}", (String) map2.get("filter"));
+                                            final List<Map<String, Object>> subresultList = this.dataService
+                                                    .dynamicQueryList(subSql2, map2);
+                                            if (null != subresultList && 0 != subresultList.size()) {
+                                                final Object valObject2 = subresultList.get(subindex).get(subValue);
+                                                if (!subresultList.get(subindex).containsKey(subValue)) {
+                                                    hiddenColumn.add((short) j3);
+                                                }
+                                                if (qrText == null || valObject2 == null) {
+                                                    this.setCellData((Cell) cell, valObject2, cellDateFormat);
+                                                } else {
+                                                    this.setQrImg(sheet, i3, j3, cell, qrText, valObject2.toString());
+                                                }
+                                                if (cellValue2.contains("<group>")) {
+                                                    final String key = subValue + valObject2;
+                                                    if (groupMap.containsKey(key)) {
+                                                        groupMap.get(key).setEndrow(i3);
+                                                        cell.setCellValue("");
+                                                    } else {
+                                                        cellModel.setCol(j3);
+                                                        cellModel.setStartrow(i3);
+                                                        cellModel.setEndrow(i3);
+                                                        groupMap.put(key, cellModel);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else if (CellType.FORMULA.equals(cell.getCellType())) {
+                                    evaluator.evaluateFormulaCell((Cell) cell);
+                                }
+                            }
+                        }
+                    }
+                }
+                subindex = 0;
+                first = 0;
+                for (final String key2 : groupMap.keySet()) {
+                    final ReportGroupModel groupVal = groupMap.get(key2);
+                    sheet.addMergedRegion(new CellRangeAddress(groupVal.getStartrow(), groupVal.getEndrow(),
+                            groupVal.getCol(), groupVal.getCol()));
                 }
             }
             int detailRowNum = 1;
             if (rowen != 0) {
                 detailRowNum = rowen - rowst + 1;
             }
-            for (int i2 = start; i2 <= end; ++i2) {
-                HSSFRow row = sheet.getRow(i2);
-                if (null != row) {
-                    for (int cols = row.getLastCellNum(), j2 = 0; j2 < cols; ++j2) {
-                        HSSFCell cell = row.getCell(j2);
-                        if (null != cell && CellType.STRING.equals(cell.getCellType())) {
-                            final String cellValue = cell.getStringCellValue();
-                            if (cellValue.contains("${") && cellValue.endsWith("}") && cellValue.contains(".")) {
-                                String subTable = cellValue.substring(cellValue.lastIndexOf("{") + 1,
-                                        cellValue.lastIndexOf("."));
-                                if (subTable.indexOf("<qr") == 0) {
-                                    subTable = subTable.substring(subTable.indexOf(62) + 1);
-                                }
-                                String subSql = sqlMap.get(subTable);
-                                subSql = subSql.replaceAll("\\$\\{filter}", (String) map.get("filter"));
-                                final List<Map<String, Object>> subresultList = this.dataService
-                                        .dynamicQueryList(subSql, map);
-                                pageSize.add(subresultList.size());
-                                if (null != subresultList && 0 != subresultList.size()) {
-                                    if (rowst + detailRowNum <= sheet.getLastRowNum()) {
-                                        sheet.shiftRows(rowst + detailRowNum, sheet.getLastRowNum(),
-                                                (subresultList.size() - 1) * detailRowNum, true, false);
-                                    }
-                                    insertRow = (subresultList.size() - 1) * detailRowNum;
-                                    for (int k2 = 1; k2 < subresultList.size(); ++k2) {
-                                        for (int detailrow = 0; detailrow < detailRowNum; ++detailrow) {
-                                            row = sheet.getRow(rowst + detailrow);
-                                            cols = row.getLastCellNum();
-                                            final HSSFRow newRow2 = sheet
-                                                    .createRow(rowst + k2 * detailRowNum + detailrow);
-                                            for (int m2 = 0; m2 < cols; ++m2) {
-                                                cell = row.getCell(m2);
-                                                if (cell != null) {
-                                                    final HSSFCell newCell2 = newRow2.createCell(m2);
-                                                    newCell2.setCellType(cell.getCellType());
-                                                    newCell2.setCellStyle(cell.getCellStyle());
-                                                    if (CellType.STRING.equals(cell.getCellType())) {
-                                                        newCell2.setCellValue(cell.getStringCellValue());
-                                                    } else if (CellType.FORMULA.equals(cell.getCellType())) {
-                                                        newCell2.setCellFormula(cell.getCellFormula());
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        final int detailst = rowst - start;
-                                        final int detailen = detailst + detailRowNum;
-                                        for (int idx2 = 0; idx2 < numMergedRegions; ++idx2) {
-                                            final CellRangeAddress cra2 = sheet.getMergedRegion(idx2);
-                                            if (cra2.getFirstRow() >= detailst && cra2.getFirstRow() <= detailen) {
-                                                final CellRangeAddress newCellRangeAddress2 = new CellRangeAddress(
-                                                        cra2.getFirstRow() + start + k2 * detailRowNum,
-                                                        cra2.getLastRow() + start + k2 * detailRowNum,
-                                                        cra2.getFirstColumn(), cra2.getLastColumn());
-                                                sheet.addMergedRegion(newCellRangeAddress2);
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    insertRow = 0;
-                                    for (int nucols = row.getLastCellNum(), z = 0; z < nucols; ++z) {
-                                        cell = row.getCell(z);
-                                        cell.setCellValue("");
-                                    }
-                                }
-                                rowPage = 1;
-                            }
-                        }
-                        if (rowPage == 1) {
-                            break;
-                        }
+            int insrow = 0;
+            int psize = 1;
+            for (final int pz : pageSize) {
+                if (psize == 1) {
+                    if (pz > 1) {
+                        insrow = (pz - 1) * detailRowNum + rownum - 1;
+                        pageSizeBreak.add(insrow);
+                    } else {
+                        insrow = rownum - 1;
+                        pageSizeBreak.add(insrow);
                     }
-                }
-                if (rowPage == 1) {
-                    break;
-                }
-            }
-            if (rowPage == 0) {
-                pageSize.add(0);
-            }
-            flg = end + insertRow;
-            pageEndRow.add(flg - 1);
-        }
-        int subindex = 0;
-        int first = 0;
-        final Set<Short> hiddenColumn = new HashSet<Short>();
-        for (int y = 0; y < resultList.size(); ++y) {
-            final Map<String, ReportGroupModel> groupMap = new HashMap<String, ReportGroupModel>();
-            final Map<String, Object> map2 = resultList.get(y);
-            if (filterParam != null) {
-                map2.putAll(filterParam);
-            }
-            final int start = pageStartRow.get(y);
-            for (int end = pageEndRow.get(y), i3 = start; i3 <= end; ++i3) {
-                final HSSFRow row = sheet.getRow(i3);
-                if (null != row) {
-                    for (int cols = row.getLastCellNum(), j3 = 0; j3 < cols; ++j3) {
-                        final HSSFCell cell = row.getCell(j3);
-                        if (null != cell) {
-                            if (CellType.STRING.equals(cell.getCellType())) {
-                                if ("rowstart".equals(cell.getRichStringCellValue().toString())) {
-                                    if (first < 1) {
-                                        subindex = 0;
-                                        ++first;
-                                    } else {
-                                        ++subindex;
-                                    }
-                                }
-                                final String cellValue2 = cell.getStringCellValue();
-                                if (cellValue2.startsWith("${") && cellValue2.endsWith("}")
-                                        && !cellValue2.contains(".")) {
-                                    String hostValue = cellValue2.substring(cellValue2.lastIndexOf("{") + 1,
-                                            cellValue2.lastIndexOf("}"));
-                                    if (hostValue.contains("<image>")) {
-                                        hostValue = hostValue.substring(hostValue.lastIndexOf("<image>") + 7);
-                                        final Object valObject = map2.get(hostValue);
-                                        final String file = this.storageService.absolutePath(Common.string(valObject));
-                                        final File fileName = new File(file);
-                                        if (fileName.exists() && fileName.isFile()) {
-                                            String picturetype = "";
-                                            if (file.contains(".")) {
-                                                picturetype = file.substring(file.lastIndexOf(".") + 1);
-                                            }
-                                            int picture_type = 0;
-                                            if (picturetype.toLowerCase().equals("jpg")) {
-                                                picture_type = 5;
-                                            } else if (picturetype.toLowerCase().equals("emf")) {
-                                                picture_type = 2;
-                                            } else if (picturetype.toLowerCase().equals("dib")) {
-                                                picture_type = 7;
-                                            } else if (picturetype.toLowerCase().equals("pict")) {
-                                                picture_type = 4;
-                                            } else if (picturetype.toLowerCase().equals("png")) {
-                                                picture_type = 6;
-                                            } else if (picturetype.toLowerCase().equals("wmf")) {
-                                                picture_type = 3;
-                                            }
-                                            final InputStream in = new FileInputStream(fileName);
-                                            final byte[] bytes = IOUtils.toByteArray(in);
-                                            final int pictureIdx = wb.addPicture(bytes, picture_type);
-                                            final CreationHelper helper = (CreationHelper) wb.getCreationHelper();
-                                            final Drawing drawing = (Drawing) sheet.createDrawingPatriarch();
-                                            final ClientAnchor anchor = helper.createClientAnchor();
-                                            anchor.setRow1(i3);
-                                            anchor.setCol1(j3);
-                                            final Picture pict = drawing.createPicture(anchor, pictureIdx);
-                                            pict.resize();
-                                        }
-                                        cell.setCellValue("");
-                                    } else if (hostValue.indexOf("<qr") == 0) {
-                                        final int pos = hostValue.indexOf(46);
-                                        String fieldName;
-                                        if (pos > 0) {
-                                            fieldName = hostValue.substring(pos + 1);
-                                        } else {
-                                            fieldName = hostValue.substring(hostValue.indexOf(">") + 1);
-                                        }
-                                        this.setQrImg(sheet, i3, j3, cell, hostValue, map2.get(fieldName).toString());
-                                    } else {
-                                        this.setCellData((Cell) cell, map2.get(hostValue), cellDateFormat);
-                                    }
-                                } else if (cellValue2.contains("${") && cellValue2.endsWith("}")
-                                        && cellValue2.contains(".")) {
-                                    final Pattern pattern = Pattern.compile("\\$\\{biz\\.([^\\.]*)\\.([^\\}.]*)\\}");
-                                    final Matcher matcher2 = pattern.matcher(cellValue2);
-                                    if (matcher2.find()) {
-                                        final String tableName = matcher2.group(1);
-                                        final String columnName = matcher2.group(2);
-                                        cell.setCellValue(
-                                                this.dataService.getBizParam(tableName, columnName).toString());
-                                    } else {
-                                        final ReportGroupModel cellModel = new ReportGroupModel();
-                                        final String subValue = cellValue2.substring(cellValue2.lastIndexOf(".") + 1,
-                                                cellValue2.lastIndexOf("}"));
-                                        String subTable2 = cellValue2.substring(cellValue2.lastIndexOf("{") + 1,
-                                                cellValue2.lastIndexOf("."));
-                                        String qrText = null;
-                                        if (subTable2.indexOf("<qr") == 0) {
-                                            qrText = subTable2;
-                                            subTable2 = subTable2.substring(subTable2.indexOf(62) + 1);
-                                        }
-                                        String subSql2 = sqlMap.get(subTable2);
-                                        subSql2 = subSql2.replaceAll("\\$\\{filter}", (String) map2.get("filter"));
-                                        final List<Map<String, Object>> subresultList = this.dataService
-                                                .dynamicQueryList(subSql2, map2);
-                                        if (null != subresultList && 0 != subresultList.size()) {
-                                            final Object valObject2 = subresultList.get(subindex).get(subValue);
-                                            if (!subresultList.get(subindex).containsKey(subValue)) {
-                                                hiddenColumn.add((short) j3);
-                                            }
-                                            if (qrText == null || valObject2 == null) {
-                                                this.setCellData((Cell) cell, valObject2, cellDateFormat);
-                                            } else {
-                                                this.setQrImg(sheet, i3, j3, cell, qrText, valObject2.toString());
-                                            }
-                                            if (cellValue2.contains("<group>")) {
-                                                final String key = subValue + valObject2;
-                                                if (groupMap.containsKey(key)) {
-                                                    groupMap.get(key).setEndrow(i3);
-                                                    cell.setCellValue("");
-                                                } else {
-                                                    cellModel.setCol(j3);
-                                                    cellModel.setStartrow(i3);
-                                                    cellModel.setEndrow(i3);
-                                                    groupMap.put(key, cellModel);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            } else if (CellType.FORMULA.equals(cell.getCellType())) {
-                                evaluator.evaluateFormulaCell((Cell) cell);
-                            }
-                        }
-                    }
-                }
-            }
-            subindex = 0;
-            first = 0;
-            for (final String key2 : groupMap.keySet()) {
-                final ReportGroupModel groupVal = groupMap.get(key2);
-                sheet.addMergedRegion(new CellRangeAddress(groupVal.getStartrow(), groupVal.getEndrow(),
-                        groupVal.getCol(), groupVal.getCol()));
-            }
-        }
-        int detailRowNum = 1;
-        if (rowen != 0) {
-            detailRowNum = rowen - rowst + 1;
-        }
-        int insrow = 0;
-        int psize = 1;
-        for (final int pz : pageSize) {
-            if (psize == 1) {
-                if (pz > 1) {
-                    insrow = (pz - 1) * detailRowNum + rownum - 1;
+                    psize = 0;
+                } else if (pz > 1) {
+                    insrow = insrow + rownum + (pz - 1) * detailRowNum;
                     pageSizeBreak.add(insrow);
                 } else {
-                    insrow = rownum - 1;
+                    insrow += rownum;
                     pageSizeBreak.add(insrow);
                 }
-                psize = 0;
-            } else if (pz > 1) {
-                insrow = insrow + rownum + (pz - 1) * detailRowNum;
-                pageSizeBreak.add(insrow);
-            } else {
-                insrow += rownum;
-                pageSizeBreak.add(insrow);
             }
-        }
-        for (int i4 = 0; i4 < numMergedRegions; ++i4) {
-            final CellRangeAddress cra3 = sheet.getMergedRegion(i4);
-            final HSSFRow row = sheet.getRow(cra3.getFirstRow());
-            final HSSFCell cell = row.getCell(0);
-            if (null != cell && CellType.STRING.equals(cell.getCellType())
-                    && !"rowhead".equals(cell.getRichStringCellValue().toString())
-                    && hiddenColumn.contains((short) cra3.getFirstColumn())) {
-                for (int j4 = cra3.getFirstColumn() + 1; j4 <= cra3.getLastColumn(); ++j4) {
-                    hiddenColumn.add((short) j4);
+            for (int i4 = 0; i4 < numMergedRegions; ++i4) {
+                final CellRangeAddress cra3 = sheet.getMergedRegion(i4);
+                final HSSFRow row = sheet.getRow(cra3.getFirstRow());
+                final HSSFCell cell = row.getCell(0);
+                if (null != cell && CellType.STRING.equals(cell.getCellType())
+                        && !"rowhead".equals(cell.getRichStringCellValue().toString())
+                        && hiddenColumn.contains((short) cra3.getFirstColumn())) {
+                    for (int j4 = cra3.getFirstColumn() + 1; j4 <= cra3.getLastColumn(); ++j4) {
+                        hiddenColumn.add((short) j4);
+                    }
                 }
             }
+            hiddenColumn.add((short) 0);
+            for (final Short column : hiddenColumn) {
+                sheet.setColumnHidden((int) column, true);
+            }
+            final String lastrow = pageArea.substring(pageArea.lastIndexOf("!") + 1, pageArea.lastIndexOf("$") + 1)
+                    + String.valueOf(insrow + 1);
+            wb.setPrintArea(0, lastrow);
+            for (final int k2 : pageSizeBreak) {
+                sheet.setRowBreak(k2);
+            }
+            wb.write(os);
         }
-        hiddenColumn.add((short) 0);
-        for (final Short column : hiddenColumn) {
-            sheet.setColumnHidden((int) column, true);
-        }
-        final String lastrow = pageArea.substring(pageArea.lastIndexOf("!") + 1, pageArea.lastIndexOf("$") + 1)
-                + String.valueOf(insrow + 1);
-        wb.setPrintArea(0, lastrow);
-        for (final int k2 : pageSizeBreak) {
-            sheet.setRowBreak(k2);
-        }
-        wb.write(os);
     }
 
     private void setCellData(final Cell cell, final Object val, final short cellDateFormat) {
@@ -707,55 +722,57 @@ public class ReportServiceDefault<T> implements ReportService<T> {
 
     private void generateExcel(final ReportGeneratorCache cache, final List<Map<String, Object>> list,
             final InputStream is, final OutputStream os, final Map<String, Object> filterParam) throws IOException {
-        final Workbook wb = (Workbook) new HSSFWorkbook(is);
-        final Sheet sheet = wb.getSheetAt(0);
-        final CreationHelper createHelper = wb.getCreationHelper();
-        final short cellDateFormat = createHelper.createDataFormat().getFormat("yyyy-MM-dd");
-        final FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
-        cache.cellDateFormat = cellDateFormat;
-        cache.evaluator = evaluator;
-        cache.wb = wb;
-        cache.sheet = sheet;
-        final String pageArea = wb.getPrintArea(0);
-        if (pageArea == null) {
-            throw new ApplicationException("no print area defined in excel.");
-        }
-        final Matcher matcher = RegexCfg.PRINT_AREA_PATTERN.matcher(pageArea);
-        if (!matcher.find()) {
-            throw new ApplicationException("incorrect print area defined in excel.");
-        }
-        final int int1 = Integer.parseInt(matcher.group(2));
-        cache.templateRows = int1;
-        final int end = int1;
-        final int mergedRegions = sheet.getNumMergedRegions();
-        cache.ranges = new ArrayList<CellRangeAddress>(mergedRegions);
-        for (int i = 0; i < mergedRegions; ++i) {
-            final CellRangeAddress cra = sheet.getMergedRegion(i);
-            if (cra.getFirstRow() < end) {
-                cache.ranges.add(cra);
+
+        try (final Workbook wb = (Workbook) new HSSFWorkbook(is);) {
+            final Sheet sheet = wb.getSheetAt(0);
+            final CreationHelper createHelper = wb.getCreationHelper();
+            final short cellDateFormat = createHelper.createDataFormat().getFormat("yyyy-MM-dd");
+            final FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
+            cache.cellDateFormat = cellDateFormat;
+            cache.evaluator = evaluator;
+            cache.wb = wb;
+            cache.sheet = sheet;
+            final String pageArea = wb.getPrintArea(0);
+            if (pageArea == null) {
+                throw new ApplicationException("no print area defined in excel.");
             }
-        }
-        final List<PagePrintingInfo> setupPages = this.setupPages(cache, list, end, filterParam);
-        cache.ppis = setupPages;
-        final List<PagePrintingInfo> ppis = setupPages;
-        for (int j = 0; j < ppis.size(); ++j) {
-            final PagePrintingInfo ppi = ppis.get(j);
-            cache.currentPage = j;
-            this.fillPage(cache, ppi);
-        }
-        int totalRows = 0;
-        for (int k = 0; k < ppis.size(); ++k) {
-            final PagePrintingInfo ppi2 = ppis.get(k);
-            if (k > 0) {
-                sheet.setRowBreak(ppi2.pageStart - 1);
+            final Matcher matcher = RegexCfg.PRINT_AREA_PATTERN.matcher(pageArea);
+            if (!matcher.find()) {
+                throw new ApplicationException("incorrect print area defined in excel.");
             }
-            for (final int bp : ppi2.breaks) {
-                sheet.setRowBreak(bp - 1);
+            final int int1 = Integer.parseInt(matcher.group(2));
+            cache.templateRows = int1;
+            final int end = int1;
+            final int mergedRegions = sheet.getNumMergedRegions();
+            cache.ranges = new ArrayList<CellRangeAddress>(mergedRegions);
+            for (int i = 0; i < mergedRegions; ++i) {
+                final CellRangeAddress cra = sheet.getMergedRegion(i);
+                if (cra.getFirstRow() < end) {
+                    cache.ranges.add(cra);
+                }
             }
-            totalRows += ppi2.pageRows;
+            final List<PagePrintingInfo> setupPages = this.setupPages(cache, list, end, filterParam);
+            cache.ppis = setupPages;
+            final List<PagePrintingInfo> ppis = setupPages;
+            for (int j = 0; j < ppis.size(); ++j) {
+                final PagePrintingInfo ppi = ppis.get(j);
+                cache.currentPage = j;
+                this.fillPage(cache, ppi);
+            }
+            int totalRows = 0;
+            for (int k = 0; k < ppis.size(); ++k) {
+                final PagePrintingInfo ppi2 = ppis.get(k);
+                if (k > 0) {
+                    sheet.setRowBreak(ppi2.pageStart - 1);
+                }
+                for (final int bp : ppi2.breaks) {
+                    sheet.setRowBreak(bp - 1);
+                }
+                totalRows += ppi2.pageRows;
+            }
+            wb.setPrintArea(0, matcher.group(1) + totalRows);
+            wb.write(os);
         }
-        wb.setPrintArea(0, matcher.group(1) + totalRows);
-        wb.write(os);
     }
 
     private int insertHead(final ReportGeneratorCache cache, final PagePrintingInfo ppi, final int start,

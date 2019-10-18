@@ -138,48 +138,50 @@ public class CsvImportService extends BatchService<CsvImportParamModel> {
         final CsvImportParamModel param = (CsvImportParamModel) batch.getData();
         final String tableId = param.getTable();
         httpRequest.setAttribute("tableId", (Object) tableId);
-        Workbook workbook = null;
-        workbook = (Workbook) ("xls".equals(suffix) ? new HSSFWorkbook(is) : new XSSFWorkbook(is));
-        FormulaEvaluator formulaEvaluator = null;
-        formulaEvaluator = (FormulaEvaluator) ("xls".equals(suffix) ? new HSSFFormulaEvaluator((HSSFWorkbook) workbook)
-                : new XSSFFormulaEvaluator((XSSFWorkbook) workbook));
-        final List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-        int id = 0;
-        final String tmpId = param.getTmpId();
-        Sheet sheet = null;
-        final int start = 0;
-        int space = 0;
-        String value = "";
-        if (workbook.getNumberOfSheets() != 0) {
-            sheet = workbook.getSheetAt(0);
-            final Row head = sheet.getRow(start);
-            for (int j = start + 1; j < sheet.getLastRowNum() + 1; ++j) {
-                final Row row = sheet.getRow(j);
-                if (row != null) {
-                    space = 0;
-                    final Map rec = new HashMap<>();
-                    for (int k = 0; k < row.getLastCellNum(); ++k) {
-                        value = this.getCellValue(row.getCell(k), formulaEvaluator);
-                        if (value != null && "".equals(value)) {
-                            value = null;
+
+        try (Workbook workbook = (Workbook) ("xls".equals(suffix) ? new HSSFWorkbook(is) : new XSSFWorkbook(is));) {
+            FormulaEvaluator formulaEvaluator = null;
+            formulaEvaluator = (FormulaEvaluator) ("xls".equals(suffix)
+                    ? new HSSFFormulaEvaluator((HSSFWorkbook) workbook)
+                    : new XSSFFormulaEvaluator((XSSFWorkbook) workbook));
+            final List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+            int id = 0;
+            final String tmpId = param.getTmpId();
+            Sheet sheet = null;
+            final int start = 0;
+            int space = 0;
+            String value = "";
+            if (workbook.getNumberOfSheets() != 0) {
+                sheet = workbook.getSheetAt(0);
+                final Row head = sheet.getRow(start);
+                for (int j = start + 1; j < sheet.getLastRowNum() + 1; ++j) {
+                    final Row row = sheet.getRow(j);
+                    if (row != null) {
+                        space = 0;
+                        final Map rec = new HashMap<>();
+                        for (int k = 0; k < row.getLastCellNum(); ++k) {
+                            value = this.getCellValue(row.getCell(k), formulaEvaluator);
+                            if (value != null && "".equals(value)) {
+                                value = null;
+                            }
+                            if ("".equals(value) || value == null) {
+                                ++space;
+                            }
+                            if (head.getCell(k) != null && head != null) {
+                                rec.put(head.getCell(k).toString().replaceAll(" ", "_"), value);
+                            }
                         }
-                        if ("".equals(value) || value == null) {
-                            ++space;
+                        if (space != row.getLastCellNum()) {
+                            if (tmpId != null) {
+                                rec.put(tmpId, ++id);
+                            }
+                            data.add(rec);
                         }
-                        if (head.getCell(k) != null && head != null) {
-                            rec.put(head.getCell(k).toString().replaceAll(" ", "_"), value);
-                        }
-                    }
-                    if (space != row.getLastCellNum()) {
-                        if (tmpId != null) {
-                            rec.put(tmpId, ++id);
-                        }
-                        data.add(rec);
                     }
                 }
             }
+            return this.dataService.insertImportData(param.getTable(), (List) data, uid, httpRequest);
         }
-        return this.dataService.insertImportData(param.getTable(), (List) data, uid, httpRequest);
     }
 
     private String getCellValue(Cell cell, FormulaEvaluator formulaEvaluator) {

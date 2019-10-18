@@ -38,6 +38,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
     private SessionRegistry sessionRegistry = new SessionRegistryImpl();
     private AuthenticationSuccessHandler authenticationSuccessHandler = new SimpleLoginSuccessHandler();
     private SimpleLogOutSuccessHandler simpleLogOutSuccessHandler = new SimpleLogOutSuccessHandler();
+    @SuppressWarnings("deprecation")
     private ConcurrentSessionFilter sessionFilter = new ConcurrentSessionFilter(this.sessionRegistry, LOGIN_URL);
 
     @Bean
@@ -62,7 +63,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
     protected void configure(HttpSecurity http) throws Exception {
         this.sessionFilter.setRedirectStrategy(new DxInvalidSessionStrategy());
         ConcurrentSessionControlAuthenticationStrategy cscas = new ConcurrentSessionControlAuthenticationStrategy(

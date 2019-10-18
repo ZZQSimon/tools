@@ -118,7 +118,7 @@ public class DxToolService {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
     private Context createVelocityContext(final Map<String, Object> model, final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
         final ChainedContext velocityContext = new ChainedContext((Context) new VelocityContext((Map) model),
@@ -130,6 +130,8 @@ public class DxToolService {
         return (Context) velocityContext;
     }
 
+
+    
     public String macro(final String name, final Map<String, Object> map, final HttpServletRequest req,
             final HttpServletResponse resp) {
         try {

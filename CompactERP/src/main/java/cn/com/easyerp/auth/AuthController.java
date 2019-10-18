@@ -40,6 +40,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.cloopen.rest.sdk.CCPRestSmsSDK;
+
 import cn.com.easyerp.addCompany.AddCompanyService;
 import cn.com.easyerp.auth.weixin.CompanyWXData;
 import cn.com.easyerp.auth.weixin.WeiXinAPI;
@@ -62,7 +64,6 @@ import cn.com.easyerp.email.ServiceException;
 import cn.com.easyerp.framework.common.ActionResult;
 import cn.com.easyerp.framework.common.Common;
 import cn.com.easyerp.framework.exception.ApplicationException;
-import cn.com.easyerp.verification.CCPRestSmsSDK;
 import cn.com.easyerp.weixin.WeChatService;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })

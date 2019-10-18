@@ -41,7 +41,7 @@ public class AliSmsService implements SmsService {
 
         DefaultProfile defaultProfile = DefaultProfile.getProfile("cn-hangzhou", this.accessKeyId,
                 this.accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", "Dysmsapi", "dysmsapi.aliyuncs.com");
+        DefaultProfile.addEndpoint("cn-hangzhou", "Dysmsapi", "dysmsapi.aliyuncs.com");
 
         return new DefaultAcsClient(defaultProfile);
     }

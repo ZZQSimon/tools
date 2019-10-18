@@ -5,13 +5,15 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import com.cloopen.rest.sdk.CCPRestSmsSDK;
+
 public class LoggerUtil {
     private static boolean isLog = true;
     private static Logger logger;
 
     static {
         if (logger == null) {
-            logger = Logger.getLogger(cn.com.easyerp.verification.CCPRestSmsSDK.class);
+            logger = Logger.getLogger(CCPRestSmsSDK.class);
         }
     }
 
@@ -25,7 +27,7 @@ public class LoggerUtil {
 
     public static void setLogLevel(int level) {
         if (logger == null) {
-            logger = Logger.getLogger(cn.com.easyerp.verification.CCPRestSmsSDK.class);
+            logger = Logger.getLogger(CCPRestSmsSDK.class);
         }
         PropertyConfigurator.configure(PropertiesUtil.getPropertie(level));
     }

@@ -12,8 +12,13 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +43,6 @@ import cn.com.easyerp.core.cache.TriggerDescribe;
 import cn.com.easyerp.core.evaluate.CacheModelService;
 import cn.com.easyerp.core.evaluate.FormulaService;
 import cn.com.easyerp.core.evaluate.DataModel.EvalResponseModel;
-import cn.com.easyerp.framework.exception.ApplicationException;
-import cn.com.easyerp.framework.util.EmptyUtil;
 import cn.com.easyerp.core.master.DxRoutingDataSource;
 import cn.com.easyerp.core.view.FormModelBase;
 import cn.com.easyerp.core.view.FormViewControllerBase;
@@ -56,6 +59,8 @@ import cn.com.easyerp.core.widget.grid.StdGridModel;
 import cn.com.easyerp.framework.common.ActionResult;
 import cn.com.easyerp.framework.common.ApiActionResult;
 import cn.com.easyerp.framework.common.Common;
+import cn.com.easyerp.framework.exception.ApplicationException;
+import cn.com.easyerp.framework.util.EmptyUtil;
 import cn.com.easyerp.storage.StorageService;
 import cn.com.easyerp.tg.TreeGridFormModel;
 
@@ -284,98 +289,101 @@ public class DataController extends FormViewControllerBase {
             throws IOException {
         final ListFormModel listform = (ListFormModel) ViewService.fetchFormModel(request.getFormId());
         final String tableName = listform.getTableName();
-        final HSSFWorkbook workBook = new HSSFWorkbook(
-                this.storageService.getUploadFile(request.getFileId()).getInputStream());
-        final HSSFSheet sheet = workBook.getSheetAt(0);
-        final int rowSize = sheet.getLastRowNum();
-        boolean flag = false;
-        int index = 0;
-        final Map<String, Integer> columnMap = new HashMap<String, Integer>();
-        for (int i = 0; i < rowSize; ++i) {
-            final HSSFRow row = sheet.getRow(i);
-            for (int cellNum = row.getLastCellNum(), j = 0; j < cellNum; ++j) {
-                final HSSFCell cell = row.getCell(j);
-                if (cell != null && CellType.STRING.equals(cell.getCellType())) {
-                    if ("start".equals(cell.getStringCellValue())) {
-                        flag = true;
-                        index = i;
-                    } else if (flag) {
-                        columnMap.put(cell.getStringCellValue(), j);
+
+        try (final HSSFWorkbook workBook = new HSSFWorkbook(
+                this.storageService.getUploadFile(request.getFileId()).getInputStream());) {
+            final HSSFSheet sheet = workBook.getSheetAt(0);
+            final int rowSize = sheet.getLastRowNum();
+            boolean flag = false;
+            int index = 0;
+            final Map<String, Integer> columnMap = new HashMap<String, Integer>();
+            for (int i = 0; i < rowSize; ++i) {
+                final HSSFRow row = sheet.getRow(i);
+                for (int cellNum = row.getLastCellNum(), j = 0; j < cellNum; ++j) {
+                    final HSSFCell cell = row.getCell(j);
+                    if (cell != null && CellType.STRING.equals(cell.getCellType())) {
+                        if ("start".equals(cell.getStringCellValue())) {
+                            flag = true;
+                            index = i;
+                        } else if (flag) {
+                            columnMap.put(cell.getStringCellValue(), j);
+                        }
                     }
                 }
+                if (flag) {
+                    this.keyCheck(tableName, columnMap);
+                    break;
+                }
             }
-            if (flag) {
-                this.keyCheck(tableName, columnMap);
-                break;
+            final TableDescribe table = this.dataService.getTableDesc(tableName);
+            List<RecordModel> records = new ArrayList<RecordModel>();
+            final String keyColumnId = table.getIdColumns()[table.getIdColumns().length - 1];
+            final ColumnDescribe keyColumn = table.getColumn(keyColumnId);
+            int keyIndex = 0;
+            if (keyColumn.getData_type() == 13) {
+                keyIndex = this.autoKeyService.getIndex(table, null);
             }
-        }
-        final TableDescribe table = this.dataService.getTableDesc(tableName);
-        List<RecordModel> records = new ArrayList<RecordModel>();
-        final String keyColumnId = table.getIdColumns()[table.getIdColumns().length - 1];
-        final ColumnDescribe keyColumn = table.getColumn(keyColumnId);
-        int keyIndex = 0;
-        if (keyColumn.getData_type() == 13) {
-            keyIndex = this.autoKeyService.getIndex(table, null);
-        }
-        final Map<String, String> msgMap = new HashMap<String, String>();
-        final List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-        for (int k = index + 1; k <= rowSize; ++k) {
-            final HSSFRow row2 = sheet.getRow(k);
-            final Map<String, Object> map = new DatabaseDataMap();
-            boolean empty = true;
-            for (final String column : columnMap.keySet()) {
-                final ColumnDescribe columnDescribe = table.getColumn(column);
-                final String id = columnDescribe.getTable_id() + "." + columnDescribe.getColumn_name();
-                if (this.authService.newAuthColumn(user, id)) {
-                    final HSSFCell cell2 = row2.getCell((int) columnMap.get(column));
-                    if (cell2 != null) {
-                        map.put(column, this.getValue(cell2, columnDescribe.getData_type()));
-                        if (!Common.notBlank(this.cellFormatter.formatCellValue((Cell) cell2))) {
-                            continue;
+            final Map<String, String> msgMap = new HashMap<String, String>();
+            final List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+            for (int k = index + 1; k <= rowSize; ++k) {
+                final HSSFRow row2 = sheet.getRow(k);
+                final Map<String, Object> map = new DatabaseDataMap();
+                boolean empty = true;
+                for (final String column : columnMap.keySet()) {
+                    final ColumnDescribe columnDescribe = table.getColumn(column);
+                    final String id = columnDescribe.getTable_id() + "." + columnDescribe.getColumn_name();
+                    if (this.authService.newAuthColumn(user, id)) {
+                        final HSSFCell cell2 = row2.getCell((int) columnMap.get(column));
+                        if (cell2 != null) {
+                            map.put(column, this.getValue(cell2, columnDescribe.getData_type()));
+                            if (!Common.notBlank(this.cellFormatter.formatCellValue((Cell) cell2))) {
+                                continue;
+                            }
+                            empty = false;
+                        } else {
+                            map.put(column, null);
                         }
-                        empty = false;
                     } else {
                         map.put(column, null);
                     }
-                } else {
-                    map.put(column, null);
+                }
+                if (!empty) {
+                    data.add(map);
                 }
             }
-            if (!empty) {
-                data.add(map);
-            }
-        }
-        final String importSql = table.getImport_sql();
-        List<DatabaseDataMap> resultData = null;
-        String tip;
-        if (Common.isBlank(importSql)) {
-            for (final Map<String, Object> map2 : data) {
-                for (final ColumnDescribe columnDesc : table.getColumns()) {
-                    if (!columnMap.containsKey(columnDesc.getColumn_name()) && !columnDesc.isVirtual()) {
-                        map2.put(columnDesc.getColumn_name(), null);
+            final String importSql = table.getImport_sql();
+            List<DatabaseDataMap> resultData = null;
+            String tip;
+            if (Common.isBlank(importSql)) {
+                for (final Map<String, Object> map2 : data) {
+                    for (final ColumnDescribe columnDesc : table.getColumns()) {
+                        if (!columnMap.containsKey(columnDesc.getColumn_name()) && !columnDesc.isVirtual()) {
+                            map2.put(columnDesc.getColumn_name(), null);
+                        }
                     }
+                    if (keyColumn.getData_type() == 13) {
+                        final AutoKeyDaoModel keyData = this.autoKeyService.getIndexData(table, null, keyIndex);
+                        map2.put(keyColumnId, keyData.getNext_id());
+                        keyIndex = keyData.getNext_no();
+                    }
+                    this.checkColumn(tableName, map2);
+                    final RecordModel record = new RecordModel((List) this.dataService.buildModel(tableName, map2));
+                    records.add(record);
                 }
-                if (keyColumn.getData_type() == 13) {
-                    final AutoKeyDaoModel keyData = this.autoKeyService.getIndexData(table, null, keyIndex);
-                    map2.put(keyColumnId, keyData.getNext_id());
-                    keyIndex = keyData.getNext_no();
-                }
-                this.checkColumn(tableName, map2);
-                final RecordModel record = new RecordModel((List) this.dataService.buildModel(tableName, map2));
-                records.add(record);
+                tip = this.dataService.getMessageText("total", records.size());
+            } else {
+                resultData = this.dataService.selectImportSqlData(table, data, user.getId());
+                records = this.dataService.dumpFailedImportData(table, resultData);
+                tip = this.dataService.getMessageText("total_and_error", resultData.size(), records.size());
             }
-            tip = this.dataService.getMessageText("total", records.size());
-        } else {
-            resultData = this.dataService.selectImportSqlData(table, data, user.getId());
-            records = this.dataService.dumpFailedImportData(table, resultData);
-            tip = this.dataService.getMessageText("total_and_error", resultData.size(), records.size());
+            final ExportingGridModel grid = new ExportingGridModel(tableName);
+            grid.setRecords((List) records);
+            final ImportFormModel form = new ImportFormModel(request.getParent(), tableName, (StdGridModel) grid,
+                    msgMap, resultData, tip, Common.isBlank(importSql));
+            form.setImport_type(request.getImport_type());
+            return this.buildModelAndView((FormModelBase) form);
         }
-        final ExportingGridModel grid = new ExportingGridModel(tableName);
-        grid.setRecords((List) records);
-        final ImportFormModel form = new ImportFormModel(request.getParent(), tableName, (StdGridModel) grid, msgMap,
-                resultData, tip, Common.isBlank(importSql));
-        form.setImport_type(request.getImport_type());
-        return this.buildModelAndView((FormModelBase) form);
+
     }
 
     private void checkColumn(final String tableName, final Map<String, Object> valueMap) {

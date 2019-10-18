@@ -72,34 +72,34 @@ public class PrintExcelService {
             throw new ApplicationException("have no data");
         }
 
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        HSSFSheet sheet = workbook.createSheet();
+        try (HSSFWorkbook workbook = new HSSFWorkbook();) {
+            HSSFSheet sheet = workbook.createSheet();
 
-        List<Map<String, Object>> selectColumn = selectColumn((CustomData) data.get(0));
-        if (selectColumn.size() == 0) {
-            throw new ApplicationException("no choose any type");
-        }
+            List<Map<String, Object>> selectColumn = selectColumn((CustomData) data.get(0));
+            if (selectColumn.size() == 0) {
+                throw new ApplicationException("no choose any type");
+            }
 
-        createMonthRow(workbook, sheet, allMonth, selectColumn);
+            createMonthRow(workbook, sheet, allMonth, selectColumn);
 
-        createHeadRow(workbook, sheet, allMonth, selectColumn);
+            createHeadRow(workbook, sheet, allMonth, selectColumn);
 
-        createDataRow(workbook, sheet, data, allMonth, selectColumn);
+            createDataRow(workbook, sheet, data, allMonth, selectColumn);
 
-        createPicture(workbook, sheet, allMonth, data);
-        try {
+            createPicture(workbook, sheet, allMonth, data);
             String filename = "rate.xls";
             String uuid = UUID.randomUUID().toString();
             String templatePath = this.storageService.templatePath(uuid, filename);
-            OutputStream outputStream1 = new FileOutputStream(templatePath);
-            workbook.write(outputStream1);
-            outputStream1.flush();
-            outputStream1.close();
-            return new ActionResult(true, templatePath);
+
+            try (OutputStream outputStream1 = new FileOutputStream(templatePath);) {
+                workbook.write(outputStream1);
+                outputStream1.flush();
+                return new ActionResult(true, templatePath);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ApplicationException(e.getMessage());
         }
+
     }
 
     @Autowired
@@ -130,7 +130,7 @@ public class PrintExcelService {
         }
     }
 
-    @SuppressWarnings({  "rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
     private void createHeadRow(HSSFWorkbook workbook, HSSFSheet sheet, List<String> allMonth,
             List<Map<String, Object>> selectColumn) {
         HSSFCellStyle headSelectStyle = headSelectStyle(workbook);
@@ -169,7 +169,7 @@ public class PrintExcelService {
         }
     }
 
-    @SuppressWarnings({  "rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
     private void createDataRow(HSSFWorkbook workbook, HSSFSheet sheet, List<CustomData> data, List<String> allMonth,
             List<Map<String, Object>> selectColumn) {
         String tableName = CustomReportController.FILTER_TABLE;
@@ -351,7 +351,7 @@ public class PrintExcelService {
         LineAndShapeRenderer lasp = (LineAndShapeRenderer) plot.getRenderer();
 
         lasp.setBaseShapesVisible(true);
-        lasp.setItemLabelsVisible(true);
+        lasp.setBaseItemLabelsVisible(true);
 
         lasp.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         lasp.setBaseItemLabelFont(new Font("瀹嬩綋", 1, 15));
