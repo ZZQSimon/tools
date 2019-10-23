@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<!-- 1. 数据源 : DriverManagerDataSource -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+
+		<!--<property name="url" value="jdbc:mysql://devhrimysbji1a.cmvyk1tgjwqh.rds.cn-north-1.amazonaws.com.cn:3306/DEVHRIDB" 
+			/> <property name="username" value="DEV_HRI_OWNER" /> <property name="password" 
+			value="Dev$Hr10wn$r" /> -->
+
+		<!-- <property name="url" value="jdbc:mysql://rm-uf62k1944wz99gu98o.mysql.rds.aliyuncs.com:3306/gc_adidas" 
+			/> <property name="username" value="root2" /> <property name="password" value="Nc-tiniag" 
+			/> -->
+		<!-- <property name="url" value="jdbc:mysql://139.224.130.197:3306/gc_pre_onboarding?zeroDateTimeBehavior=convertToNull" 
+			/> <property name="username" value="root" /> <property name="password" value="Nc-tiniag123" 
+			/> -->
+
+		<!-- <property name="url" value="jdbc:mysql://rm-uf62k1944wz99gu98o.mysql.rds.aliyuncs.com:3306/gc_adidas?zeroDateTimeBehavior=convertToNull" 
+			/> <property name="username" value="root2" /> <property name="password" value="Nc-tiniag" 
+			/> -->
+
+		<!-- <property name="url" -->
+		<!-- value="jdbc:mysql://prdhrimysbji1a.cmvyk1tgjwqh.rds.cn-north-1.amazonaws.com.cn:3306/PRDHRIDB?zeroDateTimeBehavior=convertToNull" 
+			/> -->
+		<!-- <property name="username" value="HRI_PROD_OWNER" /> -->
+		<!-- <property name="password" value="o@wneR18HR@IS" /> -->
+
+		<property name="url"
+			value="jdbc:mysql://172.16.253.203:3306/prdhridb?zeroDateTimeBehavior=convertToNull" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+
+	<!-- 2. mybatis的SqlSession的工厂: SqlSessionFactoryBean dataSource:引用数据源 MyBatis定义数据源,同意加载配置 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:config/mybatis-config.xml" />
+	</bean>
+
+	<!-- 3. mybatis自动扫描加载Sql映射文件/接口 : MapperScannerConfigurer sqlSessionFactory 
+		basePackage:指定sql映射文件/接口所在的包（自动扫描） -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.g1extend.mapper"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+
+	<!-- 4. 事务管理 : DataSourceTransactionManager dataSource:引用上面定义的数据源 -->
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 5. 使用声明式事务 transaction-manager：引用上面定义的事务管理器 -->
+	<tx:annotation-driven transaction-manager="txManager" />
+
+</beans>

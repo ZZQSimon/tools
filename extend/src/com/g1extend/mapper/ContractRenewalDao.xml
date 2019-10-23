@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.g1extend.mapper.ContractRenewalDao">
+	
+	<select id="getApproveId" resultType="java.lang.String">
+		select c1.approve_id from c_approve_flow c1 
+		INNER JOIN c_approve_flow_node c2 on c1.approve_id=c2.approve_id
+		where c1.table_id='t_contract_renewal' and c1.data_id=#{dataId}
+		AND c2.sequence = (SELECT MAX(sequence) FROM c_approve_flow_node c3 WHERE c3.approve_id = c1.approve_id) LIMIT 0, 1;
+	</select>
+	<select id="getDistinctCount" resultType="java.lang.String">
+	select t2.cn from c_flow_event t1 INNER JOIN c_international t2 on t1.international_id=t2.international_id
+	where flow_event_id in (
+		SELECT * FROM(
+				SELECT
+					c4.flow_event_id
+				FROM
+					c_approve_flow c1
+				INNER JOIN c_approve_flow_node c2 ON c1.approve_id = c2.approve_id
+				INNER JOIN c_approve_flow_user c4 on c1.approve_id=c4.approve_id and c2.block_id=c4.block_id
+				WHERE
+					c1.table_id = 't_contract_renewal'
+				AND c1.data_id = #{approveId}
+				AND c2.sequence = (
+					SELECT
+						MAX(sequence)
+					FROM
+						c_approve_flow_node c3
+					WHERE
+						c3.approve_id = c1.approve_id
+				)
+				ORDER BY node_seq
+				LIMIT 1,1) t
+		) 
+	</select>
+	<select id="getCount" resultType="java.lang.String">
+	select t2.cn from c_flow_event t1 INNER JOIN c_international t2 on t1.international_id=t2.international_id
+	where flow_event_id in (
+		SELECT * FROM(
+				SELECT
+					c4.flow_event_id
+				FROM
+					c_approve_flow c1
+				INNER JOIN c_approve_flow_node c2 ON c1.approve_id = c2.approve_id
+				INNER JOIN c_approve_flow_user c4 on c1.approve_id=c4.approve_id and c2.block_id=c4.block_id
+				WHERE
+					c1.table_id = 't_contract_renewal'
+				AND c1.data_id = #{approveId}
+				AND c2.sequence = (
+					SELECT
+						MAX(sequence)
+					FROM
+						c_approve_flow_node c3
+					WHERE
+						c3.approve_id = c1.approve_id
+				)
+				ORDER BY node_seq
+				LIMIT 1) t
+		) 
+	</select>
+	<select id="getAllUser" resultType="com.g1extend.entity.ContractRenewal">
+		select c1.`user` ,c2.international_id from c_approve_flow_user c1
+	LEFT JOIN c_flow_event c2 on c1.flow_event_id =c2.flow_event_id
+	where c1.approve_id=#{approveId}
+	</select>
+	<select id="getEmail" resultType="java.lang.String">
+		select email from m_user where id=#{userId}
+	</select>
+	<select id="getEmailTemplate" resultType="com.g1extend.entity.EmailTemplate">
+		select * from `m_weichat_message_template` where id='contractRenewalEmail'
+	</select>
+	<select id="getEmpName" resultType="java.lang.String">
+		select name from m_user where id=#{userId}
+	</select>
+</mapper>

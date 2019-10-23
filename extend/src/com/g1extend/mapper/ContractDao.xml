@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.g1extend.mapper.ContractDao">
+	
+	<select id="getLaborContract" resultType="com.g1extend.entity.Labor_contract">
+SELECT
+	t1.employee_id,t2.employee_type
+FROM
+	t_labor_contract t1
+INNER JOIN t_emp t2 ON t1.employee_id = t2.employee_id
+AND t2.emp_state = '1'
+WHERE
+	t1.end_date BETWEEN (
+		SELECT DATE_SUB(
+			DATE_SUB(
+				STR_TO_DATE(#{getDate}, '%Y-%m-%d'),
+				INTERVAL - 3 MONTH
+			),
+			INTERVAL 1 DAY
+		)
+	)
+AND (
+	SELECT
+		LAST_DAY(
+			DATE_SUB(
+				DATE_SUB(
+					STR_TO_DATE(#{getDate}, '%Y-%m-%d'),
+					INTERVAL - 3 MONTH
+				),
+				INTERVAL 1 DAY
+			)
+		)
+)
+	</select>
+	<select id="selectCountById" resultType="Integer">
+	SELECT COUNT(*) FROM t_labor_contract WHERE employee_id = #{employee_id}
+	</select>
+	<select id="getNoSubmitNum" resultType="Integer">
+	SELECT COUNT(*) FROM t_contract_renewal WHERE approve_status = 1;
+	</select>
+	<insert id="insertContract" parameterType="com.g1extend.entity.Contract_renewal">
+	INSERT INTO t_contract_renewal (
+	id,
+	emp_id,
+	approve_status,
+	old_begin_date,
+	old_end_date,
+	renew_type,
+	renew_date,
+	new_begin_date,
+	new_end_date,
+	city,
+	rank,
+	position,
+	shop_name,
+	shop_names,
+	area_manager,
+	cre_user,
+	cre_date,
+	upd_user,
+	upd_date,
+	owner,
+	area,
+	old_work_hour_type,
+	new_work_hour_type,
+	emp_name
+)
+VALUES
+(#{contract_renewal.id},#{contract_renewal.emp_id},"1",#{contract_renewal.old_begin_date},#{contract_renewal.old_end_date},
+"1",#{contract_renewal.renew_date},#{contract_renewal.new_begin_date},#{contract_renewal.new_end_date},
+#{contract_renewal.city},#{contract_renewal.rank},#{contract_renewal.position},#{contract_renewal.shop_id},#{contract_renewal.shop_name},
+#{contract_renewal.area_manager},#{contract_renewal.cre_user},#{contract_renewal.cre_date},#{contract_renewal.emp_id},
+#{contract_renewal.cre_date},#{contract_renewal.owner},#{contract_renewal.area},#{contract_renewal.old_work_hour_type},
+#{contract_renewal.new_work_hour_type},#{contract_renewal.emp_name})
+	</insert>
+
+		<insert id="insert2Contract" parameterType="com.g1extend.entity.Contract_renewal">
+	INSERT INTO t_contract_renewal (
+	id,
+	emp_id,
+	approve_status,
+	old_begin_date,
+	old_end_date,
+	renew_type,
+	renew_date,
+	new_begin_date,
+	new_end_date,
+	city,
+	rank,
+	position,
+	shop_name,
+	shop_names,
+	area_manager,
+	cre_user,
+	cre_date,
+	upd_user,
+	upd_date,
+	owner,
+	area,
+	old_work_hour_type,
+	new_work_hour_type,
+	emp_name
+)
+VALUES
+(#{renewal.id},#{renewal.emp_id},"1",#{renewal.old_begin_date},#{renewal.old_end_date},
+"1",#{renewal.renew_date},#{renewal.new_begin_date},#{renewal.new_end_date},
+#{renewal.city},#{renewal.rank},#{renewal.position},#{renewal.shop_id},#{renewal.shop_name},#{renewal.area_manager},
+#{renewal.emp_id},#{renewal.cre_date},#{renewal.emp_id},#{renewal.upd_date},#{renewal.emp_id},
+#{renewal.area},#{renewal.old_work_hour_type},#{renewal.new_work_hour_type},#{renewal.emp_name})
+	</insert>
+	<select id="getIdByApi" resultType="java.lang.String">
+        CALL c_get_next_id ("t_contract_renewal", "", @new_id, @new_not_no);
+        SELECT @new_id  id;
+    </select>
+    <select id="getDomain" resultType="java.lang.String">
+    SELECT server_address FROM `p_parameter`;
+    </select>
+    <select id="getVO" resultType="com.g1extend.entity.Contract_renewalVO">
+	SELECT
+		t.`name` emp_name,
+		t.contract_begin_day old_begin_date,
+		t.contract_end_day old_end_date,
+		DATE_ADD(
+			t.contract_end_day,
+			INTERVAL 1 DAY
+		) begin_date,
+		<if test="num == 1">
+            DATE_ADD(
+				t.contract_end_day,
+				INTERVAL 1 YEAR
+			) end_date,
+        </if>
+        <if test="num == 2">
+            DATE_ADD(
+				t.contract_end_day,
+				INTERVAL 2 YEAR
+			) end_date,
+        </if>
+        <if test="num == 0">
+           '9999-12-31' end_date,
+        </if>
+		t.city,
+		t.position,
+		t.rank,
+		t.shop_id,
+		t.shop_name,
+		m.shop_area,
+		t.work_hour_type,
+		m.DOM manager,
+		m.ROM,
+		m.SM
+	FROM
+		t_emp t
+	INNER JOIN m_department m ON t.shop_id = m.id WHERE t.employee_id = #{employee_id}
+    </select>
+    <select id="getSystemParam" resultType="java.util.Map">
+		SELECT
+			`mail_host`,
+			`mail_user`,
+			`mail_pwd`,
+			`mail_addr`,
+			`upload_root`,
+			`server_address`,
+			`ftp_host`,
+			`ftp_port`,
+			`ftp_user`,
+			`ftp_pwd`
+		FROM
+			p_parameter
+	</select>
+	
+	<update id="updateCreUser">
+	update t_contract_renewal set cre_user='SYSTEM';
+	</update>
+	
+	<select id="sendEmail" resultType="com.g1extend.entity.Contract_renewal_email">
+		<foreach collection="contract_renewal" item="contract" separator=" UNION ALL ">
+		SELECT emaliUser,emailName,email,`name` FROM (
+			select c1.`user` as emaliUser,m1.`name` as emailName,m1.email,m2.`name` from c_approve_flow_user c1 
+			LEFT JOIN c_approve_flow_node c2 on c1.approve_id=c2.approve_id and c1.block_id=c2.block_id
+			LEFT JOIN c_approve_flow c3 on c3.approve_id=c2.approve_id
+			LEFT JOIN m_user m1 on c1.`user`=m1.id
+			LEFT JOIN t_contract_renewal t1 on t1.id=c3.data_id
+			LEFT JOIN m_user m2 on t1.emp_id=m2.id 
+			where c3.table_id ='t_contract_renewal' and t1.id=#{contract.id}
+			ORDER BY c2.node_seq asc LIMIT 1)t
+		</foreach>
+	</select>
+	
+	<select id="getEmailTemplate" resultType="com.g1extend.entity.EmailTemplate">
+		SELECT
+			`id`,
+			`template_id`,
+			`title`,
+			`template`,
+			`btn_text`
+		FROM
+			`m_weichat_message_template`
+		WHERE
+			id = 'contractRenewalEmail_all';
+	</select>
+</mapper>

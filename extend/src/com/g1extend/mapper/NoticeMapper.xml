@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.g1extend.mapper.NoticeMapper">
+
+	<insert id="save">
+		INSERT INTO `t_notice` (`id`, `link`,
+		`param`, `name`,
+		`notice_to`, `notice_type`, `base_url`, `is_sent`,
+		`sent_time`,
+		`sent_counts`, `create_time`, `failed_reason`)
+		VALUES (#{notice.id},
+		#{notice.link},
+		#{notice.param}, #{notice.name}, #{notice.notice_to},
+		#{notice.notice_type},#{notice.base_url}, #{notice.is_sent},
+		#{notice.sent_time},
+		#{notice.sent_counts},
+		SYSDATE(),
+		#{notice.failed_reason});
+
+	</insert>
+
+	<update id="update">
+		UPDATE `t_notice` SET
+		`link`=#{notice.link},
+		`param`=#{notice.param}, `name`=#{notice.name},
+		`notice_to`=#{notice.notice_to},
+		`notice_type`=#{notice.notice_type},
+		`base_url`=#{notice.base_url},
+		`is_sent`=#{notice.is_sent},
+		`sent_time`=#{notice.sent_time}, `sent_counts`=#{notice.sent_counts},
+		`failed_reason`=#{notice.failed_reason}
+		WHERE
+		`id`=#{notice.id};
+	</update>
+
+	<update id="updateSent">
+		UPDATE `t_notice` SET
+		`is_sent`=#{notice.is_sent},
+		<if test="notice.sent_time != null">
+			`sent_time`=#{notice.sent_time},
+		</if>
+		`sent_counts`=#{notice.sent_counts},
+		`failed_reason`=#{notice.failed_reason}
+		WHERE `id`=#{notice.id};
+	</update>
+
+	<delete id="delete">
+		delete from t_notice where id=#{id}
+	</delete>
+
+	<select id="findById" resultType="com.g1extend.entity.Notice">
+		select * from t_notice where
+		id=#{id}
+	</select>
+
+	<select id="findAll" resultType="com.g1extend.entity.Notice">
+		select * from t_notice
+	</select>
+	<select id="findAllToSent" resultType="com.g1extend.entity.Notice">
+		 <![CDATA[
+		select * from t_notice
+		where is_sent='0' and
+		`notice_type`=#{noticetype} and
+		`sent_counts` < #{counts}
+		]]>
+	</select>
+
+</mapper>

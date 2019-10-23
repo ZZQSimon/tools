@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.g1extend.mapper.ImportDao">
+	
+<select id="importExcel" resultType="com.g1extend.entity.MonthlyIncentiveReport">
+select
+area
+bonus
+city
+cn_name
+cre_date
+cre_user
+emp_id
+id
+in_date
+KPI
+monthly
+out_date
+Payout_ratio
+rank
+salary
+shop_en_name
+type
+upd_date
+upd_user
+ from t_monthly_incentive_report
+</select>
+</mapper>

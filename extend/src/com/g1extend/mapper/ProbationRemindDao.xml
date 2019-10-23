@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.g1extend.mapper.ProbationRemindDao">
+	<select id="getALLProbationExpire" resultType="com.g1extend.entity.ProbationExpire">
+		SELECT
+			employee_id,
+			`name`,
+			positive,
+			direct_supervisor
+		FROM
+			t_emp
+		WHERE
+			positive BETWEEN #{date}
+		AND last_day(
+			date_add(
+				#{date},
+				INTERVAL 2 MONTH
+			)
+		)
+		ORDER BY positive
+	</select>
+	<select id="getDirectSupervisorEmail" resultType="java.lang.String">
+		select email from m_user where id=#{directSupervisor}
+	</select>
+	<select id="getEmailTemplate" resultType="com.g1extend.entity.EmailTemplate">
+			SELECT
+			`id`,
+			`template_id`,
+			`title`,
+			`template`,
+			`btn_text`
+		FROM
+			`m_weichat_message_template`
+		where id='probationEmail'
+	</select>
+</mapper>
