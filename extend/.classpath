@@ -11,7 +11,6 @@
 			<attribute name="owner.project.facets" value="jst.web"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/aliyun-java-sdk-core-3.2.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/aliyun-java-sdk-dybaseapi-1.0.0.jar"/>
@@ -62,5 +61,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xmlbeans-2.3.0.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/zxing-core-2.0.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/zxing-j2se-1.7.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/fastjson-1.2.3.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
