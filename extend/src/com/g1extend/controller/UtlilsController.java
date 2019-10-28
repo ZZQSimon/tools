@@ -118,7 +118,7 @@ public class UtlilsController {
             }
             if (isemail != 0) {
                 String errMessage = NoticeLog.mailLog11(e.getMessage());
-                Notice notice = new Notice(link, param, name, telephone, baseUrl, failedReason(1, errMessage));
+                Notice notice = new Notice(link, param, name, email, baseUrl, failedReason(1, errMessage));
                 log.info(NoticeLog.mailLog17());
                 NoticeUtils.saveUnsentMAIL(noticeService, notice);
                 log.info(NoticeLog.mailLog18());
@@ -171,12 +171,12 @@ public class UtlilsController {
             log.info(NoticeLog.mailLog15());
             boolean isSent = NoticeUtils.sendEmail(email, name, link, mailService);
             if (isSent) {
-                Notice notice = new Notice(link, param, name, telephone, baseUrl, "");
+                Notice notice = new Notice(link, param, name, email, baseUrl, "");
                 log.info(NoticeLog.mailLog13("succeed"));
                 NoticeUtils.saveSentMAIL(noticeService, notice);
                 log.info(NoticeLog.mailLog14("succeed"));
             } else {
-                Notice notice = new Notice(link, param, name, telephone, baseUrl, "1.mailService return failed;");
+                Notice notice = new Notice(link, param, name, email, baseUrl, "1.mailService return failed;");
                 log.info(NoticeLog.mailLog13("failed"));
                 NoticeUtils.saveUnsentMAIL(noticeService, notice);
                 log.info(NoticeLog.mailLog14("failed"));
