@@ -120,6 +120,38 @@ public class HttpClientUtil {
         }
     }
 
+    public static String doGetSSL(String url, Map<String, Object> params) {
+        final HttpGet httpGet = createHttpGetDefault(url, params);
+        return doGetSSL(httpGet);
+    }
+
+    private static String doGetSSL(HttpGet httpGet) {
+        try (CloseableHttpClient httpClient = createSSLClientDefault();
+                CloseableHttpResponse response = httpClient.execute((HttpUriRequest) httpGet);) {
+            final int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HTTPStatusCode.C200.code()) {
+                return null;
+            }
+            final HttpEntity entity = response.getEntity();
+            if (null == entity) {
+                return null;
+            }
+            return EntityUtils.toString(entity, CS.UTF8.set());
+        } catch (KeyManagementException e) {
+            LogUtil.error(e, "createSSLCloseableHttpClient error [KeyManagementException]");
+            return null;
+        } catch (NoSuchAlgorithmException e) {
+            LogUtil.error(e, "createSSLCloseableHttpClient error [NoSuchAlgorithmException]");
+            return null;
+        } catch (KeyStoreException e) {
+            LogUtil.error(e, "createSSLCloseableHttpClient error [KeyStoreException]");
+            return null;
+        } catch (Exception e) {
+            LogUtil.error(e, "CloseableHttpResponse error ", e.getMessage());
+            return null;
+        }
+    }
+
     private static HttpGet createHttpGetDefault(String url, final Map<String, Object> params) {
         String apiUrl = url;
         final StringBuffer param = new StringBuffer();
