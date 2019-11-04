@@ -82,7 +82,7 @@ public class HttpClientUtil {
             if (null == entity) {
                 return null;
             }
-            final String result = EntityUtils.toString(entity, CS.UTF8.cahrset());
+            final String result = EntityUtils.toString(entity, CS.UTF8.set());
             return JSONObject.parseObject(result);
         } catch (ClientProtocolException e) {
             LogUtil.error(e, "doGetJson error [{0}]", e.getMessage());
@@ -113,7 +113,7 @@ public class HttpClientUtil {
                 return null;
             }
             final InputStream instream = entity.getContent();
-            return IOUtils.toString(instream, CS.UTF8.cahrset());
+            return IOUtils.toString(instream, CS.UTF8.set());
         } catch (IOException e) {
             LogUtil.error(e, "doGet error [{0}]", e.getMessage());
             return null;
@@ -167,7 +167,7 @@ public class HttpClientUtil {
             if (null == entity) {
                 return null;
             }
-            return EntityUtils.toString(entity, CS.UTF8.cahrset());
+            return EntityUtils.toString(entity, CS.UTF8.set());
         } catch (IOException e) {
             LogUtil.error(e, "doPost error [{0}]", e.getMessage());
             return null;
@@ -195,7 +195,7 @@ public class HttpClientUtil {
             if (null == entity) {
                 return null;
             }
-            return EntityUtils.toString(entity, CS.UTF8.cahrset());
+            return EntityUtils.toString(entity, CS.UTF8.set());
         } catch (KeyManagementException e) {
             LogUtil.error(e, "createSSLCloseableHttpClient error [KeyManagementException]");
             return null;
@@ -221,7 +221,7 @@ public class HttpClientUtil {
             pairList.add(pair);
         }
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity((Iterable<? extends NameValuePair>) pairList,
-                CS.UTF8.cahrset());
+                CS.UTF8.set());
         httpPost.setEntity(entity);
 
         return httpPost;
@@ -230,7 +230,7 @@ public class HttpClientUtil {
     private static HttpPost createHttpPostDefault(final String apiUrl, final Object json) {
         final HttpPost httpPost = new HttpPost(apiUrl);
         httpPost.setConfig(HttpClientUtil.requestConfig);
-        final StringEntity stringEntity = new StringEntity(json.toString(), CS.UTF8.cahrset());
+        final StringEntity stringEntity = new StringEntity(json.toString(), CS.UTF8.set());
         stringEntity.setContentEncoding(CS.UTF8.getName());
         stringEntity.setContentType("application/json");
         httpPost.setEntity((HttpEntity) stringEntity);

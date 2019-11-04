@@ -363,7 +363,7 @@ public enum CS {
         return forName;
     }
 
-    public Charset cahrset() {
+    public Charset set() {
         return Charset.forName(forName);
     }
 }
